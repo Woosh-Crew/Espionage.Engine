@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Mirror;
 using UnityEngine;
 using Espionage.Engine.Internal;
 
@@ -10,6 +9,7 @@ using Random = System.Random;
 
 namespace Espionage.Engine
 {
+	/// <summary> Library is used for cached reflection & meta data for classes </summary>
 	public partial class Library
 	{
 		//
@@ -35,7 +35,7 @@ namespace Espionage.Engine
 			// Select all types where ILibrary exsists
 			var types = AppDomain.CurrentDomain.GetAssemblies()
 								.SelectMany( e => e.GetTypes()
-								.Where( e => !e.IsAbstract && e.GetInterfaces().Contains( typeof( ILibrary ) ) ) );
+								.Where( e => !e.IsAbstract && (e.IsDefined( typeof( LibraryAttribute ) ) || e.GetInterfaces().Contains( typeof( ILibrary ) )) ) );
 
 			foreach ( var item in types )
 				AddRecord( CreateRecord( item ) );
@@ -102,7 +102,6 @@ namespace Espionage.Engine
 		public string Title { get; set; }
 		public string Description { get; set; }
 
-		// Mirror uses GUIDs?
 		public Guid Id { get; set; }
 		public Type Owner { get; set; }
 	}
