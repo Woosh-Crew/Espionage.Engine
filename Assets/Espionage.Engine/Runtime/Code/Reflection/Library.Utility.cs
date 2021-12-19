@@ -29,7 +29,6 @@ namespace Espionage.Engine.Internal
 			return library is null;
 		}
 
-
 		// Get
 		public Library Get( string name ) => Records.FirstOrDefault( e => e.Name == name );
 		public Library Get( Type type ) => Records.FirstOrDefault( e => e.Owner == type );
@@ -55,7 +54,11 @@ namespace Espionage.Engine.Internal
 		public Entity Create( string name, bool assertMissing = false )
 		{
 			if ( !Accessor.TryGet( name, out var library ) )
+			{
+				if ( assertMissing )
+					Debug.LogError( $"Library doesnt contain [{name}], not creating ILibrary" );
 				return null;
+			}
 
 			var newEntity = new GameObject( library.Name ).AddComponent( library.Owner ) as Entity;
 			newEntity.Spawn();
@@ -66,5 +69,19 @@ namespace Espionage.Engine.Internal
 			return newEntity;
 		}
 
+		public Entity Create( Guid id )
+		{
+			var library = Accessor.Get( id );
+
+			if ( id == default )
+				throw new Exception( "Invalid Id" );
+
+			var newObject = new GameObject( library.Owner.FullName ).AddComponent( library.Owner );
+
+			if ( NetworkServer.active )
+				NetworkServer.Spawn( newObject.gameObject, library.Id );
+
+			return newObject as Entity;
+		}
 	}
 }

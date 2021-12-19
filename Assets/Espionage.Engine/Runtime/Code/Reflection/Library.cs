@@ -16,7 +16,10 @@ namespace Espionage.Engine
 		// Exposed API
 		//
 
+		/// <summary> Helpers to grab library records </summary>
 		public static LibraryAccessor Accessor => new LibraryAccessor();
+
+		/// <summary> Helpers to create entities from library records. </summary>
 		public static LibraryCreator Creator => new LibraryCreator();
 
 		public static IEnumerable<Library> GetAll() => _records.Values;
@@ -96,40 +99,6 @@ namespace Espionage.Engine
 		//
 		// Entity / Object Creation
 		//
-
-		private static Entity Create( Guid id )
-		{
-			var library = Accessor.Get( id );
-
-			if ( id == default )
-				throw new Exception( "Invalid Id" );
-
-			var newObject = new GameObject( library.Owner.FullName ).AddComponent( library.Owner );
-			return newObject as Entity;
-		}
-
-		internal static void RegisterEntity( Library library )
-		{
-			NetworkClient.RegisterSpawnHandler( library.Id, SpawnEntity, UnspawnEntity );
-		}
-
-		private static GameObject SpawnEntity( SpawnMessage msg )
-		{
-			var spawned = Create( msg.assetId );
-			spawned.transform.position = msg.position;
-			spawned.transform.rotation = msg.rotation;
-			spawned.transform.localScale = msg.scale;
-
-			Debug.Log( $"Spawning Entity {spawned.ClassInfo.Name}" );
-			spawned.ClientSpawn();
-			return spawned.gameObject;
-		}
-
-		private static void UnspawnEntity( GameObject spawned )
-		{
-			spawned.GetComponent<Entity>().ClientDestory();
-			GameObject.Destroy( spawned );
-		}
 
 		//
 		// Instance

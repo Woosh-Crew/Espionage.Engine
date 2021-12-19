@@ -10,7 +10,33 @@ namespace Espionage.Engine
 {
 	public abstract class Entity : NetworkBehaviour, ILibrary
 	{
-		public Library ClassInfo => Library.Accessor.Get( GetType() );
+		//
+		// Network Registering
+		//
+
+		internal static void Register( Library library )
+		{
+			NetworkClient.RegisterSpawnHandler( library.Id, SpawnEntity, UnspawnEntity );
+		}
+
+		private static GameObject SpawnEntity( SpawnMessage msg )
+		{
+			var spawned = Library.Creator.Create( msg.assetId );
+			spawned.transform.position = msg.position;
+			spawned.transform.rotation = msg.rotation;
+			spawned.transform.localScale = msg.scale;
+
+			Debug.Log( $"Spawning Entity {spawned.ClassInfo.Name}" );
+			spawned.ClientSpawn();
+			return spawned.gameObject;
+		}
+
+		private static void UnspawnEntity( GameObject spawned )
+		{
+			spawned.GetComponent<Entity>().ClientDestory();
+			GameObject.Destroy( spawned );
+		}
+
 
 		//
 		// Spawn
@@ -68,6 +94,7 @@ namespace Espionage.Engine
 		//
 		// Helpers
 		//
+		public Library ClassInfo => Library.Accessor.Get( GetType() );
 
 		public Pawn Owner { get; set; }
 		public Vector3 Position => transform.position;

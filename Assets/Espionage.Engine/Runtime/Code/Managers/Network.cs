@@ -22,7 +22,7 @@ namespace Espionage.Engine
 		{
 			// Register all ILibrary, so Clients can spawn them
 			foreach ( var item in Library.GetAll() )
-				Library.RegisterEntity( item );
+				Entity.Register( item );
 
 			base.OnClientConnect();
 		}
