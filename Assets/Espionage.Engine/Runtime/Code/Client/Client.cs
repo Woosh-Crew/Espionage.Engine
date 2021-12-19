@@ -1,4 +1,5 @@
 using Espionage.Engine;
+using Mirror;
 using UnityEngine;
 
 namespace Espionage.Engine
@@ -16,11 +17,14 @@ namespace Espionage.Engine
 			Local.Client = this;
 		}
 
+		[Net]
+		public int SyncTest;
+
 		public override void Spawn()
 		{
 			base.Spawn();
 
-			ThinkDelay = 1;
+			SyncTest = 10;
 		}
 
 		//
