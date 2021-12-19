@@ -49,22 +49,22 @@ namespace Mirror.Experimental
 
 
 		#region Sync vars
-		[Net( hook = nameof( OnVelocityChanged ) )]
+		[SyncVar( hook = nameof( OnVelocityChanged ) )]
 		Vector2 velocity;
 
-		[Net( hook = nameof( OnAngularVelocityChanged ) )]
+		[SyncVar( hook = nameof( OnAngularVelocityChanged ) )]
 		float angularVelocity;
 
-		[Net( hook = nameof( OnIsKinematicChanged ) )]
+		[SyncVar( hook = nameof( OnIsKinematicChanged ) )]
 		bool isKinematic;
 
-		[Net( hook = nameof( OnGravityScaleChanged ) )]
+		[SyncVar( hook = nameof( OnGravityScaleChanged ) )]
 		float gravityScale;
 
-		[Net( hook = nameof( OnuDragChanged ) )]
+		[SyncVar( hook = nameof( OnuDragChanged ) )]
 		float drag;
 
-		[Net( hook = nameof( OnAngularDragChanged ) )]
+		[SyncVar( hook = nameof( OnAngularDragChanged ) )]
 		float angularDrag;
 
 		/// <summary>
@@ -264,7 +264,7 @@ namespace Mirror.Experimental
 		/// <summary>
 		/// Called when only Velocity has changed on the client
 		/// </summary>
-		[ServerRPC]
+		[Command]
 		void CmdSendVelocity( Vector2 velocity )
 		{
 			// Ignore messages from client if not in client authority mode
@@ -278,7 +278,7 @@ namespace Mirror.Experimental
 		/// <summary>
 		/// Called when angularVelocity has changed on the client
 		/// </summary>
-		[ServerRPC]
+		[Command]
 		void CmdSendVelocityAndAngular( Vector2 velocity, float angularVelocity )
 		{
 			// Ignore messages from client if not in client authority mode
@@ -296,7 +296,7 @@ namespace Mirror.Experimental
 			target.angularVelocity = angularVelocity;
 		}
 
-		[ServerRPC]
+		[Command]
 		void CmdSendIsKinematic( bool isKinematic )
 		{
 			// Ignore messages from client if not in client authority mode
@@ -307,7 +307,7 @@ namespace Mirror.Experimental
 			target.isKinematic = isKinematic;
 		}
 
-		[ServerRPC]
+		[Command]
 		void CmdChangeGravityScale( float gravityScale )
 		{
 			// Ignore messages from client if not in client authority mode
@@ -318,7 +318,7 @@ namespace Mirror.Experimental
 			target.gravityScale = gravityScale;
 		}
 
-		[ServerRPC]
+		[Command]
 		void CmdSendDrag( float drag )
 		{
 			// Ignore messages from client if not in client authority mode
@@ -329,7 +329,7 @@ namespace Mirror.Experimental
 			target.drag = drag;
 		}
 
-		[ServerRPC]
+		[Command]
 		void CmdSendAngularDrag( float angularDrag )
 		{
 			// Ignore messages from client if not in client authority mode

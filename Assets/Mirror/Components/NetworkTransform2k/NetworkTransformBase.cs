@@ -187,7 +187,7 @@ namespace Mirror
 #endif
 		// cmd /////////////////////////////////////////////////////////////////
 		// only unreliable. see comment above of this file.
-		[ServerRPC( channel = Channels.Unreliable )]
+		[Command( channel = Channels.Unreliable )]
 		void CmdClientToServerSync( Vector3? position, Quaternion? rotation, Vector3? scale )
 		{
 			OnClientToServerSync( position, rotation, scale );
@@ -248,7 +248,7 @@ namespace Mirror
 
 		// rpc /////////////////////////////////////////////////////////////////
 		// only unreliable. see comment above of this file.
-		[ClientRPC( channel = Channels.Unreliable )]
+		[ClientRpc( channel = Channels.Unreliable )]
 		void RpcServerToClientSync( Vector3? position, Quaternion? rotation, Vector3? scale ) =>
 			OnServerToClientSync( position, rotation, scale );
 
@@ -541,7 +541,7 @@ namespace Mirror
 		// server->client teleport to force position without interpolation.
 		// otherwise it would interpolate to a (far away) new position.
 		// => manually calling Teleport is the only 100% reliable solution.
-		[ClientRPC]
+		[ClientRpc]
 		public void RpcTeleport( Vector3 destination )
 		{
 			// NOTE: even in client authority mode, the server is always allowed
@@ -557,7 +557,7 @@ namespace Mirror
 		// server->client teleport to force position and rotation without interpolation.
 		// otherwise it would interpolate to a (far away) new position.
 		// => manually calling Teleport is the only 100% reliable solution.
-		[ClientRPC]
+		[ClientRpc]
 		public void RpcTeleportAndRotate( Vector3 destination, Quaternion rotation )
 		{
 			// NOTE: even in client authority mode, the server is always allowed
@@ -573,7 +573,7 @@ namespace Mirror
 		// client->server teleport to force position without interpolation.
 		// otherwise it would interpolate to a (far away) new position.
 		// => manually calling Teleport is the only 100% reliable solution.
-		[ServerRPC]
+		[Command]
 		public void CmdTeleport( Vector3 destination )
 		{
 			// client can only teleport objects that it has authority over.
@@ -595,7 +595,7 @@ namespace Mirror
 		// client->server teleport to force position and rotation without interpolation.
 		// otherwise it would interpolate to a (far away) new position.
 		// => manually calling Teleport is the only 100% reliable solution.
-		[ServerRPC]
+		[Command]
 		public void CmdTeleportAndRotate( Vector3 destination, Quaternion rotation )
 		{
 			// client can only teleport objects that it has authority over.

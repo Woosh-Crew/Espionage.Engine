@@ -33,7 +33,7 @@ namespace Mirror
 		/// <summary>
 		/// Syncs animator.speed
 		/// </summary>
-		[Net( hook = nameof( OnAnimatorSpeedChanged ) )]
+		[SyncVar( hook = nameof( OnAnimatorSpeedChanged ) )]
 		float animatorSpeed;
 		float previousSpeed;
 
@@ -517,7 +517,7 @@ namespace Mirror
 
 		#region server message handlers
 
-		[ServerRPC]
+		[Command]
 		void CmdOnAnimationServerMessage( int stateHash, float normalizedTime, int layerId, float weight, byte[] parameters )
 		{
 			// Ignore messages from client if not in client authority mode
@@ -534,7 +534,7 @@ namespace Mirror
 			}
 		}
 
-		[ServerRPC]
+		[Command]
 		void CmdOnAnimationParametersServerMessage( byte[] parameters )
 		{
 			// Ignore messages from client if not in client authority mode
@@ -549,7 +549,7 @@ namespace Mirror
 			}
 		}
 
-		[ServerRPC]
+		[Command]
 		void CmdOnAnimationTriggerServerMessage( int hash )
 		{
 			// Ignore messages from client if not in client authority mode
@@ -567,7 +567,7 @@ namespace Mirror
 			RpcOnAnimationTriggerClientMessage( hash );
 		}
 
-		[ServerRPC]
+		[Command]
 		void CmdOnAnimationResetTriggerServerMessage( int hash )
 		{
 			// Ignore messages from client if not in client authority mode
@@ -585,7 +585,7 @@ namespace Mirror
 			RpcOnAnimationResetTriggerClientMessage( hash );
 		}
 
-		[ServerRPC]
+		[Command]
 		void CmdSetAnimatorSpeed( float newSpeed )
 		{
 			// set animator
@@ -597,21 +597,21 @@ namespace Mirror
 
 		#region client message handlers
 
-		[ClientRPC]
+		[ClientRpc]
 		void RpcOnAnimationClientMessage( int stateHash, float normalizedTime, int layerId, float weight, byte[] parameters )
 		{
 			using ( PooledNetworkReader networkReader = NetworkReaderPool.GetReader( parameters ) )
 				HandleAnimMsg( stateHash, normalizedTime, layerId, weight, networkReader );
 		}
 
-		[ClientRPC]
+		[ClientRpc]
 		void RpcOnAnimationParametersClientMessage( byte[] parameters )
 		{
 			using ( PooledNetworkReader networkReader = NetworkReaderPool.GetReader( parameters ) )
 				HandleAnimParamsMsg( networkReader );
 		}
 
-		[ClientRPC]
+		[ClientRpc]
 		void RpcOnAnimationTriggerClientMessage( int hash )
 		{
 			// host/owner handles this before it is sent
@@ -620,7 +620,7 @@ namespace Mirror
 			HandleAnimTriggerMsg( hash );
 		}
 
-		[ClientRPC]
+		[ClientRpc]
 		void RpcOnAnimationResetTriggerClientMessage( int hash )
 		{
 			// host/owner handles this before it is sent

@@ -19,10 +19,10 @@ namespace Mirror.Experimental
 		float nextSyncTime;
 
 
-		[Net()]
+		[SyncVar()]
 		Vector3 targetVelocity;
 
-		[Net()]
+		[SyncVar()]
 		Vector3 targetPosition;
 
 		/// <summary>
@@ -69,7 +69,7 @@ namespace Mirror.Experimental
 			}
 		}
 
-		[ServerRPC]
+		[Command]
 		void CmdSendState( Vector3 velocity, Vector3 position )
 		{
 			target.velocity = velocity;

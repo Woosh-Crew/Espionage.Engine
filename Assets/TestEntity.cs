@@ -7,7 +7,7 @@ using Mirror;
 [Library( "entity.test" )]
 public class TestEntity : Entity
 {
-	[Net]
+	[SyncVar]
 	public int SyncTest;
 
 	public override void Spawn()

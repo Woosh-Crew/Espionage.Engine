@@ -1092,19 +1092,19 @@ namespace Mirror.Weaver
 			{
 				foreach ( CustomAttribute ca in md.CustomAttributes )
 				{
-					if ( ca.AttributeType.Is<ServerRPCAttribute>() )
+					if ( ca.AttributeType.Is<CommandAttribute>() )
 					{
 						ProcessCommand( names, md, ca, ref WeavingFailed );
 						break;
 					}
 
-					if ( ca.AttributeType.Is<TargetRPCAttribute>() )
+					if ( ca.AttributeType.Is<TargetRpcAttribute>() )
 					{
 						ProcessTargetRpc( names, md, ca, ref WeavingFailed );
 						break;
 					}
 
-					if ( ca.AttributeType.Is<ClientRPCAttribute>() )
+					if ( ca.AttributeType.Is<ClientRpcAttribute>() )
 					{
 						ProcessClientRpc( names, md, ca, ref WeavingFailed );
 						break;

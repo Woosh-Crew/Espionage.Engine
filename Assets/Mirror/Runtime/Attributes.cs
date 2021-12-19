@@ -8,7 +8,7 @@ namespace Mirror
 	/// <para>Value must be changed on server, not directly by clients.  Hook parameter allows you to define a client-side method to be invoked when the client gets an update from the server.</para>
 	/// </summary>
 	[AttributeUsage( AttributeTargets.Field )]
-	public class NetAttribute : PropertyAttribute
+	public class SyncVarAttribute : PropertyAttribute
 	{
 		public string hook;
 	}
@@ -18,7 +18,7 @@ namespace Mirror
 	/// <para>Make sure to validate input etc. It's not possible to call this from a server.</para>
 	/// </summary>
 	[AttributeUsage( AttributeTargets.Method )]
-	public class ServerRPCAttribute : Attribute
+	public class CommandAttribute : Attribute
 	{
 		public int channel = Channels.Reliable;
 		public bool requiresAuthority = true;
@@ -28,7 +28,7 @@ namespace Mirror
 	/// The server uses a Remote Procedure Call (RPC) to run this function on clients.
 	/// </summary>
 	[AttributeUsage( AttributeTargets.Method )]
-	public class ClientRPCAttribute : Attribute
+	public class ClientRpcAttribute : Attribute
 	{
 		public int channel = Channels.Reliable;
 		public bool includeOwner = true;
@@ -41,7 +41,7 @@ namespace Mirror
 	// TODO: This seriously needs to be fucked off, why is it a seperate attribute? Should just be a parameter in the method
 
 	[AttributeUsage( AttributeTargets.Method )]
-	public class TargetRPCAttribute : Attribute
+	public class TargetRpcAttribute : Attribute
 	{
 		public int channel = Channels.Reliable;
 	}

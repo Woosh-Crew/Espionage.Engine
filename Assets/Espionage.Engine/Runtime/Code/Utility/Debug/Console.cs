@@ -54,7 +54,10 @@ namespace Espionage.Engine
 		internal static void Initialize()
 		{
 			// Get every CmdAttribute using Linq
-			var types = AppDomain.CurrentDomain.GetAssemblies().SelectMany( e => e.GetTypes().SelectMany( e => e.GetMembers( BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic ).Where( e => e.IsDefined( typeof( CmdAttribute ) ) ) ) );
+			var types = AppDomain.CurrentDomain.GetAssemblies()
+			.SelectMany( e => e.GetTypes()
+								.SelectMany( e => e.GetMembers( BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic )
+								.Where( e => e.IsDefined( typeof( CmdAttribute ) ) ) ) );
 
 			foreach ( var info in types )
 				AddCommand( info.GetCustomAttribute<CmdAttribute>().CreateCommand( info ) );

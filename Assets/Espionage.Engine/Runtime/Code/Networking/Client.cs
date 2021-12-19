@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace Espionage.Engine
 {
-	[Library( "client" )]
 	public sealed class Client : Entity
 	{
 		public string Name { get; }
@@ -17,13 +16,11 @@ namespace Espionage.Engine
 			Local.Client = this;
 		}
 
-		[Net]
+		[SyncVar]
 		public int SyncTest;
 
 		public override void Spawn()
 		{
-			base.Spawn();
-
 			SyncTest = 10;
 		}
 
