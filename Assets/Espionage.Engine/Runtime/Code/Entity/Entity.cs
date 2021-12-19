@@ -37,7 +37,6 @@ namespace Espionage.Engine
 			GameObject.Destroy( spawned );
 		}
 
-
 		//
 		// Spawn
 		//

@@ -22,6 +22,7 @@ namespace Espionage.Engine
 		/// <summary> Helpers to create entities from library records. </summary>
 		public static LibraryCreator Creator => new LibraryCreator();
 
+		/// <summary> Every library record. </summary>
 		public static IEnumerable<Library> GetAll() => _records.Values;
 
 		//
@@ -42,7 +43,7 @@ namespace Espionage.Engine
 
 		private static Library CreateRecord( Type type )
 		{
-			Library record;
+			Library record = null;
 
 			// If we have meta present, use it
 			if ( type.IsDefined( typeof( LibraryAttribute ), false ) )
@@ -51,16 +52,13 @@ namespace Espionage.Engine
 				record = attribute.CreateRecord( type );
 			}
 
-			// If not just use type defaults
-			else
+			// If still null just use type defaults
+			record ??= new Library()
 			{
-				record = new Library()
-				{
-					Name = type.FullName,
-					Title = type.Name,
-					Owner = type,
-				};
-			}
+				Name = type.FullName,
+				Title = type.Name,
+				Owner = type,
+			};
 
 			// Generate the ID, so we can spawn it at runtime
 			record.Id = GenerateID( record.Name );
@@ -95,10 +93,6 @@ namespace Espionage.Engine
 		}
 
 		private static Dictionary<Type, Library> _records = new Dictionary<Type, Library>();
-
-		//
-		// Entity / Object Creation
-		//
 
 		//
 		// Instance
