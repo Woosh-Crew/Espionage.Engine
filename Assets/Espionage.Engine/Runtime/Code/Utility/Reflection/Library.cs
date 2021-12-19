@@ -32,7 +32,7 @@ namespace Espionage.Engine
 		[RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.AfterAssembliesLoaded )]
 		private static void Cache()
 		{
-			// Select all types where ILibrary exsists
+			// Select all types where ILibrary exsists or if it has the correct attribute
 			var types = AppDomain.CurrentDomain.GetAssemblies()
 								.SelectMany( e => e.GetTypes()
 								.Where( e => !e.IsAbstract && (e.IsDefined( typeof( LibraryAttribute ) ) || e.GetInterfaces().Contains( typeof( ILibrary ) )) ) );
