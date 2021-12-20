@@ -11,7 +11,7 @@ using Debug = UnityEngine.Debug;
 
 namespace Espionage.Engine
 {
-	[Manager( nameof( Initialize ) )]
+	[Manager( nameof( Initialize ), Layer = Layer.Runtime | Layer.Editor )]
 	public static partial class Console
 	{
 		public struct Command
@@ -44,12 +44,6 @@ namespace Espionage.Engine
 		// System
 		//
 
-#if UNITY_EDITOR
-		[UnityEditor.InitializeOnLoadMethod]
-#else
-
-		[RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.BeforeSceneLoad )]
-#endif
 		internal static void Initialize()
 		{
 			// Get every CmdAttribute using Linq
@@ -126,7 +120,7 @@ namespace Espionage.Engine
 			}
 
 			// Check if we are on the correct layer - This looks ultra aids
-			if ( (consoleCommand.Layer.HasFlag( Layer.Runtime | Layer.Editor ) || (Application.isEditor && consoleCommand.Layer is Layer.Editor) || (Application.isPlaying && consoleCommand.Layer is Layer.Runtime)) )
+			if ( (Application.isEditor && consoleCommand.Layer.HasFlag( Layer.Editor )) || (Application.isPlaying && consoleCommand.Layer.HasFlag( Layer.Runtime )) )
 			{
 				if ( args is not null && args.Length > 0 )
 					consoleCommand.OnInvoke.Invoke( ConvertArgs( GetParameterTypes( consoleCommand.Info ), args ) );
