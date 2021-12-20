@@ -9,7 +9,6 @@ using Random = System.Random;
 
 namespace Espionage.Engine
 {
-	/// <summary> Library is used for cached reflection & meta data for classes </summary>
 	[Manager( nameof( Cache ) )]
 	public partial class Library
 	{
@@ -24,7 +23,7 @@ namespace Espionage.Engine
 		public static LibraryCreator Creator => new LibraryCreator();
 
 		/// <summary> Every library record. </summary>
-		public static IEnumerable<Library> GetAll() => _records.Values;
+		public static IEnumerable<Library> GetAll() => _records;
 
 		/// <summary> Constructs ILibrary, if it it has a custom constructor
 		/// itll use that to create the ILibrary </summary>
@@ -111,21 +110,21 @@ namespace Espionage.Engine
 		private static void AddRecord( Library library )
 		{
 			// Check if we already have that name
-			if ( _records.Any( e => e.Value.Name == library.Name ) )
+			if ( _records.Any( e => e.Name == library.Name ) )
 				throw new Exception( $"Library cache already contains key: {library.Name}" );
 
 			// Check if we already contain that type
-			if ( _records.Any( e => e.Value.Owner == library.Owner ) || _records.ContainsKey( library.Owner ) )
+			if ( _records.Any( e => e.Owner == library.Owner ) )
 				throw new Exception( $"Library cache already contains type: {library.Owner.FullName}" );
 
 			// Check if we already contain that Id, this will fuckup networking
-			if ( _records.Any( e => e.Value.Id == library.Id ) )
+			if ( _records.Any( e => e.Id == library.Id ) )
 				throw new Exception( $"Library cache already contains GUID: {library.Id}" );
 
-			_records.Add( library.Owner, library );
+			_records.Add( library );
 		}
 
-		private static Dictionary<Type, Library> _records = new Dictionary<Type, Library>();
+		private static List<Library> _records = new List<Library>();
 
 		//
 		// Instance
