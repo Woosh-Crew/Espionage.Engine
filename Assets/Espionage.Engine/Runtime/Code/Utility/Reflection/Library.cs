@@ -23,7 +23,13 @@ namespace Espionage.Engine
 		public static LibraryCreator Creator => new LibraryCreator();
 
 		/// <summary> Every library record. </summary>
-		public static IEnumerable<Library> GetAll() => _records;
+		public static IEnumerable<Library> GetAll()
+		{
+			lock ( _records )
+			{
+				return _records;
+			}
+		}
 
 		/// <summary> Constructs ILibrary, if it it has a custom constructor
 		/// itll use that to create the ILibrary </summary>

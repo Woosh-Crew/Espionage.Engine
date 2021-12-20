@@ -1,9 +1,9 @@
 namespace Espionage.Engine
 {
 	[System.Flags]
-	public enum Layer : byte
+	public enum Layer : short
 	{
-		Runtime = 0,
-		Editor = 1,
+		Runtime = 0x1,
+		Editor = 0x2,
 	}
 }

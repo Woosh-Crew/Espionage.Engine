@@ -28,6 +28,9 @@ namespace Espionage.Engine.Internal
 			return library is null;
 		}
 
+		// Exists
+		public bool Exists( string name ) => Get( name ) is not null;
+
 		// Get
 		public Library Get( string name ) => Records.FirstOrDefault( e => e.Name == name );
 		public Library Get( Type type ) => Records.FirstOrDefault( e => e.Owner == type );
