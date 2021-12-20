@@ -12,6 +12,6 @@ namespace Espionage.Engine
 
 		private string init;
 		public string Method => init;
-		public Layer Layer { get; set; }
+		public Layer Layer { get; set; } = Layer.Runtime;
 	}
 }

@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace Espionage.Engine
 {
+	[Manager( nameof( Initialization ) )]
 	public sealed class Game : Entity
 	{
 		//
 		// Espionage.Engine Entry Point
 		//
 
-		[RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.AfterSceneLoad )]
 		private static void Initialization()
 		{
 			Main = Library.Creator.Create<Game>();
