@@ -63,7 +63,38 @@ namespace Espionage.Engine
 			// Generate the ID, so we can spawn it at runtime
 			record.Id = GenerateID( record.Name );
 
+			// Get the constructor, incase it happens to have a custom one
+			record.Constructor = GetConstructor( type );
+
 			return record;
+		}
+
+		private static MethodInfo GetConstructor( Type type )
+		{
+			// Check if there is a constructor | INTERNAL
+			if ( type.IsDefined( typeof( ConstructorAttribute ) ) )
+			{
+				var attribute = type.GetCustomAttribute<ConstructorAttribute>( true );
+				var method = type.GetMethod( attribute.Constructor, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic );
+
+				if ( method is null )
+					return null;
+
+				// Sanity check
+				if ( !method.IsGenericMethod )
+					Debug.LogError( $"{method.Name} is not generic! This needs to be generic for the constructor" );
+
+				// generic arguments
+				{
+					var methodArg = method.GetGenericArguments();
+					if ( methodArg.Count() > 1 || methodArg.First() != type )
+						Debug.LogError( $"{method.Name} has incorrect generic parameters" );
+				}
+
+				return method.MakeGenericMethod( type );
+			}
+
+			return null;
 		}
 
 		private static Guid GenerateID( string name )
@@ -102,7 +133,10 @@ namespace Espionage.Engine
 		public string Title { get; set; }
 		public string Description { get; set; }
 
+
 		public Guid Id { get; set; }
 		public Type Owner { get; set; }
+
+		internal MethodInfo Constructor { get; set; }
 	}
 }

@@ -39,39 +39,45 @@ namespace Espionage.Engine.Internal
 	{
 		public LibraryAccessor Accessor => Library.Accessor;
 
-		public T Create<T>() where T : Entity, new()
+		public T Create<T>() where T : class, ILibrary, new()
 		{
-			var newEntity = new GameObject( Accessor.Get<T>().Name ).AddComponent<T>();
-			newEntity.Spawn();
-
-			return newEntity;
+			return Construct( Accessor.Get<T>() ) as T;
 		}
 
-		public Entity Create( string name, bool assertMissing = false )
+		public T Create<T>( string name, bool assertMissing = false ) where T : class, ILibrary, new()
 		{
 			if ( !Accessor.TryGet( name, out var library ) )
 			{
 				if ( assertMissing )
 					Debug.LogError( $"Library doesnt contain [{name}], not creating ILibrary" );
+
 				return null;
 			}
 
-			var newEntity = new GameObject( library.Name ).AddComponent( library.Owner ) as Entity;
-			newEntity.Spawn();
-
-			return newEntity;
+			return Construct( library ) as T;
 		}
 
-		public Entity Create( Guid id )
+		public T Create<T>( Guid id ) where T : class, ILibrary, new()
 		{
 			var library = Accessor.Get( id );
 
 			if ( id == default )
-				throw new Exception( "Invalid Id" );
+			{
+				Debug.LogError( "Invalid ID" );
+				return null;
+			}
 
-			var newObject = new GameObject( library.Owner.FullName ).AddComponent( library.Owner );
+			return Construct( library ) as T;
+		}
 
-			return newObject as Entity;
+		/// <summary> Constructs ILibrary, if it it has a custom constructor
+		/// itll use that to create the ILibrary </summary>
+		public ILibrary Construct( Library library )
+		{
+			if ( library.Constructor is not null )
+				return library.Constructor.Invoke( null, null ) as ILibrary;
+
+			return Activator.CreateInstance( library.Owner ) as ILibrary;
 		}
 	}
 }

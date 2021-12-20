@@ -4,9 +4,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Espionage.Engine.Internal;
 
 namespace Espionage.Engine
 {
+	[Constructor( nameof( Construct ) )]
 	public abstract class Entity : MonoBehaviour, ILibrary
 	{
 		//
@@ -60,6 +62,12 @@ namespace Espionage.Engine
 		private void OnDestory()
 		{
 			_all.Remove( this );
+		}
+
+		private static Entity Construct<T>() where T : Entity, new()
+		{
+			Debug.Log( "Creating Entity" );
+			return new GameObject( typeof( T ).FullName ).AddComponent<T>();
 		}
 
 		//
