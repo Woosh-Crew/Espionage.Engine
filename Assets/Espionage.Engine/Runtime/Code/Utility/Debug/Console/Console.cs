@@ -46,6 +46,8 @@ namespace Espionage.Engine
 
 		internal static void Initialize()
 		{
+			_commands = new Dictionary<string, Command>( StringComparer.CurrentCultureIgnoreCase );
+
 			// Get every CmdAttribute using Linq
 			var types = AppDomain.CurrentDomain.GetAssemblies()
 			.SelectMany( e => e.GetTypes()
@@ -55,7 +57,7 @@ namespace Espionage.Engine
 			foreach ( var info in types )
 				AddCommand( info.GetCustomAttribute<CmdAttribute>().CreateCommand( info ) );
 
-			Debug.Log( $"Console initialized - [Commands: {commands.Count}]" );
+			Debug.Log( $"Console initialized - [Commands: {_commands.Count}]" );
 
 			Application.logMessageReceived += UnityLogHook;
 		}
@@ -64,15 +66,15 @@ namespace Espionage.Engine
 		// Logging
 		//
 
-		public static IReadOnlyList<Entry> Logs => logs;
-		private static List<Entry> logs = new List<Entry>();
+		public static IReadOnlyList<Entry> Logs => _logs;
+		private static List<Entry> _logs = new List<Entry>();
 
 		public static Action<Entry> OnLog;
 		public static Action OnClear;
 
 		public static void AddLog( Entry entry )
 		{
-			logs.Add( entry );
+			_logs.Add( entry );
 			OnLog?.Invoke( entry );
 		}
 
@@ -90,20 +92,27 @@ namespace Espionage.Engine
 		// Commands
 		//
 
-		private static Dictionary<string, Command> commands = new Dictionary<string, Command>( StringComparer.CurrentCultureIgnoreCase );
+		private static Dictionary<string, Command> _commands;
 
-		public static IReadOnlyCollection<string> History => history;
-		private static HashSet<string> history = new HashSet<string>();
+		public static IReadOnlyCollection<string> History => _history;
+		private static HashSet<string> _history = new HashSet<string>();
 
 		internal static void AddCommand( Command command )
 		{
-			commands.Add( command.Name, command );
+			try
+			{
+				_commands.Add( command.Name, command );
+			}
+			catch ( Exception e )
+			{
+				Debug.LogException( e );
+			}
 		}
 
 		public static bool InvokeCommand( string commandLine )
 		{
 			// Only record the history in this method, so ones done programity dont get recorded
-			history.Add( commandLine );
+			_history.Add( commandLine );
 
 			var command = commandLine.Split( ' ' ).First();
 			var args = commandLine.Substring( command.Length ).SplitArguments();
@@ -113,7 +122,7 @@ namespace Espionage.Engine
 
 		public static bool InvokeCommand( string command, params string[] args )
 		{
-			if ( !commands.TryGetValue( command, out var consoleCommand ) )
+			if ( !_commands.TryGetValue( command, out var consoleCommand ) )
 			{
 				Debug.Log( $"Couldn't find command \"{command}\"" );
 				return false;
@@ -136,7 +145,7 @@ namespace Espionage.Engine
 
 		public static string[] FindCommand( string input )
 		{
-			return commands.Keys.Where( e => e.StartsWith( input ) ).ToArray();
+			return _commands.Keys.Where( e => e.StartsWith( input ) ).ToArray();
 		}
 
 		// 

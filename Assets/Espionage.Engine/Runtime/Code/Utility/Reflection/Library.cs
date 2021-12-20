@@ -10,6 +10,7 @@ using Random = System.Random;
 namespace Espionage.Engine
 {
 	/// <summary> Library is used for cached reflection & meta data for classes </summary>
+	[Manager( nameof( Cache ) )]
 	public partial class Library
 	{
 		//
@@ -29,7 +30,6 @@ namespace Espionage.Engine
 		// Manager
 		//
 
-		[RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.AfterAssembliesLoaded )]
 		private static void Cache()
 		{
 			// Select all types where ILibrary exsists or if it has the correct attribute
@@ -72,26 +72,12 @@ namespace Espionage.Engine
 		private static MethodInfo GetConstructor( Type type )
 		{
 			// Check if there is a constructor | INTERNAL
-			if ( type.IsDefined( typeof( ConstructorAttribute ) ) )
+			if ( type.IsDefined( typeof( ConstructorAttribute ), true ) )
 			{
 				var attribute = type.GetCustomAttribute<ConstructorAttribute>( true );
-				var method = type.GetMethod( attribute.Constructor, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic );
+				var method = type.GetMethod( attribute.Constructor, BindingFlags.FlattenHierarchy | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic );
 
-				if ( method is null )
-					return null;
-
-				// Sanity check
-				if ( !method.IsGenericMethod )
-					Debug.LogError( $"{method.Name} is not generic! This needs to be generic for the constructor" );
-
-				// generic arguments
-				{
-					var methodArg = method.GetGenericArguments();
-					if ( methodArg.Count() > 1 || methodArg.First() != type )
-						Debug.LogError( $"{method.Name} has incorrect generic parameters" );
-				}
-
-				return method.MakeGenericMethod( type );
+				return method;
 			}
 
 			return null;

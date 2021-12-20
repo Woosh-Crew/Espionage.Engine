@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Espionage.Engine.Internal;
+using System;
 
 namespace Espionage.Engine
 {
@@ -64,10 +65,9 @@ namespace Espionage.Engine
 			_all.Remove( this );
 		}
 
-		private static Entity Construct<T>() where T : Entity, new()
+		public static Entity Construct( Type type )
 		{
-			Debug.Log( "Creating Entity" );
-			return new GameObject( typeof( T ).FullName ).AddComponent<T>();
+			return new GameObject( type.FullName ).AddComponent( type ) as Entity;
 		}
 
 		//

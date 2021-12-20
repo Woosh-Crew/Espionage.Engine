@@ -7,7 +7,7 @@ namespace Espionage.Engine
 		[Console.Cmd( "help", Layer = Layer.Runtime | Layer.Editor )]
 		private static void HelpCmd()
 		{
-			foreach ( var item in commands.Values )
+			foreach ( var item in _commands.Values )
 			{
 				if ( !Application.isEditor && item.Layer is Layer.Editor )
 					continue;
@@ -20,7 +20,7 @@ namespace Espionage.Engine
 		[Console.Cmd( "clear", Layer = Layer.Runtime | Layer.Editor )]
 		private static void ClearCmd()
 		{
-			logs.Clear();
+			_logs.Clear();
 			OnClear?.Invoke();
 		}
 

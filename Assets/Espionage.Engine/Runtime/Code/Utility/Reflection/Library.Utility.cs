@@ -74,8 +74,14 @@ namespace Espionage.Engine.Internal
 		/// itll use that to create the ILibrary </summary>
 		public ILibrary Construct( Library library )
 		{
+			if ( library is null )
+			{
+				Debug.LogError( "Can't construct, Library is null" );
+				return null;
+			}
+
 			if ( library.Constructor is not null )
-				return library.Constructor.Invoke( null, null ) as ILibrary;
+				return library.Constructor.Invoke( null, new object[] { library.Owner } ) as ILibrary;
 
 			return Activator.CreateInstance( library.Owner ) as ILibrary;
 		}
