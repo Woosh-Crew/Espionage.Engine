@@ -1,0 +1,16 @@
+{
+    "name": "Espionage.Engine",
+    "rootNamespace": "",
+    "references": [
+        "GUID:0603c647f5dcc17428821b4948fb633d"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

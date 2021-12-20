@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Mirror;
 using UnityEngine;
 
 namespace Espionage.Engine.Internal
@@ -45,9 +44,6 @@ namespace Espionage.Engine.Internal
 			var newEntity = new GameObject( Accessor.Get<T>().Name ).AddComponent<T>();
 			newEntity.Spawn();
 
-			if ( NetworkServer.active )
-				NetworkServer.Spawn( newEntity.gameObject, newEntity.ClassInfo.Id );
-
 			return newEntity;
 		}
 
@@ -63,9 +59,6 @@ namespace Espionage.Engine.Internal
 			var newEntity = new GameObject( library.Name ).AddComponent( library.Owner ) as Entity;
 			newEntity.Spawn();
 
-			if ( NetworkServer.active )
-				NetworkServer.Spawn( newEntity.gameObject, library.Id );
-
 			return newEntity;
 		}
 
@@ -77,9 +70,6 @@ namespace Espionage.Engine.Internal
 				throw new Exception( "Invalid Id" );
 
 			var newObject = new GameObject( library.Owner.FullName ).AddComponent( library.Owner );
-
-			if ( NetworkServer.active )
-				NetworkServer.Spawn( newObject.gameObject, library.Id );
 
 			return newObject as Entity;
 		}
