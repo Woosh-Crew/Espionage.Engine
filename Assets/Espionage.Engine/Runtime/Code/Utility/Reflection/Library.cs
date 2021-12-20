@@ -131,13 +131,12 @@ namespace Espionage.Engine
 		// Instance
 		//
 
-		public string Name { get; set; }
-		public string Title { get; set; }
-		public string Description { get; set; }
+		public string Name { get; internal set; }
+		public string Title { get; internal set; }
+		public string Description { get; internal set; }
 
-
-		public Guid Id { get; set; }
-		public Type Owner { get; set; }
+		public Guid Id { get; internal set; }
+		public Type Owner { get; internal set; }
 
 		internal MethodInfo Constructor { get; set; }
 	}

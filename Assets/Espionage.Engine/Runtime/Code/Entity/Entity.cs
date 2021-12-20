@@ -73,6 +73,7 @@ namespace Espionage.Engine
 		//
 		// Helpers
 		//
+
 		public Library ClassInfo => Library.Accessor.Get( GetType() );
 
 		public Pawn Owner { get; set; }
