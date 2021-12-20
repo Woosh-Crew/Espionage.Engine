@@ -26,6 +26,22 @@ namespace Espionage.Engine
 		/// <summary> Every library record. </summary>
 		public static IEnumerable<Library> GetAll() => _records.Values;
 
+		/// <summary> Constructs ILibrary, if it it has a custom constructor
+		/// itll use that to create the ILibrary </summary>
+		public static ILibrary Construct( Library library )
+		{
+			if ( library is null )
+			{
+				Debug.LogError( "Can't construct, Library is null" );
+				return null;
+			}
+
+			if ( library.Constructor is not null )
+				return library.Constructor.Invoke( null, new object[] { library.Owner } ) as ILibrary;
+
+			return Activator.CreateInstance( library.Owner ) as ILibrary;
+		}
+
 		//
 		// Manager
 		//

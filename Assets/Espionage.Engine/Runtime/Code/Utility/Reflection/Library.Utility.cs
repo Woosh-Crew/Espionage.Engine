@@ -41,7 +41,7 @@ namespace Espionage.Engine.Internal
 
 		public T Create<T>() where T : class, ILibrary, new()
 		{
-			return Construct( Accessor.Get<T>() ) as T;
+			return Library.Construct( Accessor.Get<T>() ) as T;
 		}
 
 		public T Create<T>( string name, bool assertMissing = false ) where T : class, ILibrary, new()
@@ -54,7 +54,7 @@ namespace Espionage.Engine.Internal
 				return null;
 			}
 
-			return Construct( library ) as T;
+			return Library.Construct( library ) as T;
 		}
 
 		public T Create<T>( Guid id ) where T : class, ILibrary, new()
@@ -67,23 +67,7 @@ namespace Espionage.Engine.Internal
 				return null;
 			}
 
-			return Construct( library ) as T;
-		}
-
-		/// <summary> Constructs ILibrary, if it it has a custom constructor
-		/// itll use that to create the ILibrary </summary>
-		public ILibrary Construct( Library library )
-		{
-			if ( library is null )
-			{
-				Debug.LogError( "Can't construct, Library is null" );
-				return null;
-			}
-
-			if ( library.Constructor is not null )
-				return library.Constructor.Invoke( null, new object[] { library.Owner } ) as ILibrary;
-
-			return Activator.CreateInstance( library.Owner ) as ILibrary;
+			return Library.Construct( library ) as T;
 		}
 	}
 }
