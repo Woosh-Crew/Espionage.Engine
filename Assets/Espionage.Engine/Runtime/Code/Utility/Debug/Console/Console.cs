@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.IO.Pipes;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -9,10 +11,9 @@ using Debug = UnityEngine.Debug;
 
 namespace Espionage.Engine
 {
-	public static class Console
+	[Manager( nameof( Initialize ) )]
+	public static partial class Console
 	{
-		public enum Layer { Runtime, Editor, Both }
-
 		public struct Command
 		{
 			public string Name { get; internal set; }
@@ -42,8 +43,6 @@ namespace Espionage.Engine
 		//
 		// System
 		//
-
-		public static bool GameRunning => Application.isPlaying;
 
 #if UNITY_EDITOR
 		[UnityEditor.InitializeOnLoadMethod]
@@ -93,14 +92,6 @@ namespace Espionage.Engine
 			AddLog( new Entry( logString, stackTrace, layer, type ) );
 		}
 
-
-		[Console.Cmd( "clear", Layer = Layer.Both )]
-		public static void ClearLogs()
-		{
-			logs.Clear();
-			OnClear?.Invoke();
-		}
-
 		//
 		// Commands
 		//
@@ -135,7 +126,7 @@ namespace Espionage.Engine
 			}
 
 			// Check if we are on the correct layer - This looks ultra aids
-			if ( (consoleCommand.Layer is Layer.Both || (Application.isEditor && consoleCommand.Layer is Layer.Editor) || (GameRunning && consoleCommand.Layer is Layer.Runtime)) )
+			if ( (consoleCommand.Layer.HasFlag( Layer.Runtime | Layer.Editor ) || (Application.isEditor && consoleCommand.Layer is Layer.Editor) || (Application.isPlaying && consoleCommand.Layer is Layer.Runtime)) )
 			{
 				if ( args is not null && args.Length > 0 )
 					consoleCommand.OnInvoke.Invoke( ConvertArgs( GetParameterTypes( consoleCommand.Info ), args ) );
@@ -152,87 +143,6 @@ namespace Espionage.Engine
 		public static string[] FindCommand( string input )
 		{
 			return commands.Keys.Where( e => e.StartsWith( input ) ).ToArray();
-		}
-
-		[Console.Cmd( "help", Layer = Layer.Both )]
-		public static void HelpCmd()
-		{
-			foreach ( var item in commands.Values )
-			{
-				if ( !Application.isEditor && item.Layer is Layer.Editor )
-					continue;
-
-				AddLog( new Entry( $"{item.Name}", "", Layer.Both, LogType.Log ) );
-			}
-			AddLog( new Entry( "Commands", "", Layer.Both, LogType.Log ) );
-		}
-
-		// 
-		// Factory
-		//
-
-		[System.AttributeUsage( System.AttributeTargets.Method, Inherited = false, AllowMultiple = false )]
-		public class CmdAttribute : System.Attribute
-		{
-			readonly string name;
-
-			public string Name => name;
-			public string Help { get; set; }
-			public Layer Layer { get; set; } = Layer.Runtime;
-
-			public CmdAttribute( string name )
-			{
-				this.name = name;
-			}
-
-			public virtual Command CreateCommand( MemberInfo info )
-			{
-				var method = info as MethodInfo;
-
-				return new Command()
-				{
-					Name = this.Name,
-					Help = this.Help,
-					Layer = this.Layer,
-					OnInvoke = ( e ) => method.Invoke( null, e ),
-					Info = info,
-				};
-			}
-		}
-
-
-		[System.AttributeUsage( System.AttributeTargets.Property, Inherited = false, AllowMultiple = false )]
-		public sealed class VarAttribute : CmdAttribute
-		{
-			public bool IsReadOnly { get; set; }
-
-			public VarAttribute( string name ) : base( name ) { }
-
-			public override Command CreateCommand( MemberInfo info )
-			{
-				var property = info as PropertyInfo;
-
-				return new Command()
-				{
-					Name = this.Name,
-					Help = this.Help,
-
-					OnInvoke = ( parameters ) =>
-				 	{
-						 if ( !IsReadOnly && parameters is not null && parameters.Length > 0 )
-						 {
-							 property.SetValue( null, parameters[0] );
-							 Debug.Log( $"{Name} is now {property.GetValue( null )}" );
-						 }
-						 else
-						 {
-							 Debug.Log( $"{Name} = {property.GetValue( null )}" );
-						 }
-				 	},
-
-					Info = info,
-				};
-			}
 		}
 
 		// 
