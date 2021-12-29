@@ -1,9 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Reflection;
-using UnityEngine;
 
 using Debug = UnityEngine.Debug;
 
@@ -11,8 +7,8 @@ namespace Espionage.Engine
 {
 	public static partial class Console
 	{
-		[System.AttributeUsage( System.AttributeTargets.Method, Inherited = false, AllowMultiple = false )]
-		public class CmdAttribute : System.Attribute
+		[AttributeUsage( AttributeTargets.Method, Inherited = false, AllowMultiple = false )]
+		public class CmdAttribute : Attribute
 		{
 			readonly string name;
 
@@ -45,7 +41,7 @@ namespace Espionage.Engine
 		}
 
 
-		[System.AttributeUsage( System.AttributeTargets.Property, Inherited = false, AllowMultiple = false )]
+		[AttributeUsage( AttributeTargets.Property, Inherited = false, AllowMultiple = false )]
 		public sealed class VarAttribute : CmdAttribute
 		{
 			public bool IsReadOnly { get; set; }
