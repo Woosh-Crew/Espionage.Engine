@@ -10,7 +10,7 @@ using Debug = UnityEngine.Debug;
 
 namespace Espionage.Engine
 {
-	[Manager( nameof( Initialize ), Layer = Layer.Runtime | Layer.Editor )]
+	// [Manager( nameof( Initialize ), Layer = Layer.Runtime | Layer.Editor )]
 	public static partial class Console
 	{
 		public struct Command
@@ -49,9 +49,11 @@ namespace Espionage.Engine
 		// System
 		//
 
+		[RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.AfterSceneLoad )]
 		internal static void Initialize()
 		{
 			Stopwatch stopwatch = Stopwatch.StartNew();
+			_commandProvider = new CommandProvider();
 
 			// Get every CmdAttribute using Linq
 			var types = AppDomain.CurrentDomain.GetAssemblies()
@@ -60,7 +62,12 @@ namespace Espionage.Engine
 								.Where( e => e.IsDefined( typeof( CmdAttribute ) ) ) ) );
 
 			foreach ( var info in types )
-				_commandProvider.Add( info.GetCustomAttribute<CmdAttribute>().CreateCommand( info ) );
+			{
+				foreach ( var item in info.GetCustomAttribute<CmdAttribute>().Create( info ) )
+				{
+					_commandProvider.Add( item );
+				}
+			}
 
 			Debug.Log( $"Console initialized - [Commands: {_commandProvider.All.Count}]" );
 

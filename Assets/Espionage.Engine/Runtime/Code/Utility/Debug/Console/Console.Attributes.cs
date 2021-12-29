@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 using Debug = UnityEngine.Debug;
@@ -10,33 +11,42 @@ namespace Espionage.Engine
 		[AttributeUsage( AttributeTargets.Method, Inherited = false, AllowMultiple = false )]
 		public class CmdAttribute : Attribute
 		{
-			readonly string name;
+			readonly string[] names;
 
-			public string Name => name;
+			public string[] Names => names;
 			public string Help { get; set; }
 			public Layer Layer { get; set; } = Layer.Runtime;
 
-			public CmdAttribute( string name )
+			public CmdAttribute( params string[] names )
 			{
-				this.name = name;
+				this.names = names;
 			}
 
-			public virtual Command CreateCommand( MemberInfo info )
+			public Command[] Create( MemberInfo info )
+			{
+				List<Command> commands = new List<Command>();
+
+				foreach ( var item in Names )
+				{
+					var command = new Command()
+					{
+						Name = item,
+						Help = this.Help,
+						Layer = this.Layer,
+						Info = info,
+					};
+
+					OnCreate( ref command, info );
+					commands.Add( command );
+				}
+
+				return commands.ToArray();
+			}
+
+			protected virtual void OnCreate( ref Command command, MemberInfo info )
 			{
 				var method = info as MethodInfo;
-				var command = new Command()
-				{
-					Name = this.Name,
-					Help = this.Help,
-					Layer = this.Layer,
-					Info = info,
-				};
-
 				command.WithAction( ( e ) => method.Invoke( null, e ) );
-
-				return command;
-
-
 			}
 		}
 
@@ -48,17 +58,10 @@ namespace Espionage.Engine
 
 			public VarAttribute( string name ) : base( name ) { }
 
-			public override Command CreateCommand( MemberInfo info )
+			protected override void OnCreate( ref Command command, MemberInfo info )
 			{
 				var property = info as PropertyInfo;
-
-				var command = new Command()
-				{
-					Name = this.Name,
-					Help = this.Help,
-					Layer = this.Layer,
-					Info = info,
-				};
+				var name = command.Name;
 
 				command.WithAction(
 					( parameters ) =>
@@ -66,15 +69,13 @@ namespace Espionage.Engine
 						 if ( !IsReadOnly && parameters is not null && parameters.Length > 0 )
 						 {
 							 property.SetValue( null, parameters[0] );
-							 Debug.Log( $"{Name} is now {property.GetValue( null )}" );
+							 Debug.Log( $"{name} is now {property.GetValue( null )}" );
 						 }
 						 else
 						 {
-							 Debug.Log( $"{Name} = {property.GetValue( null )}" );
+							 Debug.Log( $"{name} = {property.GetValue( null )}" );
 						 }
 				 	} );
-
-				return command;
 			}
 		}
 	}

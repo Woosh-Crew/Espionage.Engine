@@ -17,14 +17,14 @@ namespace Espionage.Engine
 			AddLog( new Entry( "Commands", "", Layer.Runtime, LogType.Log ) );
 		}
 
-		[Console.Cmd( "clear", Layer = Layer.Runtime | Layer.Editor )]
+		[Console.Cmd( "clear", "cls", Layer = Layer.Runtime | Layer.Editor )]
 		private static void ClearCmd()
 		{
 			_logs.Clear();
 			OnClear?.Invoke();
 		}
 
-		[Console.Cmd( "quit" )]
+		[Console.Cmd( "quit", "exit" )]
 		private static void QuitCmd()
 		{
 #if UNITY_EDITOR
