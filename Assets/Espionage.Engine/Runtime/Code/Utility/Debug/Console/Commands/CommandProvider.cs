@@ -37,6 +37,9 @@ namespace Espionage.Engine.Internal
 				return;
 			}
 
+			// Add to history stack, for use later
+			_history.Add( $"{command} {string.Join( ' ', args )}" );
+
 			// Check if we are on the correct layer - This looks ultra aids
 			if ( (Application.isEditor && consoleCommand.Layer.HasFlag( Layer.Editor )) || (Application.isPlaying && consoleCommand.Layer.HasFlag( Layer.Runtime )) )
 			{
