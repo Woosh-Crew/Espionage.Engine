@@ -1,11 +1,10 @@
 using System;
-using System.IO;
-using System.IO.Pipes;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using Espionage.Engine.Internal;
 
 using Debug = UnityEngine.Debug;
 
@@ -52,7 +51,7 @@ namespace Espionage.Engine
 
 		internal static void Initialize()
 		{
-			_commands = new Dictionary<string, Command>( StringComparer.CurrentCultureIgnoreCase );
+			Stopwatch stopwatch = Stopwatch.StartNew();
 
 			// Get every CmdAttribute using Linq
 			var types = AppDomain.CurrentDomain.GetAssemblies()
@@ -61,11 +60,13 @@ namespace Espionage.Engine
 								.Where( e => e.IsDefined( typeof( CmdAttribute ) ) ) ) );
 
 			foreach ( var info in types )
-				AddCommand( info.GetCustomAttribute<CmdAttribute>().CreateCommand( info ) );
+				_commandProvider.Add( info.GetCustomAttribute<CmdAttribute>().CreateCommand( info ) );
 
-			Debug.Log( $"Console initialized - [Commands: {_commands.Count}]" );
+			Debug.Log( $"Console initialized - [Commands: {_commandProvider.All.Count}]" );
 
 			Application.logMessageReceived += UnityLogHook;
+			stopwatch.Stop();
+			Debug.Log( $"Console Starting in {stopwatch.ElapsedMilliseconds}ms" );
 		}
 
 		//
@@ -99,61 +100,7 @@ namespace Espionage.Engine
 		// Commands
 		//
 
-		private static Dictionary<string, Command> _commands;
-
-		public static IReadOnlyCollection<string> History => _history;
-		private static HashSet<string> _history = new HashSet<string>();
-
-		internal static void AddCommand( Command command )
-		{
-			try
-			{
-				_commands.Add( command.Name, command );
-			}
-			catch ( Exception e )
-			{
-				Debug.LogException( e );
-			}
-		}
-
-		public static bool InvokeCommand( string commandLine )
-		{
-			// Only record the history in this method, so ones done programity dont get recorded
-			_history.Add( commandLine );
-
-			var command = commandLine.Split( ' ' ).First();
-			var args = commandLine.Substring( command.Length ).SplitArguments();
-
-			return InvokeCommand( command, args );
-		}
-
-		public static bool InvokeCommand( string command, params string[] args )
-		{
-			if ( !_commands.TryGetValue( command, out var consoleCommand ) )
-			{
-				Debug.Log( $"Couldn't find command \"{command}\"" );
-				return false;
-			}
-
-			// Check if we are on the correct layer - This looks ultra aids
-			if ( (Application.isEditor && consoleCommand.Layer.HasFlag( Layer.Editor )) || (Application.isPlaying && consoleCommand.Layer.HasFlag( Layer.Runtime )) )
-			{
-				if ( args is not null && args.Length > 0 )
-					consoleCommand.Invoke( ConvertArgs( GetParameterTypes( consoleCommand.Info ), args ) );
-				else
-					consoleCommand.Invoke( null );
-
-				return true;
-			}
-
-			Debug.Log( $"Trying to invoke command on wrong layer [{consoleCommand.Layer}]" );
-			return false;
-		}
-
-		public static string[] FindCommand( string input )
-		{
-			return _commands.Keys.Where( e => e.StartsWith( input ) ).ToArray();
-		}
+		internal static ICommandProvider _commandProvider;
 
 		// 
 		// Interpreter

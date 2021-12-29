@@ -7,7 +7,7 @@ namespace Espionage.Engine
 		[Console.Cmd( "help", Layer = Layer.Runtime | Layer.Editor )]
 		private static void HelpCmd()
 		{
-			foreach ( var item in _commands.Values )
+			foreach ( var item in _commandProvider.All )
 			{
 				if ( !Application.isEditor && item.Layer is Layer.Editor )
 					continue;
