@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using Espionage.Engine.Internal;
 
 using Debug = UnityEngine.Debug;
-using System.Threading.Tasks;
 
 namespace Espionage.Engine
 {
@@ -86,7 +85,7 @@ namespace Espionage.Engine
 		// Logging
 		//
 
-		public static IReadOnlyList<Entry> Logs => _logs;
+		public static IReadOnlyCollection<Entry> Logs => _logs;
 		private static List<Entry> _logs = new List<Entry>();
 
 		public static Action<Entry> OnLog;
@@ -114,6 +113,9 @@ namespace Espionage.Engine
 		//
 
 		internal static ICommandProvider _commandProvider;
+
+		public static void Invoke( string commandLine ) => _commandProvider?.Invoke( commandLine );
+		public static void Invoke( string command, params string[] args ) => _commandProvider?.Invoke( command, args );
 
 		// 
 		// Interpreter
