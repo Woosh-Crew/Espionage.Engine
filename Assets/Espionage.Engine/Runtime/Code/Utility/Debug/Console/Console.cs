@@ -52,28 +52,26 @@ namespace Espionage.Engine
 		[RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.AfterSceneLoad )]
 		internal static void Initialize()
 		{
-			Stopwatch stopwatch = Stopwatch.StartNew();
-			_commandProvider = new CommandProvider();
-
-			// Get every CmdAttribute using Linq
-			var types = AppDomain.CurrentDomain.GetAssemblies()
-			.SelectMany( e => e.GetTypes()
-								.SelectMany( e => e.GetMembers( BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic )
-								.Where( e => e.IsDefined( typeof( CmdAttribute ) ) ) ) );
-
-			foreach ( var info in types )
+			using ( _ = new TimedScope( "Finished Initializing console" ) )
 			{
-				foreach ( var item in info.GetCustomAttribute<CmdAttribute>().Create( info ) )
+				_commandProvider = new CommandProvider();
+
+				// Get every CmdAttribute using Linq
+				var types = AppDomain.CurrentDomain.GetAssemblies()
+				.SelectMany( e => e.GetTypes()
+									.SelectMany( e => e.GetMembers( BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic )
+									.Where( e => e.IsDefined( typeof( CmdAttribute ) ) ) ) );
+
+				foreach ( var info in types )
 				{
-					_commandProvider.Add( item );
+					foreach ( var item in info.GetCustomAttribute<CmdAttribute>().Create( info ) )
+						_commandProvider.Add( item );
 				}
+
+				Debug.Log( $"Commands: {_commandProvider.All.Count}" );
+
+				Application.logMessageReceived += UnityLogHook;
 			}
-
-			Debug.Log( $"Console initialized - [Commands: {_commandProvider.All.Count}]" );
-
-			Application.logMessageReceived += UnityLogHook;
-			stopwatch.Stop();
-			Debug.Log( $"Console Starting in {stopwatch.ElapsedMilliseconds}ms" );
 		}
 
 		//
