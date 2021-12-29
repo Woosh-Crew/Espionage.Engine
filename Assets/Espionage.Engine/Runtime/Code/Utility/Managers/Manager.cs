@@ -12,7 +12,7 @@ namespace Espionage.Engine.Internal
 			// Get all manager types
 			var types = AppDomain.CurrentDomain.GetAssemblies()
 								.SelectMany( e => e.GetTypes()
-								.Where( e => e.IsDefined( typeof( ManagerAttribute ), false ) && e.GetCustomAttribute<ManagerAttribute>().Layer == layer ) );
+								.Where( e => e.IsDefined( typeof( ManagerAttribute ), false ) && e.GetCustomAttribute<ManagerAttribute>().Layer.HasFlag( layer ) ) );
 
 
 			foreach ( var item in types )

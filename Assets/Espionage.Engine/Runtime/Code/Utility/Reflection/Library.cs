@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -9,7 +10,7 @@ using Random = System.Random;
 
 namespace Espionage.Engine
 {
-	[Manager( nameof( Cache ) )]
+	[Manager( nameof( Cache ) ), Serializable]
 	public partial class Library
 	{
 		//
@@ -139,13 +140,17 @@ namespace Espionage.Engine
 		// Instance
 		//
 
-		public string Name { get; internal set; }
-		public string Title { get; internal set; }
-		public string Description { get; internal set; }
+		public string Name;
+		public string Title;
+		public string Description;
 
-		public Guid Id { get; internal set; }
-		public Type Owner { get; internal set; }
+		[NonSerialized]
+		public Guid Id;
 
-		internal MethodInfo Constructor { get; set; }
+		[NonSerialized]
+		public Type Owner;
+
+		[NonSerialized]
+		internal MethodInfo Constructor;
 	}
 }
