@@ -1,5 +1,5 @@
 # Espionage.Engine
-Espionage.Engine is a unity game based, where you design games off it (duh)
+Espionage.Engine is a Unity game base, where you design games off it (duh)
  
 ## Features
 It comes with a handfull of nice features and major workflow changes.
