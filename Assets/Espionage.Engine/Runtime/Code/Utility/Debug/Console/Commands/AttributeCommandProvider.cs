@@ -11,7 +11,7 @@ namespace Espionage.Engine.Internal
 	public class AttributeCommandProvider : ICommandProvider
 	{
 		// Commands
-		private static Dictionary<string, Command> _commands;
+		private static Dictionary<string, Command> _commands = new Dictionary<string, Command>( StringComparer.CurrentCultureIgnoreCase );
 		public IReadOnlyCollection<Command> All => _commands.Values;
 
 		// History
@@ -39,8 +39,6 @@ namespace Espionage.Engine.Internal
 
 		public void Add( Command command )
 		{
-			_commands ??= new Dictionary<string, Command>( StringComparer.CurrentCultureIgnoreCase );
-
 			try
 			{
 				_commands.Add( command.Name, command );
