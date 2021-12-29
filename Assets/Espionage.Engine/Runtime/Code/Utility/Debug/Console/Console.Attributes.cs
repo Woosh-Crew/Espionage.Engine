@@ -15,7 +15,6 @@ namespace Espionage.Engine
 
 			public string[] Names => names;
 			public string Help { get; set; }
-			public Layer Layer { get; set; } = Layer.Runtime;
 
 			public CmdAttribute( params string[] names )
 			{
@@ -32,7 +31,6 @@ namespace Espionage.Engine
 					{
 						Name = item,
 						Help = this.Help,
-						Layer = this.Layer,
 						Info = info,
 					};
 

@@ -61,18 +61,10 @@ namespace Espionage.Engine.Internal
 			_history.Add( $"{command} {string.Join( ' ', args )}" );
 
 			// Check if we are on the correct layer - This looks ultra aids
-			if ( (Application.isEditor && consoleCommand.Layer.HasFlag( Layer.Editor )) || (Application.isPlaying && consoleCommand.Layer.HasFlag( Layer.Runtime )) )
-			{
-				if ( args is not null && args.Length > 0 )
-					consoleCommand.Invoke( ConvertArgs( consoleCommand.Info.GetParameterTypes(), args ) );
-				else
-					consoleCommand.Invoke( null );
-
-				return;
-			}
-
-			Debug.Log( $"Trying to invoke command on wrong layer [{consoleCommand.Layer}]" );
-			return;
+			if ( args is not null && args.Length > 0 )
+				consoleCommand.Invoke( ConvertArgs( consoleCommand.Info.GetParameterTypes(), args ) );
+			else
+				consoleCommand.Invoke( null );
 		}
 
 		public void LaunchArgs( string arg )

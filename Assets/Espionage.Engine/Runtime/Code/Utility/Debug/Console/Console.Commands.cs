@@ -4,20 +4,17 @@ namespace Espionage.Engine
 {
 	public static partial class Console
 	{
-		[Console.Cmd( "help", Layer = Layer.Runtime | Layer.Editor )]
+		[Console.Cmd( "help" )]
 		private static void HelpCmd()
 		{
 			foreach ( var item in _commandProvider.All )
 			{
-				if ( !Application.isEditor && item.Layer is Layer.Editor )
-					continue;
-
-				AddLog( new Entry( $"{item.Name}", "", Layer.Editor, LogType.Log ) );
+				AddLog( new Entry( $"{item.Name}", "", LogType.Log ) );
 			}
-			AddLog( new Entry( "Commands", "", Layer.Runtime, LogType.Log ) );
+			AddLog( new Entry( "Commands", "", LogType.Log ) );
 		}
 
-		[Console.Cmd( "clear", "cls", Layer = Layer.Runtime | Layer.Editor )]
+		[Console.Cmd( "clear", "cls" )]
 		private static void ClearCmd()
 		{
 			_logs.Clear();

@@ -17,7 +17,6 @@ namespace Espionage.Engine
 		{
 			public string Name { get; internal set; }
 			public string Help { get; internal set; }
-			public Layer Layer { get; internal set; }
 
 			private Action<object[]> _action;
 			public MemberInfo Info { get; internal set; }
@@ -31,15 +30,13 @@ namespace Espionage.Engine
 
 		public struct Entry
 		{
-			public Entry( string message, string trace, Layer layer, LogType type )
+			public Entry( string message, string trace, LogType type )
 			{
-				Layer = layer;
 				Message = message;
 				Trace = trace;
 				Type = type;
 			}
 
-			public Layer Layer { get; internal set; }
 			public LogType Type { get; internal set; }
 			public string Message { get; internal set; }
 			public string Trace { get; internal set; }
@@ -87,12 +84,7 @@ namespace Espionage.Engine
 
 		private static void UnityLogHook( string logString, string stackTrace, LogType type )
 		{
-			var layer = Layer.Runtime;
-
-			if ( stackTrace.Contains( "UnityEditor" ) || stackTrace.Contains( "Editor" ) )
-				layer = Layer.Editor;
-
-			AddLog( new Entry( logString, stackTrace, layer, type ) );
+			AddLog( new Entry( logString, stackTrace, type ) );
 		}
 
 		//
