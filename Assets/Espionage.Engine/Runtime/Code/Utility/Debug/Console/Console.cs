@@ -7,6 +7,7 @@ using UnityEngine;
 using Espionage.Engine.Internal;
 
 using Debug = UnityEngine.Debug;
+using System.Threading.Tasks;
 
 namespace Espionage.Engine
 {
@@ -50,23 +51,29 @@ namespace Espionage.Engine
 		//
 
 		[RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.AfterSceneLoad )]
-		internal static void Initialize()
+		internal async static void Initialize()
 		{
 			using ( _ = new TimedScope( "Finished Initializing console" ) )
 			{
 				_commandProvider = new CommandProvider();
 
-				// Get every CmdAttribute using Linq
-				var types = AppDomain.CurrentDomain.GetAssemblies()
-				.SelectMany( e => e.GetTypes()
-									.SelectMany( e => e.GetMembers( BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic )
-									.Where( e => e.IsDefined( typeof( CmdAttribute ) ) ) ) );
-
-				foreach ( var info in types )
+				// We use a task so we can quick load
+				var task = Task.Run( () =>
 				{
-					foreach ( var item in info.GetCustomAttribute<CmdAttribute>().Create( info ) )
-						_commandProvider.Add( item );
-				}
+					// Get every CmdAttribute using Linq
+					var types = AppDomain.CurrentDomain.GetAssemblies()
+					.SelectMany( e => e.GetTypes()
+										.SelectMany( e => e.GetMembers( BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic )
+										.Where( e => e.IsDefined( typeof( CmdAttribute ) ) ) ) );
+
+					foreach ( var info in types )
+					{
+						foreach ( var item in info.GetCustomAttribute<CmdAttribute>().Create( info ) )
+							_commandProvider.Add( item );
+					}
+				} );
+
+				await task;
 
 				Debug.Log( $"Commands: {_commandProvider.All.Count}" );
 
@@ -123,7 +130,7 @@ namespace Espionage.Engine
 			return finalArgs.ToArray();
 		}
 
-		internal static Type[] GetParameterTypes( MemberInfo info )
+		public static Type[] GetParameterTypes( this MemberInfo info )
 		{
 			List<Type> paramteres = new List<Type>();
 
@@ -140,7 +147,7 @@ namespace Espionage.Engine
 		}
 
 		// Copied from this (https://stackoverflow.com/a/2132004)
-		internal static string[] SplitArguments( this string commandLine )
+		public static string[] SplitArguments( this string commandLine )
 		{
 			var parmChars = commandLine.ToCharArray();
 			var inSingleQuote = false;

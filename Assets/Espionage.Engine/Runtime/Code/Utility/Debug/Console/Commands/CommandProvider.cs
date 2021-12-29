@@ -44,7 +44,7 @@ namespace Espionage.Engine.Internal
 			if ( (Application.isEditor && consoleCommand.Layer.HasFlag( Layer.Editor )) || (Application.isPlaying && consoleCommand.Layer.HasFlag( Layer.Runtime )) )
 			{
 				if ( args is not null && args.Length > 0 )
-					consoleCommand.Invoke( ConvertArgs( GetParameterTypes( consoleCommand.Info ), args ) );
+					consoleCommand.Invoke( ConvertArgs( consoleCommand.Info.GetParameterTypes(), args ) );
 				else
 					consoleCommand.Invoke( null );
 
