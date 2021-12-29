@@ -76,8 +76,9 @@ namespace Espionage.Engine
 				await task;
 
 				Debug.Log( $"Commands: {_commandProvider.All.Count}" );
-
 				Application.logMessageReceived += UnityLogHook;
+
+				// We should run a method to iniitalize launch paramters
 			}
 		}
 
