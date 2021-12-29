@@ -53,13 +53,16 @@ namespace Espionage.Engine
 
 		private static void Cache()
 		{
-			// Select all types where ILibrary exsists or if it has the correct attribute
-			var types = AppDomain.CurrentDomain.GetAssemblies()
-								.SelectMany( e => e.GetTypes()
-								.Where( e => !e.IsAbstract && (e.IsDefined( typeof( LibraryAttribute ) ) || e.GetInterfaces().Contains( typeof( ILibrary ) )) ) );
+			using ( Debugging.Stopwatch( "Library Initialized" ) )
+			{
+				// Select all types where ILibrary exsists or if it has the correct attribute
+				var types = AppDomain.CurrentDomain.GetAssemblies()
+									.SelectMany( e => e.GetTypes()
+									.Where( e => !e.IsAbstract && (e.IsDefined( typeof( LibraryAttribute ) ) || e.GetInterfaces().Contains( typeof( ILibrary ) )) ) );
 
-			foreach ( var item in types )
-				AddRecord( CreateRecord( item ) );
+				foreach ( var item in types )
+					AddRecord( CreateRecord( item ) );
+			}
 		}
 
 		private static Library CreateRecord( Type type )

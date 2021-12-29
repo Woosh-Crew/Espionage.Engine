@@ -54,5 +54,10 @@ namespace Espionage.Engine.Internal
 			Debug.Log( $"Trying to invoke command on wrong layer [{consoleCommand.Layer}]" );
 			return;
 		}
+
+		public void LaunchArgs( string arg )
+		{
+
+		}
 	}
 }

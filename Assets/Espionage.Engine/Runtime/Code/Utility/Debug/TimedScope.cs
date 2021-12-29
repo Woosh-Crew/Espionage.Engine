@@ -1,12 +1,9 @@
 using System;
 using System.Diagnostics;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 using Debug = UnityEngine.Debug;
 
-public class TimedScope : IDisposable
+internal class TimedScope : IDisposable
 {
 	private Stopwatch _stopwatch;
 	private string _message;
@@ -20,6 +17,13 @@ public class TimedScope : IDisposable
 	public void Dispose()
 	{
 		_stopwatch.Stop();
+
+		if ( string.IsNullOrEmpty( _message ) )
+		{
+			Debug.Log( $"{_stopwatch.ElapsedMilliseconds}ms" );
+			return;
+		}
+
 		Debug.Log( $"{_message} | {_stopwatch.ElapsedMilliseconds}ms" );
 	}
 }

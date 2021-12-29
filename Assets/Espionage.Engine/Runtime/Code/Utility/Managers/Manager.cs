@@ -16,7 +16,9 @@ namespace Espionage.Engine.Internal
 
 
 			foreach ( var item in types )
+			{
 				item.GetMethod( item.GetCustomAttribute<ManagerAttribute>().Method, BindingFlags.Static | BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic )?.Invoke( null, null );
+			}
 		}
 
 		//

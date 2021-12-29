@@ -10,7 +10,7 @@ using Debug = UnityEngine.Debug;
 
 namespace Espionage.Engine
 {
-	// [Manager( nameof( Initialize ), Layer = Layer.Runtime | Layer.Editor )]
+	[Manager( nameof( Initialize ) )]
 	public static partial class Console
 	{
 		public struct Command
@@ -49,10 +49,9 @@ namespace Espionage.Engine
 		// System
 		//
 
-		[RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.AfterSceneLoad )]
 		internal async static void Initialize()
 		{
-			using ( _ = new TimedScope( "Finished Initializing console" ) )
+			using ( Debugging.Stopwatch( "Console Initialized" ) )
 			{
 				_commandProvider = new CommandProvider();
 
@@ -77,7 +76,9 @@ namespace Espionage.Engine
 				Debug.Log( $"Commands: {_commandProvider.All.Count}" );
 				Application.logMessageReceived += UnityLogHook;
 
-				// We should run a method to iniitalize launch paramters
+				// Run all launch args
+				foreach ( var item in System.Environment.GetCommandLineArgs() )
+					_commandProvider?.LaunchArgs( item );
 			}
 		}
 
