@@ -28,15 +28,19 @@ namespace Espionage.Engine
 			public virtual Command CreateCommand( MemberInfo info )
 			{
 				var method = info as MethodInfo;
-
-				return new Command()
+				var command = new Command()
 				{
 					Name = this.Name,
 					Help = this.Help,
 					Layer = this.Layer,
-					OnInvoke = ( e ) => method.Invoke( null, e ),
 					Info = info,
 				};
+
+				command.WithAction( ( e ) => method.Invoke( null, e ) );
+
+				return command;
+
+
 			}
 		}
 
@@ -52,12 +56,16 @@ namespace Espionage.Engine
 			{
 				var property = info as PropertyInfo;
 
-				return new Command()
+				var command = new Command()
 				{
 					Name = this.Name,
 					Help = this.Help,
+					Layer = this.Layer,
+					Info = info,
+				};
 
-					OnInvoke = ( parameters ) =>
+				command.WithAction(
+					( parameters ) =>
 				 	{
 						 if ( !IsReadOnly && parameters is not null && parameters.Length > 0 )
 						 {
@@ -68,10 +76,9 @@ namespace Espionage.Engine
 						 {
 							 Debug.Log( $"{Name} = {property.GetValue( null )}" );
 						 }
-				 	},
+				 	} );
 
-					Info = info,
-				};
+				return command;
 			}
 		}
 	}

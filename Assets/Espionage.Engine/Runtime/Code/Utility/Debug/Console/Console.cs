@@ -20,8 +20,14 @@ namespace Espionage.Engine
 			public string Help { get; internal set; }
 			public Layer Layer { get; internal set; }
 
-			public Action<object[]> OnInvoke { get; internal set; }
+			private Action<object[]> _action;
 			public MemberInfo Info { get; internal set; }
+
+			public Command WithAction( Action<object[]> action )
+			{
+				_action = action; return this;
+			}
+			public void Invoke( object[] args ) => _action?.Invoke( args );
 		}
 
 		public struct Entry
@@ -71,6 +77,7 @@ namespace Espionage.Engine
 
 		public static Action<Entry> OnLog;
 		public static Action OnClear;
+
 
 		public static void AddLog( Entry entry )
 		{
@@ -132,9 +139,9 @@ namespace Espionage.Engine
 			if ( (Application.isEditor && consoleCommand.Layer.HasFlag( Layer.Editor )) || (Application.isPlaying && consoleCommand.Layer.HasFlag( Layer.Runtime )) )
 			{
 				if ( args is not null && args.Length > 0 )
-					consoleCommand.OnInvoke.Invoke( ConvertArgs( GetParameterTypes( consoleCommand.Info ), args ) );
+					consoleCommand.Invoke( ConvertArgs( GetParameterTypes( consoleCommand.Info ), args ) );
 				else
-					consoleCommand.OnInvoke.Invoke( null );
+					consoleCommand.Invoke( null );
 
 				return true;
 			}
