@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Espionage.Engine.Internal;
 using static Espionage.Engine.Console;
 
@@ -9,6 +10,7 @@ namespace Espionage.Engine.Internal
 	{
 		void Add( Command command );
 		void Invoke( string command, string[] args );
+		Task Initialize() { return null; }
 		void LaunchArgs( string arg ) { }
 
 		IReadOnlyCollection<Command> All { get; }

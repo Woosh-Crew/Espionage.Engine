@@ -53,32 +53,18 @@ namespace Espionage.Engine
 		{
 			using ( Debugging.Stopwatch( "Console Initialized" ) )
 			{
-				_commandProvider = new CommandProvider();
+				// Commands
+				_commandProvider = new AttributeCommandProvider();
 
-				// We use a task so we can quick load
-				var task = Task.Run( () =>
-				{
-					// Get every CmdAttribute using Linq
-					var types = AppDomain.CurrentDomain.GetAssemblies()
-					.SelectMany( e => e.GetTypes()
-										.SelectMany( e => e.GetMembers( BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic )
-										.Where( e => e.IsDefined( typeof( CmdAttribute ) ) ) ) );
+				await _commandProvider?.Initialize();
 
-					foreach ( var info in types )
-					{
-						foreach ( var item in info.GetCustomAttribute<CmdAttribute>().Create( info ) )
-							_commandProvider.Add( item );
-					}
-				} );
-
-				await task;
-
-				Debug.Log( $"Commands: {_commandProvider.All.Count}" );
-				Application.logMessageReceived += UnityLogHook;
+				Debug.Log( $"Found {_commandProvider.All.Count} Commands" );
 
 				// Run all launch args
 				foreach ( var item in System.Environment.GetCommandLineArgs() )
 					_commandProvider?.LaunchArgs( item );
+
+				Application.logMessageReceived += UnityLogHook;
 			}
 		}
 
