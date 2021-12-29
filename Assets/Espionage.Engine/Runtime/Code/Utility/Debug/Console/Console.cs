@@ -23,7 +23,8 @@ namespace Espionage.Engine
 
 			public Command WithAction( Action<object[]> action )
 			{
-				_action = action; return this;
+				_action = action;
+				return this;
 			}
 			public void Invoke( object[] args ) => _action?.Invoke( args );
 		}
