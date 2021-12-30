@@ -29,24 +29,6 @@ namespace Espionage.Engine
 			public void Invoke( object[] args ) => _action?.Invoke( args );
 		}
 
-		public struct Entry
-		{
-			public Entry( string message, string trace, LogType type )
-			{
-				Message = message;
-				Trace = trace;
-				Type = type;
-			}
-
-			public LogType Type { get; internal set; }
-			public string Message { get; internal set; }
-			public string Trace { get; internal set; }
-		}
-
-		//
-		// System
-		//
-
 		internal static IConsoleProvider Provider { get; set; }
 
 		internal async static void Initialize()
@@ -55,31 +37,9 @@ namespace Espionage.Engine
 			{
 				Provider = new RuntimeConsoleProvider( new AttributeCommandProvider<Console.CmdAttribute>() );
 				await Provider.Initialize();
-
-				Application.logMessageReceived += UnityLogHook;
 			}
-		}
 
-		//
-		// Logging
-		//
-
-		public static IReadOnlyCollection<Entry> Logs => _logs;
-		private static List<Entry> _logs = new List<Entry>();
-
-		public static Action<Entry> OnLog;
-		public static Action OnClear;
-
-
-		public static void AddLog( Entry entry )
-		{
-			_logs.Add( entry );
-			OnLog?.Invoke( entry );
-		}
-
-		private static void UnityLogHook( string logString, string stackTrace, LogType type )
-		{
-			AddLog( new Entry( logString, stackTrace, type ) );
+			Invoke( "help" );
 		}
 
 		//
