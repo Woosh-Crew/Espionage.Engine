@@ -13,15 +13,21 @@ namespace Espionage.Engine
 	[Manager( nameof( Initialize ) )]
 	public static partial class Console
 	{
+		public static bool IsInitializing { get; private set; }
+
 		internal static IConsoleProvider Provider { get; set; }
 
 		internal async static void Initialize()
 		{
+			IsInitializing = true;
+
 			using ( Debugging.Stopwatch( "Console System Initialized" ) )
 			{
 				Provider = new RuntimeConsoleProvider( new AttributeCommandProvider<Console.CmdAttribute>() );
 				await Provider.Initialize();
 			}
+
+			IsInitializing = false;
 
 			// Testing
 			Invoke( "help" );
@@ -67,6 +73,5 @@ namespace Espionage.Engine
 
 			public void Invoke( object[] args ) => _action?.Invoke( args );
 		}
-
 	}
 }
