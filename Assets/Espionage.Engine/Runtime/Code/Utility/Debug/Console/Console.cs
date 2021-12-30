@@ -56,7 +56,8 @@ namespace Espionage.Engine
 
 				await _commandProvider?.Initialize();
 
-				// Initialize default commands from scratch
+				// Initialize default commands from scratch, that way they are present
+				// on every ICommandProvider.
 				var quitCmd = new Command() { Name = "quit", Help = "Quits the game" };
 				quitCmd.WithAction( ( e ) => QuitCmd() );
 				_commandProvider?.Add( quitCmd );
