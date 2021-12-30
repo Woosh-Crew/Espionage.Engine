@@ -8,6 +8,8 @@ using static Espionage.Engine.Console;
 
 namespace Espionage.Engine.Internal
 {
+	/// <summary> Attribute Command Provider caches commands based off an attribute </summary>
+	/// <typeparam name="T"> Attribute, should also have interface ICommandCreator </typeparam>
 	public class AttributeCommandProvider<T> : ICommandProvider where T : Attribute
 	{
 		// Commands
