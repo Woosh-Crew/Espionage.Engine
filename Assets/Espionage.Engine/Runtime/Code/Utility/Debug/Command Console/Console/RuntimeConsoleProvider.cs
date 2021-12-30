@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Espionage.Engine.Internal
 {
-	class RuntimeConsoleProvider : IConsoleProvider
+	public class RuntimeConsoleProvider : IConsoleProvider
 	{
 		public RuntimeConsoleProvider( ICommandProvider provider )
 		{

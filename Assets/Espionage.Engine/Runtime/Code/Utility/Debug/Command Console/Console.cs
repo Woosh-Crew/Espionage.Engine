@@ -13,24 +13,6 @@ namespace Espionage.Engine
 	[Manager( nameof( Initialize ) )]
 	public static partial class Console
 	{
-		public struct Command
-		{
-			public string Name { get; internal set; }
-			public string Help { get; internal set; }
-			public Type Owner { get; internal set; }
-
-			private Action<object[]> _action;
-			public MemberInfo Info { get; internal set; }
-
-			public Command WithAction( Action<object[]> action )
-			{
-				_action = action;
-				return this;
-			}
-
-			public void Invoke( object[] args ) => _action?.Invoke( args );
-		}
-
 		internal static IConsoleProvider Provider { get; set; }
 
 		internal async static void Initialize()
@@ -68,44 +50,23 @@ namespace Espionage.Engine
 			return finalArgs.ToArray();
 		}
 
-		public static Type[] GetParameterTypes( this MemberInfo info )
+		public struct Command
 		{
-			List<Type> paramteres = new List<Type>();
+			public string Name { get; internal set; }
+			public string Help { get; internal set; }
+			public Type Owner { get; internal set; }
 
-			if ( info is PropertyInfo propertyInfo )
-				return new Type[] { propertyInfo.PropertyType };
+			private Action<object[]> _action;
+			public MemberInfo Info { get; internal set; }
 
-			if ( info is MethodInfo methodInfo )
+			public Command WithAction( Action<object[]> action )
 			{
-				foreach ( var item in methodInfo.GetParameters() )
-					paramteres.Add( item.ParameterType );
+				_action = action;
+				return this;
 			}
 
-			return paramteres.ToArray();
+			public void Invoke( object[] args ) => _action?.Invoke( args );
 		}
 
-		// Copied from this (https://stackoverflow.com/a/2132004)
-		public static string[] SplitArguments( this string commandLine )
-		{
-			var parmChars = commandLine.ToCharArray();
-			var inSingleQuote = false;
-			var inDoubleQuote = false;
-			for ( var index = 0; index < parmChars.Length; index++ )
-			{
-				if ( parmChars[index] == '"' && !inSingleQuote )
-				{
-					inDoubleQuote = !inDoubleQuote;
-					parmChars[index] = '\n';
-				}
-				if ( parmChars[index] == '\'' && !inDoubleQuote )
-				{
-					inSingleQuote = !inSingleQuote;
-					parmChars[index] = '\n';
-				}
-				if ( !inSingleQuote && !inDoubleQuote && parmChars[index] == ' ' )
-					parmChars[index] = '\n';
-			}
-			return (new string( parmChars )).Split( new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries );
-		}
 	}
 }
