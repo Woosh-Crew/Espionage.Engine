@@ -39,6 +39,7 @@ namespace Espionage.Engine
 				await Provider.Initialize();
 			}
 
+			// Testing
 			Invoke( "help" );
 		}
 
