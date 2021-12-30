@@ -17,6 +17,7 @@ namespace Espionage.Engine
 		{
 			public string Name { get; internal set; }
 			public string Help { get; internal set; }
+			public Type Owner { get; internal set; }
 
 			private Action<object[]> _action;
 			public MemberInfo Info { get; internal set; }
@@ -26,6 +27,7 @@ namespace Espionage.Engine
 				_action = action;
 				return this;
 			}
+
 			public void Invoke( object[] args ) => _action?.Invoke( args );
 		}
 

@@ -26,11 +26,11 @@ namespace Espionage.Engine.Internal
 
 				// Initialize default commands from scratch, that way they are present
 				// on every ICommandProvider.
-				var quitCmd = new Console.Command() { Name = "quit", Help = "Quits the game" };
+				var quitCmd = new Console.Command() { Name = "quit", Help = "Quits the game", Owner = typeof( Console ) };
 				quitCmd.WithAction( ( e ) => QuitCmd() );
 				CommandProvider?.Add( quitCmd );
 
-				var helpCmd = new Console.Command() { Name = "help", Help = "Dumps all commands, or anything starting with input" };
+				var helpCmd = new Console.Command() { Name = "help", Help = "Dumps all commands, or anything starting with input", Owner = typeof( Console ) };
 				helpCmd.WithAction( ( e ) => HelpCmd() );
 				CommandProvider?.Add( helpCmd );
 
@@ -51,7 +51,7 @@ namespace Espionage.Engine.Internal
 			Debug.Log( $"Commands" );
 
 			foreach ( var item in Console.Provider.CommandProvider?.All )
-				Debug.Log( $"{item.Name}" );
+				Debug.Log( $"{item.Name} - {item.Owner.FullName}" );
 		}
 
 		public static void QuitCmd()

@@ -32,6 +32,7 @@ namespace Espionage.Engine
 					{
 						Name = item,
 						Help = this.Help,
+						Owner = info.DeclaringType,
 						Info = info,
 					};
 
