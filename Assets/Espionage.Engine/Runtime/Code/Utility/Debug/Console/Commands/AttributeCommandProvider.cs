@@ -8,7 +8,7 @@ using static Espionage.Engine.Console;
 
 namespace Espionage.Engine.Internal
 {
-	public class AttributeCommandProvider : ICommandProvider
+	public class AttributeCommandProvider<T> : ICommandProvider where T : Attribute
 	{
 		// Commands
 		private static Dictionary<string, Command> _commands = new Dictionary<string, Command>( StringComparer.CurrentCultureIgnoreCase );
@@ -27,11 +27,11 @@ namespace Espionage.Engine.Internal
 					var types = AppDomain.CurrentDomain.GetAssemblies()
 					.SelectMany( e => e.GetTypes()
 										.SelectMany( e => e.GetMembers( BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic )
-										.Where( e => e.IsDefined( typeof( CmdAttribute ) ) ) ) );
+										.Where( e => e.IsDefined( typeof( T ) ) ) ) );
 
 					foreach ( var info in types )
 					{
-						foreach ( var item in info.GetCustomAttribute<CmdAttribute>().Create( info ) )
+						foreach ( var item in (info.GetCustomAttribute<T>() as ICommandCreator).Create( info ) )
 							_commandProvider.Add( item );
 					}
 				} );
@@ -42,6 +42,18 @@ namespace Espionage.Engine.Internal
 			try
 			{
 				_commands.Add( command.Name, command );
+			}
+			catch ( Exception e )
+			{
+				Debug.LogException( e );
+			}
+		}
+
+		public void Remove( string name )
+		{
+			try
+			{
+				_commands.Remove( name );
 			}
 			catch ( Exception e )
 			{

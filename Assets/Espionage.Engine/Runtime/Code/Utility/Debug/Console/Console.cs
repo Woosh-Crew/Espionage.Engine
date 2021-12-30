@@ -52,9 +52,22 @@ namespace Espionage.Engine
 			using ( Debugging.Stopwatch( "Console Initialized" ) )
 			{
 				// Commands
-				_commandProvider = new AttributeCommandProvider();
+				_commandProvider = new AttributeCommandProvider<Console.CmdAttribute>();
 
 				await _commandProvider?.Initialize();
+
+				// Initialize default commands from scratch
+				var quitCmd = new Command() { Name = "quit", Help = "Quits the game" };
+				quitCmd.WithAction( ( e ) => QuitCmd() );
+				_commandProvider?.Add( quitCmd );
+
+				var clearCmd = new Command() { Name = "clear", Help = "Clears all logs" };
+				clearCmd.WithAction( ( e ) => ClearCmd() );
+				_commandProvider?.Add( clearCmd );
+
+				var helpCmd = new Command() { Name = "help", Help = "Dumps all commands, or anything starting with input" };
+				helpCmd.WithAction( ( e ) => HelpCmd() );
+				_commandProvider?.Add( helpCmd );
 
 				Debug.Log( $"Found {_commandProvider.All.Count} Commands" );
 

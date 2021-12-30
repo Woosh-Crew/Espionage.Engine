@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
+using Espionage.Engine.Internal;
 using Debug = UnityEngine.Debug;
 
 namespace Espionage.Engine
@@ -9,7 +10,7 @@ namespace Espionage.Engine
 	public static partial class Console
 	{
 		[AttributeUsage( AttributeTargets.Method, Inherited = false, AllowMultiple = false )]
-		public class CmdAttribute : Attribute
+		public class CmdAttribute : Attribute, ICommandCreator
 		{
 			readonly string[] names;
 

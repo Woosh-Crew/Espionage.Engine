@@ -7,11 +7,13 @@ internal class TimedScope : IDisposable
 {
 	private Stopwatch _stopwatch;
 	private string _message;
+	private object[] _args;
 
-	public TimedScope( string message )
+	public TimedScope( string message, params object[] args )
 	{
 		_stopwatch = Stopwatch.StartNew();
 		_message = message;
+		_args = args;
 	}
 
 	public void Dispose()
@@ -24,6 +26,6 @@ internal class TimedScope : IDisposable
 			return;
 		}
 
-		Debug.Log( $"{_message} | {_stopwatch.ElapsedMilliseconds}ms" );
+		Debug.Log( $"{String.Format( _message, _args )} | {_stopwatch.ElapsedMilliseconds}ms" );
 	}
 }

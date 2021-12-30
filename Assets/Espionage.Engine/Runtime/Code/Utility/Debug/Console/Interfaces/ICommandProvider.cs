@@ -9,6 +9,7 @@ namespace Espionage.Engine.Internal
 	public interface ICommandProvider
 	{
 		void Add( Command command );
+		void Remove( string name );
 		void Invoke( string command, string[] args );
 		Task Initialize() { return null; }
 		void LaunchArgs( string arg ) { }
