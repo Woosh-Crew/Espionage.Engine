@@ -13,7 +13,7 @@ namespace Espionage.Engine
 	[Manager( nameof( Initialize ) )]
 	public static partial class Console
 	{
-		public static bool IsInitializing { get; private set; }
+		internal static bool IsInitializing { get; private set; }
 
 		internal static IConsoleProvider Provider { get; set; }
 
