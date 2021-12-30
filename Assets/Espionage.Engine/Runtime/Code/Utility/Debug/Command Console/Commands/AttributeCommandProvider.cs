@@ -34,7 +34,7 @@ namespace Espionage.Engine.Internal
 					foreach ( var info in types )
 					{
 						foreach ( var item in (info.GetCustomAttribute<T>() as ICommandCreator).Create( info ) )
-							_commandProvider.Add( item );
+							Add( item );
 					}
 				} );
 		}

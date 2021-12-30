@@ -47,34 +47,14 @@ namespace Espionage.Engine
 		// System
 		//
 
+		internal static IConsoleProvider Provider { get; set; }
+
 		internal async static void Initialize()
 		{
-			using ( Debugging.Stopwatch( "Console Initialized" ) )
+			using ( Debugging.Stopwatch( "Console System Initialized" ) )
 			{
-				// Commands
-				_commandProvider = new AttributeCommandProvider<Console.CmdAttribute>();
-
-				await _commandProvider?.Initialize();
-
-				// Initialize default commands from scratch, that way they are present
-				// on every ICommandProvider.
-				var quitCmd = new Command() { Name = "quit", Help = "Quits the game" };
-				quitCmd.WithAction( ( e ) => QuitCmd() );
-				_commandProvider?.Add( quitCmd );
-
-				var clearCmd = new Command() { Name = "clear", Help = "Clears all logs" };
-				clearCmd.WithAction( ( e ) => ClearCmd() );
-				_commandProvider?.Add( clearCmd );
-
-				var helpCmd = new Command() { Name = "help", Help = "Dumps all commands, or anything starting with input" };
-				helpCmd.WithAction( ( e ) => HelpCmd() );
-				_commandProvider?.Add( helpCmd );
-
-				Debug.Log( $"Found {_commandProvider.All.Count} Commands" );
-
-				// Run all launch args
-				foreach ( var item in System.Environment.GetCommandLineArgs() )
-					_commandProvider?.LaunchArgs( item );
+				Provider = new RuntimeConsoleProvider( new AttributeCommandProvider<Console.CmdAttribute>() );
+				await Provider.Initialize();
 
 				Application.logMessageReceived += UnityLogHook;
 			}
@@ -106,10 +86,8 @@ namespace Espionage.Engine
 		// Commands
 		//
 
-		internal static ICommandProvider _commandProvider;
-
-		public static void Invoke( string commandLine ) => _commandProvider?.Invoke( commandLine );
-		public static void Invoke( string command, params string[] args ) => _commandProvider?.Invoke( command, args );
+		public static void Invoke( string commandLine ) => Provider?.CommandProvider?.Invoke( commandLine );
+		public static void Invoke( string command, params string[] args ) => Provider?.CommandProvider?.Invoke( command, args );
 
 		// 
 		// Interpreter

@@ -4,22 +4,22 @@ namespace Espionage.Engine
 {
 	public static partial class Console
 	{
-		private static void HelpCmd()
+		public static void HelpCmd()
 		{
-			foreach ( var item in _commandProvider.All )
+			foreach ( var item in Provider?.CommandProvider?.All )
 			{
 				AddLog( new Entry( $"{item.Name}", "", LogType.Log ) );
 			}
 			AddLog( new Entry( "Commands", "", LogType.Log ) );
 		}
 
-		private static void ClearCmd()
+		public static void ClearCmd()
 		{
 			_logs.Clear();
 			OnClear?.Invoke();
 		}
 
-		private static void QuitCmd()
+		public static void QuitCmd()
 		{
 #if UNITY_EDITOR
 			UnityEditor.EditorApplication.ExitPlaymode();
