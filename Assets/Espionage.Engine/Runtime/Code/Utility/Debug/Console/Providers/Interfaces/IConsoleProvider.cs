@@ -6,6 +6,7 @@ namespace Espionage.Engine.Internal
 	{
 		Task Initialize() { return null; }
 
-		ICommandProvider CommandProvider { get; set; }
+		ICommandProvider CommandProvider { get; }
+		ILoggingProvider LoggingProvider { get; }
 	}
 }

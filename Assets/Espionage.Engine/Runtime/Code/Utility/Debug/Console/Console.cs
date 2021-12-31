@@ -16,15 +16,19 @@ namespace Espionage.Engine
 			if ( HasInitialized )
 				return;
 
+			// If we have no provider already, just use the default one,
+			// we return because providers set initializes for us.
+			if ( Provider is null )
+			{
+				Provider = new RuntimeConsoleProvider( new AttributeCommandProvider<Console.CmdAttribute>() );
+				return;
+			}
+
 			// Do this here cause of race conditions
 			HasInitialized = true;
 
 			using ( Debugging.Stopwatch( "Console System Initialized - " + (Provider is null ? "Default Provider" : $"[{Provider.GetType().Name}]") ) )
 			{
-				// If we have no provider already, just use the default one
-				if ( Provider is null )
-					Provider = new RuntimeConsoleProvider( new AttributeCommandProvider<Console.CmdAttribute>() );
-
 				await Provider.Initialize();
 			}
 		}
@@ -37,7 +41,7 @@ namespace Espionage.Engine
 
 		public static IConsoleProvider Provider
 		{
-			private get
+			internal get
 			{
 				return _provider;
 			}
@@ -57,7 +61,7 @@ namespace Espionage.Engine
 		public static void Invoke( string commandLine ) => Provider.CommandProvider?.Invoke( commandLine );
 		public static void Invoke( string command, params string[] args ) => Provider.CommandProvider?.Invoke( command, args );
 
-		public static void SetupDefaults()
+		internal static void SetupDefaults()
 		{
 			// Initialize default commands from scratch, that way they are present
 			// on every ICommandProvider.
@@ -93,6 +97,15 @@ namespace Espionage.Engine
 		private static void QuitCmd()
 		{
 			Application.Quit();
+		}
+
+		//
+		// Logging
+		//
+
+		public static void Log( string message )
+		{
+
 		}
 
 		// 

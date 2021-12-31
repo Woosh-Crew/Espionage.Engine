@@ -10,7 +10,8 @@ namespace Espionage.Engine.Internal
 			CommandProvider = provider;
 		}
 
-		public ICommandProvider CommandProvider { get; set; }
+		public ICommandProvider CommandProvider { get; private set; }
+		public ILoggingProvider LoggingProvider { get; private set; }
 
 		public Task Initialize()
 		{

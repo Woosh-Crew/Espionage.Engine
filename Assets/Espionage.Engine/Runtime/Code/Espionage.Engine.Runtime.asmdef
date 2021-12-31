@@ -1,5 +1,5 @@
 {
-    "name": "Espionage.Engine",
+    "name": "Espionage.Engine.Runtime",
     "rootNamespace": "",
     "references": [
         "GUID:51df6056187750b4a9cd5760fdc5e76a"
