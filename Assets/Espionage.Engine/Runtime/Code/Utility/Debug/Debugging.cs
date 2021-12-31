@@ -14,11 +14,18 @@ namespace Espionage.Engine
 
 		public static async void Initialize()
 		{
+			if ( Log is null )
+				Log = new SimpleLoggingProvider();
+
 			// Init Logging
 			Log.Initialize();
 
 			using ( Debugging.Stopwatch( "Debugging Initialized" ) )
 			{
+				// Setup Console
+				if ( Console is null )
+					Console = new AttributeCommandProvider<CmdAttribute>();
+
 				await Task.WhenAll( Console.Initialize() );
 			}
 		}
