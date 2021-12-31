@@ -3,7 +3,7 @@ using System;
 namespace Espionage.Engine.Internal
 {
 	[AttributeUsage( AttributeTargets.Class, Inherited = true )]
-	internal sealed class ConstructorAttribute : Attribute
+	public sealed class ConstructorAttribute : Attribute
 	{
 		public ConstructorAttribute( string constructor )
 		{

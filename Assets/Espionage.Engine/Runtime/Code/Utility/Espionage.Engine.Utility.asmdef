@@ -1,13 +1,8 @@
 {
-    "name": "Espionage.Engine.Editor",
+    "name": "Espionage.Engine.Utility",
     "rootNamespace": "",
-    "references": [
-        "GUID:e44fad0b7a425f24b9cf472238f472c0",
-        "GUID:51df6056187750b4a9cd5760fdc5e76a"
-    ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "references": [],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
