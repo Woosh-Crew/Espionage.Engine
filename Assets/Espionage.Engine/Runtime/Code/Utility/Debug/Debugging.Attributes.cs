@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
-using Espionage.Engine.Internal;
+using Espionage.Engine.Internal.Commands;
 
 namespace Espionage.Engine
 {

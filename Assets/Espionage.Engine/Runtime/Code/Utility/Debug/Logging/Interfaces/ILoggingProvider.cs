@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Espionage.Engine.Internal;
+using Espionage.Engine.Internal.Logging;
 
-namespace Espionage.Engine.Internal
+namespace Espionage.Engine.Internal.Logging
 {
 	public interface ILoggingProvider
 	{
@@ -30,6 +30,7 @@ public static class ILoggingProviderExtensions
 		{
 			Message = message.ToString(),
 			StackTrace = System.Environment.StackTrace,
+			Type = Entry.Level.Info,
 		} );
 	}
 
@@ -39,6 +40,7 @@ public static class ILoggingProviderExtensions
 		{
 			Message = message.ToString(),
 			StackTrace = System.Environment.StackTrace,
+			Type = Entry.Level.Warning,
 		} );
 	}
 
@@ -48,6 +50,7 @@ public static class ILoggingProviderExtensions
 		{
 			Message = message.ToString(),
 			StackTrace = System.Environment.StackTrace,
+			Type = Entry.Level.Error,
 		} );
 	}
 }

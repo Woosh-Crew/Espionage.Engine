@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Espionage.Engine.Internal
+namespace Espionage.Engine.Internal.Commands
 {
 	public interface ICommandInvoker
 	{

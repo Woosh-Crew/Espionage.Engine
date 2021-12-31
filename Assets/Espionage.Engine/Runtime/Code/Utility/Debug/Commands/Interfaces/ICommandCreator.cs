@@ -1,6 +1,6 @@
 using System.Reflection;
 
-namespace Espionage.Engine.Internal
+namespace Espionage.Engine.Internal.Commands
 {
 	public interface ICommandCreator
 	{

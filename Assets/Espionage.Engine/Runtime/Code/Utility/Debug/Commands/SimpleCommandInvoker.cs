@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Collections.Generic;
 
-namespace Espionage.Engine.Internal
+namespace Espionage.Engine.Internal.Commands
 {
 	public class SimpleCommandInvoker : ICommandInvoker
 	{

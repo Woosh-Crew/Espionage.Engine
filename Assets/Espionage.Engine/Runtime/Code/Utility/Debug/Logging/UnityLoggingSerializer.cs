@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Espionage.Engine.Internal
+namespace Espionage.Engine.Internal.Logging
 {
 	public class UnityLoggingSerializer : ILoggingSerializer
 	{

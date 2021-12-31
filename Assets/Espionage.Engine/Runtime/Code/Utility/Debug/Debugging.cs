@@ -3,6 +3,9 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Espionage.Engine.Internal;
 
+using Espionage.Engine.Internal.Logging;
+using Espionage.Engine.Internal.Commands;
+
 namespace Espionage.Engine
 {
 	[Manager( nameof( Initialize ) )]

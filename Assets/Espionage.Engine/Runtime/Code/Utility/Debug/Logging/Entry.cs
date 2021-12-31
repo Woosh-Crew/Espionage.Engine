@@ -1,6 +1,6 @@
 using System;
 
-namespace Espionage.Engine.Internal
+namespace Espionage.Engine.Internal.Logging
 {
 	[Serializable]
 	public struct Entry

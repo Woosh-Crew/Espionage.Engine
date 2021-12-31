@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Espionage.Engine.Internal
+namespace Espionage.Engine.Internal.Commands
 {
 	/// <summary> Attribute Command Provider caches commands based off an attribute </summary>
 	/// <typeparam name="T"> Attribute, should also have interface ICommandCreator </typeparam>

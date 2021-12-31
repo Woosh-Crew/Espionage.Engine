@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Espionage.Engine.Internal
+namespace Espionage.Engine.Internal.Logging
 {
 	public class SimpleLoggingProvider : ILoggingProvider
 	{
