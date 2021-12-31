@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-
+using System.Threading.Tasks;
 using Espionage.Engine.Internal;
-using Debug = UnityEngine.Debug;
+using UnityEngine;
 
 namespace Espionage.Engine
 {
-	public static partial class Console
+	public static partial class Debugging
 	{
 		[AttributeUsage( AttributeTargets.Method, Inherited = false, AllowMultiple = false )]
 		public class CmdAttribute : Attribute, ICommandCreator

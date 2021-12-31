@@ -2,17 +2,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Espionage.Engine.Internal;
-using static Espionage.Engine.Console;
 
 namespace Espionage.Engine.Internal
 {
 	public interface ICommandProvider
 	{
-		void Add( Command command );
-		void Remove( string name );
-		void Invoke( string command, string[] args );
 		Task Initialize() { return null; }
-		void LaunchArgs( string arg ) { }
+
+		void Add( Command command );
+		void Invoke( string command, string[] args );
 
 		IReadOnlyCollection<Command> All { get; }
 		IReadOnlyCollection<string> History { get; }

@@ -4,6 +4,6 @@ namespace Espionage.Engine.Internal
 {
 	public interface ICommandCreator
 	{
-		Console.Command[] Create( MemberInfo info );
+		Command[] Create( MemberInfo info );
 	}
 }

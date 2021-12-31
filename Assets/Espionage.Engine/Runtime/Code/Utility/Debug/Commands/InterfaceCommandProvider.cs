@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using UnityEngine;
-using static Espionage.Engine.Console;
 
 namespace Espionage.Engine.Internal
 {
@@ -79,7 +78,7 @@ namespace Espionage.Engine.Internal
 
 			// Check if we are on the correct layer - This looks ultra aids
 			if ( args is not null && args.Length > 0 )
-				consoleCommand.Invoke( ConvertArgs( consoleCommand.Info, args ) );
+				consoleCommand.Invoke( Command.ConvertArgs( consoleCommand.Info, args ) );
 			else
 				consoleCommand.Invoke( null );
 		}

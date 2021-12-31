@@ -5,8 +5,6 @@ using System.Reflection;
 using System.Threading.Tasks;
 using UnityEngine;
 
-using static Espionage.Engine.Console;
-
 namespace Espionage.Engine.Internal
 {
 	/// <summary> Attribute Command Provider caches commands based off an attribute </summary>
@@ -75,7 +73,7 @@ namespace Espionage.Engine.Internal
 			// Add to history stack, for use later
 			_history.Add( $"{command} {string.Join( ' ', args )}" );
 
-			consoleCommand.Invoke( ConvertArgs( consoleCommand.Info, args ) );
+			consoleCommand.Invoke( Command.ConvertArgs( consoleCommand.Info, args ) );
 		}
 
 		public void LaunchArgs( string arg )
