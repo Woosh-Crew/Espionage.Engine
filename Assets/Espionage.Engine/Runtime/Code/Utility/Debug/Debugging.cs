@@ -31,6 +31,8 @@ namespace Espionage.Engine
 
 				await Task.WhenAll( Console.Initialize() );
 			}
+
+			Console.Invoke( "help" );
 		}
 
 		//

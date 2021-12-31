@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Text;
 using Espionage.Engine.Internal.Commands;
 
 namespace Espionage.Engine
@@ -24,12 +25,16 @@ namespace Espionage.Engine
 			{
 				List<Command> commands = new List<Command>();
 
+				var helpBuilder = new StringBuilder( this.Help + " - [" );
+				var helpMessage = BuildHelpMessage( info, helpBuilder );
+				helpBuilder.Append( " ]" );
+
 				foreach ( var item in Names )
 				{
 					var command = new Command()
 					{
 						Name = item,
-						Help = this.Help,
+						Help = helpBuilder.ToString(),
 						Owner = info.DeclaringType,
 						Info = info,
 					};
@@ -39,6 +44,29 @@ namespace Espionage.Engine
 				}
 
 				return commands.ToArray();
+			}
+
+			protected virtual StringBuilder BuildHelpMessage( MemberInfo info, StringBuilder builder )
+			{
+				if ( info is not MethodInfo method )
+					return builder;
+
+				var parameters = method.GetParameters();
+
+				foreach ( var item in parameters )
+				{
+					if ( item.HasDefaultValue )
+					{
+						var text = item.DefaultValue is null ? "null" : item.DefaultValue.ToString();
+						builder.Append( $" {item.ParameterType.Name} = {text}" );
+					}
+					else
+					{
+						builder.Append( $" {item.ParameterType.Name}" );
+					}
+				}
+
+				return builder;
 			}
 
 			protected virtual void OnCreate( ref Command command, MemberInfo info )
@@ -77,6 +105,17 @@ namespace Espionage.Engine
 						 }
 				 	} );
 			}
+
+			protected override StringBuilder BuildHelpMessage( MemberInfo info, StringBuilder builder )
+			{
+				if ( info is not PropertyInfo property )
+					return builder;
+
+				builder.Append( $" {property.PropertyType.Name} " );
+
+				return builder;
+			}
+
 
 			protected virtual void SaveValue()
 			{

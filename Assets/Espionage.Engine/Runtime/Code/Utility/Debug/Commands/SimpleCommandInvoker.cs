@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -6,7 +7,7 @@ namespace Espionage.Engine.Internal.Commands
 	public class SimpleCommandInvoker : ICommandInvoker
 	{
 		// Storage
-		private Dictionary<string, Command> _commands;
+		private Dictionary<string, Command> _commands = new Dictionary<string, Command>( StringComparer.CurrentCultureIgnoreCase );
 		public IReadOnlyCollection<Command> All => _commands.Values;
 
 		public void Add( Command command ) => _commands.Add( command.Name, command );
