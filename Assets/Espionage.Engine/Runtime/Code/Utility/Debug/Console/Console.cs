@@ -8,24 +8,26 @@ namespace Espionage.Engine
 	[Manager( nameof( Initialize ) )]
 	public static partial class Console
 	{
-		internal static bool IsInitializing { get; private set; }
+		internal static bool HasInitialized { get; private set; }
 
-		internal static IConsoleProvider Provider { get; set; }
+		public static IConsoleProvider Provider { get; set; }
 
-		internal async static void Initialize()
+		public async static void Initialize()
 		{
-			IsInitializing = true;
+			if ( HasInitialized )
+				return;
 
-			using ( Debugging.Stopwatch( "Console System Initialized" ) )
+			// Do this here cause of race conditions
+			HasInitialized = true;
+
+			using ( Debugging.Stopwatch( "Console System Initialized - " + (Provider is null ? "Default Provider" : $"[{Provider.GetType().Name}]") ) )
 			{
-				Provider = new RuntimeConsoleProvider( new AttributeCommandProvider<Console.CmdAttribute>() );
+				// If we have no provider already, just use the default one
+				if ( Provider is null )
+					Provider = new RuntimeConsoleProvider( new AttributeCommandProvider<Console.CmdAttribute>() );
+
 				await Provider.Initialize();
 			}
-
-			IsInitializing = false;
-
-			// Testing
-			Invoke( "help" );
 		}
 
 		//
@@ -41,14 +43,14 @@ namespace Espionage.Engine
 
 		internal static object[] ConvertArgs( Type[] paramters, string[] args )
 		{
-			List<object> finalArgs = new List<object>();
+			object[] finalArgs = new object[paramters.Length];
 
-			for ( int i = 0; i < args.Length; i++ )
+			for ( int i = 0; i < MathF.Min( paramters.Length, args.Length ); i++ )
 			{
-				finalArgs.Add( System.Convert.ChangeType( args[i], paramters[i] ) );
+				finalArgs[i] = System.Convert.ChangeType( args[i], paramters[i] );
 			}
 
-			return finalArgs.ToArray();
+			return finalArgs;
 		}
 
 		public struct Command

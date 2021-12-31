@@ -34,8 +34,6 @@ namespace Espionage.Engine.Internal
 				helpCmd.WithAction( ( e ) => HelpCmd() );
 				CommandProvider?.Add( helpCmd );
 
-				Debug.Log( $"Found {CommandProvider.All.Count} Commands" );
-
 				// Run all launch args
 				foreach ( var item in System.Environment.GetCommandLineArgs() )
 					CommandProvider?.LaunchArgs( item );

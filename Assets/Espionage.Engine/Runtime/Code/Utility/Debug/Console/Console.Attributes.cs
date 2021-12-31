@@ -12,7 +12,7 @@ namespace Espionage.Engine
 		[AttributeUsage( AttributeTargets.Method, Inherited = false, AllowMultiple = false )]
 		public class CmdAttribute : Attribute, ICommandCreator
 		{
-			readonly string[] names;
+			private readonly string[] names;
 
 			public string[] Names => names;
 			public string Help { get; set; }
@@ -52,8 +52,10 @@ namespace Espionage.Engine
 
 
 		[AttributeUsage( AttributeTargets.Property, Inherited = false, AllowMultiple = false )]
-		public sealed class VarAttribute : CmdAttribute
+		public class VarAttribute : CmdAttribute
 		{
+			/// <summary> TODO: Actually make this work </summary>
+			public bool Saved { get; set; }
 			public bool IsReadOnly { get; set; }
 
 			public VarAttribute( string name ) : base( name ) { }
@@ -76,6 +78,11 @@ namespace Espionage.Engine
 							 Debug.Log( $"{name} = {property.GetValue( null )}" );
 						 }
 				 	} );
+			}
+
+			protected virtual void SaveValue()
+			{
+
 			}
 		}
 	}

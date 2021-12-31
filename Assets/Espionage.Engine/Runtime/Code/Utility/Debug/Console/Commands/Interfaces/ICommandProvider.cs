@@ -28,7 +28,7 @@ public static class ICommandProviderExtensions
 	public static void Invoke( this ICommandProvider provider, string command )
 	{
 		var name = command.Split( ' ' ).First();
-		var args = command.Substring( command.Length ).SplitArguments();
+		var args = command.Substring( name.Length ).SplitArguments();
 
 		provider.Invoke( name, args );
 	}

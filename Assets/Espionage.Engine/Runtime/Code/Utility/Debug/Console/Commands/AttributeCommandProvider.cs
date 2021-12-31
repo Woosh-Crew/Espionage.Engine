@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using UnityEngine;
+
 using static Espionage.Engine.Console;
 
 namespace Espionage.Engine.Internal
@@ -74,11 +75,14 @@ namespace Espionage.Engine.Internal
 			// Add to history stack, for use later
 			_history.Add( $"{command} {string.Join( ' ', args )}" );
 
-			// Check if we are on the correct layer - This looks ultra aids
-			if ( args is not null && args.Length > 0 )
-				consoleCommand.Invoke( ConvertArgs( consoleCommand.Info.GetParameterTypes(), args ) );
-			else
-				consoleCommand.Invoke( null );
+			Debug.Log( command );
+
+			foreach ( var item in args )
+			{
+				Debug.Log( item );
+			}
+
+			consoleCommand.Invoke( ConvertArgs( consoleCommand.Info.GetParameterTypes(), args ) );
 		}
 
 		public void LaunchArgs( string arg )
