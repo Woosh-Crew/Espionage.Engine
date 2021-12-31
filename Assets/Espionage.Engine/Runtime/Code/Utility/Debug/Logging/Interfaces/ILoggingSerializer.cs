@@ -4,7 +4,7 @@ namespace Espionage.Engine.Internal
 {
 	public interface ILoggingSerializer
 	{
-		void Serialize();
+		void Serialize( IEnumerable<Entry> entries );
 		IEnumerable<Entry> Deserialize();
 	}
 }
