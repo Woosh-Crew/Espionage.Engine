@@ -10,8 +10,6 @@ namespace Espionage.Engine
 	{
 		internal static bool HasInitialized { get; private set; }
 
-		public static IConsoleProvider Provider { get; set; }
-
 		public async static void Initialize()
 		{
 			if ( HasInitialized )
@@ -31,11 +29,32 @@ namespace Espionage.Engine
 		}
 
 		//
+		// Provider
+		//
+
+		private static IConsoleProvider _provider;
+
+		public static IConsoleProvider Provider
+		{
+			private get
+			{
+				return _provider;
+			}
+
+			set
+			{
+				HasInitialized = false;
+				_provider = value;
+				Initialize();
+			}
+		}
+
+		//
 		// Commands
 		//
 
-		public static void Invoke( string commandLine ) => Provider?.CommandProvider?.Invoke( commandLine );
-		public static void Invoke( string command, params string[] args ) => Provider?.CommandProvider?.Invoke( command, args );
+		public static void Invoke( string commandLine ) => Provider.CommandProvider?.Invoke( commandLine );
+		public static void Invoke( string command, params string[] args ) => Provider.CommandProvider?.Invoke( command, args );
 
 		// 
 		// Interpreter

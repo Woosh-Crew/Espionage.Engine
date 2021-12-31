@@ -13,7 +13,6 @@ namespace Espionage.Engine.Internal
 			// we want to use the EditorConsole Provider, so we have
 			// commands only accessible through unity...
 			Console.Provider = new EditorConsoleProvider();
-			Console.Initialize();
 		}
 
 		//
