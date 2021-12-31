@@ -9,7 +9,6 @@ namespace Espionage.Engine.Internal
 	{
 		Task Initialize() { return null; }
 
-		void Add( Command command );
 		void Invoke( string command, string[] args );
 
 		IReadOnlyCollection<Command> All { get; }

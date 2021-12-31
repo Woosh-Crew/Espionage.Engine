@@ -77,6 +77,5 @@ namespace Espionage.Engine
 				Log.Info( $"{String.Format( _message, _args )} | {_stopwatch.ElapsedMilliseconds}ms" );
 			}
 		}
-
 	}
 }

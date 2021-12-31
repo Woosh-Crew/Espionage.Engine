@@ -10,14 +10,29 @@ namespace Espionage.Engine.Internal
 	/// <typeparam name="T"> Attribute, should also have interface ICommandCreator </typeparam>
 	public class AttributeCommandProvider<T> : ICommandProvider where T : Attribute
 	{
+		//
 		// Commands
-		private static Dictionary<string, Command> _commands = new Dictionary<string, Command>( StringComparer.CurrentCultureIgnoreCase );
-		public IReadOnlyCollection<Command> All => _commands.Values;
+		private ICommandInvoker _invoker;
+		public IReadOnlyCollection<Command> All => _invoker.All;
 
+		//
 		// History
 		private static HashSet<string> _history = new HashSet<string>();
 		public IReadOnlyCollection<string> History => _history;
 
+		public AttributeCommandProvider()
+		{
+			_invoker = new SimpleCommandInvoker();
+		}
+
+		public AttributeCommandProvider( ICommandInvoker invoker )
+		{
+			_invoker = invoker;
+		}
+
+		//
+		// Provider
+		//
 
 		public Task Initialize()
 		{
@@ -39,40 +54,15 @@ namespace Espionage.Engine.Internal
 
 		public void Add( Command command )
 		{
-			try
-			{
-				_commands.Add( command.Name, command );
-			}
-			catch ( Exception e )
-			{
-				Debugging.Log.Error( e );
-			}
-		}
-
-		public void Remove( string name )
-		{
-			try
-			{
-				_commands.Remove( name );
-			}
-			catch ( Exception e )
-			{
-				Debugging.Log.Error( e );
-			}
+			_invoker.Add( command );
 		}
 
 		public void Invoke( string command, string[] args )
 		{
-			if ( !_commands.TryGetValue( command, out var consoleCommand ) )
-			{
-				Debugging.Log.Info( $"Couldn't find command \"{command}\"" );
-				return;
-			}
+			_invoker.Invoke( command, args );
 
 			// Add to history stack, for use later
 			_history.Add( $"{command} {string.Join( ' ', args )}" );
-
-			consoleCommand.Invoke( Command.ConvertArgs( consoleCommand.Info, args ) );
 		}
 
 		public void LaunchArgs( string arg )
