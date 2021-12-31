@@ -20,7 +20,7 @@ namespace Espionage.Engine
 
 				foreach ( var item in Console.All )
 				{
-					Log.Info( $"{item.Name} - {item.Help}" );
+					Log.Info( $"[ {item.Name} ] - {item.Help}" );
 				}
 
 				return;

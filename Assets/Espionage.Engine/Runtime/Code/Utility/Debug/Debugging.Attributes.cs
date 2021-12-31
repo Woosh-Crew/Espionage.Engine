@@ -25,9 +25,9 @@ namespace Espionage.Engine
 			{
 				List<Command> commands = new List<Command>();
 
-				var helpBuilder = new StringBuilder( this.Help + " - [" );
+				var helpBuilder = new StringBuilder( this.Help + " - (" );
 				var helpMessage = BuildHelpMessage( info, helpBuilder );
-				helpBuilder.Append( " ]" );
+				helpBuilder.Append( " )" );
 
 				foreach ( var item in Names )
 				{
