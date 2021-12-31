@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 
@@ -15,8 +14,6 @@ namespace Espionage.Engine.Internal
 			// commands only accessible through unity...
 			Console.Provider = new EditorConsoleProvider();
 			Console.Initialize();
-
-			// Initialize CommandLine UI
 		}
 
 		//
