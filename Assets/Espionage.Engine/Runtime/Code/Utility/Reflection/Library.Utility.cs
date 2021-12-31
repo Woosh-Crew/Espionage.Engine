@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace Espionage.Engine.Internal
 {
@@ -52,7 +51,7 @@ namespace Espionage.Engine.Internal
 			if ( !Accessor.TryGet( name, out var library ) )
 			{
 				if ( assertMissing )
-					Debug.LogError( $"Library doesnt contain [{name}], not creating ILibrary" );
+					Debugging.Log.Error( $"Library doesnt contain [{name}], not creating ILibrary" );
 
 				return null;
 			}
@@ -66,7 +65,7 @@ namespace Espionage.Engine.Internal
 
 			if ( id == default )
 			{
-				Debug.LogError( "Invalid ID" );
+				Debugging.Log.Error( "Invalid ID" );
 				return null;
 			}
 

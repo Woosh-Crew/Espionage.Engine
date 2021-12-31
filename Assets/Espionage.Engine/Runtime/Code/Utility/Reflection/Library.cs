@@ -3,7 +3,6 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using UnityEngine;
 using Espionage.Engine.Internal;
 
 using Random = System.Random;
@@ -38,7 +37,7 @@ namespace Espionage.Engine
 		{
 			if ( library is null )
 			{
-				Debug.LogError( "Can't construct, Library is null" );
+				Debugging.Log.Error( "Can't construct, Library is null" );
 				return null;
 			}
 

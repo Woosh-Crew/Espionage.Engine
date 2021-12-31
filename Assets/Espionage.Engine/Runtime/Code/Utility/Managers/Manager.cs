@@ -14,7 +14,6 @@ namespace Espionage.Engine.Internal
 								.SelectMany( e => e.GetTypes()
 								.Where( e => e.IsDefined( typeof( ManagerAttribute ), false ) && e.GetCustomAttribute<ManagerAttribute>().Layer.HasFlag( layer ) ) );
 
-
 			foreach ( var item in types )
 			{
 				item.GetMethod( item.GetCustomAttribute<ManagerAttribute>().Method, BindingFlags.Static | BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic )?.Invoke( null, null );

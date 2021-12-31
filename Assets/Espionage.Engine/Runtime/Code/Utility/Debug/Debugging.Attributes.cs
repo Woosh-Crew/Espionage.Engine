@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 using Espionage.Engine.Internal;
-using UnityEngine;
 
 namespace Espionage.Engine
 {
@@ -71,11 +70,11 @@ namespace Espionage.Engine
 						 if ( !IsReadOnly && parameters is not null && parameters.Length > 0 )
 						 {
 							 property.SetValue( null, parameters[0] );
-							 Debug.Log( $"{name} is now {property.GetValue( null )}" );
+							 Debugging.Log.Info( $"{name} is now {property.GetValue( null )}" );
 						 }
 						 else
 						 {
-							 Debug.Log( $"{name} = {property.GetValue( null )}" );
+							 Debugging.Log.Info( $"{name} = {property.GetValue( null )}" );
 						 }
 				 	} );
 			}

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using UnityEngine;
 
 namespace Espionage.Engine.Internal
 {
@@ -46,7 +45,7 @@ namespace Espionage.Engine.Internal
 			}
 			catch ( Exception e )
 			{
-				Debug.LogException( e );
+				Debugging.Log.Error( e );
 			}
 		}
 
@@ -58,7 +57,7 @@ namespace Espionage.Engine.Internal
 			}
 			catch ( Exception e )
 			{
-				Debug.LogException( e );
+				Debugging.Log.Error( e );
 			}
 		}
 
@@ -66,7 +65,7 @@ namespace Espionage.Engine.Internal
 		{
 			if ( !_commands.TryGetValue( command, out var consoleCommand ) )
 			{
-				Debug.Log( $"Couldn't find command \"{command}\"" );
+				Debugging.Log.Info( $"Couldn't find command \"{command}\"" );
 				return;
 			}
 
