@@ -24,7 +24,7 @@ namespace Espionage.Engine.Internal
 		//
 
 		[EditorConsole.Cmd( "test" )]
-		private static void CmdNullablesTest( string preset = null )
+		private static void CmdNullablesTest( string preset = "the default value" )
 		{
 			Debug.Log( $"Worked - {preset}" );
 		}

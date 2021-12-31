@@ -75,14 +75,7 @@ namespace Espionage.Engine.Internal
 			// Add to history stack, for use later
 			_history.Add( $"{command} {string.Join( ' ', args )}" );
 
-			Debug.Log( command );
-
-			foreach ( var item in args )
-			{
-				Debug.Log( item );
-			}
-
-			consoleCommand.Invoke( ConvertArgs( consoleCommand.Info.GetParameterTypes(), args ) );
+			consoleCommand.Invoke( ConvertArgs( consoleCommand.Info, args ) );
 		}
 
 		public void LaunchArgs( string arg )

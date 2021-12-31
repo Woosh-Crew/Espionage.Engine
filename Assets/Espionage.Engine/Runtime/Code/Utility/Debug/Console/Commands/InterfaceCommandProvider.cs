@@ -79,7 +79,7 @@ namespace Espionage.Engine.Internal
 
 			// Check if we are on the correct layer - This looks ultra aids
 			if ( args is not null && args.Length > 0 )
-				consoleCommand.Invoke( ConvertArgs( consoleCommand.Info.GetParameterTypes(), args ) );
+				consoleCommand.Invoke( ConvertArgs( consoleCommand.Info, args ) );
 			else
 				consoleCommand.Invoke( null );
 		}
