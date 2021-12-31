@@ -23,12 +23,6 @@ namespace Espionage.Engine.Internal
 		// Commands
 		//
 
-		[EditorConsole.Cmd( "test" )]
-		private static void CmdNullablesTest( string preset = "the default value" )
-		{
-			Debug.Log( $"Worked - {preset}" );
-		}
-
 		[EditorConsole.Cmd( "editor.new_scene" )]
 		private static void CmdNewScene( string preset = null )
 		{
@@ -42,6 +36,13 @@ namespace Espionage.Engine.Internal
 
 				EditorSceneManager.NewScene( setup, NewSceneMode.Single );
 			}
+		}
+
+		[EditorConsole.Cmd( "editor.lighting" )]
+		private static void CmdLightDebug()
+		{
+			var sceneView = SceneView.lastActiveSceneView;
+			sceneView.sceneLighting = !sceneView.sceneLighting;
 		}
 	}
 }
