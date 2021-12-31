@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Espionage.Engine.Internal;
+using UnityEngine; // We should use our own logging
 
 namespace Espionage.Engine
 {
@@ -55,6 +56,44 @@ namespace Espionage.Engine
 
 		public static void Invoke( string commandLine ) => Provider.CommandProvider?.Invoke( commandLine );
 		public static void Invoke( string command, params string[] args ) => Provider.CommandProvider?.Invoke( command, args );
+
+		public static void SetupDefaults()
+		{
+			// Initialize default commands from scratch, that way they are present
+			// on every ICommandProvider.
+			var quitCmd = new Console.Command()
+			{
+				Name = "quit",
+				Help = "Quits the game",
+				Owner = typeof( Console )
+			};
+
+			quitCmd.WithAction( ( e ) => QuitCmd() );
+			Provider.CommandProvider?.Add( quitCmd );
+
+			var helpCmd = new Console.Command()
+			{
+				Name = "help",
+				Help = "Dumps all commands, or anything starting with input",
+				Owner = typeof( Console )
+			};
+
+			helpCmd.WithAction( ( e ) => HelpCmd() );
+			Provider.CommandProvider?.Add( helpCmd );
+		}
+
+		private static void HelpCmd()
+		{
+			Debug.Log( $"Commands" );
+
+			foreach ( var item in Console.Provider.CommandProvider?.All )
+				Debug.Log( $"{item.Name} - {item.Owner.FullName}" );
+		}
+
+		private static void QuitCmd()
+		{
+			Application.Quit();
+		}
 
 		// 
 		// Interpreter
