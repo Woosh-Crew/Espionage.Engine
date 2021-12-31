@@ -32,7 +32,7 @@ namespace Espionage.Engine
 				await Task.WhenAll( Console.Initialize() );
 			}
 
-			Console.Invoke( "help" );
+			Console.Invoke( "help clear; quit" );
 		}
 
 		//

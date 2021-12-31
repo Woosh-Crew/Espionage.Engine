@@ -22,12 +22,16 @@ namespace Espionage.Engine.Internal.Commands
 
 public static class ICommandProviderExtensions
 {
-	public static void Invoke( this ICommandProvider provider, string command )
+	public static void Invoke( this ICommandProvider provider, string commandLine )
 	{
-		var name = command.Split( ' ' ).First();
-		var args = command.Substring( name.Length ).SplitArguments();
+		foreach ( var targetCommand in commandLine.Split( ';' ) )
+		{
+			var name = targetCommand.TrimStart().Split( ' ' ).First();
+			var args = targetCommand.Substring( name.Length ).SplitArguments();
 
-		provider.Invoke( name, args );
+			// Invoke multiple commands at the same time
+			provider.Invoke( name, args );
+		}
 	}
 
 	public static string[] Find( this ICommandProvider provider, string input )
