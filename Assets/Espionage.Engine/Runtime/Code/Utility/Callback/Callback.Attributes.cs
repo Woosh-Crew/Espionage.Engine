@@ -9,9 +9,10 @@ namespace Espionage.Engine
 {
 	public static partial class Callback
 	{
-		public class FrameAttribute : CallbackAttribute
+		public class Frame : CallbackAttribute
 		{
-			public FrameAttribute() : base( "base.update" ) { }
+			public const string Identifier = "event.frame";
+			public Frame() : base( Identifier ) { }
 		}
 	}
 
