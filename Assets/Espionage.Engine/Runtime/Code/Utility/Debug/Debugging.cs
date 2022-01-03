@@ -8,7 +8,7 @@ using Espionage.Engine.Internal.Commands;
 
 namespace Espionage.Engine
 {
-	[Manager( nameof( Initialize ) )]
+	[Manager( nameof( Initialize ), Order = -100 )]
 	public static partial class Debugging
 	{
 		//
@@ -17,10 +17,12 @@ namespace Espionage.Engine
 
 		public static async void Initialize()
 		{
+			// We initialize logging without
+			// Async so we can log straight away
+
 			if ( Log is null )
 				Log = new SimpleLoggingProvider();
 
-			// Init Logging
 			Log.Initialize();
 
 			using ( Debugging.Stopwatch( "Debugging Initialized" ) )

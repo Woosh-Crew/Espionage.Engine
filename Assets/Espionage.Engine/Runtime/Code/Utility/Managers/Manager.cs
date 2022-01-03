@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Espionage.Engine.Internal
@@ -12,11 +14,14 @@ namespace Espionage.Engine.Internal
 			// Get all manager types
 			var types = AppDomain.CurrentDomain.GetAssemblies()
 								.SelectMany( e => e.GetTypes()
-								.Where( e => e.IsDefined( typeof( ManagerAttribute ), false ) && e.GetCustomAttribute<ManagerAttribute>().Layer.HasFlag( layer ) ) );
+								.Where( e => e.IsDefined( typeof( ManagerAttribute ), false ) && e.GetCustomAttribute<ManagerAttribute>().Layer.HasFlag( layer ) ) )
+								.OrderBy( e => e.GetCustomAttribute<ManagerAttribute>().Order );
 
+			// Invoke all init methods - or cache if it returns task
 			foreach ( var item in types )
 			{
-				item.GetMethod( item.GetCustomAttribute<ManagerAttribute>().Method, BindingFlags.Static | BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic )?.Invoke( null, null );
+				var method = item.GetMethod( item.GetCustomAttribute<ManagerAttribute>().Method, BindingFlags.Static | BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic );
+				method.Invoke( null, null );
 			}
 		}
 

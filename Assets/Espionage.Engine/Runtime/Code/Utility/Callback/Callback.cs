@@ -2,24 +2,46 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using Espionage.Engine.Internal.Callbacks;
 
 namespace Espionage.Engine
 {
+	[Manager( nameof( Initialize ), Order = 50 )]
 	public static partial class Callback
 	{
-		internal struct CallbackInfo
+		//
+		// Initialize
+		//
+
+		public static async void Initialize()
 		{
-			public Type Class { get; set; }
-			public MethodInfo Info { get; set; }
+			using ( Debugging.Stopwatch( "Callbacks Initialized" ) )
+			{
+				if ( Provider is null )
+					Provider = new AttributeCallbackProvider();
+
+				await Provider.Initialize();
+			}
+
+			Run( "test", "penis?" );
 		}
 
-		public static void Run( string name )
+		[Callback( "test" )]
+		public static void Test( string fuck )
+		{
+			Debugging.Log.Info( "Worked" );
+			Debugging.Log.Info( fuck );
+		}
+
+		//
+		// API
+		//
+
+		public static void Run( string name, params object[] args )
 		{
 			try
 			{
-				Provider?.Run( name );
+				Provider?.Run( name, args );
 			}
 			catch ( Exception e )
 			{

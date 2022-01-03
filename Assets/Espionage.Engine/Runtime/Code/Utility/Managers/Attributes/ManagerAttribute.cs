@@ -12,6 +12,7 @@ namespace Espionage.Engine
 
 		private string init;
 		public string Method => init;
+		public int Order { get; set; }
 		public Layer Layer { get; set; } = Layer.Runtime;
 	}
 }

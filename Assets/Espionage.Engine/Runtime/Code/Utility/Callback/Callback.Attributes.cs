@@ -16,7 +16,7 @@ namespace Espionage.Engine
 	}
 
 
-	[AttributeUsage( AttributeTargets.Method, Inherited = false, AllowMultiple = false )]
+	[AttributeUsage( AttributeTargets.Method, Inherited = true, AllowMultiple = false )]
 	public class CallbackAttribute : Attribute
 	{
 		readonly string name;
