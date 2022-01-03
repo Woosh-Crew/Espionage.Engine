@@ -37,7 +37,7 @@ namespace Espionage.Engine
 		[Debugging.Cmd( "quit", "exit", Help = "Quits the application" )]
 		private static void QuitCmd()
 		{
-			Log.Error( "This should probably quit the game" );
+			Log.Warning( "This should probably quit the game" );
 		}
 	}
 }

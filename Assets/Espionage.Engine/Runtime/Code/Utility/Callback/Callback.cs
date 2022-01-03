@@ -23,7 +23,7 @@ namespace Espionage.Engine
 				await Provider.Initialize();
 			}
 
-			Run( "test", "penis?" );
+			Run( "shit", "penis?" );
 		}
 
 		[Callback( "test" )]
