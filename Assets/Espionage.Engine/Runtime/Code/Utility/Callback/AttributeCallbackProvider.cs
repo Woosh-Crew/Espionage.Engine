@@ -39,14 +39,13 @@ namespace Espionage.Engine.Internal.Callbacks
 		public void Run( string name, params object[] args )
 		{
 			if ( !_callbacks.ContainsKey( name ) )
-			{
-				Debugging.Log.Error( $"No callback for name {name}" );
 				return;
-			}
 
 			var callbacks = _callbacks[name];
 			foreach ( var callback in callbacks )
 			{
+				Debugging.Log.Info( "Calling" );
+
 				if ( callback.IsStatic )
 				{
 					callback.Info.Invoke( null, args );
@@ -65,7 +64,14 @@ namespace Espionage.Engine.Internal.Callbacks
 
 		public void Register( object item )
 		{
-			if ( _registered.TryGetValue( item.GetType(), out var all ) )
+			var type = item.GetType();
+
+			if ( !_registered.ContainsKey( type ) )
+			{
+				_registered.Add( type, new List<object>() );
+			}
+
+			if ( _registered.TryGetValue( type, out var all ) )
 			{
 				all.Add( item );
 			}
