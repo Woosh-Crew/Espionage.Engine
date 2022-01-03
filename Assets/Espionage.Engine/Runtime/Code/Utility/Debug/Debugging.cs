@@ -77,11 +77,11 @@ namespace Espionage.Engine
 
 				if ( string.IsNullOrEmpty( _message ) )
 				{
-					Log.Info( $"{_stopwatch.ElapsedMilliseconds}ms" );
+					Log.Info( $"{_stopwatch.ElapsedMilliseconds}ms, {_stopwatch.ElapsedTicks}ticks" );
 					return;
 				}
 
-				Log.Info( $"{String.Format( _message, _args )} | {_stopwatch.ElapsedMilliseconds}ms" );
+				Log.Info( $"{String.Format( _message, _args )} | {_stopwatch.ElapsedMilliseconds}ms, {_stopwatch.ElapsedTicks}ticks" );
 			}
 		}
 	}

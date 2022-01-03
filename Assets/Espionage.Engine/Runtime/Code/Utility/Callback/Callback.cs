@@ -23,14 +23,8 @@ namespace Espionage.Engine
 				await Provider.Initialize();
 			}
 
-			Run( "shit", "penis?" );
-		}
-
-		[Callback( "test" )]
-		public static void Test( string fuck )
-		{
-			Debugging.Log.Info( "Worked" );
-			Debugging.Log.Info( fuck );
+			// Default
+			UnityEngine.Application.onBeforeRender += () => Run( "event.frame" );
 		}
 
 		//
