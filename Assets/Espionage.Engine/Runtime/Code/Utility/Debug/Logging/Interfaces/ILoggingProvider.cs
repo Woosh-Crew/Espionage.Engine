@@ -53,4 +53,14 @@ public static class ILoggingProviderExtensions
 			Type = Entry.Level.Error,
 		} );
 	}
+
+	public static void Exception( this ILoggingProvider provider, Exception exception )
+	{
+		provider.Add( new Entry()
+		{
+			Message = exception.Message,
+			StackTrace = System.Environment.StackTrace,
+			Type = Entry.Level.Error,
+		} );
+	}
 }

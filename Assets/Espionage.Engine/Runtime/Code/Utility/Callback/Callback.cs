@@ -17,6 +17,7 @@ namespace Espionage.Engine
 		{
 			using ( Debugging.Stopwatch( "Callbacks Initialized" ) )
 			{
+				// AttributeCallbackProvider is the default provider
 				if ( Provider is null )
 					Provider = new AttributeCallbackProvider();
 
@@ -37,29 +38,48 @@ namespace Espionage.Engine
 		// API
 		//
 
+		/// <summary> Runs a callback </summary>
 		public static void Run( string name, params object[] args )
 		{
-			if ( Provider is null )
+			if ( Provider is null || string.IsNullOrEmpty( name ) )
 				return;
 
 			try
 			{
 				Provider.Run( name, args );
 			}
+			catch ( KeyNotFoundException )
+			{
+				Debugging.Log.Error( $"Key : {name}, somehow couldn't be found or created?" );
+			}
 			catch ( Exception e )
 			{
-				Debugging.Log.Error( e.Message );
+				Debugging.Log.Exception( e );
 			}
 		}
 
-		public static void Register( object item )
+		/// <summary> Runs a callback that returns a value </summary>
+		public static T[] Run<T>( string name, params object[] args )
 		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary> Register an object to recieve callbacks </summary>
+		public static void Register( ICallbacks item )
+		{
+			if ( item is null )
+				return;
+
 			Provider?.Register( item );
 		}
 
 
-		public static void Unregister( object item )
+		/// <summary> Unregister an object to stop receiving callbacks </summary>
+		public static void Unregister( ICallbacks item )
 		{
+			if ( item is null )
+				return;
+
 			Provider?.Unregister( item );
 		}
 
