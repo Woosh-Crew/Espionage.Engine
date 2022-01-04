@@ -11,6 +11,9 @@ namespace Espionage.Engine.Internal.Logging
 
 		public void Add( Entry entry )
 		{
+			if ( string.IsNullOrEmpty( entry.Message ) )
+				return;
+
 			switch ( entry.Type )
 			{
 				case Entry.Level.Info:

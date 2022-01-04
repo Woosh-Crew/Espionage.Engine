@@ -23,8 +23,14 @@ namespace Espionage.Engine
 				await Provider.Initialize();
 			}
 
-			// Default
-			UnityEngine.Application.onBeforeRender += () => Run( "event.frame" );
+			// If we are exiting playmode, dispose the provider
+#if UNITY_EDITOR
+			UnityEditor.EditorApplication.playModeStateChanged += (e =>
+			{
+				if ( e is UnityEditor.PlayModeStateChange.ExitingPlayMode )
+					Provider?.Dispose();
+			});
+#endif
 		}
 
 		//
@@ -33,9 +39,12 @@ namespace Espionage.Engine
 
 		public static void Run( string name, params object[] args )
 		{
+			if ( Provider is null )
+				return;
+
 			try
 			{
-				Provider?.Run( name, args );
+				Provider.Run( name, args );
 			}
 			catch ( Exception e )
 			{

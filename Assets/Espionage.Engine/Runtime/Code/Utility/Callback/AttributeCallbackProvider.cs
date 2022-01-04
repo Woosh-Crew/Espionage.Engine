@@ -16,14 +16,19 @@ namespace Espionage.Engine.Internal.Callbacks
 			return Task.Run( () =>
 			{
 				// Get every Callback using Linq
-				var methods = AppDomain.CurrentDomain.GetAssemblies()
-				.SelectMany( e => e.GetTypes()
-									.SelectMany( e => e.GetMethods( BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic )
-									.Where( e => e.IsDefined( typeof( CallbackAttribute ) ) ) ) );
+				// var methods = AppDomain.CurrentDomain.GetAssemblies()
+				// .SelectMany( e => e.GetTypes()
+				// 					.SelectMany( e => e.GetMethods( BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy )
+				// 					.Where( e => e.IsDefined( typeof( CallbackAttribute ) ) ) ) );
 
-				foreach ( var item in methods )
+				var methods = typeof( Callback ).GetMethods( BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy )
+												.Where( e => e.IsDefined( typeof( CallbackAttribute ) ) );
+
+				return;
+
+				foreach ( var info in methods )
 				{
-					var attribute = item.GetCustomAttribute<CallbackAttribute>();
+					var attribute = info.GetCustomAttribute<CallbackAttribute>();
 
 					if ( !_callbacks.ContainsKey( attribute.Name ) )
 					{
@@ -31,9 +36,17 @@ namespace Espionage.Engine.Internal.Callbacks
 					}
 
 					_callbacks.TryGetValue( attribute.Name, out var items );
-					items.Add( new CallbackInfo() { Name = attribute.Name, Info = item, Class = item.DeclaringType } );
+					items.Add( new CallbackInfo() { IsStatic = info.IsStatic }.FromType( info.DeclaringType ).WithCallback( Build( info ) ) );
 				}
 			} );
+		}
+
+		internal CallbackInfo.CallbackEvent Build( MethodInfo info )
+		{
+			return delegate ( object target, object[] args )
+			{
+				info?.Invoke( target, args );
+			};
 		}
 
 		public void Run( string name, params object[] args )
@@ -48,7 +61,7 @@ namespace Espionage.Engine.Internal.Callbacks
 
 				if ( callback.IsStatic )
 				{
-					callback.Info.Invoke( null, args );
+					callback.Invoke( null, args );
 					continue;
 				}
 
@@ -56,7 +69,7 @@ namespace Espionage.Engine.Internal.Callbacks
 				{
 					foreach ( var obj in _registered[callback.Class] )
 					{
-						callback.Info?.Invoke( obj, args );
+						callback.Invoke( obj, args );
 					}
 				}
 			}
@@ -83,6 +96,17 @@ namespace Espionage.Engine.Internal.Callbacks
 			{
 				all.Remove( item );
 			}
+		}
+
+		public void Dispose()
+		{
+			_registered?.Clear();
+			_registered = null;
+
+			_callbacks?.Clear();
+			_callbacks = null;
+
+			Debugging.Log.Warning( "Dispoing ICallbackProvider" );
 		}
 	}
 }

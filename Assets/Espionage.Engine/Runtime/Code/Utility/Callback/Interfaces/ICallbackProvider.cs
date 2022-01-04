@@ -1,8 +1,9 @@
+using System;
 using System.Threading.Tasks;
 
 namespace Espionage.Engine.Internal.Callbacks
 {
-	public interface ICallbackProvider
+	public interface ICallbackProvider : IDisposable
 	{
 		Task Initialize() { return null; }
 
