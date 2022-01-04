@@ -9,22 +9,17 @@ namespace Espionage.Engine.Internal.Callbacks
 	public class AttributeCallbackProvider : ICallbackProvider
 	{
 		private static Dictionary<string, List<CallbackInfo>> _callbacks = new Dictionary<string, List<CallbackInfo>>();
-		private Dictionary<Type, List<object>> _registered = new Dictionary<Type, List<object>>();
+		private static Dictionary<Type, List<object>> _registered = new Dictionary<Type, List<object>>();
 
 		public Task Initialize()
 		{
 			return Task.Run( () =>
 			{
 				// Get every Callback using Linq
-				// var methods = AppDomain.CurrentDomain.GetAssemblies()
-				// .SelectMany( e => e.GetTypes()
-				// 					.SelectMany( e => e.GetMethods( BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy )
-				// 					.Where( e => e.IsDefined( typeof( CallbackAttribute ) ) ) ) );
-
-				var methods = typeof( Callback ).GetMethods( BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy )
-												.Where( e => e.IsDefined( typeof( CallbackAttribute ) ) );
-
-				return;
+				var methods = AppDomain.CurrentDomain.GetAssemblies()
+				.SelectMany( e => e.GetTypes()
+									.SelectMany( e => e.GetMethods( BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy )
+									.Where( e => e.IsDefined( typeof( CallbackAttribute ) ) ) ) );
 
 				foreach ( var info in methods )
 				{
