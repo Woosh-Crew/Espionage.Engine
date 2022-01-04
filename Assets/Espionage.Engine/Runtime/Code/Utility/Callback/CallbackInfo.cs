@@ -13,12 +13,12 @@ namespace Espionage.Engine.Internal.Callbacks
 
 
 		// Delegate
-		public delegate void CallbackEvent( object target, object[] args );
+		public delegate object CallbackEvent( object target, object[] args );
 		private CallbackEvent _callback;
 
-		public void Invoke( object target = null, object[] args = null )
+		public object Invoke( object target = null, object[] args = null )
 		{
-			_callback?.Invoke( target, args );
+			return _callback?.Invoke( target, args );
 		}
 
 		//

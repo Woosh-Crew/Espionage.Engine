@@ -7,7 +7,8 @@ namespace Espionage.Engine.Internal.Callbacks
 	{
 		Task Initialize() { return null; }
 
-		void Run( string name, params object[] args );
+		object[] Run( string name, params object[] args );
+
 		void Register( object item );
 		void Unregister( object item );
 	}

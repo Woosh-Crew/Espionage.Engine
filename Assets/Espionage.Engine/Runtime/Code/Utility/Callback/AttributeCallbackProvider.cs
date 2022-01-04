@@ -41,23 +41,29 @@ namespace Espionage.Engine.Internal.Callbacks
 		{
 			return delegate ( object target, object[] args )
 			{
-				info?.Invoke( target, args );
+				return info?.Invoke( target, args );
 			};
 		}
 
-		public void Run( string name, params object[] args )
+		public object[] Run( string name, params object[] args )
 		{
 			if ( !_callbacks.ContainsKey( name ) )
-				return;
+				return null;
 
 			var callbacks = _callbacks[name];
+			List<object> builder = new List<object>();
+
 			foreach ( var callback in callbacks )
 			{
 				Debugging.Log.Info( "Calling" );
 
 				if ( callback.IsStatic )
 				{
-					callback.Invoke( null, args );
+					var arg = callback.Invoke( null, args );
+
+					if ( arg is not null )
+						builder.Add( arg );
+
 					continue;
 				}
 
@@ -65,10 +71,15 @@ namespace Espionage.Engine.Internal.Callbacks
 				{
 					foreach ( var obj in _registered[callback.Class] )
 					{
-						callback.Invoke( obj, args );
+						var arg = callback.Invoke( obj, args );
+
+						if ( arg is not null )
+							builder.Add( arg );
 					}
 				}
 			}
+
+			return builder.ToArray();
 		}
 
 		public void Register( object item )

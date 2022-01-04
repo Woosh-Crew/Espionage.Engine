@@ -1,6 +1,7 @@
 // Attribute based event callback system
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Espionage.Engine.Internal.Callbacks;
 
@@ -59,9 +60,25 @@ namespace Espionage.Engine
 		}
 
 		/// <summary> Runs a callback that returns a value </summary>
-		public static T[] Run<T>( string name, params object[] args )
+		public static IEnumerable<T> Run<T>( string name, params object[] args )
 		{
-			throw new NotImplementedException();
+			if ( Provider is null || string.IsNullOrEmpty( name ) )
+				return null;
+
+			try
+			{
+				return Provider.Run( name, args ).Cast<T>();
+			}
+			catch ( KeyNotFoundException )
+			{
+				Debugging.Log.Error( $"Key : {name}, somehow couldn't be found or created?" );
+			}
+			catch ( Exception e )
+			{
+				Debugging.Log.Exception( e );
+			}
+
+			return null;
 		}
 
 		/// <summary> Register an object to recieve callbacks </summary>
