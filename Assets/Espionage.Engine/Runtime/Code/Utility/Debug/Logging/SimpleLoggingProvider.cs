@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Espionage.Engine.Internal.Logging
 {
-	public class SimpleLoggingProvider : ILoggingProvider
+	internal class SimpleLoggingProvider : ILoggingProvider
 	{
 		public Action<Entry> OnLogged { get; set; }
 

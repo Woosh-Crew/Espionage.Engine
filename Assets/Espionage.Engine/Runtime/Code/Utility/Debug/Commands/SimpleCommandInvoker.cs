@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Espionage.Engine.Internal.Commands
 {
-	public class SimpleCommandInvoker : ICommandInvoker
+	internal class SimpleCommandInvoker : ICommandInvoker
 	{
 		// Storage
 		private Dictionary<string, Command> _commands = new Dictionary<string, Command>( StringComparer.CurrentCultureIgnoreCase );

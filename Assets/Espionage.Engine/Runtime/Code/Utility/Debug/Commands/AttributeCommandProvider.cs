@@ -8,7 +8,7 @@ namespace Espionage.Engine.Internal.Commands
 {
 	/// <summary> Attribute Command Provider caches commands based off an attribute </summary>
 	/// <typeparam name="T"> Attribute, should also have interface ICommandCreator </typeparam>
-	public class AttributeCommandProvider<T> : ICommandProvider where T : Attribute
+	internal class AttributeCommandProvider<T> : ICommandProvider where T : Attribute
 	{
 		//
 		// Commands

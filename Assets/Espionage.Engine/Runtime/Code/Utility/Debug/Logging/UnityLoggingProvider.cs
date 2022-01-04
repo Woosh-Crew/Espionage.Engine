@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Espionage.Engine.Internal.Logging
 {
-	public class UnityLoggingProvider : ILoggingProvider
+	internal class UnityLoggingProvider : ILoggingProvider
 	{
 		public Action<Entry> OnLogged { get; set; }
 		public IReadOnlyCollection<Entry> All => throw new NotImplementedException();

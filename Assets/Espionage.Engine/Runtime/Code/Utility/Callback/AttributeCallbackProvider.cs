@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Espionage.Engine.Internal.Callbacks
 {
-	public class AttributeCallbackProvider : ICallbackProvider
+	internal class AttributeCallbackProvider : ICallbackProvider
 	{
 		private static Dictionary<string, List<CallbackInfo>> _callbacks = new Dictionary<string, List<CallbackInfo>>();
 		private static Dictionary<Type, List<object>> _registered = new Dictionary<Type, List<object>>();

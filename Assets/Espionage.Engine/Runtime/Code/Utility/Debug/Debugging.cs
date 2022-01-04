@@ -75,13 +75,15 @@ namespace Espionage.Engine
 			{
 				_stopwatch.Stop();
 
+				var time = $"{_stopwatch.ElapsedMilliseconds}ms, {_stopwatch.ElapsedTicks}ticks";
+
 				if ( string.IsNullOrEmpty( _message ) )
 				{
-					Log.Info( $"{_stopwatch.ElapsedMilliseconds}ms, {_stopwatch.ElapsedTicks}ticks" );
+					Log.Info( time );
 					return;
 				}
 
-				Log.Info( $"{String.Format( _message, _args )} | {_stopwatch.ElapsedMilliseconds}ms, {_stopwatch.ElapsedTicks}ticks" );
+				Log.Info( $"{String.Format( _message, _args )} | {time}" );
 			}
 		}
 	}

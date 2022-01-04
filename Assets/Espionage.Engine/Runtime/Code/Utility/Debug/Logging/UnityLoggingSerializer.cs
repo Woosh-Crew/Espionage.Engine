@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Espionage.Engine.Internal.Logging
 {
-	public class UnityLoggingSerializer : ILoggingSerializer
+	internal class UnityLoggingSerializer : ILoggingSerializer
 	{
 		public UnityLoggingSerializer( string path )
 		{
