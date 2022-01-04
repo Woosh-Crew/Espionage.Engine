@@ -10,7 +10,7 @@ using System;
 namespace Espionage.Engine
 {
 	[Constructor( nameof( Construct ) )]
-	public abstract class Entity : MonoBehaviour, ILibrary
+	public abstract class Entity : MonoBehaviour, ILibrary, ICallbacks
 	{
 		//
 		// Spawn

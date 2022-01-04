@@ -18,8 +18,9 @@ namespace Espionage.Engine.Internal.Callbacks
 				// Get every Callback using Linq
 				var methods = AppDomain.CurrentDomain.GetAssemblies()
 				.SelectMany( e => e.GetTypes()
+									.Where( e => e.GetInterfaces().Contains( typeof( ICallbacks ) ) ) )
 									.SelectMany( e => e.GetMethods( BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy )
-									.Where( e => e.IsDefined( typeof( CallbackAttribute ) ) ) ) );
+									.Where( e => e.IsDefined( typeof( CallbackAttribute ) ) ) );
 
 				foreach ( var info in methods )
 				{
