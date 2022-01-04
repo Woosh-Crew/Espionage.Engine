@@ -16,11 +16,9 @@ namespace Espionage.Engine
 		// Exposed API
 		//
 
-		/// <summary> Helpers to grab library records </summary>
+		/// <summary> Helpers to grab and create library records </summary>
 		public static LibraryAccessor Accessor => new LibraryAccessor();
 
-		/// <summary> Helpers to create entities from library records. </summary>
-		public static LibraryCreator Creator => new LibraryCreator();
 
 		/// <summary> Every library record. </summary>
 		public static IEnumerable<Library> GetAll()

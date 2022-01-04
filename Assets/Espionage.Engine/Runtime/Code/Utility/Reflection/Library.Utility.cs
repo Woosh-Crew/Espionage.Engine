@@ -6,6 +6,10 @@ namespace Espionage.Engine.Internal
 {
 	public struct LibraryAccessor
 	{
+		//
+		// Getting
+		//
+
 		public IEnumerable<Library> Records => Library.GetAll();
 
 		// TryGet
@@ -35,20 +39,19 @@ namespace Espionage.Engine.Internal
 		public Library Get( Type type ) => Records.FirstOrDefault( e => e.Owner == type );
 		public Library Get( Guid id ) => Records.FirstOrDefault( e => e.Id == id );
 		public Library Get<T>() where T : ILibrary => Records.FirstOrDefault( e => e.Owner == typeof( T ) );
-	}
 
-	public struct LibraryCreator
-	{
-		public LibraryAccessor Accessor => Library.Accessor;
+		//
+		// Creating
+		//
 
 		public T Create<T>() where T : class, ILibrary, new()
 		{
-			return Library.Construct( Accessor.Get<T>() ) as T;
+			return Library.Construct( Get<T>() ) as T;
 		}
 
 		public T Create<T>( string name, bool assertMissing = false ) where T : class, ILibrary, new()
 		{
-			if ( !Accessor.TryGet( name, out var library ) )
+			if ( !TryGet( name, out var library ) )
 			{
 				if ( assertMissing )
 					Debugging.Log.Error( $"Library doesnt contain [{name}], not creating ILibrary" );
@@ -61,7 +64,7 @@ namespace Espionage.Engine.Internal
 
 		public T Create<T>( Guid id ) where T : class, ILibrary, new()
 		{
-			var library = Accessor.Get( id );
+			var library = Get( id );
 
 			if ( id == default )
 			{
