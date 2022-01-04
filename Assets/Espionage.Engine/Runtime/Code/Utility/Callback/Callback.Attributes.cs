@@ -1,9 +1,6 @@
 // Attribute based event callback system
 
 using System;
-using System.Collections.Generic;
-using System.Reflection;
-using Espionage.Engine.Internal.Callbacks;
 
 namespace Espionage.Engine
 {
@@ -17,7 +14,7 @@ namespace Espionage.Engine
 	}
 
 
-	[AttributeUsage( AttributeTargets.Method, Inherited = true, AllowMultiple = false )]
+	[AttributeUsage( AttributeTargets.Method, Inherited = true, AllowMultiple = true )]
 	public class CallbackAttribute : Attribute
 	{
 		readonly string name;
