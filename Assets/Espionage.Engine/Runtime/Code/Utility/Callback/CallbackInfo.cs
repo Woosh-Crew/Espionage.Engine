@@ -1,6 +1,7 @@
 // Attribute based event callback system
 
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace Espionage.Engine.Internal.Callbacks
@@ -13,8 +14,8 @@ namespace Espionage.Engine.Internal.Callbacks
 
 
 		// Delegate
-		public delegate object CallbackEvent( object target, object[] args );
-		private CallbackEvent _callback;
+		public delegate object Action( object target, object[] args );
+		private Action _callback;
 
 		public object Invoke( object target = null, object[] args = null )
 		{
@@ -25,7 +26,7 @@ namespace Espionage.Engine.Internal.Callbacks
 		// Builder
 		//
 
-		public CallbackInfo WithCallback( CallbackEvent callbackEvent )
+		public CallbackInfo WithCallback( Action callbackEvent )
 		{
 			_callback = callbackEvent;
 			return this;
@@ -36,5 +37,8 @@ namespace Espionage.Engine.Internal.Callbacks
 			Class = type;
 			return this;
 		}
+
+		// Group
+		public class Group : List<CallbackInfo> { }
 	}
 }

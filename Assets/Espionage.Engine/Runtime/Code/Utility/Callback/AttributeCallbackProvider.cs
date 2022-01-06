@@ -8,7 +8,7 @@ namespace Espionage.Engine.Internal.Callbacks
 {
 	internal class AttributeCallbackProvider : ICallbackProvider
 	{
-		private static Dictionary<string, List<CallbackInfo>> _callbacks = new Dictionary<string, List<CallbackInfo>>();
+		private static Dictionary<string, CallbackInfo.Group> _callbacks = new Dictionary<string, CallbackInfo.Group>();
 		private static Dictionary<Type, List<object>> _registered = new Dictionary<Type, List<object>>();
 
 		public Task Initialize()
@@ -17,9 +17,9 @@ namespace Espionage.Engine.Internal.Callbacks
 			{
 				// Get every Callback using Linq
 				var methods = AppDomain.CurrentDomain.GetAssemblies()
-				.SelectMany( e => e.GetTypes()
-									.Where( e => e.GetInterfaces().Contains( typeof( ICallbacks ) ) ) )
-									.SelectMany( e => e.GetMethods( BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy )
+						.SelectMany( e => e.GetTypes()
+									.Where( e => e.HasInterface<ICallbacks>() )
+									.SelectMany( e => e.GetMethods( BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy ) )
 									.Where( e => e.IsDefined( typeof( CallbackAttribute ) ) ) );
 
 				foreach ( var info in methods )
@@ -28,7 +28,7 @@ namespace Espionage.Engine.Internal.Callbacks
 
 					if ( !_callbacks.ContainsKey( attribute.Name ) )
 					{
-						_callbacks.Add( attribute.Name, new List<CallbackInfo>() );
+						_callbacks.Add( attribute.Name, new CallbackInfo.Group() );
 					}
 
 					_callbacks.TryGetValue( attribute.Name, out var items );
@@ -37,7 +37,7 @@ namespace Espionage.Engine.Internal.Callbacks
 			} );
 		}
 
-		internal CallbackInfo.CallbackEvent Build( MethodInfo info )
+		internal CallbackInfo.Action Build( MethodInfo info )
 		{
 			return delegate ( object target, object[] args )
 			{
@@ -51,11 +51,14 @@ namespace Espionage.Engine.Internal.Callbacks
 				return null;
 
 			var callbacks = _callbacks[name];
+
+			// Build the final object array
 			List<object> builder = new List<object>();
 
 			foreach ( var callback in callbacks )
 			{
-				Debugging.Log.Info( "Calling" );
+				// If the callback is a static method
+				// Then just pass in null for the invoke
 
 				if ( callback.IsStatic )
 				{
@@ -66,6 +69,9 @@ namespace Espionage.Engine.Internal.Callbacks
 
 					continue;
 				}
+
+				// If the callback is from an instance, get all instances
+				// And invoke them, using the stored object from _registered
 
 				if ( _registered.ContainsKey( callback.Class ) )
 				{

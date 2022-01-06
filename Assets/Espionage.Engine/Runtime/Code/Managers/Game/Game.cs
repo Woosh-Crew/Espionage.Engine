@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Espionage.Engine
 {
-	public sealed class Game : Entity
+	public sealed class Game : Entity, IGameProvider
 	{
 		//
 		// Espionage.Engine Entry Point
@@ -14,6 +14,7 @@ namespace Espionage.Engine
 		private static void Initialization()
 		{
 			Main = Library.Accessor.Create<Game>();
+			IGameProvider.Main = Main;
 			DontDestroyOnLoad( Main );
 
 			// Shutdown depending on if were in the editor or not.
