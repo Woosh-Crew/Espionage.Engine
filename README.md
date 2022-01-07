@@ -19,9 +19,9 @@ Entity system also removes the need for everything to be scene dependent / prefa
 
 ### > Assets
 All assets are loaded at runtime using AssetBundles. this provides many benifits such as everything not being scene dependent.
- 
-### > Utility
-- Debug Console
-- Reflection System
-- Event System
-- Handy extension methods
+
+### > Callback System
+Easy attribute based callback system, assign a method the ```[Callback("callback.name")]``` attribute and then run it using ```Callback.Run("callback.name");``` the string being the callback
+
+### > Console System
+Attribute based and easily extendable, use Debugging.Cmd or Debugging.Var attributes on propertys or methods for them to be used as a console command
