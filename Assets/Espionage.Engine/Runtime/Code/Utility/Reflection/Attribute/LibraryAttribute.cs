@@ -7,8 +7,10 @@ namespace Espionage.Engine
 	{
 		public string Name { get; set; }
 		public string Title { get; set; }
-		public string Description { get; set; }
+		public string Help { get; set; }
 		public string Icon { get; set; }
+
+		public int Order { get; set; }
 
 		public LibraryAttribute() { }
 
@@ -22,9 +24,12 @@ namespace Espionage.Engine
 			return new Library()
 			{
 				Name = Name,
+				Description = Help,
 				Title = Title,
 				Owner = type,
 				Icon = Icon,
+
+				Order = Order,
 			};
 		}
 	}

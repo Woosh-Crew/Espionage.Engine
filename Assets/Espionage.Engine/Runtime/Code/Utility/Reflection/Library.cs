@@ -142,6 +142,9 @@ namespace Espionage.Engine
 		public string Description;
 		public string Icon;
 
+		public int Order;
+
+
 		[NonSerialized]
 		public Guid Id;
 
