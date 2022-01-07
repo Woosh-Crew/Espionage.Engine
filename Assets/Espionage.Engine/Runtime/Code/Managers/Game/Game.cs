@@ -13,8 +13,9 @@ namespace Espionage.Engine
 		[RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.AfterSceneLoad )]
 		private static void Initialization()
 		{
+			return;
+
 			Main = Library.Accessor.Create<Game>();
-			IGameProvider.Main = Main;
 			DontDestroyOnLoad( Main );
 
 			// Shutdown depending on if were in the editor or not.

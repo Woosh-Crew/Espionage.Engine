@@ -140,6 +140,7 @@ namespace Espionage.Engine
 		public string Name;
 		public string Title;
 		public string Description;
+		public string Icon;
 
 		[NonSerialized]
 		public Guid Id;
