@@ -7,7 +7,7 @@ using Editor = UnityEditor.Editor;
 
 namespace Espionage.Engine.Editor
 {
-	[Manager( nameof( Initialize ) )]
+	[Manager( nameof( Initialize ), Layer = Layer.Editor, Order = 50 )]
 	public abstract class Tool : ILibrary, ICallbacks, IDisposable
 	{
 		//

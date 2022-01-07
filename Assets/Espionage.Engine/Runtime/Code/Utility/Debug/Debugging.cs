@@ -8,7 +8,7 @@ using Espionage.Engine.Internal.Commands;
 
 namespace Espionage.Engine
 {
-	[Manager( nameof( Initialize ), Order = -100 )]
+	[Manager( nameof( Initialize ), Layer = Layer.Runtime | Layer.Editor, Order = -100 )]
 	public static partial class Debugging
 	{
 		//
@@ -33,8 +33,6 @@ namespace Espionage.Engine
 
 				await Task.WhenAll( Console.Initialize() );
 			}
-
-			Console.Invoke( "help clear; quit" );
 		}
 
 		//

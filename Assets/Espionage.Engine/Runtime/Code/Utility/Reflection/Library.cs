@@ -9,7 +9,7 @@ using Random = System.Random;
 
 namespace Espionage.Engine
 {
-	[Manager( nameof( Cache ) ), Serializable]
+	[Manager( nameof( Cache ), Layer = Layer.Editor | Layer.Runtime, Order = -10 ), Serializable]
 	public partial class Library
 	{
 		//
@@ -78,6 +78,7 @@ namespace Espionage.Engine
 			record ??= new Library()
 			{
 				Name = type.FullName,
+				Order = 0,
 				Title = type.Name,
 				Owner = type,
 			};
