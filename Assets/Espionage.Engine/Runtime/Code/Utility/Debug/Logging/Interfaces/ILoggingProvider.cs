@@ -26,7 +26,7 @@ public static class ILoggingProviderExtensions
 {
 	public static void Info( this ILoggingProvider provider, object message )
 	{
-		provider.Add( new Entry()
+		provider?.Add( new Entry()
 		{
 			Message = message.ToString(),
 			StackTrace = System.Environment.StackTrace,
@@ -36,7 +36,7 @@ public static class ILoggingProviderExtensions
 
 	public static void Warning( this ILoggingProvider provider, object message )
 	{
-		provider.Add( new Entry()
+		provider?.Add( new Entry()
 		{
 			Message = message.ToString(),
 			StackTrace = System.Environment.StackTrace,
@@ -46,7 +46,7 @@ public static class ILoggingProviderExtensions
 
 	public static void Error( this ILoggingProvider provider, object message )
 	{
-		provider.Add( new Entry()
+		provider?.Add( new Entry()
 		{
 			Message = message.ToString(),
 			StackTrace = System.Environment.StackTrace,
@@ -56,7 +56,7 @@ public static class ILoggingProviderExtensions
 
 	public static void Exception( this ILoggingProvider provider, Exception exception )
 	{
-		provider.Add( new Entry()
+		provider?.Add( new Entry()
 		{
 			Message = exception.Message,
 			StackTrace = System.Environment.StackTrace,

@@ -6,8 +6,12 @@ namespace Espionage.Engine
 	[Library( "asset.map", Title = "Map" )]
 	public class Map : Asset
 	{
+#if UNITY_EDITOR
+
 		public override void Compile()
 		{
 		}
+
+#endif
 	}
 }

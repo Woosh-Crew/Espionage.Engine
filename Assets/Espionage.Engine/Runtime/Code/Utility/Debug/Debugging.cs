@@ -8,7 +8,7 @@ using Espionage.Engine.Internal.Commands;
 
 namespace Espionage.Engine
 {
-	[Manager( nameof( Initialize ), Layer = Layer.Runtime | Layer.Editor, Order = -100 )]
+	[Manager( nameof( Initialize ), Layer = Layer.Runtime | Layer.Editor, Order = -200 )]
 	public static partial class Debugging
 	{
 		//

@@ -21,7 +21,7 @@ namespace Espionage.Engine
 
 
 		/// <summary> Every library record. </summary>
-		public static IEnumerable<Library> GetAll()
+		internal static IEnumerable<Library> GetAll()
 		{
 			lock ( _records )
 			{
