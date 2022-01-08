@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 
+using Object = UnityEngine.Object;
 using Editor = UnityEditor.Editor;
 
 namespace Espionage.Engine.Editor
 {
-	[Manager( nameof( Initialize ), Layer = Layer.Editor, Order = 50 )]
+	[Manager( nameof( Initialize ), Layer = Layer.Editor, Order = 150 )]
 	public abstract class Tool : ILibrary, ICallbacks, IDisposable
 	{
 		//
@@ -31,6 +32,7 @@ namespace Espionage.Engine.Editor
 
 			// Set the first too
 			SetTool( All.FirstOrDefault() );
+			UnityEngine.Debug.Log( $"Setting new tool too {Active.ClassInfo.Name}" );
 		}
 
 		private static Tool _active;

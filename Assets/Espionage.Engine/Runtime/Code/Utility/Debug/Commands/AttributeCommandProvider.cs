@@ -12,23 +12,13 @@ namespace Espionage.Engine.Internal.Commands
 	{
 		//
 		// Commands
-		private ICommandInvoker _invoker;
-		public IReadOnlyCollection<Command> All => _invoker.All;
+		private Dictionary<string, Command> _commands = new Dictionary<string, Command>( StringComparer.CurrentCultureIgnoreCase );
+		public IReadOnlyCollection<Command> All => _commands.Values;
 
 		//
 		// History
 		private static HashSet<string> _history = new HashSet<string>();
 		public IReadOnlyCollection<string> History => _history;
-
-		public AttributeCommandProvider()
-		{
-			_invoker = new SimpleCommandInvoker();
-		}
-
-		public AttributeCommandProvider( ICommandInvoker invoker )
-		{
-			_invoker = invoker;
-		}
 
 		//
 		// Provider
@@ -38,6 +28,9 @@ namespace Espionage.Engine.Internal.Commands
 		{
 			return Task.Run( () =>
 				{
+					_commands ??= new Dictionary<string, Command>( StringComparer.CurrentCultureIgnoreCase );
+					_commands.Clear();
+
 					// Get every CmdAttribute using Linq
 					var types = AppDomain.CurrentDomain.GetAssemblies()
 					.SelectMany( e => e.GetTypes()
@@ -52,14 +45,17 @@ namespace Espionage.Engine.Internal.Commands
 				} );
 		}
 
-		public void Add( Command command )
-		{
-			_invoker.Add( command );
-		}
+		public void Add( Command command ) => _commands.Add( command.Name, command );
 
 		public void Invoke( string command, string[] args )
 		{
-			_invoker.Invoke( command, args );
+			if ( !_commands.TryGetValue( command, out var consoleCommand ) )
+			{
+				Debugging.Log.Info( $"Couldn't find command \"{command}\"" );
+				return;
+			}
+
+			consoleCommand.Invoke( Command.ConvertArgs( consoleCommand.Info, args ) );
 
 			// Add to history stack, for use later
 			_history.Add( $"{command} {string.Join( ' ', args )}" );

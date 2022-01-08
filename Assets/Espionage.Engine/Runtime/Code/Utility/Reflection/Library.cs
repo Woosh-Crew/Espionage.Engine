@@ -51,6 +51,9 @@ namespace Espionage.Engine
 
 		private static void Cache()
 		{
+			_records ??= new List<Library>();
+			_records.Clear();
+
 			using ( Debugging.Stopwatch( "Library Initialized" ) )
 			{
 				// Select all types where ILibrary exsists or if it has the correct attribute

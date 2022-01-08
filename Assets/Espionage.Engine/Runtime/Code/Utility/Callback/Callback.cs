@@ -7,33 +7,50 @@ using Espionage.Engine.Internal.Callbacks;
 
 namespace Espionage.Engine
 {
-	[Manager( nameof( Initialize ), Order = 50 )]
+	[Manager( nameof( Initialize ), Layer = Layer.Editor | Layer.Runtime, Order = 50 )]
 	public static partial class Callback
 	{
 		//
 		// Initialize
 		//
 
+		private static bool _isInitializing;
+
 		public static async void Initialize()
 		{
 			using ( Debugging.Stopwatch( "Callbacks Initialized" ) )
 			{
+				_isInitializing = true;
+
 				// AttributeCallbackProvider is the default provider
 				if ( Provider is null )
 					Provider = new AttributeCallbackProvider();
 
 				await Provider.Initialize();
+
+				_isInitializing = false;
 			}
 
-			// If we are exiting playmode, dispose the provider
-#if UNITY_EDITOR
-			UnityEditor.EditorApplication.playModeStateChanged += (e =>
+			// Dequeue any callbacks called when initializing
+			for ( int i = 0; i < _callbackQueue.Count; i++ )
 			{
-				if ( e is UnityEditor.PlayModeStateChange.ExitingPlayMode )
-					Provider?.Dispose();
-			});
-#endif
+				var item = _callbackQueue.Dequeue();
+				Run( item.name, item.args );
+			}
 		}
+
+		// Initialization Queue
+
+		private static Queue<QueuedCallback> _callbackQueue = new Queue<QueuedCallback>();
+
+		private struct QueuedCallback
+		{
+			public string name;
+			public object[] args;
+		}
+
+		[Debugging.Var( "callbacks.report" )]
+		private static bool Report { get; set; } = true;
 
 		//
 		// API
@@ -44,6 +61,17 @@ namespace Espionage.Engine
 		{
 			if ( Provider is null || string.IsNullOrEmpty( name ) )
 				return;
+
+			// Queue if we are still init'in
+			if ( _isInitializing )
+			{
+				_callbackQueue.Enqueue( new QueuedCallback() { name = name, args = args } );
+				Debugging.Log.Warning( $"Callbacks are still initializing, Queuing: {name}" );
+				return;
+			}
+
+			if ( Report )
+				Debugging.Log.Info( $"Invoking Callback: {name}" );
 
 			try
 			{
@@ -64,6 +92,12 @@ namespace Espionage.Engine
 		{
 			if ( Provider is null || string.IsNullOrEmpty( name ) )
 				return null;
+
+			if ( _isInitializing )
+				throw new Exception( "Can't run a return value callback while initializing" );
+
+			if ( Report )
+				Debugging.Log.Info( $"Invoking Return Value Callback: {name}" );
 
 			try
 			{
