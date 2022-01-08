@@ -6,11 +6,13 @@ namespace Espionage.Engine.Entities
 	{
 		public static IDatabase<Blueprint> Database { get; }
 
-		public Library ClassInfo => Library.Database.Get( GetType() );
+		public Library ClassInfo { get; set; }
 
 		public Entity()
 		{
 			Callback.Register( this );
+
+			ClassInfo = Library.Database.Get( GetType() );
 		}
 
 		~Entity()

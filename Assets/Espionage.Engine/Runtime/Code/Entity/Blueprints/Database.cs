@@ -10,13 +10,37 @@ using UnityEditor;
 namespace Espionage.Engine.Entities
 {
 	[CreateAssetMenu( menuName = "Espionage.Engine/Entities/Database", fileName = "Entity Database" )]
-	public class Database : ScriptableObject
+	public class Database : ScriptableObject, IDatabase<Blueprint>
 	{
-		public List<Blueprint> references;
+		[SerializeField]
+		private List<Blueprint> references;
+
+		public IEnumerable<Blueprint> All => references;
+
+		public void Add( Blueprint item )
+		{
+			references.Add( item );
+		}
+
+		public void Clear()
+		{
+			references.Clear();
+		}
+
+		public void Contains( Blueprint item )
+		{
+			references.Contains( item );
+		}
+
+		public void Remove( Blueprint item )
+		{
+			references.Remove( item );
+		}
 
 		//
 		// Editor
 		//
+
 #if UNITY_EDITOR
 
 		[InitializeOnLoadMethod]

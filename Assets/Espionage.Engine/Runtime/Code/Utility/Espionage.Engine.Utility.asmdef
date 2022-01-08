@@ -1,6 +1,6 @@
 {
     "name": "Espionage.Engine.Utility",
-    "rootNamespace": "",
+    "rootNamespace": "Espionage.Engine",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],

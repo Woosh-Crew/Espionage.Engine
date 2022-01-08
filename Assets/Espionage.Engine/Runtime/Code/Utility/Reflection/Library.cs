@@ -70,8 +70,8 @@ namespace Espionage.Engine
 				return null;
 			}
 
-			if ( library.Constructor is not null )
-				return library.Constructor.Invoke( null, new object[] { library.Owner } ) as ILibrary;
+			if ( library._constructor is not null )
+				return library._constructor.Invoke( library.Owner ) as ILibrary;
 
 			return Activator.CreateInstance( library.Owner ) as ILibrary;
 		}
@@ -121,12 +121,14 @@ namespace Espionage.Engine
 			record.Id = GenerateID( record.Name );
 
 			// Get the constructor, incase it happens to have a custom one
-			record.Constructor = GetConstructor( type );
+			record._constructor = GetConstructor( type );
 
 			return record;
 		}
 
-		private static MethodInfo GetConstructor( Type type )
+		private delegate object Constructor( Type type );
+
+		private static Constructor GetConstructor( Type type )
 		{
 			// Check if there is a constructor | INTERNAL
 			if ( type.IsDefined( typeof( ConstructorAttribute ), true ) )
@@ -134,7 +136,7 @@ namespace Espionage.Engine
 				var attribute = type.GetCustomAttribute<ConstructorAttribute>( true );
 				var method = type.GetMethod( attribute.Constructor, BindingFlags.FlattenHierarchy | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic );
 
-				return method;
+				return ( e ) => method.Invoke( null, new object[] { e } );
 			}
 
 			return null;
@@ -168,6 +170,6 @@ namespace Espionage.Engine
 		public Type Owner;
 
 		[NonSerialized]
-		internal MethodInfo Constructor;
+		private Constructor _constructor;
 	}
 }

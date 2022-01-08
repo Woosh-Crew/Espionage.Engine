@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Espionage.Engine.Entities
 {
-	[CreateAssetMenu( menuName = "Espionage.Engine/Entity", fileName = "Entity" )]
+	[CreateAssetMenu( menuName = "Espionage.Engine/Blueprint", fileName = "Blueprint" )]
 	public class Blueprint : ScriptableObject
 	{
 		public string identifier;
