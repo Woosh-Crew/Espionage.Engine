@@ -37,6 +37,9 @@ namespace Espionage.Engine
 				var item = _callbackQueue.Dequeue();
 				Run( item.name, item.args );
 			}
+
+			_callbackQueue.Clear();
+			_callbackQueue = null;
 		}
 
 		// Initialization Queue

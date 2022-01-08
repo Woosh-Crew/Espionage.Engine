@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Espionage.Engine.Entities
 {
 	[CreateAssetMenu( menuName = "Espionage.Engine/Entity", fileName = "Entity" )]
-	public class Reference : ScriptableObject
+	public class Blueprint : ScriptableObject
 	{
 		public string identifier;
 		public string title;

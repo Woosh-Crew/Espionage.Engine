@@ -51,9 +51,15 @@ namespace Espionage.Engine
 		// Stopwatch
 		//
 
+		[Debugging.Var( "debug.report_stopwatch" )]
+		public static bool ReportStopwatch { get; set; } = false;
+
 		public static IDisposable Stopwatch( string message = null, params object[] args )
 		{
-			return new TimedScope( message, args );
+			if ( ReportStopwatch )
+				return new TimedScope( message, args );
+			else
+				return null;
 		}
 
 		internal class TimedScope : IDisposable

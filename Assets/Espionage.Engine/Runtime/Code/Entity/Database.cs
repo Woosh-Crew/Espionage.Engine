@@ -12,7 +12,7 @@ namespace Espionage.Engine.Entities
 	[CreateAssetMenu( menuName = "Espionage.Engine/Entities/Database", fileName = "Entity Database" )]
 	public class Database : ScriptableObject
 	{
-		public List<Reference> references;
+		public List<Blueprint> references;
 
 		//
 		// Editor
@@ -23,10 +23,6 @@ namespace Espionage.Engine.Entities
 		private static void CreateInstance()
 		{
 			var path = Path.GetFullPath( $"{Application.dataPath}/Espionage.Engine/Runtime/Resources" );
-			Debug.Log( path );
-
-			var assets = AssetDatabase.FindAssets( $"t: {typeof( Database ).Name}" );
-			Debug.Log( assets[0] );
 		}
 
 #endif
