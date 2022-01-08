@@ -11,7 +11,7 @@ namespace Espionage.Engine
 
 		public Asset()
 		{
-			ClassInfo = Library.Accessor.Get( GetType() );
+			ClassInfo = Library.Database.Get( GetType() );
 		}
 
 		//

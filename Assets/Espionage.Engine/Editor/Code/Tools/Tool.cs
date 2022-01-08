@@ -64,7 +64,7 @@ namespace Espionage.Engine.Editor
 
 		public Tool()
 		{
-			ClassInfo = Library.Accessor.Get( GetType() );
+			ClassInfo = Library.Database.Get( GetType() );
 			Callback.Register( this );
 		}
 

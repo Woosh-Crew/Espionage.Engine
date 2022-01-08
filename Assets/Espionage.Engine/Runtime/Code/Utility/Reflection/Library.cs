@@ -12,22 +12,53 @@ namespace Espionage.Engine
 	[Manager( nameof( Cache ), Layer = Layer.Editor | Layer.Runtime, Order = -10 ), Serializable]
 	public partial class Library
 	{
+		private class internal_Database : IDatabase<Library>
+		{
+			private static List<Library> _records = new List<Library>();
+			public IEnumerable<Library> All => _records;
+
+			public void Add( Library item )
+			{
+				// Check if we already have that name
+				if ( _records.Any( e => e.Name == item.Name ) )
+					throw new Exception( $"Library cache already contains key: {item.Name}" );
+
+				// Check if we already contain that type
+				if ( _records.Any( e => e.Owner == item.Owner ) )
+					throw new Exception( $"Library cache already contains type: {item.Owner.FullName}" );
+
+				// Check if we already contain that Id, this will fuckup networking
+				if ( _records.Any( e => e.Id == item.Id ) )
+					throw new Exception( $"Library cache already contains GUID: {item.Id}" );
+
+				_records.Add( item );
+			}
+
+			public void Clear()
+			{
+				_records.Clear();
+			}
+
+			public void Contains( Library item )
+			{
+				_records.Contains( item );
+			}
+
+			public void Remove( Library item )
+			{
+				_records.Remove( item );
+			}
+		}
+
 		//
 		// Exposed API
 		//
 
-		/// <summary> Helpers to grab and create library records </summary>
-		public static LibraryAccessor Accessor => new LibraryAccessor();
+		private static IDatabase<Library> _database;
 
+		/// <summary> Database for library records </summary>
+		public static IDatabase<Library> Database => _database;
 
-		/// <summary> Every library record. </summary>
-		internal static IEnumerable<Library> GetAll()
-		{
-			lock ( _records )
-			{
-				return _records;
-			}
-		}
 
 		/// <summary> Constructs ILibrary, if it it has a custom constructor
 		/// itll use that to create the ILibrary </summary>
@@ -51,8 +82,8 @@ namespace Espionage.Engine
 
 		private static void Cache()
 		{
-			_records ??= new List<Library>();
-			_records.Clear();
+			_database ??= new internal_Database();
+			_database.Clear();
 
 			using ( Debugging.Stopwatch( "Library Initialized" ) )
 			{
@@ -62,7 +93,7 @@ namespace Espionage.Engine
 									.Where( e => !e.IsAbstract && (e.IsDefined( typeof( LibraryAttribute ) ) || e.GetInterfaces().Contains( typeof( ILibrary ) )) ) );
 
 				foreach ( var item in types )
-					AddRecord( CreateRecord( item ) );
+					_database.Add( CreateRecord( item ) );
 			}
 		}
 
@@ -117,25 +148,6 @@ namespace Espionage.Engine
 
 			return new Guid( guid );
 		}
-
-		private static void AddRecord( Library library )
-		{
-			// Check if we already have that name
-			if ( _records.Any( e => e.Name == library.Name ) )
-				throw new Exception( $"Library cache already contains key: {library.Name}" );
-
-			// Check if we already contain that type
-			if ( _records.Any( e => e.Owner == library.Owner ) )
-				throw new Exception( $"Library cache already contains type: {library.Owner.FullName}" );
-
-			// Check if we already contain that Id, this will fuckup networking
-			if ( _records.Any( e => e.Id == library.Id ) )
-				throw new Exception( $"Library cache already contains GUID: {library.Id}" );
-
-			_records.Add( library );
-		}
-
-		private static List<Library> _records = new List<Library>();
 
 		//
 		// Instance
