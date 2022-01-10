@@ -1,0 +1,23 @@
+:root {
+	--panel-color: rgba(60, 60, 60, 1);
+	--dark-panel-color: rgba(56, 56, 56, 1);
+	--border-color: rgba(26, 26, 26, 1);
+
+	--hover-color: rgba(100, 100, 100, 1);
+	--active-color: #434c5a;
+
+	--text-field-border-top: rgba(13, 13, 13, 1);
+	--text-field-border: rgba(33, 33, 33, 1);
+	--text-field-back: rgba(42, 42, 42, 1);
+}
+
+/* Input Field */
+
+#Input {
+	margin: 8px;
+	height: 32px;
+}
+#Input,
+Label {
+	font-size: 14px;
+}
