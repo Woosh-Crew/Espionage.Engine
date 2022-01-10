@@ -11,6 +11,12 @@ namespace Espionage.Engine
 
 		private static void Initialize()
 		{
+			if ( Game is null )
+			{
+				Debugging.Log.Error( "No game provided. Not starting Engine" );
+				return;
+			}
+
 			SteamClient.Init( Game?.AppId ?? 252490 );
 
 			// Weird shit for when the application should stop running
@@ -22,7 +28,7 @@ namespace Espionage.Engine
 					Game?.OnShutdown();
 			};
 #else
-			Application.quitting += () => Game?.Shutdown();
+			Application.quitting += () => Game?.OnShutdown();
 #endif
 
 			// Init Scene Mangement

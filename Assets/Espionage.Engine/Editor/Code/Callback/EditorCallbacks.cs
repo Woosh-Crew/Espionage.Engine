@@ -29,20 +29,20 @@ namespace Espionage.Engine.Editor
 			//
 
 			// Utlity
-			EditorSceneManager.newSceneCreated += ( scene, setup, mode ) => Callback.Run( EditorCallback.Scene.Created.Identifier, scene, setup, mode );
-			EditorSceneManager.sceneDirtied += ( scene ) => Callback.Run( EditorCallback.Scene.Dirtied.Identifier, scene );
+			EditorSceneManager.newSceneCreated += ( scene, setup, mode ) => Callback.Run( EditorCallback.SceneManager.Created.Identifier, scene, setup, mode );
+			EditorSceneManager.sceneDirtied += ( scene ) => Callback.Run( EditorCallback.SceneManager.Dirtied.Identifier, scene );
 
 			// Close
-			EditorSceneManager.sceneClosing += ( scene, removingScene ) => Callback.Run( EditorCallback.Scene.Closing.Identifier, scene, removingScene );
-			EditorSceneManager.sceneClosed += ( scene ) => Callback.Run( EditorCallback.Scene.Closed.Identifier, scene );
+			EditorSceneManager.sceneClosing += ( scene, removingScene ) => Callback.Run( EditorCallback.SceneManager.Closing.Identifier, scene, removingScene );
+			EditorSceneManager.sceneClosed += ( scene ) => Callback.Run( EditorCallback.SceneManager.Closed.Identifier, scene );
 
 			// Open
-			EditorSceneManager.sceneOpening += ( path, mode ) => Callback.Run( EditorCallback.Scene.Opening.Identifier, path, mode );
-			EditorSceneManager.sceneOpened += ( scene, mode ) => Callback.Run( EditorCallback.Scene.Opened.Identifier, scene, mode );
+			EditorSceneManager.sceneOpening += ( path, mode ) => Callback.Run( EditorCallback.SceneManager.Opening.Identifier, path, mode );
+			EditorSceneManager.sceneOpened += ( scene, mode ) => Callback.Run( EditorCallback.SceneManager.Opened.Identifier, scene, mode );
 
 			// Saving
-			EditorSceneManager.sceneSaving += ( scene, mode ) => Callback.Run( EditorCallback.Scene.Saving.Identifier, scene, mode );
-			EditorSceneManager.sceneSaved += ( scene ) => Callback.Run( EditorCallback.Scene.Saved.Identifier, scene );
+			EditorSceneManager.sceneSaving += ( scene, mode ) => Callback.Run( EditorCallback.SceneManager.Saving.Identifier, scene, mode );
+			EditorSceneManager.sceneSaved += ( scene ) => Callback.Run( EditorCallback.SceneManager.Saved.Identifier, scene );
 		}
 	}
 }
