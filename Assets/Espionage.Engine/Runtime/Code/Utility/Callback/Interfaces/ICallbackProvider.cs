@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Espionage.Engine.Internal.Callbacks
@@ -7,7 +8,7 @@ namespace Espionage.Engine.Internal.Callbacks
 	{
 		Task Initialize() { return null; }
 
-		object[] Run( string name, params object[] args );
+		IEnumerable<object> Run( string name, params object[] args );
 
 		void Register( object item );
 		void Unregister( object item );

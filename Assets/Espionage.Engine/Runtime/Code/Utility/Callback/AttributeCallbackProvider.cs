@@ -45,15 +45,12 @@ namespace Espionage.Engine.Internal.Callbacks
 			};
 		}
 
-		public object[] Run( string name, params object[] args )
+		public IEnumerable<object> Run( string name, params object[] args )
 		{
 			if ( !_callbacks.ContainsKey( name ) )
-				return null;
+				yield break;
 
 			var callbacks = _callbacks[name];
-
-			// Build the final object array
-			List<object> builder = new List<object>();
 
 			foreach ( var callback in callbacks )
 			{
@@ -65,7 +62,7 @@ namespace Espionage.Engine.Internal.Callbacks
 					var arg = callback.Invoke( null, args );
 
 					if ( arg is not null )
-						builder.Add( arg );
+						yield return arg;
 
 					continue;
 				}
@@ -80,12 +77,10 @@ namespace Espionage.Engine.Internal.Callbacks
 						var arg = callback.Invoke( obj, args );
 
 						if ( arg is not null )
-							builder.Add( arg );
+							yield return arg;
 					}
 				}
 			}
-
-			return builder.ToArray();
 		}
 
 		public void Register( object item )

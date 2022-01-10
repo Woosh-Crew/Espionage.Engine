@@ -16,7 +16,7 @@ namespace Espionage.Engine
 
 		private static bool _isInitializing;
 
-		public static async void Initialize()
+		internal static async void Initialize()
 		{
 			using ( Debugging.Stopwatch( "Callbacks Initialized" ) )
 			{
