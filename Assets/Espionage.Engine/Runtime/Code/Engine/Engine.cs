@@ -13,7 +13,7 @@ namespace Espionage.Engine
 		{
 			if ( Game is null )
 			{
-				Debugging.Log.Error( "No game provided. Not starting Engine" );
+				Debugging.Log.Error( "No game provided. Not starting Engine. If you are confused on how to start, give a class the IGameProvider and Espionage.Engine will setup the Game for you." );
 				return;
 			}
 

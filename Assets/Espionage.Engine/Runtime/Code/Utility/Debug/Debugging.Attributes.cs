@@ -91,6 +91,10 @@ namespace Espionage.Engine
 				var property = info as PropertyInfo;
 				var name = command.Name;
 
+				// if ( Saved )
+				// Set the propertys value when we create the command.
+				// Only static propertys should be allowed to be saved.
+
 				command.WithAction(
 					( parameters ) =>
 				 	{
@@ -98,6 +102,9 @@ namespace Espionage.Engine
 						 {
 							 property.SetValue( null, parameters[0] );
 							 Debugging.Log.Info( $"{name} is now {property.GetValue( null )}" );
+
+							 if ( Saved )
+								 SaveValue();
 						 }
 						 else
 						 {
