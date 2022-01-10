@@ -24,6 +24,12 @@ namespace Espionage.Engine.Internal.Logging
 
 public static class ILoggingProviderExtensions
 {
+	/// <summary> Dumps the target object into the console </summary>
+	public static void Dump( this object target )
+	{
+		Espionage.Engine.Debugging.Log.Info( target.ToString() );
+	}
+
 	public static void Info( this ILoggingProvider provider, object message )
 	{
 		provider?.Add( new Entry()

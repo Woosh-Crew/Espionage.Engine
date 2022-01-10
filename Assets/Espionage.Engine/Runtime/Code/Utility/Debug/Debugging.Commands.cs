@@ -7,7 +7,6 @@ namespace Espionage.Engine
 		[Debugging.Cmd( "clear", "cls", Help = "Clears everything in the log" )]
 		private static void ClearCmd()
 		{
-			Debugging.Log.Info( "SHOULD CLEAR" );
 			Log.Clear();
 		}
 
