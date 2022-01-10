@@ -1,14 +1,77 @@
-# Espionage.Engine
-Espionage.Engine is a Unity game base, where you design games off it (duh)
+<h1 align="center">
+ Espionage.Engine
+</h1>
+
+Espionage.Engine is a Unity game base, where you design games off it (duh). Its meant to be a similar workflow to Unreal Engine or s&box where you can do a majority of the work for your game straight in code.
  
-## Features
+## Current Features
 It comes with a handfull of nice features and major workflow changes.
+
+### > Callback System
+Easy attribute based event system that I'm calling the Callback system. Just assign a method the "Callback" attribute and itll do the rest behind the scenes.
+``` csharp
+[Callback( "callback.frame" )]
+private void Frame() { }
+``` 
+Or you can predine your own attributes to auto assign the callback property.
+``` csharp
+[Callback.Frame]
+private void Frame() { }
+``` 
+As it says theses callbacks will invoke that method every frame. This will work on static or instanced objects. If you want it to work for instance objects you have to register it in the callback database, so it knows to invoke it.
+
+Then you can invoke it using this expression:
+``` csharp
+Callback.Run( "callback.name" ); 
+``` 
+the string being the callback
+
+### > Console System / Debugging Library
+The Debugging Library contains a wide variety of helpful methods and tools to help you debug your game. All of which can be found under the Debugging static class.
+
+#### Logging System
+Easily extendable logging system using extension methods or your own logging provider. To log something simply do:
+``` csharp
+Debugging.Log.Info( "Wasssup" );
+Debugging.Log.Error( "oh no! something went wrong!" )
+``` 
+
+#### Stopwatch Scope
+Simple to use stopwatch scope, will record the time for anything in the scope and will log a message for how long it took.
+
+``` csharp
+using ( Debugging.Stopwatch( "blah blah" ) )
+{
+   // Some long task.
+}
+
+// When finished
+// LOG: blah blah | 40ms 
+```
+
+#### Console / Commands
+Attribute based and easily extendable
+
+using the `Debugging.Cmd` attribute, you can easily define console commands to be invoked
+``` csharp
+[Debugging.Cmd( "mat.override_viewport", Help = "Changes the viewport shader to a debug shader, for debugging visuals" )]
+private static void ChangeViewportDebug( int shaderId ) 
+{
+   // Blah blah, change viewport replace shader
+}
+``` 
+or alternativly you can use the `Debugging.Var` attribute on a property, so you can change it or use it as a readonly value
+```csharp
+[Debugging.Var( "sv.cheats", Help = "Enable cheats on the server", IsReadOnly = false )
+private static bool Cheats { get; set; } = false;
+```
+
+## Planned Features
+These are planned features that are going to be implimented in the future
  
 ### > Networking
-Networking is based of mirror, with major improvements to it.
-Such as:
-- Networked objects being indicted by using an interface
-- Not using / being inherited from MonoBehaviour
+Networking is a fork of Tom Weiland's Riptide, with major improvements to it. Such as:
+- Networked objects being indicted by using an interface, where it impliments a network identity object.
 
 ### > Entity System
 An entity system similar to source. So its super easy to make custom maps etc, without having to update a map maker code base everytime you impliment a new feature. It uses a similar system / principles to an FDG file.
@@ -20,8 +83,18 @@ Entity system also removes the need for everything to be scene dependent / prefa
 ### > Assets
 All assets are loaded at runtime using AssetBundles. this provides many benifits such as everything not being scene dependent.
 
-### > Callback System
-Easy attribute based callback system, assign a method the ```[Callback("callback.name")]``` attribute and then run it using ```Callback.Run("callback.name");``` the string being the callback
+# Games & Projects using Espionage.Engine
+### Espionage
+Espionage.Engine was made for Espionage, since I hated the way Unity worked.
 
-### > Console System
-Attribute based and easily extendable, use Debugging.Cmd or Debugging.Var attributes on propertys or methods for them to be used as a console command
+### Netscape Cybermind
+No details yet.
+
+# Help & Support
+<div align="center">
+ <a href="https://wooshcrew.com">Website</a>&emsp;
+ <b>•</b>&emsp;
+ <a href="https://twitter.com/JakeWoosh">YouTube</a>&emsp;
+ <b>•</b>&emsp;
+ <a href="https://wooshcrew.com/discord">Discord</a>&emsp;
+</div>
