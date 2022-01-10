@@ -53,13 +53,28 @@ namespace Espionage.Engine
 		}
 
 		[Debugging.Var( "callbacks.report" )]
-		private static bool Report { get; set; } = true;
+		private static bool Report { get; set; } = false;
 
 		//
 		// API
 		//
 
-		/// <summary> Runs a callback </summary>
+		/// <summary> <inheritdoc cref="Callback.Run(string, object[])"/> With the option of it being unreliable. 
+		/// Which makes it so it wont run if the callback is initializing or something goes wrong. </summary>
+		public static void Run( string name, bool unreliable, params object[] args )
+		{
+			if ( unreliable && _isInitializing )
+				return;
+
+			try
+			{
+				Run( name, args );
+			}
+			// Is this stupid?
+			finally { }
+		}
+
+		/// <summary> Runs a callback with an array of args. </summary>
 		public static void Run( string name, params object[] args )
 		{
 			if ( Provider is null || string.IsNullOrEmpty( name ) )

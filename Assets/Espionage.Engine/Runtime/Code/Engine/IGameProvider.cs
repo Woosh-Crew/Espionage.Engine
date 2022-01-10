@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Espionage.Engine
 {
@@ -8,8 +9,8 @@ namespace Espionage.Engine
 	{
 		uint AppId { get; }
 
-		void Ready();
-		void Shutdown();
-		void OnLevelLoaded(/* Probably pass through a level */);
+		void OnReady();
+		void OnShutdown();
+		void OnLevelLoaded( Scene lastScene, Scene newScene /* We should pass our own level class */ );
 	}
 }

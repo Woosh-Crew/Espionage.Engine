@@ -1,4 +1,5 @@
-#if UNITY_5_3_OR_NEWER
+// Makes sure we are actually in Unity
+#if UNITY_STANDALONE || UNITY_EDITOR
 
 using System;
 using System.Collections.Generic;
