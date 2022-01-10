@@ -3,40 +3,46 @@ using UnityEngine.SceneManagement;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 
-namespace Espionage.Engine.Internal.Editor
+namespace Espionage.Engine.Editor
 {
 	// Run all the callbacks related to Unity
-	internal static class EditorCallbacks
+	public static partial class EditorCallback
 	{
 		[InitializeOnLoadMethod]
-		public static void Initialize()
+		private static void Initialize()
 		{
+			//
+			// Editor Application
+			//
+
+			EditorApplication.playModeStateChanged += ( state ) => Callback.Run( EditorCallback.Application.PlayModeChanged.Identifier, state );
+
 			//
 			// SceneView Callbacks
 			//
 
-			SceneView.beforeSceneGui += ( view ) => Callback.Run( "editor.scene_view.draw", true, view );
-			SceneView.duringSceneGui += ( view ) => Callback.Run( "editor.scene_view.during_draw", true, view );
+			UnityEditor.SceneView.beforeSceneGui += ( view ) => Callback.Run( EditorCallback.SceneView.Drawing.Identifier, true, view );
+			UnityEditor.SceneView.duringSceneGui += ( view ) => Callback.Run( "editor.scene_view.during_draw", true, view );
 
 			//
 			// Scene Manger
 			//
 
 			// Utlity
-			EditorSceneManager.newSceneCreated += ( scene, setup, mode ) => Callback.Run( "editor.scene.new_scene", scene, setup, mode );
-			EditorSceneManager.sceneDirtied += ( scene ) => Callback.Run( "editor.scene.dirtied", scene );
+			EditorSceneManager.newSceneCreated += ( scene, setup, mode ) => Callback.Run( EditorCallback.Scene.Created.Identifier, scene, setup, mode );
+			EditorSceneManager.sceneDirtied += ( scene ) => Callback.Run( EditorCallback.Scene.Dirtied.Identifier, scene );
 
 			// Close
-			EditorSceneManager.sceneClosing += ( scene, removingScene ) => Callback.Run( "editor.scene.closed", scene, removingScene );
-			EditorSceneManager.sceneClosed += ( scene ) => Callback.Run( "editor.scene.closed", scene );
+			EditorSceneManager.sceneClosing += ( scene, removingScene ) => Callback.Run( EditorCallback.Scene.Closing.Identifier, scene, removingScene );
+			EditorSceneManager.sceneClosed += ( scene ) => Callback.Run( EditorCallback.Scene.Closed.Identifier, scene );
 
 			// Open
-			EditorSceneManager.sceneOpening += ( scene, mode ) => Callback.Run( "editor.scene.opening", scene, mode );
-			EditorSceneManager.sceneOpened += ( scene, mode ) => Callback.Run( "editor.scene.opened", scene, mode );
+			EditorSceneManager.sceneOpening += ( path, mode ) => Callback.Run( EditorCallback.Scene.Opening.Identifier, path, mode );
+			EditorSceneManager.sceneOpened += ( scene, mode ) => Callback.Run( EditorCallback.Scene.Opened.Identifier, scene, mode );
 
 			// Saving
-			EditorSceneManager.sceneSaving += ( scene, mode ) => Callback.Run( "editor.scene.saving", scene, mode );
-			EditorSceneManager.sceneSaved += ( scene ) => Callback.Run( "editor.scene.saved", scene );
+			EditorSceneManager.sceneSaving += ( scene, mode ) => Callback.Run( EditorCallback.Scene.Saving.Identifier, scene, mode );
+			EditorSceneManager.sceneSaved += ( scene ) => Callback.Run( EditorCallback.Scene.Saved.Identifier, scene );
 		}
 	}
 }
