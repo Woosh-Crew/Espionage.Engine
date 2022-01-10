@@ -2,6 +2,7 @@ using UnityEditor;
 using Espionage.Engine.Editor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using System.Linq;
 
 namespace Espionage.Engine.Internal.Editor
 {
@@ -79,7 +80,11 @@ namespace Espionage.Engine.Internal.Editor
 				// Autofil
 				if ( e.keyCode is KeyCode.RightArrow )
 				{
-					Debug.Log( "Autofil" );
+					var autofill = Debugging.Console.Find( _input.value ).FirstOrDefault();
+					if ( !string.IsNullOrEmpty( autofill ) )
+					{
+						_input.value = autofill;
+					}
 				}
 			} );
 

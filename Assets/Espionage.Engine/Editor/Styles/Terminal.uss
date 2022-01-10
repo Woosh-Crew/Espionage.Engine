@@ -15,9 +15,12 @@
 
 #Input {
 	margin: 8px;
-	height: 32px;
+	height: 28px;
 }
-#Input,
-Label {
+
+#Input > TextInput {
+	padding-left: 8px;
+	padding-right: 8px;
 	font-size: 14px;
+	border-radius: 0px;
 }
