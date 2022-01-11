@@ -9,7 +9,7 @@ namespace Espionage.Engine
 	{
 		public Library ClassInfo { get; set; }
 
-		public Asset()
+		private void OnEnable()
 		{
 			ClassInfo = Library.Database.Get( GetType() );
 		}

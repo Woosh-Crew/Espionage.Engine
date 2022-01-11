@@ -7,8 +7,9 @@ namespace Espionage.Engine
 		IEnumerable<T> All { get; }
 
 		void Add( T item );
-		void Contains( T item );
+		bool Contains( T item );
 		void Remove( T item );
+		void Replace( T oldItem, T newItem ) { }
 		void Clear();
 	}
 }

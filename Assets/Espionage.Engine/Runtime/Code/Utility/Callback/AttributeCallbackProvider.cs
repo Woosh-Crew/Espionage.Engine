@@ -18,7 +18,8 @@ namespace Espionage.Engine.Internal.Callbacks
 				// Get every Callback using Linq
 				var methods = AppDomain.CurrentDomain.GetAssemblies()
 						.SelectMany( e => e.GetTypes()
-									.Where( e => e.HasInterface<ICallbacks>() )
+									// We gotta do this so it loads faster... I think its stupid having to have a library attribute
+									.Where( e => e.IsDefined( typeof( LibraryAttribute ) ) || e.HasInterface<ICallbacks>() )
 									.SelectMany( e => e.GetMethods( BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy ) )
 									.Where( e => e.IsDefined( typeof( CallbackAttribute ) ) ) );
 
@@ -45,12 +46,15 @@ namespace Espionage.Engine.Internal.Callbacks
 			};
 		}
 
-		public IEnumerable<object> Run( string name, params object[] args )
+		public object[] Run( string name, params object[] args )
 		{
 			if ( !_callbacks.ContainsKey( name ) )
-				yield break;
+				return null;
 
 			var callbacks = _callbacks[name];
+
+			// Build the final object array
+			List<object> builder = new List<object>();
 
 			foreach ( var callback in callbacks )
 			{
@@ -62,7 +66,7 @@ namespace Espionage.Engine.Internal.Callbacks
 					var arg = callback.Invoke( null, args );
 
 					if ( arg is not null )
-						yield return arg;
+						builder.Add( arg );
 
 					continue;
 				}
@@ -77,10 +81,12 @@ namespace Espionage.Engine.Internal.Callbacks
 						var arg = callback.Invoke( obj, args );
 
 						if ( arg is not null )
-							yield return arg;
+							builder.Add( arg );
 					}
 				}
 			}
+
+			return builder.ToArray();
 		}
 
 		public void Register( object item )

@@ -53,7 +53,7 @@ namespace Espionage.Engine
 		}
 
 		[Debugging.Var( "callbacks.report" )]
-		private static bool Report { get; set; } = false;
+		private static bool Report { get; set; } = true;
 
 		//
 		// API

@@ -39,14 +39,26 @@ namespace Espionage.Engine
 				_records.Clear();
 			}
 
-			public void Contains( Library item )
+			public bool Contains( Library item )
 			{
-				_records.Contains( item );
+				return _records.Contains( item );
 			}
 
 			public void Remove( Library item )
 			{
 				_records.Remove( item );
+			}
+
+			public void Replace( Library oldItem, Library newItem )
+			{
+				if ( !Contains( oldItem ) )
+				{
+					Debugging.Log.Warning( $"Library doesnt contain item {oldItem}" );
+					return;
+				}
+
+				var index = _records.IndexOf( oldItem );
+				_records[index] = newItem;
 			}
 		}
 

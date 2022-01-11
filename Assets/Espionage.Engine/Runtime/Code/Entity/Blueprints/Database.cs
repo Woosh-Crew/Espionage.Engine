@@ -27,9 +27,9 @@ namespace Espionage.Engine.Entities
 			references.Clear();
 		}
 
-		public void Contains( Blueprint item )
+		public bool Contains( Blueprint item )
 		{
-			references.Contains( item );
+			return references.Contains( item );
 		}
 
 		public void Remove( Blueprint item )

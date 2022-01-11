@@ -9,6 +9,12 @@ public static class LibraryDatabaseExtensions
 	// Try Get
 	//
 
+	public static bool TryGet<T>( this IDatabase<Library> database, out Library library ) where T : ILibrary
+	{
+		library = database.Get<T>();
+		return library is null;
+	}
+
 	public static bool TryGet( this IDatabase<Library> database, string name, out Library library )
 	{
 		library = database.Get( name );
@@ -31,6 +37,7 @@ public static class LibraryDatabaseExtensions
 	// Exists
 	//
 
+	public static bool Exists<T>( this IDatabase<Library> database ) where T : ILibrary => database.Get<T>() is not null;
 	public static bool Exists( this IDatabase<Library> database, string name ) => database.Get( name ) is not null;
 	public static bool Exists( this IDatabase<Library> database, Type type ) => database.Get( type ) is not null;
 	public static bool Exists( this IDatabase<Library> database, Guid id ) => database.Get( id ) is not null;
@@ -38,6 +45,11 @@ public static class LibraryDatabaseExtensions
 	//
 	// Get
 	//
+
+	public static Library Get<T>( this IDatabase<Library> database ) where T : ILibrary
+	{
+		return database.All.FirstOrDefault( e => e.Owner == typeof( T ) );
+	}
 
 	public static Library Get( this IDatabase<Library> database, string name )
 	{
@@ -54,21 +66,16 @@ public static class LibraryDatabaseExtensions
 		return database.All.FirstOrDefault( e => e.Id == id );
 	}
 
-	public static Library Get<T>( this IDatabase<Library> database ) where T : ILibrary
-	{
-		return database.All.FirstOrDefault( e => e.Owner == typeof( T ) );
-	}
-
 	//
 	// Create
 	//
 
-	public static T Create<T>( this IDatabase<Library> database ) where T : class, ILibrary, new()
+	public static ILibrary Create<T>( this IDatabase<Library> database ) where T : class, ILibrary, new()
 	{
 		return Library.Construct( database.Get<T>() ) as T;
 	}
 
-	public static T Create<T>( this IDatabase<Library> database, string name, bool assertMissing = false ) where T : class, ILibrary, new()
+	public static ILibrary Create( this IDatabase<Library> database, string name, bool assertMissing = false )
 	{
 		if ( !database.TryGet( name, out var library ) )
 		{
@@ -78,10 +85,15 @@ public static class LibraryDatabaseExtensions
 			return null;
 		}
 
-		return Library.Construct( library ) as T;
+		return Library.Construct( library );
 	}
 
-	public static T Create<T>( this IDatabase<Library> database, Guid id ) where T : class, ILibrary, new()
+	public static T Create<T>( this IDatabase<Library> database, string name, bool assertMissing = false ) where T : class, ILibrary, new()
+	{
+		return database.Create( name, assertMissing ) as T;
+	}
+
+	public static ILibrary Create( this IDatabase<Library> database, Guid id )
 	{
 		var library = database.Get( id );
 
@@ -91,6 +103,63 @@ public static class LibraryDatabaseExtensions
 			return null;
 		}
 
-		return Library.Construct( library ) as T;
+		return Library.Construct( library );
+	}
+
+	public static T Create<T>( this IDatabase<Library> database, Guid id ) where T : class, ILibrary, new()
+	{
+		return database.Create( id ) as T;
+	}
+
+	//
+	// Replace
+	//
+
+	public static void Replace<T>( this IDatabase<Library> database, Library newLibrary ) where T : ILibrary
+	{
+		if ( database.TryGet<T>( out var item ) )
+		{
+			database.Replace( item, newLibrary );
+		}
+		else
+		{
+			Debugging.Log.Warning( $"Couldnt not find {typeof( T ).FullName} in Library database" );
+		}
+	}
+
+	public static void Replace( this IDatabase<Library> database, string name, Library newLibrary )
+	{
+		if ( database.TryGet( name, out var item ) )
+		{
+			database.Replace( item, newLibrary );
+		}
+		else
+		{
+			Debugging.Log.Warning( $"Couldnt not find {name} in Library database" );
+		}
+	}
+
+	public static void Replace( this IDatabase<Library> database, Guid id, Library newLibrary )
+	{
+		if ( database.TryGet( id, out var item ) )
+		{
+			database.Replace( item, newLibrary );
+		}
+		else
+		{
+			Debugging.Log.Warning( $"Couldnt not find {id} in Library database" );
+		}
+	}
+
+	public static void Replace( this IDatabase<Library> database, Type type, Library newLibrary )
+	{
+		if ( database.TryGet( type, out var item ) )
+		{
+			database.Replace( item, newLibrary );
+		}
+		else
+		{
+			Debugging.Log.Warning( $"Couldnt not find {type.FullName} in Library database" );
+		}
 	}
 }

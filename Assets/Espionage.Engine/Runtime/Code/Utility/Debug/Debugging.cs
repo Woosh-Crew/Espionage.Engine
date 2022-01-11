@@ -52,7 +52,7 @@ namespace Espionage.Engine
 		//
 
 		[Debugging.Var( "debug.report_stopwatch" )]
-		public static bool ReportStopwatch { get; set; } = false;
+		public static bool ReportStopwatch { get; set; } = true;
 
 		public static IDisposable Stopwatch( string message = null, params object[] args )
 		{
