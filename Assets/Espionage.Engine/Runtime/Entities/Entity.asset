@@ -12,8 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfe2338a71b02b947b1bf46d976b6084, type: 3}
   m_Name: Entity
   m_EditorClassIdentifier: 
-  identifier: 
-  title: 
-  description: 
-  entityReference: 
+  <ClassInfo>k__BackingField:
+    Name: esp_entity.test_blueprint
+    Title: Test Blueprint
+    Description: Test blueprint for testing the capablitys of the system
+    Icon: Blueprint
+    Order: 150
+  entityReference: esp.entity
   prefab: {fileID: 0}

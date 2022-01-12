@@ -6,7 +6,11 @@ using UnityEngine.UIElements;
 
 namespace Espionage.Engine.Internal.Editor
 {
-	[Library( "esp_editor.blueprint_window", Title = "Blueprint Editor" )]
+	[Library( "esp_editor.blueprint_window",
+		Title = "Blueprint Editor",
+		Help = "Interface with a blueprints node tree",
+	  	Icon = "Assets/Espionage.Engine/Editor/Styles/Icons/baseline_view_in_ar_white_48dp.png"
+	)]
 	public class BlueprintGraphWindow : EditorWindow, ILibrary, ICallbacks
 	{
 		public Library ClassInfo { get; set; }
@@ -30,13 +34,39 @@ namespace Espionage.Engine.Internal.Editor
 			var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>( "Assets/Espionage.Engine/Editor/Styles/Blueprints/BlueprintGraphWindow.uss" );
 			rootVisualElement.styleSheets.Add( styleSheet );
 
-			CreateToolbar();
+			CreateMenuBar();
+
+			var window = new VisualElement() { name = "Window" };
+			rootVisualElement.Add( window );
+
+			var blueprintWatermark = new VisualElement() { name = "Blueprint-Watermark" };
+			window.Add( blueprintWatermark );
+			var iconTexture = AssetDatabase.LoadAssetAtPath<Texture>( ClassInfo.Icon );
+
+			blueprintWatermark.Add( new Image() { image = iconTexture } );
+			blueprintWatermark.Add( new Label( "BLUEPRINT" ) );
 		}
 
-		private void CreateToolbar()
+		private VisualElement _toolbar;
+
+		private void CreateMenuBar()
 		{
-			rootVisualElement.Add<VisualElement>( "Toolbar" );
-			rootVisualElement.Add<VisualElement>( "Window" );
+			Button CreateDropdown( string text )
+			{
+				var button = new Button() { text = text };
+				button.AddToClassList( "MenuBar-Button" );
+				return button;
+			}
+
+			_toolbar = rootVisualElement.Add<VisualElement>( "MenuBar" );
+
+			// Buttons
+			_toolbar.Add( CreateDropdown( $"File" ) );
+			_toolbar.Add( CreateDropdown( $"Edit" ) );
+			_toolbar.Add( CreateDropdown( $"Asset" ) );
+			_toolbar.Add( CreateDropdown( $"View" ) );
+			_toolbar.Add( CreateDropdown( $"Options" ) );
+			_toolbar.Add( CreateDropdown( $"Help" ) );
 		}
 	}
 }

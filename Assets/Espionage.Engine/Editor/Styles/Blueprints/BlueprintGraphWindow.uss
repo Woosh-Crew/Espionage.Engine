@@ -1,19 +1,61 @@
 :root {
 	/* Toolbar Colours */
-	--toolbar-colors-panel: #3c3c3c;
-	--toolbar-colors-shadow: #232323;
+	--menubar-colors-panel: #3c3c3c;
+	--menubar-colors-shadow: #191919;
+
+	--button-hover: #46607c;
 }
 
-/* Toolbar */
-#Toolbar {
-	background-color: var(--toolbar-colors-panel);
-	height: 20px;
+/* MenuBar */
+#MenuBar {
+	background-color: var(--menubar-colors-panel);
+	height: 24px;
 	width: 100%;
+	flex-direction: row;
 
-	border-color: var(--toolbar-colors-shadow);
+	border-color: var(--menubar-colors-shadow);
 	border-bottom-width: 1px;
+
+	padding-left: 4px;
+	padding-right: 4px;
 }
+
+.MenuBar-Button {
+	background-color: initial;
+	font-size: 12px;
+
+	margin: 0px;
+	padding-left: 10px;
+	padding-right: 10px;
+
+	border-radius: 0px;
+	border-width: 0px;
+}
+
+.MenuBar-Button:hover {
+	background-color: var(--button-hover);
+}
+
+/* Window */
 
 #Window {
 	flex-grow: 1;
+	background-color: #282828;
+}
+
+#Blueprint-Watermark {
+	opacity: 0.2;
+	position: absolute;
+	flex-direction: row;
+	font-size: 64px;
+	-unity-font-style: bold;
+	bottom: 32px;
+	right: 32px;
+}
+
+#Blueprint-Watermark > Image {
+	height: 48px;
+	width: 48px;
+	margin-right: 8px;
+	align-self: center;
 }
