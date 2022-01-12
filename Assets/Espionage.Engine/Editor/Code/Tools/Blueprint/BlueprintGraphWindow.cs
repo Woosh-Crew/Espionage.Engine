@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.UIElements;
+using System;
 
 namespace Espionage.Engine.Internal.Editor
 {
@@ -50,11 +51,12 @@ namespace Espionage.Engine.Internal.Editor
 
 		private void CreateGraphView()
 		{
-			Button CreateButton( string text, Texture icon )
+			Button CreateButton( string text, Texture icon, out Image image, Action onClick = null )
 			{
-				var button = new Button();
+				var button = new Button( onClick ) { tooltip = text };
 				button.AddToClassList( "Info-Bar-Button" );
-				button.Add( new Image() { image = icon } );
+				image = new Image() { image = icon };
+				button.Add( image );
 
 				return button;
 			}
@@ -67,27 +69,10 @@ namespace Espionage.Engine.Internal.Editor
 
 			rootVisualElement.Add( _graphView );
 
-			// Info Bar
-			_infoBar = new VisualElement() { name = "Info-Bar" };
-			_graphView.Add( _infoBar );
-			{
-				var left = new VisualElement();
-				left.AddToClassList( "Left" );
-				_infoBar.Add( left );
+			// Vignette
 
-				left.Add( new Label() { text = "Weapon Blueprint" } );
-
-				var right = new VisualElement();
-				right.AddToClassList( "Right" );
-				_infoBar.Add( right );
-
-				var saveIcon = AssetDatabase.LoadAssetAtPath<Texture>( "Assets/Espionage.Engine/Editor/Styles/Icons/baseline_save_white_48dp.png" );
-				right.Add( CreateButton( "Save", saveIcon ) );
-
-				var compileIcon = AssetDatabase.LoadAssetAtPath<Texture>( "Assets/Espionage.Engine/Editor/Styles/Icons/outline_construction_white_48dp.png" );
-				right.Add( CreateButton( "Compile", compileIcon ) );
-			}
-
+			// var image = new VisualElement() { name = "Vignette" };
+			// _graphView.Add( image );
 
 			// Watermark
 
@@ -97,6 +82,48 @@ namespace Espionage.Engine.Internal.Editor
 			var iconTexture = AssetDatabase.LoadAssetAtPath<Texture>( ClassInfo.Icon );
 			blueprintWatermark.Add( new Image() { image = iconTexture } );
 			blueprintWatermark.Add( new Label( "BLUEPRINT" ) );
+
+			// Info Bar
+
+			_infoBar = new VisualElement() { name = "Info-Bar" };
+			_graphView.Add( _infoBar );
+			{
+				// Left Side
+
+				var left = new VisualElement();
+				left.AddToClassList( "Left" );
+				_infoBar.Add( left );
+
+				left.Add( new Label() { text = "Weapon Blueprint" } );
+
+				// Right Side
+
+				var right = new VisualElement();
+				right.AddToClassList( "Right" );
+				_infoBar.Add( right );
+
+				var saveIcon = AssetDatabase.LoadAssetAtPath<Texture>( "Assets/Espionage.Engine/Editor/Styles/Icons/baseline_save_white_48dp.png" );
+				right.Add( CreateButton( "Save", saveIcon, out _ ) );
+
+				var zoomOutIcon = AssetDatabase.LoadAssetAtPath<Texture>( "Assets/Espionage.Engine/Editor/Styles/Icons/baseline_zoom_out_map_white_48dp.png" );
+				var zoomInIcon = AssetDatabase.LoadAssetAtPath<Texture>( "Assets/Espionage.Engine/Editor/Styles/Icons/baseline_zoom_in_map_white_48dp.png" );
+
+				var maximiseButton = CreateButton( "", maximized ? zoomInIcon : zoomOutIcon, out var maximiseImage );
+				maximiseButton.tooltip = maximized ? "Zoom In" : "Zoom Out";
+
+				maximiseButton.clicked += () =>
+				{
+					maximized = !maximized;
+					maximiseImage.image = maximized ? zoomInIcon : zoomOutIcon;
+					maximiseButton.tooltip = maximized ? "Zoom In" : "Zoom Out";
+				};
+
+
+				right.Add( maximiseButton );
+
+				var infoIcon = AssetDatabase.LoadAssetAtPath<Texture>( "Assets/Espionage.Engine/Editor/Styles/Icons/baseline_info_white_48dp.png" );
+				right.Add( CreateButton( "Info", infoIcon, out _ ) );
+			}
 		}
 
 		//

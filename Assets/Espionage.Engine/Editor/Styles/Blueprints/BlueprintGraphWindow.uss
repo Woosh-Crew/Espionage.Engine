@@ -82,6 +82,8 @@
 	background-color: initial;
 	width: 48px;
 
+	padding: 6px;
+
 	border-radius: 0px;
 	border-width: 0px;
 
@@ -96,6 +98,14 @@
 }
 
 /* Grid + Watermark */
+
+#Vignette {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background-image: resource("Assets/Espionage.Engine/Editor/Styles/Sprites/Vignette.png");
+	-unity-background-scale-mode: stretch-to-fit;
+}
 
 #Grid {
 	--line-color: #2c2c2c;
