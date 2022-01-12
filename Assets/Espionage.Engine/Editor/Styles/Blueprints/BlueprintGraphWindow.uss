@@ -1,0 +1,19 @@
+:root {
+	/* Toolbar Colours */
+	--toolbar-colors-panel: #3c3c3c;
+	--toolbar-colors-shadow: #232323;
+}
+
+/* Toolbar */
+#Toolbar {
+	background-color: var(--toolbar-colors-panel);
+	height: 20px;
+	width: 100%;
+
+	border-color: var(--toolbar-colors-shadow);
+	border-bottom-width: 1px;
+}
+
+#Window {
+	flex-grow: 1;
+}

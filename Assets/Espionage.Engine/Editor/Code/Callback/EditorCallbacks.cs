@@ -28,7 +28,7 @@ namespace Espionage.Engine.Editor
 			// Scene Manger
 			//
 
-			// Utlity
+			// Utility
 			EditorSceneManager.newSceneCreated += ( scene, setup, mode ) => Callback.Run( EditorCallback.SceneManager.Created.Identifier, scene, setup, mode );
 			EditorSceneManager.sceneDirtied += ( scene ) => Callback.Run( EditorCallback.SceneManager.Dirtied.Identifier, scene );
 

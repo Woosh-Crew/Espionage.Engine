@@ -13,9 +13,8 @@ namespace Espionage.Engine.Entities
 		public string entityReference;
 		public GameObject prefab;
 
-		public void Spawn()
+		public Blueprint()
 		{
-
 		}
 
 		private static object Constructor()

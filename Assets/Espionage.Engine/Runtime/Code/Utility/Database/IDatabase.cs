@@ -11,5 +11,8 @@ namespace Espionage.Engine
 		void Remove( T item );
 		void Replace( T oldItem, T newItem ) { }
 		void Clear();
+
+		string Serialize() { return null; }
+		List<T> Deserialize( string path ) { return null; }
 	}
 }

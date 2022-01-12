@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -10,7 +9,7 @@ using Random = System.Random;
 namespace Espionage.Engine
 {
 	/// <summary> Espionage.Engines string based Reflection System </summary>
-	[Serializable]
+	[Serializable] // Instance Serialization
 	[Manager( nameof( Cache ), Layer = Layer.Editor | Layer.Runtime, Order = -10 )]
 	public partial class Library
 	{
@@ -21,60 +20,64 @@ namespace Espionage.Engine
 		/// <summary> Database for library records </summary>
 		public static IDatabase<Library> Database => _database;
 
-		/// <summary> Skips the attached class from generating a library reference </summary>
+		/// <summary> Attribute that skips the attached class from generating a library reference </summary>
 		[AttributeUsage( AttributeTargets.Class )]
-		public class SkipAttribute : Attribute { }
+		public class Skip : Attribute { }
 
 
-		/// <summary> Allows the definition of a custom constructor </summary>
+		/// <summary> Attribute that allows the definition of a custom constructor </summary>
 		[AttributeUsage( AttributeTargets.Class, Inherited = true )]
-		public sealed class ConstructorAttribute : Attribute
+		public sealed class Constructor : Attribute
 		{
 			/// <param name="constructor"> Method should return ILibrary </param>
-			public ConstructorAttribute( string constructor )
+			public Constructor( string constructor )
 			{
 				this.constructor = constructor;
 			}
 
 			private string constructor;
-			public string Constructor => constructor;
+			public string Target => constructor;
 		}
 
 		//
 		// Database
 		//
 
+		[Serializable] // Database Serialization
 		private class internal_Database : IDatabase<Library>
 		{
-			private static List<Library> _records = new List<Library>();
-			public IEnumerable<Library> All => _records;
+#if UNITY_STANDALONE || UNITY_EDITOR
+			[UnityEngine.SerializeField]
+#endif
+			private List<Library> records = new List<Library>();
+			public IEnumerable<Library> All => records;
 
 			public void Add( Library item )
 			{
 				// Check if we already have that name
-				if ( _records.Any( e => e.Name == item.Name ) )
+				if ( records.Any( e => e.Name == item.Name ) )
 					throw new Exception( $"Library cache already contains key: {item.Name}" );
 
 				// Check if we already contain that Id, this will fuckup networking
-				if ( _records.Any( e => e.Id == item.Id ) )
+				if ( records.Any( e => e.Id == item.Id ) )
 					throw new Exception( $"Library cache already contains GUID: {item.Id}" );
 
-				_records.Add( item );
+				records.Add( item );
 			}
 
 			public void Clear()
 			{
-				_records.Clear();
+				records.Clear();
 			}
 
 			public bool Contains( Library item )
 			{
-				return _records.Contains( item );
+				return records.Contains( item );
 			}
 
 			public void Remove( Library item )
 			{
-				_records.Remove( item );
+				records.Remove( item );
 			}
 
 			public void Replace( Library oldItem, Library newItem )
@@ -85,9 +88,21 @@ namespace Espionage.Engine
 					return;
 				}
 
-				var index = _records.IndexOf( oldItem );
-				_records[index] = newItem;
+				var index = records.IndexOf( oldItem );
+				records[index] = newItem;
 			}
+
+
+			// Use Unitys shitty json serialization
+#if UNITY_STANDALONE || UNITY_EDITOR
+
+			public string Serialize()
+			{
+				var json = UnityEngine.JsonUtility.ToJson( this, true );
+				return json;
+			}
+
+#endif
 		}
 
 		private static IDatabase<Library> _database;
@@ -127,7 +142,7 @@ namespace Espionage.Engine
 										if ( e.IsAbstract )
 											return false;
 
-										if ( e.IsDefined( typeof( SkipAttribute ) ) )
+										if ( e.IsDefined( typeof( Skip ) ) )
 											return false;
 
 										return (e.IsDefined( typeof( LibraryAttribute ) ) || e.GetInterfaces().Contains( typeof( ILibrary ) ));
@@ -167,15 +182,15 @@ namespace Espionage.Engine
 			return record;
 		}
 
-		public delegate ILibrary Constructor( Library type );
+		public delegate ILibrary ConstructorRef( Library type );
 
-		private static Constructor GetConstructor( Type type )
+		private static ConstructorRef GetConstructor( Type type )
 		{
 			// Check if there is a constructor | INTERNAL
-			if ( type.IsDefined( typeof( ConstructorAttribute ), true ) )
+			if ( type.IsDefined( typeof( Constructor ), true ) )
 			{
-				var attribute = type.GetCustomAttribute<ConstructorAttribute>( true );
-				var method = type.GetMethod( attribute.Constructor, BindingFlags.FlattenHierarchy | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic );
+				var attribute = type.GetCustomAttribute<Constructor>( true );
+				var method = type.GetMethod( attribute.Target, BindingFlags.FlattenHierarchy | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic );
 
 				return ( e ) => method.Invoke( null, new object[] { e } ) as ILibrary;
 			}
@@ -227,13 +242,13 @@ namespace Espionage.Engine
 
 		// Construtor
 
-		public Library WithConstructor( Constructor constructor )
+		public Library WithConstructor( ConstructorRef constructor )
 		{
 			_constructor = constructor;
 			return this;
 		}
 
 		[NonSerialized]
-		private Constructor _constructor;
+		private ConstructorRef _constructor;
 	}
 }
