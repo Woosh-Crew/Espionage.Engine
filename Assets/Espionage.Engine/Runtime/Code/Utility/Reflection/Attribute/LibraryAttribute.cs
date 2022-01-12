@@ -2,7 +2,7 @@ using System;
 
 namespace Espionage.Engine
 {
-	[AttributeUsage( AttributeTargets.Class, Inherited = false, AllowMultiple = false )]
+	[AttributeUsage( AttributeTargets.Class )]
 	public class LibraryAttribute : Attribute
 	{
 		public string Name { get; set; }

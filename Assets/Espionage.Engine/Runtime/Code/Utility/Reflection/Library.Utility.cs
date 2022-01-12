@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Espionage.Engine;
 
 public static class LibraryDatabaseExtensions
@@ -64,6 +65,42 @@ public static class LibraryDatabaseExtensions
 	public static Library Get( this IDatabase<Library> database, Guid id )
 	{
 		return database.All.FirstOrDefault( e => e.Id == id );
+	}
+
+	//
+	// Get All
+	//
+
+	public static IEnumerable<Library> GetAll<T>( this IDatabase<Library> database ) where T : ILibrary
+	{
+		if ( !database.TryGet<T>( out var item ) )
+			return null;
+
+		return database.All.Where( e => e.Owner.IsAssignableFrom( item.Owner ) );
+	}
+
+	public static IEnumerable<Library> GetAll( this IDatabase<Library> database, Type type )
+	{
+		if ( !database.TryGet( type, out var item ) )
+			return null;
+
+		return database.All.Where( e => e.Owner.IsAssignableFrom( item.Owner ) );
+	}
+
+	public static IEnumerable<Library> GetAll( this IDatabase<Library> database, string name )
+	{
+		if ( !database.TryGet( name, out var item ) )
+			return null;
+
+		return database.All.Where( e => e.Owner.IsAssignableFrom( item.Owner ) );
+	}
+
+	public static IEnumerable<Library> GetAll( this IDatabase<Library> database, Guid id )
+	{
+		if ( !database.TryGet( id, out var item ) )
+			return null;
+
+		return database.All.Where( e => e.Owner.IsAssignableFrom( item.Owner ) );
 	}
 
 	//

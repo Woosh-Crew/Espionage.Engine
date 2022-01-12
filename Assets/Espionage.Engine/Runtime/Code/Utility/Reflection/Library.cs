@@ -9,9 +9,41 @@ using Random = System.Random;
 
 namespace Espionage.Engine
 {
-	[Manager( nameof( Cache ), Layer = Layer.Editor | Layer.Runtime, Order = -10 ), Serializable]
+	/// <summary> Espionage.Engines string based Reflection System </summary>
+	[Serializable]
+	[Manager( nameof( Cache ), Layer = Layer.Editor | Layer.Runtime, Order = -10 )]
 	public partial class Library
 	{
+		//
+		// Public API
+		//
+
+		/// <summary> Database for library records </summary>
+		public static IDatabase<Library> Database => _database;
+
+		/// <summary> Skips the attached class from generating a library reference </summary>
+		[AttributeUsage( AttributeTargets.Class )]
+		public class SkipAttribute : Attribute { }
+
+
+		/// <summary> Allows the definition of a custom constructor </summary>
+		[AttributeUsage( AttributeTargets.Class, Inherited = true )]
+		public sealed class ConstructorAttribute : Attribute
+		{
+			/// <param name="constructor"> Method should return ILibrary </param>
+			public ConstructorAttribute( string constructor )
+			{
+				this.constructor = constructor;
+			}
+
+			private string constructor;
+			public string Constructor => constructor;
+		}
+
+		//
+		// Database
+		//
+
 		private class internal_Database : IDatabase<Library>
 		{
 			private static List<Library> _records = new List<Library>();
@@ -22,10 +54,6 @@ namespace Espionage.Engine
 				// Check if we already have that name
 				if ( _records.Any( e => e.Name == item.Name ) )
 					throw new Exception( $"Library cache already contains key: {item.Name}" );
-
-				// Check if we already contain that type
-				if ( _records.Any( e => e.Owner == item.Owner ) )
-					throw new Exception( $"Library cache already contains type: {item.Owner.FullName}" );
 
 				// Check if we already contain that Id, this will fuckup networking
 				if ( _records.Any( e => e.Id == item.Id ) )
@@ -62,19 +90,11 @@ namespace Espionage.Engine
 			}
 		}
 
-		//
-		// Exposed API
-		//
-
 		private static IDatabase<Library> _database;
-
-		/// <summary> Database for library records </summary>
-		public static IDatabase<Library> Database => _database;
-
 
 		/// <summary> Constructs ILibrary, if it it has a custom constructor
 		/// itll use that to create the ILibrary </summary>
-		public static ILibrary Construct( Library library )
+		internal static ILibrary Construct( Library library )
 		{
 			if ( library is null )
 			{
@@ -83,7 +103,7 @@ namespace Espionage.Engine
 			}
 
 			if ( library._constructor is not null )
-				return library._constructor.Invoke( library.Owner ) as ILibrary;
+				return library._constructor.Invoke( library );
 
 			return Activator.CreateInstance( library.Owner ) as ILibrary;
 		}
@@ -102,7 +122,16 @@ namespace Espionage.Engine
 				// Select all types where ILibrary exsists or if it has the correct attribute
 				var types = AppDomain.CurrentDomain.GetAssemblies()
 									.SelectMany( e => e.GetTypes()
-									.Where( e => !e.IsAbstract && (e.IsDefined( typeof( LibraryAttribute ) ) || e.GetInterfaces().Contains( typeof( ILibrary ) )) ) );
+									.Where( ( e ) =>
+									{
+										if ( e.IsAbstract )
+											return false;
+
+										if ( e.IsDefined( typeof( SkipAttribute ) ) )
+											return false;
+
+										return (e.IsDefined( typeof( LibraryAttribute ) ) || e.GetInterfaces().Contains( typeof( ILibrary ) ));
+									} ) );
 
 				foreach ( var item in types )
 					_database.Add( CreateRecord( item ) );
@@ -138,7 +167,7 @@ namespace Espionage.Engine
 			return record;
 		}
 
-		private delegate object Constructor( Type type );
+		public delegate ILibrary Constructor( Library type );
 
 		private static Constructor GetConstructor( Type type )
 		{
@@ -148,7 +177,7 @@ namespace Espionage.Engine
 				var attribute = type.GetCustomAttribute<ConstructorAttribute>( true );
 				var method = type.GetMethod( attribute.Constructor, BindingFlags.FlattenHierarchy | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic );
 
-				return ( e ) => method.Invoke( null, new object[] { e } );
+				return ( e ) => method.Invoke( null, new object[] { e } ) as ILibrary;
 			}
 
 			return null;
@@ -174,12 +203,35 @@ namespace Espionage.Engine
 
 		public int Order;
 
+		// Owner
+
+		public Library WithOwner( Type type )
+		{
+			Owner = type;
+			return this;
+		}
+
+		[NonSerialized]
+		public Type Owner;
+
+		// GUID
+
+		public Library WithId( string name )
+		{
+			Id = GenerateID( name );
+			return this;
+		}
 
 		[NonSerialized]
 		public Guid Id;
 
-		[NonSerialized]
-		public Type Owner;
+		// Construtor
+
+		public Library WithConstructor( Constructor constructor )
+		{
+			_constructor = constructor;
+			return this;
+		}
 
 		[NonSerialized]
 		private Constructor _constructor;

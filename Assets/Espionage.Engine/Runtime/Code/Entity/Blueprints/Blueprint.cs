@@ -1,15 +1,26 @@
+using System;
 using UnityEngine;
 
 namespace Espionage.Engine.Entities
 {
 	[CreateAssetMenu( menuName = "Espionage.Engine/Blueprint", fileName = "Blueprint" )]
-	public class Blueprint : ScriptableObject
+	[Library.Skip, Library.Constructor( nameof( Constructor ) )]
+	public class Blueprint : ScriptableObject, ILibrary
 	{
-		public string identifier;
-		public string title;
-		public string description;
+		[field: SerializeField]
+		public Library ClassInfo { get; set; }
 
 		public string entityReference;
 		public GameObject prefab;
+
+		public void Spawn()
+		{
+
+		}
+
+		private static object Constructor()
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Espionage.Engine.Entities
 {
-	public abstract class Entity : ILibrary, ICallbacks
+	public abstract partial class Entity : ILibrary, ICallbacks
 	{
 		public static IDatabase<Blueprint> Database { get; }
 

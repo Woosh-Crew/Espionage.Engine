@@ -12,3 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cb2aeccf4e7a65408bd63af2c51c359, type: 3}
   m_Name: Map
   m_EditorClassIdentifier: 
+  title: 
+  scene: {fileID: 102900000, guid: 4b89e3b753e2a794badc302de132049f, type: 3}
