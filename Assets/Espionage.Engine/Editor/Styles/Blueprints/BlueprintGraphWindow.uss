@@ -1,9 +1,10 @@
 :root {
-	/* Toolbar Colours */
+	/* MenuBar Colours */
 	--menubar-colors-panel: #3c3c3c;
 	--menubar-colors-shadow: #191919;
 
-	--button-hover: #46607c;
+	--button-hover: #464646;
+	--button-click: #46607c;
 }
 
 /* MenuBar */
@@ -14,7 +15,7 @@
 	flex-direction: row;
 
 	border-color: var(--menubar-colors-shadow);
-	border-bottom-width: 1px;
+	border-top-width: 1px;
 
 	padding-left: 4px;
 	padding-right: 4px;
@@ -36,11 +37,72 @@
 	background-color: var(--button-hover);
 }
 
+.MenuBar-Button:active {
+	background-color: var(--button-click);
+}
+
 /* Window */
 
 #Window {
 	flex-grow: 1;
 	background-color: #282828;
+}
+
+/* Info Bar */
+
+#Info-Bar {
+	position: absolute;
+	height: 48px;
+	width: 100%;
+
+	font-size: 22px;
+	align-items: center;
+	opacity: 0.7;
+	-unity-font-style: bold;
+
+	background-color: rgba(0, 0, 0, 0.5);
+}
+
+#Info-Bar,
+.Left {
+	flex-grow: 1;
+	padding-left: 8px;
+	flex-direction: row;
+}
+
+#Info-Bar,
+.Right {
+	flex-grow: 1;
+	padding-right: 8px;
+	flex-direction: row;
+	justify-content: flex-end;
+}
+
+.Info-Bar-Button {
+	background-color: initial;
+	width: 48px;
+
+	border-radius: 0px;
+	border-width: 0px;
+
+	border-color: initial;
+	border-top-width: 2px;
+	border-bottom-width: 2px;
+}
+
+.Info-Bar-Button:hover {
+	border-bottom-color: var(--button-hover);
+	border-bottom-width: 2px;
+}
+
+/* Grid + Watermark */
+
+#Grid {
+	--line-color: #2c2c2c;
+	--thick-line-color: #1d1d1d;
+	--grid-background-color: #262626;
+	--spacing: 16;
+	--thick-lines: 64;
 }
 
 #Blueprint-Watermark {
