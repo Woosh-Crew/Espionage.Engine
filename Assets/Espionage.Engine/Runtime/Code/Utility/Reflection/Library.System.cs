@@ -65,7 +65,7 @@ namespace Espionage.Engine
 			if ( type.IsDefined( typeof( LibraryAttribute ), false ) )
 			{
 				var attribute = type.GetCustomAttribute<LibraryAttribute>();
-				record = attribute.CreateRecord( type );
+				record = attribute.CreateRecord();
 			}
 
 			// If still null just use type defaults
@@ -73,8 +73,9 @@ namespace Espionage.Engine
 			{
 				Name = type.FullName,
 				Title = type.Name,
-				Class = type,
 			};
+
+			record.Class = type;
 
 			// Generate the ID, so we can spawn it at runtime
 			record.Id = GenerateID( record.Name );

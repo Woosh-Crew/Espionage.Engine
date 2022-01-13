@@ -16,14 +16,13 @@ namespace Espionage.Engine
 			this.Name = name;
 		}
 
-		public Library CreateRecord( Type type )
+		public Library CreateRecord()
 		{
 			return new Library()
 			{
 				Name = Name,
 				Help = Help,
 				Title = Title,
-				Class = type,
 			};
 		}
 	}

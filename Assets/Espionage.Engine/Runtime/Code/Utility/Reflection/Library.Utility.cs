@@ -17,25 +17,25 @@ public static class LibraryDatabaseExtensions
 	public static bool TryGet<T>( this IDatabase<Library> database, out Library library ) where T : ILibrary
 	{
 		library = database.Get<T>();
-		return library is null;
+		return library is not null;
 	}
 
 	public static bool TryGet( this IDatabase<Library> database, string name, out Library library )
 	{
 		library = database.Get( name );
-		return library is null;
+		return library is not null;
 	}
 
 	public static bool TryGet( this IDatabase<Library> database, Type type, out Library library )
 	{
 		library = database.Get( type );
-		return library is null;
+		return library is not null;
 	}
 
 	public static bool TryGet( this IDatabase<Library> database, Guid id, out Library library )
 	{
 		library = database.Get( id );
-		return library is null;
+		return library is not null;
 	}
 
 	//
@@ -80,7 +80,7 @@ public static class LibraryDatabaseExtensions
 		if ( !database.TryGet<T>( out var item ) )
 			return null;
 
-		return database.All.Where( e => e.Class.IsAssignableFrom( item.Class ) );
+		return database.All.Where( e => e.Class.IsSubclassOf( item.Class ) );
 	}
 
 	public static IEnumerable<Library> GetAll( this IDatabase<Library> database, Type type )
@@ -88,7 +88,7 @@ public static class LibraryDatabaseExtensions
 		if ( !database.TryGet( type, out var item ) )
 			return null;
 
-		return database.All.Where( e => e.Class.IsAssignableFrom( item.Class ) );
+		return database.All.Where( e => e.Class.IsSubclassOf( item.Class ) );
 	}
 
 	public static IEnumerable<Library> GetAll( this IDatabase<Library> database, string name )
@@ -96,7 +96,7 @@ public static class LibraryDatabaseExtensions
 		if ( !database.TryGet( name, out var item ) )
 			return null;
 
-		return database.All.Where( e => e.Class.IsAssignableFrom( item.Class ) );
+		return database.All.Where( e => e.Class.IsSubclassOf( item.Class ) );
 	}
 
 	public static IEnumerable<Library> GetAll( this IDatabase<Library> database, Guid id )
@@ -104,7 +104,7 @@ public static class LibraryDatabaseExtensions
 		if ( !database.TryGet( id, out var item ) )
 			return null;
 
-		return database.All.Where( e => e.Class.IsAssignableFrom( item.Class ) );
+		return database.All.Where( e => e.Class.IsSubclassOf( item.Class ) );
 	}
 
 	//
