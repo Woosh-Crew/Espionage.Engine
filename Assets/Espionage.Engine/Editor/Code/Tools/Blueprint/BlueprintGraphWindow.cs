@@ -7,11 +7,8 @@ using System;
 
 namespace Espionage.Engine.Internal.Editor
 {
-	[Library( "esp_editor.blueprint_window",
-		Title = "Blueprint Editor",
-		Help = "Interface with a blueprints node tree",
-	  	Icon = "Assets/Espionage.Engine/Editor/Styles/Icons/baseline_view_in_ar_white_48dp.png"
-	)]
+	[Library( "esp_editor.blueprint_window", Title = "Blueprint Editor", Help = "Interface with a blueprints node tree" )]
+	[Icon( "Assets/Espionage.Engine/Editor/Styles/Icons/baseline_view_in_ar_white_48dp.png" )]
 	public class BlueprintGraphWindow : EditorWindow, ILibrary, ICallbacks
 	{
 		public Library ClassInfo { get; set; }
@@ -76,7 +73,7 @@ namespace Espionage.Engine.Internal.Editor
 			var blueprintWatermark = new VisualElement() { name = "Blueprint-Watermark" };
 			_graphView.Add( blueprintWatermark );
 
-			var iconTexture = AssetDatabase.LoadAssetAtPath<Texture>( ClassInfo.Icon );
+			var iconTexture = ClassInfo.Components.Get<IconAttribute>().Icon;
 			blueprintWatermark.Add( new Image() { image = iconTexture } );
 			blueprintWatermark.Add( new Label( "BLUEPRINT" ) );
 

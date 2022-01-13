@@ -54,7 +54,6 @@ namespace Espionage.Engine
 		public string Name;
 		public string Title;
 		public string Help;
-		public string Icon;
 
 		// Components
 

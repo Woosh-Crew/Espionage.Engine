@@ -21,6 +21,9 @@ namespace Espionage.Engine
 				return null;
 			}
 
+			if ( library.Components.TryGet<Constructor>( out var constructor ) )
+				return constructor.Invoke();
+
 			return Activator.CreateInstance( library.Class ) as ILibrary;
 		}
 
@@ -35,7 +38,7 @@ namespace Espionage.Engine
 
 			using ( Debugging.Stopwatch( "Library Initialized" ) )
 			{
-				// Select all types where ILibrary exsists or if it has the correct attribute
+				// Select all types where ILibrary exists or if it has the correct attribute
 				var types = AppDomain.CurrentDomain.GetAssemblies()
 									.SelectMany( e => e.GetTypes()
 									.Where( ( e ) =>
@@ -46,7 +49,7 @@ namespace Espionage.Engine
 										if ( e.IsDefined( typeof( Skip ) ) )
 											return false;
 
-										return (e.IsDefined( typeof( LibraryAttribute ) ) || e.GetInterfaces().Contains( typeof( ILibrary ) ));
+										return e.IsDefined( typeof( LibraryAttribute ) ) || e.HasInterface<ILibrary>();
 									} ) );
 
 				foreach ( var item in types )

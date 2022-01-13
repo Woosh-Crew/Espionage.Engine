@@ -6,11 +6,7 @@ using UnityEngine.UIElements;
 
 namespace Espionage.Engine.Internal.Editor
 {
-	[Library( "esp_editor.blueprint_creator",
-		Title = "Blueprint Creator",
-		Help = "Create blueprints using a handy window",
-	 	Icon = "Assets/Espionage.Engine/Editor/Styles/Icons/baseline_view_in_ar_white_48dp.png"
-	)]
+	[Library( "esp_editor.blueprint_creator", Title = "Blueprint Creator", Help = "Create blueprints using a handy window" )]
 	public class BlueprintCreatorWindow : EditorWindow, ILibrary, ICallbacks
 	{
 		public Library ClassInfo { get; set; }
