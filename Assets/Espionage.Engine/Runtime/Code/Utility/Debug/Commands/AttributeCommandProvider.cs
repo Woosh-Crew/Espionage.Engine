@@ -33,9 +33,10 @@ namespace Espionage.Engine.Internal.Commands
 
 					// Get every CmdAttribute using Linq
 					var types = AppDomain.CurrentDomain.GetAssemblies()
-					.SelectMany( e => e.GetTypes()
+									.Where( e => Utility.IgnoreIfNotUserGeneratedAssembly( e ) )
+									.SelectMany( e => e.GetTypes()
 										.SelectMany( e => e.GetMembers( BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic )
-										.Where( e => e.IsDefined( typeof( T ) ) ) ) );
+											.Where( e => e.IsDefined( typeof( T ) ) ) ) );
 
 					foreach ( var info in types )
 					{

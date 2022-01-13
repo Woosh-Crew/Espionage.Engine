@@ -40,6 +40,7 @@ namespace Espionage.Engine
 			{
 				// Select all types where ILibrary exists or if it has the correct attribute
 				var types = AppDomain.CurrentDomain.GetAssemblies()
+									.Where( e => Utility.IgnoreIfNotUserGeneratedAssembly( e ) )
 									.SelectMany( e => e.GetTypes()
 									.Where( ( e ) =>
 									{

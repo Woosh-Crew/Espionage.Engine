@@ -10,17 +10,6 @@ namespace Espionage.Engine.Entities
 	public abstract class Node : ScriptableObject, ILibrary, ICallbacks
 	{
 		//
-		// Attributes
-		//
-
-		[AttributeUsage( AttributeTargets.Property | AttributeTargets.Method, Inherited = true )]
-		protected sealed class InputAttribute : Attribute { }
-
-		[AttributeUsage( AttributeTargets.Property | AttributeTargets.Method, Inherited = true )]
-		protected sealed class OutputAttribute : Attribute { }
-
-
-		//
 		// Init
 		//
 
@@ -30,5 +19,21 @@ namespace Espionage.Engine.Entities
 		{
 			ClassInfo = Library.Database.Get( GetType() );
 		}
+
+		//
+		// Graph
+		//
+
+		private Vector2 _position;
+
+		//
+		// Inputs and Outputs
+		//
+
+		public void BuildInputs() { }
+		public void BuildOutputs() { }
+
+		protected virtual void OnBuildInputs() { }
+		protected virtual void OnBuildOutputs() { }
 	}
 }
