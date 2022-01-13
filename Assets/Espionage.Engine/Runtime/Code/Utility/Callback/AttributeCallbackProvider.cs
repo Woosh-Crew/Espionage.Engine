@@ -20,12 +20,14 @@ namespace Espionage.Engine.Internal.Callbacks
 						.Where( e => Utility.IgnoreIfNotUserGeneratedAssembly( e ) )
 						.SelectMany( e => e.GetTypes()
 							// We gotta do this so it loads faster... I think its stupid having to have a library attribute
-							.SelectMany( e => e.GetMethods( BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy ) )
-								.Where( e => e.IsDefined( typeof( CallbackAttribute ) ) ) );
+							.SelectMany( e => e.GetMethods( BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy ) ) );
 
 				foreach ( var info in methods )
 				{
 					var attribute = info.GetCustomAttribute<CallbackAttribute>();
+
+					if ( attribute is null )
+						continue;
 
 					if ( !_callbacks.ContainsKey( attribute.Name ) )
 					{

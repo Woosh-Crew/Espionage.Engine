@@ -35,13 +35,17 @@ namespace Espionage.Engine.Internal.Commands
 					var types = AppDomain.CurrentDomain.GetAssemblies()
 									.Where( e => Utility.IgnoreIfNotUserGeneratedAssembly( e ) )
 									.SelectMany( e => e.GetTypes()
-										.SelectMany( e => e.GetMembers( BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic )
-											.Where( e => e.IsDefined( typeof( T ) ) ) ) );
+										.SelectMany( e => e.GetMembers( BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic ) ) );
 
 					foreach ( var info in types )
 					{
-						foreach ( var item in (info.GetCustomAttribute<T>() as ICommandCreator).Create( info ) )
-							Add( item );
+						var attribute = info.GetCustomAttribute<T>();
+
+						if ( attribute is ICommandCreator command )
+						{
+							foreach ( var item in command.Create( info ) )
+								Add( item );
+						}
 					}
 				} );
 		}
