@@ -21,7 +21,7 @@ namespace Espionage.Engine.Internal.Editor
 		{
 			var lib = Library.Database.Get<BlueprintGraphWindow>();
 			var wind = EditorWindow.CreateWindow<BlueprintGraphWindow>();
-			wind.titleContent = new GUIContent( lib.Title, lib.Description );
+			wind.titleContent = new GUIContent( lib.Title, lib.Help );
 		}
 
 		private void OnEnable()

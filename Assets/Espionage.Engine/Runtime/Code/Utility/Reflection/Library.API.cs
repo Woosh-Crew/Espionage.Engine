@@ -10,21 +10,27 @@ namespace Espionage.Engine
 {
 	public partial class Library
 	{
-		//
-		// Public API
-		//
-
 		/// <summary> Database for library records </summary>
 		public static IDatabase<Library> Database => _database;
 
 		/// <summary> Attribute that skips the attached class from generating a library reference </summary>
-		[AttributeUsage( AttributeTargets.Class )]
+		[AttributeUsage( AttributeTargets.Class, Inherited = true )]
 		public class Skip : Attribute { }
 
+		//
+		// Components
+		//
+
+		[AttributeUsage( AttributeTargets.Class, Inherited = true )]
+		public abstract class Component : Attribute
+		{
+			public Library Library { get; internal set; }
+
+			public virtual void OnAttached() { }
+		}
 
 		/// <summary> Attribute that allows the definition of a custom constructor </summary>
-		[AttributeUsage( AttributeTargets.Class, Inherited = true )]
-		public sealed class Constructor : Attribute
+		public sealed class Constructor : Component
 		{
 			/// <param name="constructor"> Method should return ILibrary </param>
 			public Constructor( string constructor )
@@ -33,7 +39,14 @@ namespace Espionage.Engine
 			}
 
 			private string constructor;
-			public string Target => constructor;
+
+			public override void OnAttached()
+			{
+				base.OnAttached();
+
+				// Works?
+				UnityEngine.Debug.Log( $"Constructor Attached to Class {Library.Name}" );
+			}
 		}
 	}
 }

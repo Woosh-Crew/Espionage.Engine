@@ -20,7 +20,7 @@ namespace Espionage.Engine.Internal.Editor
 		{
 			var lib = Library.Database.Get<BlueprintCreatorWindow>();
 			var wind = EditorWindow.CreateInstance<BlueprintCreatorWindow>();
-			wind.titleContent = new GUIContent( lib.Title, lib.Description );
+			wind.titleContent = new GUIContent( lib.Title, lib.Help );
 			wind.ShowModalUtility();
 		}
 

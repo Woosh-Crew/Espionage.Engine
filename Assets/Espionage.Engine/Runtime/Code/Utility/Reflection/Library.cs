@@ -10,46 +10,53 @@ namespace Espionage.Engine
 {
 	/// <summary> Espionage.Engines string based Reflection System </summary>
 	[Serializable] // Instance Serialization
-	public partial class Library
+	public sealed partial class Library
 	{
+		private class internal_ComponentDatabase : IDatabase<Component>
+		{
+			private List<Component> _components = new List<Component>();
+			public IEnumerable<Component> All => _components;
+
+			public void Add( Component item )
+			{
+				_components.Add( item );
+			}
+
+			public void Clear()
+			{
+				_components.Clear();
+			}
+
+			public bool Contains( Component item )
+			{
+				return _components.Contains( item );
+			}
+
+			public void Remove( Component item )
+			{
+				_components.Remove( item );
+			}
+		}
+
+		// Meta
+
 		public string Name;
 		public string Title;
-		public string Description;
+		public string Help;
 		public string Icon;
 
-		public int Order;
+		// Components
+
+		public IDatabase<Component> Components = new internal_ComponentDatabase();
 
 		// Owner
 
-		public Library WithOwner( Type type )
-		{
-			Owner = type;
-			return this;
-		}
-
 		[NonSerialized]
-		public Type Owner;
+		public Type Class;
 
 		// GUID
 
-		public Library WithId( string name )
-		{
-			Id = GenerateID( name );
-			return this;
-		}
-
 		[NonSerialized]
 		public Guid Id;
-
-		// Construtor
-
-		public Library WithConstructor( ConstructorRef constructor )
-		{
-			_constructor = constructor;
-			return this;
-		}
-
-		[NonSerialized]
-		private ConstructorRef _constructor;
 	}
 }

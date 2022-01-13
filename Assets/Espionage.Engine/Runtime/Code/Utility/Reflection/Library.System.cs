@@ -12,7 +12,7 @@ namespace Espionage.Engine
 	public partial class Library
 	{
 		/// <summary> Constructs ILibrary, if it it has a custom constructor
-		/// itll use that to create the ILibrary </summary>
+		/// it'll use that to create the ILibrary </summary>
 		internal static ILibrary Construct( Library library )
 		{
 			if ( library is null )
@@ -21,10 +21,7 @@ namespace Espionage.Engine
 				return null;
 			}
 
-			if ( library._constructor is not null )
-				return library._constructor.Invoke( library );
-
-			return Activator.CreateInstance( library.Owner ) as ILibrary;
+			return Activator.CreateInstance( library.Class ) as ILibrary;
 		}
 
 		//
@@ -72,34 +69,22 @@ namespace Espionage.Engine
 			record ??= new Library()
 			{
 				Name = type.FullName,
-				Order = 0,
 				Title = type.Name,
-				Owner = type,
+				Class = type,
 			};
+
+			// Get Library Components
+			foreach ( var item in type.GetCustomAttributes<Component>() )
+			{
+				item.Library = record;
+				record.Components.Add( item );
+				item.OnAttached();
+			}
 
 			// Generate the ID, so we can spawn it at runtime
 			record.Id = GenerateID( record.Name );
 
-			// Get the constructor, incase it happens to have a custom one
-			record._constructor = GetConstructor( type );
-
 			return record;
-		}
-
-		public delegate ILibrary ConstructorRef( Library type );
-
-		private static ConstructorRef GetConstructor( Type type )
-		{
-			// Check if there is a constructor | INTERNAL
-			if ( type.IsDefined( typeof( Constructor ), true ) )
-			{
-				var attribute = type.GetCustomAttribute<Constructor>( true );
-				var method = type.GetMethod( attribute.Target, BindingFlags.FlattenHierarchy | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic );
-
-				return ( e ) => method.Invoke( null, new object[] { e } ) as ILibrary;
-			}
-
-			return null;
 		}
 
 		private static Guid GenerateID( string name )

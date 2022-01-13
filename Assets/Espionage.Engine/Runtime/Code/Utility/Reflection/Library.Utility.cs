@@ -49,7 +49,7 @@ public static class LibraryDatabaseExtensions
 
 	public static Library Get<T>( this IDatabase<Library> database ) where T : ILibrary
 	{
-		return database.All.FirstOrDefault( e => e.Owner == typeof( T ) );
+		return database.All.FirstOrDefault( e => e.Class == typeof( T ) );
 	}
 
 	public static Library Get( this IDatabase<Library> database, string name )
@@ -59,7 +59,7 @@ public static class LibraryDatabaseExtensions
 
 	public static Library Get( this IDatabase<Library> database, Type type )
 	{
-		return database.All.FirstOrDefault( e => e.Owner == type );
+		return database.All.FirstOrDefault( e => e.Class == type );
 	}
 
 	public static Library Get( this IDatabase<Library> database, Guid id )
@@ -76,7 +76,7 @@ public static class LibraryDatabaseExtensions
 		if ( !database.TryGet<T>( out var item ) )
 			return null;
 
-		return database.All.Where( e => e.Owner.IsAssignableFrom( item.Owner ) );
+		return database.All.Where( e => e.Class.IsAssignableFrom( item.Class ) );
 	}
 
 	public static IEnumerable<Library> GetAll( this IDatabase<Library> database, Type type )
@@ -84,7 +84,7 @@ public static class LibraryDatabaseExtensions
 		if ( !database.TryGet( type, out var item ) )
 			return null;
 
-		return database.All.Where( e => e.Owner.IsAssignableFrom( item.Owner ) );
+		return database.All.Where( e => e.Class.IsAssignableFrom( item.Class ) );
 	}
 
 	public static IEnumerable<Library> GetAll( this IDatabase<Library> database, string name )
@@ -92,7 +92,7 @@ public static class LibraryDatabaseExtensions
 		if ( !database.TryGet( name, out var item ) )
 			return null;
 
-		return database.All.Where( e => e.Owner.IsAssignableFrom( item.Owner ) );
+		return database.All.Where( e => e.Class.IsAssignableFrom( item.Class ) );
 	}
 
 	public static IEnumerable<Library> GetAll( this IDatabase<Library> database, Guid id )
@@ -100,7 +100,7 @@ public static class LibraryDatabaseExtensions
 		if ( !database.TryGet( id, out var item ) )
 			return null;
 
-		return database.All.Where( e => e.Owner.IsAssignableFrom( item.Owner ) );
+		return database.All.Where( e => e.Class.IsAssignableFrom( item.Class ) );
 	}
 
 	//

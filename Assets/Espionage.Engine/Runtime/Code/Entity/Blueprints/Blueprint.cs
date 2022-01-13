@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Espionage.Engine.Entities
 {
 	[CreateAssetMenu( menuName = "Espionage.Engine/Blueprint", fileName = "Blueprint" )]
-	[Library.Skip, Library.Constructor( nameof( Constructor ) )]
+	[Library.Constructor( nameof( Constructor ) )]
 	public class Blueprint : ScriptableObject, ILibrary
 	{
 		[field: SerializeField]

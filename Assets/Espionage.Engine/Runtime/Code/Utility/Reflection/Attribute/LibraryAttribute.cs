@@ -24,12 +24,10 @@ namespace Espionage.Engine
 			return new Library()
 			{
 				Name = Name,
-				Description = Help,
+				Help = Help,
 				Title = Title,
-				Owner = type,
+				Class = type,
 				Icon = Icon,
-
-				Order = Order,
 			};
 		}
 	}
