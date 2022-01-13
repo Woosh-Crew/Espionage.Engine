@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Espionage.Engine.Entities;
+using UnityEditor;
 
 namespace Espionage.Engine.Internal.Editor
 {
 	public class BlueprintGraphView : GraphView
 	{
+		private BehaviourTree _tree;
+
 		public BlueprintGraphView()
 		{
 			SetupZoom( ContentZoomer.DefaultMinScale, 3 );
@@ -16,23 +20,21 @@ namespace Espionage.Engine.Internal.Editor
 			this.AddManipulator( new SelectionDragger() );
 			this.AddManipulator( new RectangleSelector() );
 
-			CreateEntryPoint();
+			var eventsBlackboard = new Blackboard( this ) { title = "Variables" };
+
+			Add( eventsBlackboard );
+			Add( new Blackboard( this ) { title = "Events" } );
+
 
 			// Add Grid
 			var grid = new GridBackground() { name = "Grid" };
 			Insert( 0, grid );
+
 		}
 
-		private void CreateEntryPoint()
+		internal void Populate( BehaviourTree tree )
 		{
-			var node = new Node()
-			{
-				title = "Start"
-			};
-
-			node.SetPosition( new Rect( 0, 0, 100, 250 ) );
-
-			AddElement( node );
+			_tree = tree;
 		}
 	}
 }

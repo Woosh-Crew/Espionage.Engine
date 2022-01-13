@@ -37,9 +37,6 @@ namespace Espionage.Engine.Internal.Editor
 
 			CreateGraphView();
 			CreateMenuBar();
-
-			// var window = new VisualElement() { name = "Window" };
-			// rootVisualElement.Add( window );
 		}
 
 		//
