@@ -44,6 +44,8 @@ namespace Espionage.Engine
 			public void Remove( Component item )
 			{
 				_components.Remove( item );
+				item.OnDetached();
+				item.Library = null;
 			}
 		}
 

@@ -3,8 +3,7 @@ using UnityEngine;
 
 namespace Espionage.Engine.Entities
 {
-	[CreateAssetMenu( menuName = "Espionage.Engine/Blueprint", fileName = "Blueprint" )]
-	[Library.Constructor( nameof( Constructor ) )]
+	[Library.Skip, CreateAssetMenu( menuName = "Espionage.Engine/Blueprint", fileName = "Blueprint" )]
 	public class Blueprint : ScriptableObject, ILibrary
 	{
 		[field: SerializeField]

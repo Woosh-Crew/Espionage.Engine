@@ -27,25 +27,51 @@ namespace Espionage.Engine
 			public Library Library { get; internal set; }
 
 			public virtual void OnAttached() { }
+			public virtual void OnDetached() { }
 		}
 
 		/// <summary> Attribute that allows the definition of a custom constructor </summary>
 		public sealed class Constructor : Component
 		{
+			// Attribute
+
+			private string targetMethod;
+
 			/// <param name="constructor"> Method should return ILibrary </param>
 			public Constructor( string constructor )
 			{
-				this.constructor = constructor;
+				this.targetMethod = constructor;
 			}
 
-			private string constructor;
+			// Component
 
 			public override void OnAttached()
 			{
 				base.OnAttached();
 
 				// Works?
-				UnityEngine.Debug.Log( $"Constructor Attached to Class {Library.Name}" );
+				_constructor = GetConstructor();
+				UnityEngine.Debug.Log( $"Constructor ({targetMethod}), Attached to Class {Library.Name}" );
+			}
+
+			// Constructor
+
+			private delegate ILibrary Action( Library type );
+			private Action _constructor;
+
+			private Action GetConstructor()
+			{
+				var method = Library.Class.GetMethod( targetMethod, BindingFlags.FlattenHierarchy | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic );
+
+				if ( method is null )
+					return null;
+
+				return ( e ) => method.Invoke( null, new object[] { e } ) as ILibrary;
+			}
+
+			public ILibrary Invoke()
+			{
+				return _constructor( Library );
 			}
 		}
 	}

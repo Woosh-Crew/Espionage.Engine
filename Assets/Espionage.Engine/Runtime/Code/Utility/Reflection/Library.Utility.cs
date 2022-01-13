@@ -4,6 +4,10 @@ using System.Linq;
 using System.Reflection;
 using Espionage.Engine;
 
+//
+// IDatabase<Library>
+//
+
 public static class LibraryDatabaseExtensions
 {
 	//
@@ -199,4 +203,27 @@ public static class LibraryDatabaseExtensions
 			Debugging.Log.Warning( $"Couldnt not find {type.FullName} in Library database" );
 		}
 	}
+}
+
+//
+// IDatabase<Library.Component>
+//
+public static class LibraryComponentDatabaseExtensions
+{
+	public static T Get<T>( this IDatabase<Library.Component> database ) where T : Library.Component
+	{
+		return database.All.FirstOrDefault( e => e is T ) as T;
+	}
+
+	public static bool TryGet<T>( this IDatabase<Library.Component> database, out T component ) where T : Library.Component
+	{
+		component = database.Get<T>();
+		return component is null;
+	}
+
+	public static bool Exists<T>( this IDatabase<Library.Component> database ) where T : Library.Component
+	{
+		return database.Get<T>() is not null;
+	}
+
 }
