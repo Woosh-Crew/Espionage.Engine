@@ -10,6 +10,10 @@ namespace Espionage.Engine.Editor
 		public const string Blueprint = "Assets/Espionage.Engine/Editor/Styles/Icons/baseline_view_in_ar_white_48dp.png";
 		public const string Construct = "Assets/Espionage.Engine/Editor/Styles/Icons/outline_construction_white_48dp.png";
 		public const string Terminal = "Assets/Espionage.Engine/Editor/Styles/Icons/outline_terminal_white_48dp.png";
+		public const string Question = "Assets/Espionage.Engine/Editor/Styles/Icons/baseline_question_mark_white_48dp.png";
+		public const string Inspector = "Assets/Espionage.Engine/Editor/Styles/Icons/baseline_manage_search_white_48dp.png";
+		public const string NodeTree = "Assets/Espionage.Engine/Editor/Styles/Icons/baseline_account_tree_white_48dp.png";
+		public const string Dashboard = "Assets/Espionage.Engine/Editor/Styles/Icons/baseline_dashboard_white_48dp.png";
 
 		// Zoom
 		public const string ZoomIn = "Assets/Espionage.Engine/Editor/Styles/Icons/baseline_zoom_in_map_white_48dp.png";

@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Espionage.Engine.Entities
 {
@@ -9,16 +10,18 @@ namespace Espionage.Engine.Entities
 		[field: SerializeField]
 		public Library ClassInfo { get; set; }
 
-		public string entityReference;
-		public GameObject prefab;
-
-		public Blueprint()
+		private static ILibrary Constructor( Library library )
 		{
+			return null;
 		}
 
-		private static object Constructor()
+#if UNITY_EDITOR
+
+		public VisualElement InspectorUI()
 		{
-			throw new NotImplementedException();
+			return null;
 		}
+
+#endif
 	}
 }

@@ -33,18 +33,67 @@ namespace Espionage.Engine.Internal.Editor
 			var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>( "Assets/Espionage.Engine/Editor/Styles/Blueprints/BlueprintGraphWindow.uss" );
 			rootVisualElement.styleSheets.Add( styleSheet );
 
-			CreateGraphView();
+			// Split View
+			var panel = new TwoPaneSplitView( 0, 300, TwoPaneSplitViewOrientation.Horizontal );
+			panel.Add( CreateInfoBoard() );
+			panel.Add( CreateGraphView() );
+
+			rootVisualElement.Add( panel );
+
 			CreateMenuBar();
+		}
+
+		//
+		// Inspector
+		//
+
+		private VisualElement CreateInfoBoard()
+		{
+			var root = new VisualElement() { name = "InfoBoard" };
+
+			// Split View
+			var panel = new TwoPaneSplitView( 0, 256, TwoPaneSplitViewOrientation.Vertical );
+
+			panel.Add( CreateInspector() );
+			panel.Add( CreateBlackboard() );
+
+			root.Add( panel );
+
+			return root;
+		}
+
+		private VisualElement CreateBlackboard()
+		{
+			var root = new VisualElement() { name = "Blackboard" };
+			root.Add( CreateTitlebar( "Blackboard", AssetDatabase.LoadAssetAtPath<Texture>( EditorIcons.Dashboard ) ) );
+
+			return root;
+
+		}
+
+		private VisualElement CreateInspector()
+		{
+			var root = new VisualElement() { name = "Inspector" };
+			root.Add( CreateTitlebar( "Inspector", AssetDatabase.LoadAssetAtPath<Texture>( EditorIcons.Info ) ) );
+
+			return root;
+		}
+
+		private VisualElement CreateTitlebar( string title, Texture icon )
+		{
+			var root = new VisualElement() { name = "TitleBar" };
+			root.Add( new Image() { image = icon } );
+			root.Add( new Label( title ) );
+			return root;
 		}
 
 		//
 		// Graph View
 		//
 
-		private BlueprintGraphView _graphView;
 		private VisualElement _infoBar;
 
-		private void CreateGraphView()
+		private VisualElement CreateGraphView()
 		{
 			Button CreateButton( string text, Texture icon, out Image image, Action onClick = null )
 			{
@@ -56,23 +105,21 @@ namespace Espionage.Engine.Internal.Editor
 				return button;
 			}
 
+			var root = new VisualElement();
 
-			_graphView = new BlueprintGraphView()
+			root.Add( CreateTitlebar( "Node Graph", AssetDatabase.LoadAssetAtPath<Texture>( EditorIcons.NodeTree ) ) );
+
+			var graph = new BlueprintGraphView()
 			{
 				name = "Window"
 			};
 
-			rootVisualElement.Add( _graphView );
-
-			// Vignette
-
-			// var image = new VisualElement() { name = "Vignette" };
-			// _graphView.Add( image );
+			root.Add( graph );
 
 			// Watermark
 
 			var blueprintWatermark = new VisualElement() { name = "Blueprint-Watermark" };
-			_graphView.Add( blueprintWatermark );
+			graph.Add( blueprintWatermark );
 
 			var iconTexture = ClassInfo.Components.Get<IconAttribute>().Icon;
 			blueprintWatermark.Add( new Image() { image = iconTexture } );
@@ -81,7 +128,7 @@ namespace Espionage.Engine.Internal.Editor
 			// Info Bar
 
 			_infoBar = new VisualElement() { name = "Info-Bar" };
-			_graphView.Add( _infoBar );
+			graph.Add( _infoBar );
 			{
 				// Left Side
 
@@ -89,7 +136,7 @@ namespace Espionage.Engine.Internal.Editor
 				left.AddToClassList( "Left" );
 				_infoBar.Add( left );
 
-				left.Add( new Label() { text = "Weapon Blueprint" } );
+				left.Add( new Label() { text = "Door Blueprint" } );
 
 				// Right Side
 
@@ -119,6 +166,8 @@ namespace Espionage.Engine.Internal.Editor
 				var infoIcon = AssetDatabase.LoadAssetAtPath<Texture>( EditorIcons.Info );
 				right.Add( CreateButton( "Info", infoIcon, out _ ) );
 			}
+
+			return root;
 		}
 
 		//
@@ -129,9 +178,9 @@ namespace Espionage.Engine.Internal.Editor
 
 		private void CreateMenuBar()
 		{
-			Button CreateDropdown( string text )
+			Button CreateDropdown( string text, Action action = null )
 			{
-				var button = new Button() { text = text };
+				var button = new Button( action ) { text = text };
 				button.AddToClassList( "MenuBar-Button" );
 				return button;
 			}
@@ -139,12 +188,27 @@ namespace Espionage.Engine.Internal.Editor
 			_menubar = rootVisualElement.Add<VisualElement>( "MenuBar" );
 
 			// Buttons
-			_menubar.Add( CreateDropdown( $"File" ) );
+			_menubar.Add( CreateDropdown( $"File", CreateGenericMenu ) );
 			_menubar.Add( CreateDropdown( $"Edit" ) );
-			_menubar.Add( CreateDropdown( $"Asset" ) );
+			_menubar.Add( CreateDropdown( $"Nodes" ) );
 			_menubar.Add( CreateDropdown( $"View" ) );
 			_menubar.Add( CreateDropdown( $"Options" ) );
 			_menubar.Add( CreateDropdown( $"Help" ) );
+		}
+
+		private void CreateGenericMenu()
+		{
+			// create the menu and add items to it
+			GenericMenu menu = new GenericMenu();
+
+			menu.AddItem( new GUIContent( "Save" ), false, null );
+			menu.AddItem( new GUIContent( "Save As" ), false, null );
+			menu.AddSeparator( "" );
+			menu.AddItem( new GUIContent( "Open" ), false, null );
+			menu.AddItem( new GUIContent( "Recent Files/To bad!" ), false, null );
+
+			// display the menu
+			menu.ShowAsContext();
 		}
 	}
 }

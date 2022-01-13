@@ -46,6 +46,7 @@
 #Window {
 	flex-grow: 1;
 	background-color: #282828;
+	min-width: 256px;
 }
 
 /* Info Bar */
@@ -97,14 +98,86 @@
 	border-bottom-width: 2px;
 }
 
+/* Title bars */
+
+#TitleBar {
+	background-color: #2d2d2d;
+	padding-left: 4px;
+	flex-direction: row;
+	height: 26px;
+	align-items: center;
+
+	border-color: var(--menubar-colors-shadow);
+	border-top-width: 1px;
+	border-bottom-width: 1px;
+}
+
+#TitleBar > Label {
+	font-size: 12px;
+	padding-left: 4px;
+}
+
+#TitleBar > Image {
+	opacity: 0.72;
+	padding: 5px;
+	height: 26px;
+	width: 26px;
+}
+
+#TitleBar {
+}
+
+/* Separator */
+
+#unity-dragline-anchor {
+	background-color: var(--menubar-colors-shadow);
+}
+
+#unity-dragline-anchor:hover {
+	background-color: #9e9e9e;
+}
+
+/* InfoBoard */
+
+#InfoBoard {
+	min-width: 256px;
+	max-width: 512px;
+}
+
+#Blackboard {
+	min-height: 256px;
+}
+
+#Inspector {
+	min-height: 256px;
+}
+
+.Header {
+	flex-direction: row;
+	height: 64px;
+	padding: 4px;
+	background-color: #333333;
+
+	border-color: var(--menubar-colors-shadow);
+	border-bottom-width: 1px;
+}
+
+.Header > Image {
+}
+
+.Header > Label {
+	font-size: 16px;
+	align-self: center;
+}
+
+/* Inspector */
+
 /* Grid + Watermark */
 
 #Vignette {
 	position: absolute;
 	width: 100%;
 	height: 100%;
-	background-image: resource("Assets/Espionage.Engine/Editor/Styles/Sprites/Vignette.png");
-	-unity-background-scale-mode: stretch-to-fit;
 }
 
 #Grid {

@@ -20,12 +20,6 @@ namespace Espionage.Engine.Internal.Editor
 			this.AddManipulator( new SelectionDragger() );
 			this.AddManipulator( new RectangleSelector() );
 
-			var eventsBlackboard = new Blackboard( this ) { title = "Variables" };
-
-			Add( eventsBlackboard );
-			Add( new Blackboard( this ) { title = "Events" } );
-
-
 			// Add Grid
 			var grid = new GridBackground() { name = "Grid" };
 			Insert( 0, grid );
