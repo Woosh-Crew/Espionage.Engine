@@ -4,11 +4,12 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.UIElements;
 using System;
+using Espionage.Engine.Editor;
 
 namespace Espionage.Engine.Internal.Editor
 {
 	[Library( "esp_editor.blueprint_window", Title = "Blueprint Editor", Help = "Interface with a blueprints node tree" )]
-	[Icon( "Assets/Espionage.Engine/Editor/Styles/Icons/baseline_view_in_ar_white_48dp.png" )]
+	[Icon( EditorIcons.Blueprint )]
 	public class BlueprintGraphWindow : EditorWindow, ILibrary, ICallbacks
 	{
 		public Library ClassInfo { get; set; }
@@ -17,7 +18,7 @@ namespace Espionage.Engine.Internal.Editor
 		private static void ShowEditor()
 		{
 			var lib = Library.Database.Get<BlueprintGraphWindow>();
-			var wind = EditorWindow.CreateWindow<BlueprintGraphWindow>();
+			var wind = EditorWindow.GetWindow<BlueprintGraphWindow>();
 			wind.titleContent = new GUIContent( lib.Title, lib.Help );
 		}
 
@@ -96,11 +97,11 @@ namespace Espionage.Engine.Internal.Editor
 				right.AddToClassList( "Right" );
 				_infoBar.Add( right );
 
-				var saveIcon = AssetDatabase.LoadAssetAtPath<Texture>( "Assets/Espionage.Engine/Editor/Styles/Icons/baseline_save_white_48dp.png" );
+				var saveIcon = AssetDatabase.LoadAssetAtPath<Texture>( EditorIcons.Save );
 				right.Add( CreateButton( "Save", saveIcon, out _ ) );
 
-				var zoomOutIcon = AssetDatabase.LoadAssetAtPath<Texture>( "Assets/Espionage.Engine/Editor/Styles/Icons/baseline_zoom_out_map_white_48dp.png" );
-				var zoomInIcon = AssetDatabase.LoadAssetAtPath<Texture>( "Assets/Espionage.Engine/Editor/Styles/Icons/baseline_zoom_in_map_white_48dp.png" );
+				var zoomOutIcon = AssetDatabase.LoadAssetAtPath<Texture>( EditorIcons.ZoomOut );
+				var zoomInIcon = AssetDatabase.LoadAssetAtPath<Texture>( EditorIcons.ZoomIn );
 
 				var maximiseButton = CreateButton( "", maximized ? zoomInIcon : zoomOutIcon, out var maximiseImage );
 				maximiseButton.tooltip = maximized ? "Zoom In" : "Zoom Out";
@@ -115,7 +116,7 @@ namespace Espionage.Engine.Internal.Editor
 
 				right.Add( maximiseButton );
 
-				var infoIcon = AssetDatabase.LoadAssetAtPath<Texture>( "Assets/Espionage.Engine/Editor/Styles/Icons/baseline_info_white_48dp.png" );
+				var infoIcon = AssetDatabase.LoadAssetAtPath<Texture>( EditorIcons.Info );
 				right.Add( CreateButton( "Info", infoIcon, out _ ) );
 			}
 		}

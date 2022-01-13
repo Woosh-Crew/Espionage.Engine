@@ -79,7 +79,7 @@ namespace Espionage.Engine
 			{
 				_stopwatch.Stop();
 
-				var time = $"{_stopwatch.ElapsedMilliseconds}ms, {_stopwatch.ElapsedTicks}ticks";
+				var time = $"{_stopwatch.ElapsedMilliseconds}ms";
 
 				if ( string.IsNullOrEmpty( _message ) )
 				{
