@@ -14,12 +14,21 @@ namespace Espionage.Engine
 	{
 		private class internal_ComponentDatabase : IDatabase<Component>
 		{
-			private List<Component> _components = new List<Component>();
 			public IEnumerable<Component> All => _components;
+
+			public internal_ComponentDatabase( Library library )
+			{
+				_target = library;
+			}
+
+			private Library _target;
+			private List<Component> _components = new List<Component>();
 
 			public void Add( Component item )
 			{
+				item.Library = _target;
 				_components.Add( item );
+				item.OnAttached();
 			}
 
 			public void Clear()
@@ -47,7 +56,7 @@ namespace Espionage.Engine
 
 		// Components
 
-		public IDatabase<Component> Components = new internal_ComponentDatabase();
+		public IDatabase<Component> Components;
 
 		// Owner
 

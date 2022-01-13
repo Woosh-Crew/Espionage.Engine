@@ -73,16 +73,15 @@ namespace Espionage.Engine
 				Class = type,
 			};
 
-			// Get Library Components
-			foreach ( var item in type.GetCustomAttributes<Component>() )
-			{
-				item.Library = record;
-				record.Components.Add( item );
-				item.OnAttached();
-			}
-
 			// Generate the ID, so we can spawn it at runtime
 			record.Id = GenerateID( record.Name );
+
+			// Create the components database
+			record.Components = new internal_ComponentDatabase( record );
+
+			// Get Components attached to type
+			foreach ( var item in type.GetCustomAttributes<Component>() )
+				record.Components.Add( item );
 
 			return record;
 		}
