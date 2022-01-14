@@ -9,13 +9,13 @@ using UnityEditor;
 using Node = Espionage.Engine.Entities.Node;
 using System;
 
-namespace Espionage.Engine.Internal.Editor
+namespace Espionage.Engine.Internal.Editor.Blueprints
 {
 	public class BlueprintGraphView : GraphView
 	{
-		private BlueprintGraphWindow _owner;
+		private BlueprintTool _owner;
 
-		public BlueprintGraphView( BlueprintGraphWindow owner )
+		public BlueprintGraphView( BlueprintTool owner )
 		{
 			SetupZoom( ContentZoomer.DefaultMinScale, 3 );
 

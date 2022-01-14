@@ -4,7 +4,9 @@ using UnityEngine;
 
 namespace Espionage.Engine.Internal.Editor
 {
-	public class Window : EditorWindow, ILibrary, ICallbacks
+	/// <summary> A Tool is just an EditorWindow with 
+	/// ILibrary and callbacks registered </summary>
+	public class Tool : EditorWindow, ILibrary, ICallbacks
 	{
 		public Library ClassInfo { get; set; }
 

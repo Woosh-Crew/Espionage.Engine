@@ -11,6 +11,8 @@ namespace Espionage.Engine
 	[AttributeUsage( AttributeTargets.Class, Inherited = true )]
 	public sealed class StyleSheetAttribute : Attribute, Library.IComponent
 	{
+		public Library Library { get; set; }
+
 		public StyleSheetAttribute( string path )
 		{
 			_path = path;
@@ -18,19 +20,6 @@ namespace Espionage.Engine
 
 		private string _path;
 
-		public StyleSheet Style { get; private set; }
-
-		//
-		// Component
-		//
-
-		public Library Library { get; set; }
-
-		public void OnAttached()
-		{
-#if UNITY_EDITOR
-			Style = AssetDatabase.LoadAssetAtPath<StyleSheet>( _path );
-#endif
-		}
+		public StyleSheet Style => AssetDatabase.LoadAssetAtPath<StyleSheet>( _path );
 	}
 }

@@ -6,18 +6,18 @@ using UnityEngine.UIElements;
 using System;
 using Espionage.Engine.Editor;
 using Espionage.Engine.Entities;
+using Espionage.Engine.Editor.Internal;
 
-namespace Espionage.Engine.Internal.Editor
+namespace Espionage.Engine.Internal.Editor.Blueprints
 {
-	[Library( "esp_editor.blueprint_window", Title = "Blueprint Editor", Help = "Interface with a blueprints node tree" )]
+	[Library( "tool.blueprint_editor", Title = "Blueprint Editor", Help = "Interface with a blueprint" )]
 	[Icon( EditorIcons.Blueprint ), StyleSheet( "Assets/Espionage.Engine/Editor/Styles/Blueprints/BlueprintGraphWindow.uss" )]
-	public class BlueprintGraphWindow : Window, ILibrary, ICallbacks
+	public class BlueprintTool : Tool
 	{
-
 		[MenuItem( "Tools/Blueprint Editor" )]
 		private static void ShowEditor()
 		{
-			var wind = EditorWindow.GetWindow<BlueprintGraphWindow>();
+			var wind = EditorWindow.GetWindow<BlueprintTool>();
 		}
 
 		protected override void OnCreateGUI()
@@ -241,7 +241,7 @@ namespace Espionage.Engine.Internal.Editor
 				right.Add( maximiseButton );
 
 				var infoIcon = AssetDatabase.LoadAssetAtPath<Texture>( EditorIcons.Info );
-				right.Add( CreateButton( "Info", infoIcon, out _ ) );
+				right.Add( CreateButton( "Info", infoIcon, out _, onClick: () => { Node = null; } ) );
 			}
 
 			return root;
@@ -251,41 +251,15 @@ namespace Espionage.Engine.Internal.Editor
 		// Menu Bar
 		//
 
-		private VisualElement _menubar;
+		private MenuBar _menubar;
 
 		private void CreateMenuBar()
 		{
-			Button CreateDropdown( string text, Action action = null )
-			{
-				var button = new Button( action ) { text = text };
-				button.AddToClassList( "MenuBar-Button" );
-				return button;
-			}
-
-			_menubar = rootVisualElement.Add<VisualElement>( "MenuBar" );
+			_menubar = new MenuBar();
+			rootVisualElement.Add( _menubar );
 
 			// Buttons
-			_menubar.Add( CreateDropdown( $"File", CreateGenericMenu ) );
-			_menubar.Add( CreateDropdown( $"Edit" ) );
-			_menubar.Add( CreateDropdown( $"Nodes" ) );
-			_menubar.Add( CreateDropdown( $"View" ) );
-			_menubar.Add( CreateDropdown( $"Options" ) );
-			_menubar.Add( CreateDropdown( $"Help" ) );
-		}
-
-		private void CreateGenericMenu()
-		{
-			// create the menu and add items to it
-			GenericMenu menu = new GenericMenu();
-
-			menu.AddItem( new GUIContent( "Save" ), false, null );
-			menu.AddItem( new GUIContent( "Save As" ), false, null );
-			menu.AddSeparator( "" );
-			menu.AddItem( new GUIContent( "Open" ), false, null );
-			menu.AddItem( new GUIContent( "Recent Files/To bad!" ), false, null );
-
-			// display the menu
-			menu.ShowAsContext();
+			_menubar.AddMenuButton( "File" );
 		}
 	}
 }
