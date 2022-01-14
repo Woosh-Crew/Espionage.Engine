@@ -12,9 +12,9 @@ namespace Espionage.Engine
 	[Serializable] // Instance Serialization
 	public sealed partial class Library
 	{
-		private class internal_ComponentDatabase : IDatabase<Component>
+		private class internal_ComponentDatabase : IDatabase<IComponent>
 		{
-			public IEnumerable<Component> All => _components;
+			public IEnumerable<IComponent> All => _components;
 
 			public internal_ComponentDatabase( Library library )
 			{
@@ -22,9 +22,9 @@ namespace Espionage.Engine
 			}
 
 			private Library _target;
-			private List<Component> _components = new List<Component>();
+			private List<IComponent> _components = new List<IComponent>();
 
-			public void Add( Component item )
+			public void Add( IComponent item )
 			{
 				item.Library = _target;
 				_components.Add( item );
@@ -36,12 +36,12 @@ namespace Espionage.Engine
 				_components.Clear();
 			}
 
-			public bool Contains( Component item )
+			public bool Contains( IComponent item )
 			{
 				return _components.Contains( item );
 			}
 
-			public void Remove( Component item )
+			public void Remove( IComponent item )
 			{
 				_components.Remove( item );
 				item.OnDetached();
@@ -57,7 +57,7 @@ namespace Espionage.Engine
 
 		// Components
 
-		public IDatabase<Component> Components;
+		public IDatabase<IComponent> Components;
 
 		// Owner
 

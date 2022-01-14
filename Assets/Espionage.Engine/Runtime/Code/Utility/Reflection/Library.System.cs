@@ -21,6 +21,12 @@ namespace Espionage.Engine
 				return null;
 			}
 
+			if ( library.Class.IsAbstract )
+			{
+				Debugging.Log.Error( $"Can't construct, {library.Name} is abstract" );
+				return null;
+			}
+
 			if ( library.Components.TryGet<Constructor>( out var constructor ) )
 				return constructor.Invoke();
 
@@ -44,9 +50,6 @@ namespace Espionage.Engine
 									.SelectMany( e => e.GetTypes()
 									.Where( ( e ) =>
 									{
-										if ( e.IsAbstract )
-											return false;
-
 										if ( e.IsDefined( typeof( Skip ) ) )
 											return false;
 
@@ -85,8 +88,8 @@ namespace Espionage.Engine
 			record.Components = new internal_ComponentDatabase( record );
 
 			// Get Components attached to type
-			foreach ( var item in type.GetCustomAttributes<Component>() )
-				record.Components.Add( item );
+			foreach ( var item in type.GetCustomAttributes().Where( e => e is IComponent ) )
+				record.Components.Add( item as IComponent );
 
 			return record;
 		}

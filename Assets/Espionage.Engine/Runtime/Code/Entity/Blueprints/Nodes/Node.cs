@@ -7,24 +7,31 @@ namespace Espionage.Engine.Entities
 {
 	public enum State { Running, Failure, Success }
 
+	[Library.Constructor( nameof( Constructor ) )]
 	public abstract class Node : ScriptableObject, ILibrary, ICallbacks
 	{
 		//
 		// Init
 		//
 
-		public Library ClassInfo { get; set; }
+		// We gotta do this cause of weird unity shit
+		public Library ClassInfo => Library.Database.Get( GetType() );
 
-		private void OnEnable()
+		public static ILibrary Constructor( Library library )
 		{
-			ClassInfo = Library.Database.Get( GetType() );
+			return ScriptableObject.CreateInstance( library.Class ) as ILibrary;
 		}
 
 		//
 		// Graph
 		//
 
-		private Vector2 _position;
+#if UNITY_EDITOR
+
+		public string id;
+		public Vector2 position;
+
+#endif
 
 		//
 		// Inputs and Outputs

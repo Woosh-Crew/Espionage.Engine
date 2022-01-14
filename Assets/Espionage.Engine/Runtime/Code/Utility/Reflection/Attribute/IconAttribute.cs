@@ -1,4 +1,4 @@
-
+using System;
 using UnityEngine;
 
 #if UNITY_EDITOR
@@ -7,7 +7,8 @@ using UnityEditor;
 
 namespace Espionage.Engine
 {
-	public sealed class IconAttribute : Library.Component
+	[AttributeUsage( AttributeTargets.Class, Inherited = true )]
+	public sealed class IconAttribute : Attribute, Library.IComponent
 	{
 		public IconAttribute( string path )
 		{
@@ -18,7 +19,13 @@ namespace Espionage.Engine
 
 		public Texture Icon { get; private set; }
 
-		public override void OnAttached()
+		//
+		// Component
+		//
+
+		public Library Library { get; set; }
+
+		public void OnAttached()
 		{
 #if UNITY_EDITOR
 			Icon = AssetDatabase.LoadAssetAtPath<Texture>( _path );

@@ -21,17 +21,17 @@ namespace Espionage.Engine
 		// Components
 		//
 
-		[AttributeUsage( AttributeTargets.Class, Inherited = true )]
-		public abstract class Component : Attribute
+		public interface IComponent
 		{
-			public Library Library { get; internal set; }
+			Library Library { get; set; }
 
-			public virtual void OnAttached() { }
-			public virtual void OnDetached() { }
+			void OnAttached() { }
+			void OnDetached() { }
 		}
 
-		/// <summary> Attribute that allows the definition of a custom constructor </summary>
-		public sealed class Constructor : Component
+		/// <summary> Attribute that allows the definition of a custom constructor
+		/// Must return an ILibrary and Must have one parameter that takes in a Library </summary>
+		public sealed class Constructor : Attribute, IComponent
 		{
 			// Attribute
 
@@ -45,19 +45,19 @@ namespace Espionage.Engine
 
 			// Component
 
-			public override void OnAttached()
-			{
-				base.OnAttached();
+			public Library Library { get; set; }
 
+			public void OnAttached()
+			{
 				// Works?
 				_constructor = GetConstructor();
-				UnityEngine.Debug.Log( $"Constructor ({targetMethod}), Attached to Class {Library.Name}" );
 			}
 
 			// Constructor
 
 			private delegate ILibrary Action( Library type );
 			private Action _constructor;
+
 
 			private Action GetConstructor()
 			{
@@ -73,6 +73,7 @@ namespace Espionage.Engine
 			{
 				return _constructor( Library );
 			}
+
 		}
 	}
 }

@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEngine.UIElements;
 using System;
 using Espionage.Engine.Editor;
+using Espionage.Engine.Entities;
 
 namespace Espionage.Engine.Internal.Editor
 {
@@ -41,6 +42,19 @@ namespace Espionage.Engine.Internal.Editor
 			rootVisualElement.Add( panel );
 
 			CreateMenuBar();
+
+			Selection.selectionChanged -= OnSelectionChange;
+			Selection.selectionChanged += OnSelectionChange;
+
+			OnSelectionChange();
+		}
+
+		private void OnSelectionChange()
+		{
+			if ( Selection.activeObject is NodeTree tree )
+			{
+				_graph.LoadGraph( tree );
+			}
 		}
 
 		//
@@ -91,6 +105,7 @@ namespace Espionage.Engine.Internal.Editor
 		// Graph View
 		//
 
+		private BlueprintGraphView _graph;
 		private VisualElement _infoBar;
 
 		private VisualElement CreateGraphView()
@@ -109,17 +124,17 @@ namespace Espionage.Engine.Internal.Editor
 
 			root.Add( CreateTitlebar( "Node Graph", AssetDatabase.LoadAssetAtPath<Texture>( EditorIcons.NodeTree ) ) );
 
-			var graph = new BlueprintGraphView()
+			_graph = new BlueprintGraphView()
 			{
 				name = "Window"
 			};
 
-			root.Add( graph );
+			root.Add( _graph );
 
 			// Watermark
 
 			var blueprintWatermark = new VisualElement() { name = "Blueprint-Watermark" };
-			graph.Add( blueprintWatermark );
+			_graph.Add( blueprintWatermark );
 
 			var iconTexture = ClassInfo.Components.Get<IconAttribute>().Icon;
 			blueprintWatermark.Add( new Image() { image = iconTexture } );
@@ -128,7 +143,7 @@ namespace Espionage.Engine.Internal.Editor
 			// Info Bar
 
 			_infoBar = new VisualElement() { name = "Info-Bar" };
-			graph.Add( _infoBar );
+			_graph.Add( _infoBar );
 			{
 				// Left Side
 

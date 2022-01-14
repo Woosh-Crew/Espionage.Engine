@@ -1,7 +1,7 @@
 namespace Espionage.Engine.Entities.Nodes
 {
 	[Library( "node.log", Title = "Print Log", Help = "Logs a string to the console" )]
-	public class Log : Node
+	public class PrintNode : Node
 	{
 		public void Entry()
 		{

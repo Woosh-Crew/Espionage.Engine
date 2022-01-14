@@ -111,9 +111,14 @@ public static class LibraryDatabaseExtensions
 	// Create
 	//
 
-	public static ILibrary Create<T>( this IDatabase<Library> database ) where T : class, ILibrary, new()
+	public static T Create<T>( this IDatabase<Library> database ) where T : class, ILibrary, new()
 	{
 		return Library.Construct( database.Get<T>() ) as T;
+	}
+
+	public static ILibrary Create( this IDatabase<Library> database, Type type )
+	{
+		return Library.Construct( database.Get( type ) );
 	}
 
 	public static ILibrary Create( this IDatabase<Library> database, string name, bool assertMissing = false )
@@ -210,18 +215,18 @@ public static class LibraryDatabaseExtensions
 //
 public static class LibraryComponentDatabaseExtensions
 {
-	public static T Get<T>( this IDatabase<Library.Component> database ) where T : Library.Component
+	public static T Get<T>( this IDatabase<Library.IComponent> database ) where T : Library.IComponent
 	{
-		return database.All.FirstOrDefault( e => e is T ) as T;
+		return (T)database.All.FirstOrDefault( e => e is T );
 	}
 
-	public static bool TryGet<T>( this IDatabase<Library.Component> database, out T component ) where T : Library.Component
+	public static bool TryGet<T>( this IDatabase<Library.IComponent> database, out T component ) where T : Library.IComponent
 	{
 		component = database.Get<T>();
-		return component is null;
+		return component is not null;
 	}
 
-	public static bool Exists<T>( this IDatabase<Library.Component> database ) where T : Library.Component
+	public static bool Exists<T>( this IDatabase<Library.IComponent> database ) where T : Library.IComponent
 	{
 		return database.Get<T>() is not null;
 	}
