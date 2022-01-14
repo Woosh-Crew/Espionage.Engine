@@ -10,30 +10,18 @@ using Espionage.Engine.Entities;
 namespace Espionage.Engine.Internal.Editor
 {
 	[Library( "esp_editor.blueprint_window", Title = "Blueprint Editor", Help = "Interface with a blueprints node tree" )]
-	[Icon( EditorIcons.Blueprint )]
-	public class BlueprintGraphWindow : EditorWindow, ILibrary, ICallbacks
+	[Icon( EditorIcons.Blueprint ), StyleSheet( "Assets/Espionage.Engine/Editor/Styles/Blueprints/BlueprintGraphWindow.uss" )]
+	public class BlueprintGraphWindow : Window, ILibrary, ICallbacks
 	{
-		public Library ClassInfo { get; set; }
 
 		[MenuItem( "Tools/Blueprint Editor" )]
 		private static void ShowEditor()
 		{
-			var lib = Library.Database.Get<BlueprintGraphWindow>();
 			var wind = EditorWindow.GetWindow<BlueprintGraphWindow>();
-			wind.titleContent = new GUIContent( lib.Title, lib.Help );
 		}
 
-		private void OnEnable()
+		protected override void OnCreateGUI()
 		{
-			ClassInfo = Library.Database.Get( GetType() );
-		}
-
-		private void CreateGUI()
-		{
-			// Add Stylesheet
-			var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>( "Assets/Espionage.Engine/Editor/Styles/Blueprints/BlueprintGraphWindow.uss" );
-			rootVisualElement.styleSheets.Add( styleSheet );
-
 			// Split View
 			var panel = new TwoPaneSplitView( 0, 300, TwoPaneSplitViewOrientation.Horizontal );
 			panel.Add( CreateInfoBoard() );
@@ -51,10 +39,64 @@ namespace Espionage.Engine.Internal.Editor
 
 		private void OnSelectionChange()
 		{
-			if ( Selection.activeObject is NodeTree tree )
+			Blueprint = Selection.activeObject as Blueprint;
+		}
+
+		//
+		// Selection
+		//
+
+		// Blueprint
+
+		private Blueprint _blueprint;
+		public Blueprint Blueprint
+		{
+			get
 			{
-				_graph.LoadGraph( tree );
+				return _blueprint;
 			}
+			set
+			{
+				OnBlueprintChange( _blueprint, value );
+				_blueprint = value;
+			}
+		}
+
+		public Action<Blueprint, Blueprint> OnBlueprintChanged;
+		public void OnBlueprintChange( Blueprint oldBp, Blueprint newBp )
+		{
+			if ( oldBp == newBp )
+				return;
+
+			OnBlueprintChanged?.Invoke( oldBp, newBp );
+
+			// Set Title Bar
+			_inheritingLabel.text = newBp?.ClassInfo.Title ?? "Unknown";
+		}
+
+		// Node
+
+		private Node _node;
+		public Node Node
+		{
+			get
+			{
+				return _node;
+			}
+			set
+			{
+				OnNodeChange( _node, value );
+				_node = value;
+			}
+		}
+
+		public Action<Node, Node> OnNodeChanged;
+		public void OnNodeChange( Node oldNode, Node newNode )
+		{
+			if ( oldNode == newNode )
+				return;
+
+			OnNodeChanged?.Invoke( oldNode, newNode );
 		}
 
 		//
@@ -107,6 +149,19 @@ namespace Espionage.Engine.Internal.Editor
 
 		private BlueprintGraphView _graph;
 		private VisualElement _infoBar;
+		private Label _inheritingLabel;
+
+		private VisualElement _graphCreation;
+		private int _graphCreationIndex;
+
+		private VisualElement CreateGraphCreation()
+		{
+			var root = new VisualElement() { name = "GraphCreator" };
+
+			root.Add( new Button() );
+
+			return root;
+		}
 
 		private VisualElement CreateGraphView()
 		{
@@ -124,7 +179,7 @@ namespace Espionage.Engine.Internal.Editor
 
 			root.Add( CreateTitlebar( "Node Graph", AssetDatabase.LoadAssetAtPath<Texture>( EditorIcons.NodeTree ) ) );
 
-			_graph = new BlueprintGraphView()
+			_graph = new BlueprintGraphView( this )
 			{
 				name = "Window"
 			};
@@ -140,6 +195,12 @@ namespace Espionage.Engine.Internal.Editor
 			blueprintWatermark.Add( new Image() { image = iconTexture } );
 			blueprintWatermark.Add( new Label( "BLUEPRINT" ) );
 
+			// Graph Creator
+
+			_graphCreation = CreateGraphCreation();
+			_graph.Add( _graphCreation );
+			_graphCreationIndex = _graph.IndexOf( _graphCreation );
+
 			// Info Bar
 
 			_infoBar = new VisualElement() { name = "Info-Bar" };
@@ -151,7 +212,8 @@ namespace Espionage.Engine.Internal.Editor
 				left.AddToClassList( "Left" );
 				_infoBar.Add( left );
 
-				left.Add( new Label() { text = "Door Blueprint" } );
+				_inheritingLabel = new Label() { text = "Unknown" };
+				left.Add( _inheritingLabel );
 
 				// Right Side
 

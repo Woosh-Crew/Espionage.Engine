@@ -10,12 +10,12 @@ namespace Espionage.Engine.Entities
 	[Library.Constructor( nameof( Constructor ) )]
 	public abstract class Node : ScriptableObject, ILibrary, ICallbacks
 	{
-		//
-		// Init
-		//
+		public Library ClassInfo { get; set; }
 
-		// We gotta do this cause of weird unity shit
-		public Library ClassInfo => Library.Database.Get( GetType() );
+		private void Awake()
+		{
+			ClassInfo = Library.Database.Get( GetType() );
+		}
 
 		public static ILibrary Constructor( Library library )
 		{

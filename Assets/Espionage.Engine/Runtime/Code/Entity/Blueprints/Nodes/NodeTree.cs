@@ -9,7 +9,6 @@ using UnityEditor;
 
 namespace Espionage.Engine.Entities
 {
-	[CreateAssetMenu( fileName = "Espionage.Engine/Tree" )]
 	public class NodeTree : ScriptableObject
 	{
 		public IReadOnlyList<Node> Nodes => nodes;

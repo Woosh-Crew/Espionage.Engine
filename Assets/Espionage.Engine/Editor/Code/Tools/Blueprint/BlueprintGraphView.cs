@@ -13,9 +13,9 @@ namespace Espionage.Engine.Internal.Editor
 {
 	public class BlueprintGraphView : GraphView
 	{
-		private NodeTree _tree;
+		private BlueprintGraphWindow _owner;
 
-		public BlueprintGraphView()
+		public BlueprintGraphView( BlueprintGraphWindow owner )
 		{
 			SetupZoom( ContentZoomer.DefaultMinScale, 3 );
 
@@ -27,6 +27,7 @@ namespace Espionage.Engine.Internal.Editor
 			var grid = new GridBackground() { name = "Grid" };
 			Insert( 0, grid );
 
+			_owner = owner;
 		}
 
 		public override void BuildContextualMenu( ContextualMenuPopulateEvent evt )
@@ -49,7 +50,10 @@ namespace Espionage.Engine.Internal.Editor
 
 		public void CreateNode( Type type )
 		{
-			var node = _tree.Create( type );
+			if ( _owner.Blueprint is null )
+				return;
+
+			var node = _owner.Blueprint.Tree.Create( type );
 			CreateNodeUI( node );
 		}
 
@@ -57,9 +61,10 @@ namespace Espionage.Engine.Internal.Editor
 		// Graph Loading
 		//
 
-		public void LoadGraph( NodeTree tree )
+		public void LoadGraph()
 		{
-			_tree = tree;
+			if ( _owner.Blueprint is null )
+				return;
 
 			graphViewChanged -= OnGraphViewChanged;
 			ClearGraph();
@@ -75,7 +80,7 @@ namespace Espionage.Engine.Internal.Editor
 
 		private void RecreateGraph()
 		{
-			foreach ( var item in _tree.Nodes )
+			foreach ( var item in _owner.Blueprint.Tree.Nodes )
 			{
 				CreateNodeUI( item );
 			}
@@ -100,7 +105,7 @@ namespace Espionage.Engine.Internal.Editor
 				{
 					if ( item is BlueprintNodeUI nodeUI )
 					{
-						_tree.Delete( nodeUI.Owner );
+						_owner.Blueprint.Tree.Delete( nodeUI.Owner );
 					}
 				}
 			}

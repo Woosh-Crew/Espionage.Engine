@@ -204,3 +204,20 @@
 	margin-right: 8px;
 	align-self: center;
 }
+
+/* Graph Creator */
+
+#GraphCreator {
+	background-color: black;
+	position: absolute;
+	flex-grow: 1;
+	width: 100%;
+	height: 100%;
+	opacity: 0.6;
+
+	justify-content: center;
+}
+
+#GraphCreator,
+Button {
+}

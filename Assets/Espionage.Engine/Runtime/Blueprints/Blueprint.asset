@@ -1,6 +1,21 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-4814989678413596833
+--- !u!114 &-5946578677037595083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fe5c24a85d0e1b42a212b855ef908da, type: 3}
+  m_Name: Node Tree
+  m_EditorClassIdentifier: 
+  nodes:
+  - {fileID: 5132409496924584301}
+  - {fileID: -5083324996818448745}
+--- !u!114 &-5083324996818448745
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -12,7 +27,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38b4d999165fd13428b5ebb09da99cf4, type: 3}
   m_Name: Print Log
   m_EditorClassIdentifier: 
-  id: a80dc8689f500414cbde02bfbaf3706f
+  id: 62c39a9205840e940a57acc9f6db89a8
   position: {x: 0, y: 0}
 --- !u!114 &11400000
 MonoBehaviour:
@@ -23,13 +38,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3fe5c24a85d0e1b42a212b855ef908da, type: 3}
-  m_Name: Espionage.Engine_Tree
+  m_Script: {fileID: 11500000, guid: cfe2338a71b02b947b1bf46d976b6084, type: 3}
+  m_Name: Blueprint
   m_EditorClassIdentifier: 
-  nodes:
-  - {fileID: 7789349073439452919}
-  - {fileID: -4814989678413596833}
---- !u!114 &7789349073439452919
+  <ClassInfo>k__BackingField:
+    Name: blueprint.test_model
+    Title: Test Model
+    Help: Just has a cool model
+  _tree: {fileID: -5946578677037595083}
+--- !u!114 &5132409496924584301
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,5 +58,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38b4d999165fd13428b5ebb09da99cf4, type: 3}
   m_Name: Print Log
   m_EditorClassIdentifier: 
-  id: ecdd5574d4db4b943b2d7d8574a22194
-  position: {x: 338, y: -108}
+  id: 225fe7897291b264a9f1fb27b8d32d43
+  position: {x: 0, y: 0}

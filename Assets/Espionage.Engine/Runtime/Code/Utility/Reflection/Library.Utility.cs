@@ -220,6 +220,11 @@ public static class LibraryComponentDatabaseExtensions
 		return (T)database.All.FirstOrDefault( e => e is T );
 	}
 
+	public static IEnumerable<T> GetAll<T>( this IDatabase<Library.IComponent> database ) where T : Library.IComponent
+	{
+		return database.All.Select( e => (T)e );
+	}
+
 	public static bool TryGet<T>( this IDatabase<Library.IComponent> database, out T component ) where T : Library.IComponent
 	{
 		component = database.Get<T>();
