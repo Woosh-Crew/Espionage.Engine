@@ -28,7 +28,7 @@ MonoBehaviour:
   m_Name: Print Log
   m_EditorClassIdentifier: 
   id: 62c39a9205840e940a57acc9f6db89a8
-  position: {x: 0, y: 0}
+  position: {x: 204, y: -58.999996}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -43,7 +43,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <ClassInfo>k__BackingField:
     Name: blueprint.test_model
-    Title: Test Model
+    Title: Sliding Door
     Help: Just has a cool model
   _tree: {fileID: -5946578677037595083}
 --- !u!114 &5132409496924584301
@@ -59,4 +59,4 @@ MonoBehaviour:
   m_Name: Print Log
   m_EditorClassIdentifier: 
   id: 225fe7897291b264a9f1fb27b8d32d43
-  position: {x: 0, y: 0}
+  position: {x: 107, y: -58.999996}

@@ -15,7 +15,6 @@ namespace Espionage.Engine.Editor.Internal
 				styleSheets.Add( item.Style );
 		}
 
-
 		~Element()
 		{
 			Callback.Unregister( this );

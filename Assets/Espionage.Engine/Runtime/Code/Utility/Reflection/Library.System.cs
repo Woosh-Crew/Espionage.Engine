@@ -73,13 +73,14 @@ namespace Espionage.Engine
 			}
 
 			// If still null just use type defaults
-			record ??= new Library()
-			{
-				Name = type.FullName,
-				Title = type.Name,
-			};
-
+			record ??= new Library();
 			record.Class = type;
+
+			if ( string.IsNullOrEmpty( record.Name ) )
+				record.Name = type.FullName;
+
+			if ( string.IsNullOrEmpty( record.Title ) )
+				record.Title = type.Name;
 
 			// Generate the ID, so we can spawn it at runtime
 			record.Id = GenerateID( record.Name );

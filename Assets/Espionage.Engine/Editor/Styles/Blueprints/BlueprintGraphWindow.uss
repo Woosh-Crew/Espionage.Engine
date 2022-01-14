@@ -7,40 +7,6 @@
 	--button-click: #46607c;
 }
 
-/* MenuBar */
-#MenuBar {
-	background-color: var(--menubar-colors-panel);
-	height: 24px;
-	width: 100%;
-	flex-direction: row;
-
-	border-color: var(--menubar-colors-shadow);
-	border-top-width: 1px;
-
-	padding-left: 4px;
-	padding-right: 4px;
-}
-
-.MenuBar-Button {
-	background-color: initial;
-	font-size: 12px;
-
-	margin: 0px;
-	padding-left: 10px;
-	padding-right: 10px;
-
-	border-radius: 0px;
-	border-width: 0px;
-}
-
-.MenuBar-Button:hover {
-	background-color: var(--button-hover);
-}
-
-.MenuBar-Button:active {
-	background-color: var(--button-click);
-}
-
 /* Window */
 
 #Window {

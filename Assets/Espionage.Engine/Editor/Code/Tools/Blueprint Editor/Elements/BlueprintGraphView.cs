@@ -9,7 +9,7 @@ using UnityEditor;
 using Node = Espionage.Engine.Entities.Node;
 using System;
 
-namespace Espionage.Engine.Internal.Editor.Blueprints
+namespace Espionage.Engine.Editor.Internal.Blueprints
 {
 	public class BlueprintGraphView : GraphView
 	{

@@ -3,7 +3,7 @@ using System;
 namespace Espionage.Engine
 {
 	[AttributeUsage( AttributeTargets.Class )]
-	public class LibraryAttribute : Attribute
+	public sealed class LibraryAttribute : Attribute
 	{
 		public string Name { get; set; }
 		public string Title { get; set; }

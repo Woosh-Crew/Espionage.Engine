@@ -7,7 +7,7 @@ using Espionage.Engine.Entities;
 using Graph = UnityEditor.Experimental.GraphView;
 using Node = Espionage.Engine.Entities.Node;
 
-namespace Espionage.Engine.Internal.Editor
+namespace Espionage.Engine.Editor.Internal.Blueprints
 {
 	public class BlueprintNodeUI : Graph.Node
 	{

@@ -8,7 +8,7 @@ using Espionage.Engine.Editor;
 using Espionage.Engine.Entities;
 using Espionage.Engine.Editor.Internal;
 
-namespace Espionage.Engine.Internal.Editor.Blueprints
+namespace Espionage.Engine.Editor.Internal.Blueprints
 {
 	[Library( "tool.blueprint_editor", Title = "Blueprint Editor", Help = "Interface with a blueprint" )]
 	[Icon( EditorIcons.Blueprint ), StyleSheet( "Assets/Espionage.Engine/Editor/Styles/Blueprints/BlueprintGraphWindow.uss" )]
@@ -28,8 +28,6 @@ namespace Espionage.Engine.Internal.Editor.Blueprints
 			panel.Add( CreateGraphView() );
 
 			rootVisualElement.Add( panel );
-
-			CreateMenuBar();
 
 			Selection.selectionChanged -= OnSelectionChange;
 			Selection.selectionChanged += OnSelectionChange;
@@ -97,6 +95,19 @@ namespace Espionage.Engine.Internal.Editor.Blueprints
 				return;
 
 			OnNodeChanged?.Invoke( oldNode, newNode );
+		}
+
+		//
+		// Menu Bar
+		//
+
+		protected override void OnMenuBarCreated( MenuBar bar )
+		{
+			bar.Add( "File" );
+			bar.Add( "Edit" );
+			bar.Add( "Nodes" );
+			bar.Add( "View" );
+			bar.Add( "Options" );
 		}
 
 		//
@@ -197,9 +208,9 @@ namespace Espionage.Engine.Internal.Editor.Blueprints
 
 			// Graph Creator
 
-			_graphCreation = CreateGraphCreation();
-			_graph.Add( _graphCreation );
-			_graphCreationIndex = _graph.IndexOf( _graphCreation );
+			// _graphCreation = CreateGraphCreation();
+			// _graph.Add( _graphCreation );
+			// _graphCreationIndex = _graph.IndexOf( _graphCreation );
 
 			// Info Bar
 
@@ -245,21 +256,6 @@ namespace Espionage.Engine.Internal.Editor.Blueprints
 			}
 
 			return root;
-		}
-
-		//
-		// Menu Bar
-		//
-
-		private MenuBar _menubar;
-
-		private void CreateMenuBar()
-		{
-			_menubar = new MenuBar();
-			rootVisualElement.Add( _menubar );
-
-			// Buttons
-			_menubar.AddMenuButton( "File" );
 		}
 	}
 }

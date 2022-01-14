@@ -8,16 +8,22 @@
 }
 
 .Menu-Bar {
-	background-color: var(--menubar-colors-panel);
+	background-color: var(--menu-bar-colors-panel);
 	height: 24px;
 	width: 100%;
 	flex-direction: row;
-
-	border-color: var(--menubar-colors-shadow);
-	border-top-width: 1px;
+	border-color: var(--menu-bar-colors-border);
 
 	padding-left: 4px;
 	padding-right: 4px;
+}
+
+.Top {
+	border-bottom-width: 1px;
+}
+
+.Bottom {
+	border-top-width: 1px;
 }
 
 .Menu-Bar-Button {
@@ -33,9 +39,9 @@
 }
 
 .Menu-Bar-Button:hover {
-	background-color: var(--button-hover);
+	background-color: var(--menu-bar-colors-button-hover);
 }
 
 .Menu-Bar-Button:active {
-	background-color: var(--button-click);
+	background-color: var(--menu-bar-colors-button-click);
 }

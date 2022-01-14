@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace Espionage.Engine.Internal.Editor
+namespace Espionage.Engine.Editor.Internal
 {
 	[Library( "esp_editor.blueprint_creator", Title = "Blueprint Creator", Help = "Create blueprints using a handy window" )]
 	public class BlueprintCreatorWindow : EditorWindow, ILibrary, ICallbacks
