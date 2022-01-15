@@ -7,6 +7,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
+using System.Threading.Tasks;
 
 namespace Espionage.Engine.Editor.Internal
 {
@@ -65,47 +66,45 @@ namespace Espionage.Engine.Editor.Internal
 			OnTargetChanged?.Invoke( oldScene, newScene );
 		}
 
-		public static bool Compile( Scene scene, params BuildTarget[] buildTargets )
+		public bool Compile( Scene scene, params BuildTarget[] buildTargets )
 		{
 			// Ask the user if they want to save the scene, if not don't export!
 			if ( !EditorSceneManager.SaveModifiedScenesIfUserWantsTo( new Scene[] { scene } ) )
 				return false;
 
-			// Check if the dir is there and export level
 			var exportPath = $"Exports/Maps/{scene.name}/";
 
 			using ( Debugging.Stopwatch( "Level Compiled", true ) )
 			{
-				// Copies the scene to Level01 cause of intruder stupid shit
 				EditorSceneManager.SaveScene( scene, "Assets/Level1.unity", true );
 
-				// Give the level01 asset
 				var levelAsset = AssetImporter.GetAtPath( "Assets/Level1.unity" );
 
 				if ( !Directory.Exists( Path.GetFullPath( exportPath ) ) )
 					Directory.CreateDirectory( Path.GetFullPath( exportPath ) );
 
-				// FileUtility.DirectoryCheck( $"Exports/Maps/{scene.name}/" );
-
 				// For each target build, build
 				foreach ( var target in buildTargets )
 				{
-					levelAsset.assetBundleName = $"{scene.name}.lvl" + (target == BuildTarget.StandaloneWindows ? "w" : "m");
+					var bundleName = $"{scene.name}.lvl" + (target == BuildTarget.StandaloneWindows ? "w" : "m");
+					levelAsset.assetBundleName = bundleName;
 					var bundle = BuildPipeline.BuildAssetBundles( exportPath, BuildAssetBundleOptions.ChunkBasedCompression, target );
 
-					if ( bundle == null )
+					if ( bundle is null )
 					{
 						EditorUtility.DisplayDialog( "ERROR", $"Map asset bundle compile failed. {target.ToString()}", "Okay" );
-						Debug.LogError( "Compile Failed" );
 						return false;
 					}
 				}
 
-				AssetDatabase.Refresh();
+				// Remove all bundle names
+				foreach ( var item in AssetDatabase.GetAllAssetBundleNames() )
+					AssetDatabase.RemoveAssetBundleName( item, true );
 
+				AssetDatabase.DeleteAsset( "Assets/Level1.unity" );
+				AssetDatabase.Refresh();
 			}
 
-			EditorUtility.DisplayDialog( $"Successfully Compiled \"{scene.name}\"", $"Outputted to [{exportPath}]\n\nFor full build report look in console", "Okay!" );
 			return true;
 		}
 
