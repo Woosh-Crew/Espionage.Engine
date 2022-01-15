@@ -53,7 +53,8 @@ namespace Espionage.Engine.Editor.Internal
 			OnMenuBarCreated( _menuBar );
 
 			var helpMenu = new GenericMenu();
-			helpMenu.AddItem( new GUIContent( "Wiki" ), false, () => Application.OpenURL( "https://github.com/Woosh-Crew/Espionage.Engine/wiki" ) );
+			var helpUrl = ClassInfo.Components.Get<HelpURLAttribute>()?.URL ?? "https://github.com/Woosh-Crew/Espionage.Engine/wiki";
+			helpMenu.AddItem( new GUIContent( "Wiki" ), false, () => Application.OpenURL( helpUrl ) );
 			_menuBar.Add( "Help", helpMenu );
 		}
 

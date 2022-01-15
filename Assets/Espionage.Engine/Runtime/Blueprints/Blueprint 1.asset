@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cfe2338a71b02b947b1bf46d976b6084, type: 3}
-  m_Name: Blueprint
+  m_Name: Blueprint 1
   m_EditorClassIdentifier: 
   <ClassInfo>k__BackingField:
     Name: 
-    Title: Shit
+    Title: 
     Help: 
   _tree: {fileID: 0}

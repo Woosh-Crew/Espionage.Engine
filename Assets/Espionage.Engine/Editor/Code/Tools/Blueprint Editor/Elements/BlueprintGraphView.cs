@@ -13,6 +13,7 @@ namespace Espionage.Engine.Editor.Internal.Blueprints
 {
 	public class BlueprintGraphView : GraphView
 	{
+		public Blueprint Blueprint => _owner.Blueprint;
 		private BlueprintTool _owner;
 
 		public BlueprintGraphView( BlueprintTool owner )
@@ -50,7 +51,7 @@ namespace Espionage.Engine.Editor.Internal.Blueprints
 
 		public void CreateNode( Type type )
 		{
-			if ( _owner.Blueprint is null )
+			if ( _owner.Blueprint.Tree is null )
 				return;
 
 			var node = _owner.Blueprint.Tree.Create( type );
@@ -61,21 +62,23 @@ namespace Espionage.Engine.Editor.Internal.Blueprints
 		// Graph Loading
 		//
 
-		public void LoadGraph()
+		public void Populate()
 		{
 			if ( _owner.Blueprint is null )
+			{
+				ClearGraph();
 				return;
+			}
 
-			graphViewChanged -= OnGraphViewChanged;
 			ClearGraph();
-			graphViewChanged += OnGraphViewChanged;
-
 			RecreateGraph();
 		}
 
 		private void ClearGraph()
 		{
+			graphViewChanged -= OnGraphViewChanged;
 			DeleteElements( graphElements );
+			graphViewChanged += OnGraphViewChanged;
 		}
 
 		private void RecreateGraph()

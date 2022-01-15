@@ -11,7 +11,7 @@ namespace Espionage.Engine.Editor.Internal
 	{
 		public Library ClassInfo { get; set; }
 
-		[MenuItem( "Tools/Blueprint Creator" )]
+		[MenuItem( "Tools/Blueprint/Creator" )]
 		private static void ShowEditor()
 		{
 			var lib = Library.Database.Get<BlueprintCreatorWindow>();

@@ -9,13 +9,12 @@ using UnityEditor;
 
 namespace Espionage.Engine.Entities
 {
-	public class NodeTree : ScriptableObject
+	public sealed class BehaviourTree : ScriptableObject
 	{
 		public IReadOnlyList<Node> Nodes => nodes;
 
 		[SerializeField]
 		private List<Node> nodes = new List<Node>();
-
 
 		//
 		// Node Management
@@ -23,17 +22,17 @@ namespace Espionage.Engine.Entities
 
 		public Node Create( Type type )
 		{
-			var newNode = Library.Database.Create( type ) as Node;
-			newNode.name = newNode.ClassInfo.Title;
-			newNode.id = GUID.Generate().ToString();
-			nodes.Add( newNode );
+			var node = Library.Database.Create<Node>( type );
+			node.name = node.ClassInfo.Title;
+			node.id = GUID.Generate().ToString();
+			nodes.Add( node );
 
 #if UNITY_EDITOR
-			AssetDatabase.AddObjectToAsset( newNode, this );
+			AssetDatabase.AddObjectToAsset( node, this );
 			AssetDatabase.SaveAssets();
 #endif
 
-			return newNode;
+			return node;
 		}
 
 		public void Delete( Node node )

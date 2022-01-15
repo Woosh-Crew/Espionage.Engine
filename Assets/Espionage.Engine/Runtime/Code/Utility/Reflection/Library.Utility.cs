@@ -121,6 +121,11 @@ public static class LibraryDatabaseExtensions
 		return Library.Construct( database.Get( type ) );
 	}
 
+	public static T Create<T>( this IDatabase<Library> database, Type type ) where T : class, ILibrary
+	{
+		return database.Create( type ) as T;
+	}
+
 	public static ILibrary Create( this IDatabase<Library> database, string name, bool assertMissing = false )
 	{
 		if ( !database.TryGet( name, out var library ) )

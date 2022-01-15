@@ -6,15 +6,14 @@ using UnityEngine.UIElements;
 using System;
 using Espionage.Engine.Editor;
 using Espionage.Engine.Entities;
-using Espionage.Engine.Editor.Internal;
 
 namespace Espionage.Engine.Editor.Internal.Blueprints
 {
 	[Library( "tool.blueprint_editor", Title = "Blueprint Editor", Help = "Interface with a blueprint" )]
 	[Icon( EditorIcons.Blueprint ), StyleSheet( "Assets/Espionage.Engine/Editor/Styles/Blueprints/BlueprintGraphWindow.uss" )]
-	public class BlueprintTool : Tool
+	public sealed class BlueprintTool : Tool
 	{
-		[MenuItem( "Tools/Blueprint Editor" )]
+		[MenuItem( "Tools/Blueprint/Editor", false, -10 )]
 		private static void ShowEditor()
 		{
 			var wind = EditorWindow.GetWindow<BlueprintTool>();
@@ -37,7 +36,10 @@ namespace Espionage.Engine.Editor.Internal.Blueprints
 
 		private void OnSelectionChange()
 		{
-			Blueprint = Selection.activeObject as Blueprint;
+			if ( Selection.activeObject is Blueprint blueprint )
+			{
+				Blueprint = blueprint;
+			}
 		}
 
 		//
@@ -63,9 +65,6 @@ namespace Espionage.Engine.Editor.Internal.Blueprints
 		public Action<Blueprint, Blueprint> OnBlueprintChanged;
 		public void OnBlueprintChange( Blueprint oldBp, Blueprint newBp )
 		{
-			if ( oldBp == newBp )
-				return;
-
 			OnBlueprintChanged?.Invoke( oldBp, newBp );
 
 			// Set Title Bar

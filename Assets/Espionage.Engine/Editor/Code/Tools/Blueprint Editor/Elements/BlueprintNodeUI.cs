@@ -25,6 +25,15 @@ namespace Espionage.Engine.Editor.Internal.Blueprints
 
 			style.left = node.position.x;
 			style.top = node.position.y;
+
+			CreateInputPorts();
+		}
+
+		public override void OnSelected()
+		{
+			base.OnSelected();
+
+			Debug.Log( parent );
 		}
 
 		public override void SetPosition( Rect newPos )
@@ -37,7 +46,7 @@ namespace Espionage.Engine.Editor.Internal.Blueprints
 
 		private void CreateInputPorts()
 		{
-
+			outputContainer.Add( InstantiatePort( Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, typeof( Node ) ) );
 		}
 
 
