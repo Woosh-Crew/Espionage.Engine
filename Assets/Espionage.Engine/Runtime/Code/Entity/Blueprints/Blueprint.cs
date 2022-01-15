@@ -30,8 +30,6 @@ namespace Espionage.Engine.Entities
 
 		public void CreateTree()
 		{
-			// Node tree stores graph information
-
 			_tree = ScriptableObject.CreateInstance<BehaviourTree>();
 			_tree.name = "Node Tree";
 

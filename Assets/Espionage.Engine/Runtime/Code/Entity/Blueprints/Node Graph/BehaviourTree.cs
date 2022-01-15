@@ -17,6 +17,14 @@ namespace Espionage.Engine.Entities
 		private List<Node> nodes = new List<Node>();
 
 		//
+		// Event Management
+		//
+
+		public void Execute( string eventName )
+		{
+		}
+
+		//
 		// Node Management
 		//
 
