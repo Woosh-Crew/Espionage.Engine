@@ -33,8 +33,13 @@ namespace Espionage.Engine.Editor.Internal
 			if ( ClassInfo.Components.TryGet<StyleSheetAttribute>( out var style ) )
 				rootVisualElement.styleSheets.Add( style.Style );
 
+			if ( MenuBarPosition == 0 )
+				CreateMenuBar( MenuBarPosition );
+
 			OnCreateGUI();
-			CreateMenuBar( 1 );
+
+			if ( MenuBarPosition == 1 )
+				CreateMenuBar( MenuBarPosition );
 		}
 
 		protected virtual void OnCreateGUI() { }
@@ -42,6 +47,9 @@ namespace Espionage.Engine.Editor.Internal
 		//
 		// Menu Bar
 		//
+
+		/// <summary> 0 = Top, 1 = Bottom </summary>
+		protected virtual int MenuBarPosition => 0;
 
 		private MenuBar _menuBar;
 
@@ -52,15 +60,18 @@ namespace Espionage.Engine.Editor.Internal
 
 			OnMenuBarCreated( _menuBar );
 
+			// Create Help Menu
 			var helpMenu = new GenericMenu();
+
+			// About
+			helpMenu.AddItem( new GUIContent( "About" ), false, () => AboutWindow.ShowWindow() );
+
+			// Wiki
 			var helpUrl = ClassInfo.Components.Get<HelpURLAttribute>()?.URL ?? "https://github.com/Woosh-Crew/Espionage.Engine/wiki";
 			helpMenu.AddItem( new GUIContent( "Wiki" ), false, () => Application.OpenURL( helpUrl ) );
 			_menuBar.Add( "Help", helpMenu );
 		}
 
-		protected virtual void OnMenuBarCreated( MenuBar bar )
-		{
-
-		}
+		protected virtual void OnMenuBarCreated( MenuBar bar ) { }
 	}
 }

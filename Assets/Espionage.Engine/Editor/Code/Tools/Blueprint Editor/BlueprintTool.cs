@@ -13,7 +13,7 @@ namespace Espionage.Engine.Editor.Internal.Blueprints
 	[Icon( EditorIcons.Blueprint ), StyleSheet( "Assets/Espionage.Engine/Editor/Styles/Blueprints/BlueprintGraphWindow.uss" )]
 	public sealed class BlueprintTool : Tool
 	{
-		[MenuItem( "Tools/Blueprint/Editor", false, -10 )]
+		[MenuItem( "Tools/Blueprint/Editor #F6", false )]
 		private static void ShowEditor()
 		{
 			var wind = EditorWindow.GetWindow<BlueprintTool>();
@@ -99,6 +99,8 @@ namespace Espionage.Engine.Editor.Internal.Blueprints
 		//
 		// Menu Bar
 		//
+
+		protected override int MenuBarPosition => 1;
 
 		protected override void OnMenuBarCreated( MenuBar bar )
 		{

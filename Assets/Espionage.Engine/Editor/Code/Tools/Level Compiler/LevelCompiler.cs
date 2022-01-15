@@ -5,8 +5,8 @@ using UnityEngine;
 
 namespace Espionage.Engine.Editor.Internal
 {
-	[Library( "tool.level_compiler", Title = "Level Compiler", Help = "Compiles a Level" )]
-	[Icon( EditorIcons.Construct ), HelpURL( "https://github.com/Woosh-Crew/Espionage.Engine/wiki" )]
+	[Library( "tool.level_compiler", Title = "Level Compiler", Help = "Compiles a Level for use in-game" )]
+	[Icon( EditorIcons.Build ), HelpURL( "https://github.com/Woosh-Crew/Espionage.Engine/wiki" )]
 	public sealed class LevelCompiler : Tool
 	{
 		[MenuItem( "Tools/Level Compiler _F8", false, -150 )]
@@ -18,7 +18,6 @@ namespace Espionage.Engine.Editor.Internal
 		protected override void OnCreateGUI()
 		{
 		}
-
 
 		protected override void OnMenuBarCreated( MenuBar bar )
 		{
