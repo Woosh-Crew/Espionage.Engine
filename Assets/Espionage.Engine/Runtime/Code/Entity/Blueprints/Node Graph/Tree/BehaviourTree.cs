@@ -9,6 +9,7 @@ using UnityEditor;
 
 namespace Espionage.Engine.Entities
 {
+	[CreateAssetMenu]
 	public sealed class BehaviourTree : ScriptableObject
 	{
 		public IReadOnlyList<Node> Nodes => nodes;
@@ -22,6 +23,14 @@ namespace Espionage.Engine.Entities
 
 		public void Execute( string eventName )
 		{
+			var print1 = this.Create<PrintNode>();
+			var print2 = this.Create<PrintNode>();
+			print1.child = print2;
+
+			var print3 = this.Create<PrintNode>();
+			print2.child = print3;
+
+			print1.Execute();
 		}
 
 		//
@@ -32,10 +41,12 @@ namespace Espionage.Engine.Entities
 		{
 			var node = Library.Database.Create<Node>( type );
 			node.name = node.ClassInfo.Title;
-			node.id = new Guid().ToString();
+			node._tree = this;
+
 			nodes.Add( node );
 
 #if UNITY_EDITOR
+			node.id = new Guid().ToString();
 			AssetDatabase.AddObjectToAsset( node, this );
 			AssetDatabase.SaveAssets();
 #endif

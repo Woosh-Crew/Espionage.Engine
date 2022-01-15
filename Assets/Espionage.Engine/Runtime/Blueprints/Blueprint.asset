@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Blueprint
   m_EditorClassIdentifier: 
   <ClassInfo>k__BackingField:
-    Name: 
-    Title: 
-    Help: 
-  _tree: {fileID: 0}
+    Name: blueprint.test_bp
+    Title: Test Blueprint
+    Help: Used for testing blueprint functionality
+  _tree: {fileID: 11400000, guid: 812ba59e5b4fddc4085f171d8ccd3f69, type: 2}
