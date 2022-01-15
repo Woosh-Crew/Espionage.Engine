@@ -1,0 +1,37 @@
+:root {
+	/* MenuBar Colours */
+	--title-bar-colors-panel: #333333;
+	--title-bar-colors-border: #191919;
+
+	--title-bar-colors-button-hover: #464646;
+	--title-bar-colors-button-click: #46607c;
+
+	border-color: var(--title-bar-colors-border);
+	border-width: 0px;
+
+	background-color: var(--title-bar-colors-panel);
+	padding-left: 4px;
+	flex-direction: row;
+	height: 26px;
+	align-items: center;
+}
+
+.Bottom {
+	border-bottom-width: 1px;
+}
+
+.Top {
+	border-top-width: 1px;
+}
+
+Label {
+	font-size: 12px;
+	padding-left: 4px;
+}
+
+Image {
+	opacity: 0.72;
+	padding: 5px;
+	height: 26px;
+	width: 26px;
+}

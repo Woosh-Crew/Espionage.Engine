@@ -20,32 +20,6 @@ namespace Espionage.Engine.Entities
 		}
 
 		//
-		// Blueprint Tree
-		//
-
-		public BehaviourTree Tree => _tree;
-
-		[SerializeField]
-		private BehaviourTree _tree;
-
-		public void CreateTree()
-		{
-			_tree = ScriptableObject.CreateInstance<BehaviourTree>();
-			_tree.name = "Node Tree";
-
-#if UNITY_EDITOR
-			AssetDatabase.AddObjectToAsset( _tree, this );
-			AssetDatabase.SaveAssets();
-#endif
-
-		}
-
-		public void CreateBlackboard()
-		{
-			// Blackboard holds variables
-		}
-
-		//
 		// Editor
 		//
 
