@@ -5,4 +5,41 @@
 
 	--header-bar-colors-button-hover: #464646;
 	--header-bar-colors-button-click: #46607c;
+	flex-direction: row;
+	background-color: var(--header-bar-colors-panel);
+	height: 64px;
+
+	padding: 16px;
+}
+
+.Header-Top-Border {
+	border-top-width: 1px;
+	border-top-color: var(--header-bar-colors-border);
+}
+
+.Header-Bottom-Border {
+	border-bottom-width: 1px;
+	border-bottom-color: var(--header-bar-colors-border);
+}
+
+.Icon {
+	height: 40px;
+	margin-left: 16px;
+	width: 40px;
+
+	align-self: center;
+}
+
+.Title {
+	font-size: 18px;
+}
+
+.Sub-Title {
+	font-size: 12px;
+}
+
+#Title-Container {
+	align-self: center;
+	margin-left: 16px;
+	flex-direction: column;
 }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Espionage.Engine.Editor.Internal
 {
@@ -18,6 +19,11 @@ namespace Espionage.Engine.Editor.Internal
 
 		protected override void OnCreateGUI()
 		{
+			var texture = ClassInfo.Components.Get<IconAttribute>().Icon;
+			var icon = new Image() { image = texture };
+
+			var header = new HeaderBar( ClassInfo.Title, "Select a level and press compile!", icon, "Header-Bottom-Border" );
+			rootVisualElement.Add( header );
 		}
 
 		//
