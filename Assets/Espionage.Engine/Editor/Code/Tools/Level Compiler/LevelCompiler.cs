@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -18,6 +19,36 @@ namespace Espionage.Engine.Editor.Internal
 		protected override void OnCreateGUI()
 		{
 		}
+
+		//
+		// Level Logic
+		//
+
+		// Target Level
+
+		private Level _target;
+		public Level Target
+		{
+			get
+			{
+				return _target;
+			}
+			set
+			{
+				OnBlueprintChange( _target, value );
+				_target = value;
+			}
+		}
+
+		public Action<Level, Level> OnTargetChanged;
+		public void OnBlueprintChange( Level oldBp, Level newBp )
+		{
+			OnTargetChanged?.Invoke( oldBp, newBp );
+		}
+
+		//
+		// Menu Bar
+		//
 
 		protected override void OnMenuBarCreated( MenuBar bar )
 		{

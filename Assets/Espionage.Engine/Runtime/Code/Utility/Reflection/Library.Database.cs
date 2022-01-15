@@ -12,27 +12,18 @@ namespace Espionage.Engine
 	{
 		private static IDatabase<Library> _database;
 
-
-		[Serializable] // Database Serialization
 		private class internal_Database : IDatabase<Library>
 		{
-#if UNITY_STANDALONE || UNITY_EDITOR
-			[UnityEngine.SerializeField]
-#endif
-			private List<Library> records = new List<Library>();
-			public IEnumerable<Library> All => records;
+			private Dictionary<string, Library> records = new Dictionary<string, Library>();
+			public IEnumerable<Library> All => records.Values;
 
 			public void Add( Library item )
 			{
-				// Check if we already have that name
-				if ( records.Any( e => e.Name == item.Name ) )
-					throw new Exception( $"Library cache already contains key: {item.Name}" );
-
 				// Check if we already contain that Id, this will fuckup networking
-				if ( records.Any( e => e.Id == item.Id ) )
+				if ( records.Any( e => e.Value.Id == item.Id ) )
 					throw new Exception( $"Library cache already contains GUID: {item.Id}" );
 
-				records.Add( item );
+				records.Add( item.Name, item );
 			}
 
 			public void Clear()
@@ -42,12 +33,12 @@ namespace Espionage.Engine
 
 			public bool Contains( Library item )
 			{
-				return records.Contains( item );
+				return records.ContainsKey( item.Name );
 			}
 
 			public void Remove( Library item )
 			{
-				records.Remove( item );
+				records.Remove( item.Name );
 			}
 
 			public void Replace( Library oldItem, Library newItem )
@@ -58,8 +49,13 @@ namespace Espionage.Engine
 					return;
 				}
 
-				var index = records.IndexOf( oldItem );
-				records[index] = newItem;
+				if ( oldItem.Name != newItem.Name )
+				{
+					Debugging.Log.Warning( $"Cannot replace {oldItem.Title} with {newItem.Title}, because the name isn't the same." );
+					return;
+				}
+
+				records[oldItem.Name] = newItem;
 			}
 
 			public string Serialize()
