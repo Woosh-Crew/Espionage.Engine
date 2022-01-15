@@ -26,12 +26,8 @@ namespace Espionage.Engine.Entities
 		// Graph
 		//
 
-#if UNITY_EDITOR
-
 		public string id;
 		public Vector2 position;
-
-#endif
 
 		//
 		// Inputs and Outputs

@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 namespace Espionage.Engine.Editor.Internal
 {
 	/// <summary> A Tool is just an EditorWindow with 
-	/// ILibrary and callbacks registered and a menu bar</summary>
+	/// ILibrary and callbacks registered and a menu bar </summary>
 	public class Tool : EditorWindow, ILibrary, ICallbacks
 	{
 		public Library ClassInfo { get; set; }

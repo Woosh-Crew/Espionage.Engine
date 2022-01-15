@@ -20,6 +20,10 @@ namespace Espionage.Engine
 
 		private string _path;
 
+#if UNITY_EDITOR
 		public StyleSheet Style => AssetDatabase.LoadAssetAtPath<StyleSheet>( _path );
+#else
+		public StyleSheet Style => throw new NotImplementedException();
+#endif
 	}
 }

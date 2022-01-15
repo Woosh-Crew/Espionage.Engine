@@ -19,6 +19,10 @@ namespace Espionage.Engine
 
 		private string _path;
 
+#if UNITY_EDITOR
 		public Texture Icon => AssetDatabase.LoadAssetAtPath<Texture>( _path );
+#else
+		public Texture Icon => throw new NotImplementedException();
+#endif
 	}
 }

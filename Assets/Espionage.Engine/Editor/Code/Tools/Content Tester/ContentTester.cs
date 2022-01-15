@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 
 namespace Espionage.Engine.Editor.Internal
 {
-	[Library( "tool.content_tester", Title = "Content Tester", Help = "Quickly test content in game" )]
+	[Library( "tool.content_tester", Title = "Content Tester", Help = "Quickly test compiled content in game" )]
 	[Icon( EditorIcons.Game ), HelpURL( "https://github.com/Woosh-Crew/Espionage.Engine/wiki" )]
 	public class ContentTester : Tool
 	{

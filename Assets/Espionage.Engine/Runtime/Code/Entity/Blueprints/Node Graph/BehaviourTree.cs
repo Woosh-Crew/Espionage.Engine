@@ -24,7 +24,7 @@ namespace Espionage.Engine.Entities
 		{
 			var node = Library.Database.Create<Node>( type );
 			node.name = node.ClassInfo.Title;
-			node.id = GUID.Generate().ToString();
+			node.id = new Guid().ToString();
 			nodes.Add( node );
 
 #if UNITY_EDITOR
