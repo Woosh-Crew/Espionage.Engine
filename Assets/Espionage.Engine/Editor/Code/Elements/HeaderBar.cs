@@ -3,7 +3,7 @@ using UnityEditor;
 
 namespace Espionage.Engine.Editor.Internal
 {
-	[StyleSheet( "Assets/Espionage.Engine/Editor/Code/Elements/MenuBar.uss" )]
+	[StyleSheet( "Assets/Espionage.Engine/Editor/Code/Elements/HeaderBar.uss" )]
 	public class HeaderBar : Element
 	{
 		public HeaderBar( string name, string subtitle, Image icon )

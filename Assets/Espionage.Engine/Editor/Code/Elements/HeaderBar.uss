@@ -1,0 +1,8 @@
+:root {
+	/* MenuBar Colours */
+	--header-bar-colors-panel: #282828;
+	--header-bar-colors-border: #191919;
+
+	--header-bar-colors-button-hover: #464646;
+	--header-bar-colors-button-click: #46607c;
+}
