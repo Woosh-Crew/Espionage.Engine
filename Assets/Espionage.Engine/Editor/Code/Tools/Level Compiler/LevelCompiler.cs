@@ -7,7 +7,9 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
+using UnityEditor.UIElements;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Espionage.Engine.Editor.Internal
 {
@@ -29,15 +31,44 @@ namespace Espionage.Engine.Editor.Internal
 			var header = new HeaderBar( ClassInfo.Title, "Select a level and press compile!", icon, "Header-Bottom-Border" );
 			rootVisualElement.Add( header );
 
-			// Compiler Logic
+			QuickCompilerUI();
+			AdvancedCompilerUI();
+		}
 
-			var compileButton = new Button() { text = "Compile Open Scene" };
-			compileButton.clicked += () =>
+		private void QuickCompilerUI()
+		{
+			var texture = AssetDatabase.LoadAssetAtPath<Texture>( EditorIcons.Map );
+			var icon = new Image() { image = texture };
+			var title = new TitleBar( "Quick Compile", icon );
+
+			rootVisualElement.Add( title );
+
+			// Quick Buttons
 			{
-				Compile( EditorSceneManager.GetActiveScene(), BuildTarget.StandaloneWindows );
-			};
+				var getOpenScene = new Button( () => Compile( EditorSceneManager.GetActiveScene(), BuildTarget.StandaloneWindows ) ) { text = "Quick Compile Open Scene" };
+				rootVisualElement.Add( getOpenScene );
+			}
+		}
 
-			rootVisualElement.Add( compileButton );
+		private void AdvancedCompilerUI()
+		{
+			var texture = AssetDatabase.LoadAssetAtPath<Texture>( EditorIcons.Construct );
+			var icon = new Image() { image = texture };
+			var title = new TitleBar( "Advanced Compile", icon, "Top", "Bottom" );
+
+			rootVisualElement.Add( title );
+
+			// Target
+			{
+				var getOpenScene = new Button() { text = "Get Active Scene" };
+				rootVisualElement.Add( getOpenScene );
+
+				var field = new ObjectField( "Target Scene" );
+				field.objectType = typeof( SceneAsset );
+				field.RegisterValueChangedCallback( ( e ) => { Target = e.newValue as SceneAsset; } );
+
+				rootVisualElement.Add( field );
+			}
 		}
 
 		//
@@ -46,8 +77,8 @@ namespace Espionage.Engine.Editor.Internal
 
 		// Target Level
 
-		private Scene _target;
-		public Scene Target
+		private SceneAsset _target;
+		public SceneAsset Target
 		{
 			get
 			{
@@ -60,24 +91,35 @@ namespace Espionage.Engine.Editor.Internal
 			}
 		}
 
-		public Action<Scene, Scene> OnTargetChanged;
-		public void OnBlueprintChange( Scene oldScene, Scene newScene )
+		public void OnBlueprintChange( SceneAsset oldScene, SceneAsset newScene )
 		{
-			OnTargetChanged?.Invoke( oldScene, newScene );
+			Callback.Run( "compiler.target_changed", oldScene, newScene );
 		}
 
-		public bool Compile( Scene scene, params BuildTarget[] buildTargets )
+		public static bool Compile( Scene scene, params BuildTarget[] buildTargets )
 		{
 			// Ask the user if they want to save the scene, if not don't export!
 			if ( !EditorSceneManager.SaveModifiedScenesIfUserWantsTo( new Scene[] { scene } ) )
 				return false;
 
-			var exportPath = $"Exports/Maps/{scene.name}/";
+			var exportPath = $"Exports/Levels/{scene.name}/";
 
+			// Track how long exporting took
 			using ( Debugging.Stopwatch( "Level Compiled", true ) )
 			{
+				if ( Callback.Run<bool>( "compiler.sanity_check", scene )?.Any( e => e is false ) ?? false )
+				{
+					Debug.Log( "Sanity check failed" );
+					return false;
+				}
+
+				// Compile Preprocess. Allows anything to act as a preprocessor
+				Callback.Run( "compiler.pre_process", scene );
+
+				// Create the Level1 scene, we use this for preprocessing & exporting
 				EditorSceneManager.SaveScene( scene, "Assets/Level1.unity", true );
 
+				AssetDatabase.Refresh();
 				var levelAsset = AssetImporter.GetAtPath( "Assets/Level1.unity" );
 
 				if ( !Directory.Exists( Path.GetFullPath( exportPath ) ) )
@@ -97,10 +139,18 @@ namespace Espionage.Engine.Editor.Internal
 					}
 				}
 
+				// Once we are done do any cleanup on scene
+				EditorSceneManager.OpenScene( scene.path );
+
+				Callback.Run( "compiler.post_process", scene );
+
+				EditorSceneManager.SaveScene( scene );
+
 				// Remove all bundle names
 				foreach ( var item in AssetDatabase.GetAllAssetBundleNames() )
 					AssetDatabase.RemoveAssetBundleName( item, true );
 
+				// Delete Level1, as its not needed anymore
 				AssetDatabase.DeleteAsset( "Assets/Level1.unity" );
 				AssetDatabase.Refresh();
 			}

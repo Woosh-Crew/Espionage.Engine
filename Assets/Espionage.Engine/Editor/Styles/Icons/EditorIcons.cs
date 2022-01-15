@@ -14,6 +14,7 @@ namespace Espionage.Engine.Editor
 		public const string Inspector = "Assets/Espionage.Engine/Editor/Styles/Icons/baseline_manage_search_white_48dp.png";
 		public const string NodeTree = "Assets/Espionage.Engine/Editor/Styles/Icons/baseline_account_tree_white_48dp.png";
 		public const string Dashboard = "Assets/Espionage.Engine/Editor/Styles/Icons/baseline_dashboard_white_48dp.png";
+		public const string Map = "Assets/Espionage.Engine/Editor/Styles/Icons/baseline_map_white_48dp.png";
 
 		// Zoom
 		public const string ZoomIn = "Assets/Espionage.Engine/Editor/Styles/Icons/baseline_zoom_in_map_white_48dp.png";

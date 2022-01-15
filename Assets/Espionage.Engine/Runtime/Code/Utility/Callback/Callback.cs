@@ -119,7 +119,12 @@ namespace Espionage.Engine
 
 			try
 			{
-				return Provider.Run( name, args ).Cast<T>();
+				var values = Provider.Run( name, args );
+
+				if ( values is null )
+					return null;
+
+				return values.Cast<T>();
 			}
 			catch ( KeyNotFoundException )
 			{
