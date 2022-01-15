@@ -54,10 +54,10 @@ namespace Espionage.Engine
 		[Debugging.Var( "debug.report_stopwatch" )]
 		public static bool ReportStopwatch { get; set; } = true;
 
-		public static IDisposable Stopwatch( string message = null, params object[] args )
+		public static IDisposable Stopwatch( string message = null, bool alwaysReport = false )
 		{
-			if ( ReportStopwatch )
-				return new TimedScope( message, args );
+			if ( ReportStopwatch || alwaysReport )
+				return new TimedScope( message );
 			else
 				return null;
 		}
@@ -66,13 +66,11 @@ namespace Espionage.Engine
 		{
 			private Stopwatch _stopwatch;
 			private string _message;
-			private object[] _args;
 
-			public TimedScope( string message, params object[] args )
+			public TimedScope( string message )
 			{
 				_stopwatch = System.Diagnostics.Stopwatch.StartNew();
 				_message = message;
-				_args = args;
 			}
 
 			public void Dispose()
@@ -87,7 +85,7 @@ namespace Espionage.Engine
 					return;
 				}
 
-				Log.Info( $"{String.Format( _message, _args )} | {time}" );
+				Log.Info( $"{String.Format( _message )} | {time}" );
 			}
 		}
 	}

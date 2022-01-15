@@ -9,7 +9,7 @@
 
 .Menu-Bar {
 	background-color: var(--menu-bar-colors-panel);
-	height: 24px;
+	height: 26px;
 	width: 100%;
 	flex-direction: row;
 	border-color: var(--menu-bar-colors-border);

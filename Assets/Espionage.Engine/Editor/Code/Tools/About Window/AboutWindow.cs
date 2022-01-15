@@ -5,6 +5,7 @@ using UnityEditor;
 
 namespace Espionage.Engine.Editor.Internal
 {
+	[Library( Title = "About Window" )]
 	public class AboutWindow : Tool
 	{
 		protected override int MenuBarPosition => -1;
@@ -12,7 +13,7 @@ namespace Espionage.Engine.Editor.Internal
 		public static void ShowWindow()
 		{
 			var wind = ScriptableObject.CreateInstance<AboutWindow>();
-			var size = new Vector2( 500, 300 );
+			var size = new Vector2( 450, 250 );
 
 			wind.position = new Rect( new Vector2( (Screen.width / 2) + (size.x / 2), (Screen.height / 2) - (size.y / 2) ), size );
 			wind.maxSize = size;

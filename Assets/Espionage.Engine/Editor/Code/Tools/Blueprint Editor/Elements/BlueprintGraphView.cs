@@ -83,7 +83,7 @@ namespace Espionage.Engine.Editor.Internal.Blueprints
 
 		private void RecreateGraph()
 		{
-			foreach ( var item in _owner.Blueprint.Tree.FUCKING_NODES )
+			foreach ( var item in _owner.Blueprint.Tree.Nodes )
 			{
 				CreateNodeUI( item );
 			}

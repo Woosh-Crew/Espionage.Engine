@@ -1,7 +1,7 @@
 ManifestFileVersion: 0
-CRC: 1185840732
+CRC: 3626318220
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
-      Name: map.lvlw
+      Name: lab_networking.lvlw
       Dependencies: {}

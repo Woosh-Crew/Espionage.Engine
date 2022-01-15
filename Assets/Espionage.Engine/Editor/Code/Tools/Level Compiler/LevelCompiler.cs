@@ -33,12 +33,7 @@ namespace Espionage.Engine.Editor.Internal
 			var compileButton = new Button() { text = "Compile Open Scene" };
 			compileButton.clicked += () =>
 			{
-				var level = Selection.activeObject as Level;
-
-				if ( level is null )
-					return;
-
-				Compile( level, BuildTarget.StandaloneWindows );
+				Compile( EditorSceneManager.GetActiveScene(), BuildTarget.StandaloneWindows );
 			};
 
 			rootVisualElement.Add( compileButton );
@@ -50,8 +45,8 @@ namespace Espionage.Engine.Editor.Internal
 
 		// Target Level
 
-		private Level _target;
-		public Level Target
+		private Scene _target;
+		public Scene Target
 		{
 			get
 			{
@@ -64,53 +59,53 @@ namespace Espionage.Engine.Editor.Internal
 			}
 		}
 
-		public Action<Level, Level> OnTargetChanged;
-		public void OnBlueprintChange( Level oldBp, Level newBp )
+		public Action<Scene, Scene> OnTargetChanged;
+		public void OnBlueprintChange( Scene oldScene, Scene newScene )
 		{
-			OnTargetChanged?.Invoke( oldBp, newBp );
+			OnTargetChanged?.Invoke( oldScene, newScene );
 		}
 
-		public static bool Compile( Level level, params BuildTarget[] buildTargets )
+		public static bool Compile( Scene scene, params BuildTarget[] buildTargets )
 		{
-			var scenePath = AssetDatabase.GetAssetPath( level.scene );
-			var scene = SceneManager.GetSceneByPath( scenePath );
-
 			// Ask the user if they want to save the scene, if not don't export!
 			if ( !EditorSceneManager.SaveModifiedScenesIfUserWantsTo( new Scene[] { scene } ) )
 				return false;
 
-			// Copies the scene to Level01 cause of intruder stupid shit
-			EditorSceneManager.SaveScene( scene, "Assets/Level1.unity", true );
-
-			// Give the level01 asset
-			var levelAsset = AssetImporter.GetAtPath( "Assets/Level1.unity" );
-
 			// Check if the dir is there and export level
 			var exportPath = $"Exports/Maps/{scene.name}/";
 
-
-			if ( !Directory.Exists( Path.GetFullPath( exportPath ) ) )
-				Directory.CreateDirectory( Path.GetFullPath( exportPath ) );
-
-			// FileUtility.DirectoryCheck( $"Exports/Maps/{scene.name}/" );
-
-			// For each target build, build
-			foreach ( var target in buildTargets )
+			using ( Debugging.Stopwatch( "Level Compiled", true ) )
 			{
-				levelAsset.assetBundleName = "map.lvl" + (target == BuildTarget.StandaloneWindows ? "w" : "m");
-				var bundle = BuildPipeline.BuildAssetBundles( exportPath, BuildAssetBundleOptions.ChunkBasedCompression, target );
+				// Copies the scene to Level01 cause of intruder stupid shit
+				EditorSceneManager.SaveScene( scene, "Assets/Level1.unity", true );
 
-				if ( bundle == null )
+				// Give the level01 asset
+				var levelAsset = AssetImporter.GetAtPath( "Assets/Level1.unity" );
+
+				if ( !Directory.Exists( Path.GetFullPath( exportPath ) ) )
+					Directory.CreateDirectory( Path.GetFullPath( exportPath ) );
+
+				// FileUtility.DirectoryCheck( $"Exports/Maps/{scene.name}/" );
+
+				// For each target build, build
+				foreach ( var target in buildTargets )
 				{
-					EditorUtility.DisplayDialog( "ERROR", $"Map asset bundle compile failed. {target.ToString()}", "Okay" );
-					Debug.LogError( "Compile Failed" );
-					return false;
+					levelAsset.assetBundleName = $"{scene.name}.lvl" + (target == BuildTarget.StandaloneWindows ? "w" : "m");
+					var bundle = BuildPipeline.BuildAssetBundles( exportPath, BuildAssetBundleOptions.ChunkBasedCompression, target );
+
+					if ( bundle == null )
+					{
+						EditorUtility.DisplayDialog( "ERROR", $"Map asset bundle compile failed. {target.ToString()}", "Okay" );
+						Debug.LogError( "Compile Failed" );
+						return false;
+					}
 				}
+
+				AssetDatabase.Refresh();
+
 			}
 
-			AssetDatabase.Refresh();
-			EditorUtility.DisplayDialog( $"Successfully Compiled {level.title}", $"For a full build report, look in the console", "Okay!" );
-
+			EditorUtility.DisplayDialog( $"Successfully Compiled \"{scene.name}\"", $"Outputted to [{exportPath}]\n\nFor full build report look in console", "Okay!" );
 			return true;
 		}
 
