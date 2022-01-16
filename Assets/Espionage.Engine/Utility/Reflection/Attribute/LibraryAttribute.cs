@@ -7,6 +7,7 @@ namespace Espionage.Engine
 	{
 		public string Name { get; set; }
 		public string Title { get; set; }
+		public string Group { get; set; }
 		public string Help { get; set; }
 		public bool Spawnable { get; set; }
 
@@ -14,17 +15,18 @@ namespace Espionage.Engine
 
 		public LibraryAttribute( string name )
 		{
-			this.Name = name;
+			Name = name;
 		}
 
 		public Library CreateRecord()
 		{
 			return new Library()
 			{
-				name = Name,
-				help = Help,
-				title = Title,
-				spawnable = Spawnable,
+				Name = Name,
+				Help = Help,
+				Title = Title,
+				Spawnable = Spawnable,
+				Group = Group
 			};
 		}
 	}

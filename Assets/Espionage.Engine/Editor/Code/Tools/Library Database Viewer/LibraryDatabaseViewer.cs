@@ -6,14 +6,14 @@ using UnityEditor;
 
 namespace Espionage.Engine.Editor.Internal
 {
-	[Library( Title = "Library Viewer" )]
+	[Library( Title = "Library Viewer", Group = "Debug" )]
 	[Icon( EditorIcons.Terminal )]
 	public class LibraryDatabaseViewer : Tool
 	{
 		[MenuItem( "Tools/Debug/Library Viewer", false, 500 )]
 		private static void ShowEditor()
 		{
-			var wind = EditorWindow.GetWindow<LibraryDatabaseViewer>();
+			var wind = GetWindow<LibraryDatabaseViewer>();
 		}
 
 		protected override void OnCreateGUI()
@@ -22,7 +22,7 @@ namespace Espionage.Engine.Editor.Internal
 
 			foreach ( var item in Library.Database.All )
 			{
-				rootVisualElement.Add( new Label( $"{item.name} - {item.title}" ) );
+				rootVisualElement.Add( new Label( $"{item.Name} - {item.Title}" ) );
 			}
 		}
 	}

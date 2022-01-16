@@ -1,93 +1,101 @@
 :root {
-	/* MenuBar Colours */
-	--menubar-colors-panel: #3c3c3c;
-	--menubar-colors-shadow: #191919;
+    /* MenuBar Colours */
+    --menubar-colors-panel: #3c3c3c;
+    --menubar-colors-shadow: #191919;
 
-	--button-hover: #464646;
-	--button-click: #46607c;
+    --button-hover: #464646;
+    --button-click: #46607c;
 }
 
 /* Window */
 
 #Window {
-	flex-grow: 1;
-	background-color: #282828;
-	min-width: 256px;
+    flex-grow: 1;
+    min-width: 256px;
+}
+
+BlueprintGraphView {
 }
 
 /* Info Bar */
 
 #Info-Bar {
-	position: absolute;
-	height: 48px;
-	width: 100%;
+    position: absolute;
+    height: 48px;
+    width: 100%;
 
-	font-size: 22px;
-	align-items: center;
-	opacity: 0.7;
-	-unity-font-style: bold;
+    font-size: 22px;
+    align-items: center;
+    opacity: 0.7;
+    -unity-font-style: bold;
 
-	background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 #Info-Bar,
 .Left {
-	flex-grow: 1;
-	padding-left: 8px;
-	flex-direction: row;
+    flex-grow: 1;
+    padding-left: 8px;
+    flex-direction: row;
 }
 
 #Info-Bar,
 .Right {
-	flex-grow: 1;
-	padding-right: 8px;
-	flex-direction: row;
-	justify-content: flex-end;
+    flex-grow: 1;
+    padding-right: 8px;
+    flex-direction: row;
+    justify-content: flex-end;
 }
 
 .Info-Bar-Button {
-	background-color: initial;
-	width: 48px;
+    background-color: initial;
+    width: 48px;
 
-	padding: 6px;
+    padding: 6px;
 
-	border-radius: 0px;
-	border-width: 0px;
+    border-radius: 0px;
+    border-width: 0px;
 
-	border-color: initial;
-	border-top-width: 2px;
-	border-bottom-width: 2px;
+    border-color: initial;
+    border-top-width: 2px;
+    border-bottom-width: 2px;
 }
 
 .Info-Bar-Button:hover {
-	border-bottom-color: var(--button-hover);
-	border-bottom-width: 2px;
+    border-bottom-color: var(--button-hover);
+    border-bottom-width: 2px;
 }
 
 /* Title bars */
 
 #TitleBar {
-	background-color: #2d2d2d;
-	padding-left: 4px;
-	flex-direction: row;
-	height: 26px;
-	align-items: center;
+    background-color: #2d2d2d;
+    padding-left: 4px;
+    flex-direction: row;
+    height: 26px;
+    align-items: center;
 
-	border-color: var(--menubar-colors-shadow);
-	border-top-width: 1px;
-	border-bottom-width: 1px;
+    border-color: var(--menubar-colors-shadow);
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+}
+
+#Viewport {
+    flex-grow: 1;
+    width: 100%;
+    height: 100%;
 }
 
 #TitleBar > Label {
-	font-size: 12px;
-	padding-left: 4px;
+    font-size: 12px;
+    padding-left: 4px;
 }
 
 #TitleBar > Image {
-	opacity: 0.72;
-	padding: 5px;
-	height: 26px;
-	width: 26px;
+    opacity: 0.72;
+    padding: 5px;
+    height: 26px;
+    width: 26px;
 }
 
 #TitleBar {
@@ -96,44 +104,43 @@
 /* Separator */
 
 #unity-dragline-anchor {
-	background-color: var(--menubar-colors-shadow);
+    background-color: var(--menubar-colors-shadow);
 }
 
 #unity-dragline-anchor:hover {
-	background-color: #9e9e9e;
+    background-color: #9e9e9e;
 }
 
 /* InfoBoard */
 
 #InfoBoard {
-	min-width: 256px;
-	max-width: 512px;
+    min-width: 256px;
 }
 
 #Blackboard {
-	min-height: 256px;
+    min-height: 256px;
 }
 
 #Inspector {
-	min-height: 256px;
+    min-height: 256px;
 }
 
 .Header {
-	flex-direction: row;
-	height: 64px;
-	padding: 4px;
-	background-color: #333333;
+    flex-direction: row;
+    height: 64px;
+    padding: 4px;
+    background-color: #333333;
 
-	border-color: var(--menubar-colors-shadow);
-	border-bottom-width: 1px;
+    border-color: var(--menubar-colors-shadow);
+    border-bottom-width: 1px;
 }
 
 .Header > Image {
 }
 
 .Header > Label {
-	font-size: 16px;
-	align-self: center;
+    font-size: 16px;
+    align-self: center;
 }
 
 /* Inspector */
@@ -141,47 +148,47 @@
 /* Grid + Watermark */
 
 #Vignette {
-	position: absolute;
-	width: 100%;
-	height: 100%;
+    position: absolute;
+    width: 100%;
+    height: 100%;
 }
 
 #Grid {
-	--line-color: #2c2c2c;
-	--thick-line-color: #1d1d1d;
-	--grid-background-color: #262626;
-	--spacing: 16;
-	--thick-lines: 64;
+    --line-color: #2c2c2c;
+    --thick-line-color: #1d1d1d;
+    --grid-background-color: #262626;
+    --spacing: 16;
+    --thick-lines: 64;
 }
 
 #Blueprint-Watermark {
-	opacity: 0.2;
-	position: absolute;
-	flex-direction: row;
-	font-size: 64px;
-	-unity-font-style: bold;
-	bottom: 32px;
-	right: 32px;
+    opacity: 0.2;
+    position: absolute;
+    flex-direction: row;
+    font-size: 64px;
+    -unity-font-style: bold;
+    bottom: 32px;
+    right: 32px;
 }
 
 #Blueprint-Watermark > Image {
-	height: 48px;
-	width: 48px;
-	margin-right: 8px;
-	align-self: center;
+    height: 48px;
+    width: 48px;
+    margin-right: 8px;
+    align-self: center;
 }
 
 /* Graph Creator */
 
 #GraphCreator {
-	background-color: black;
-	position: absolute;
-	flex-grow: 1;
-	width: 100%;
-	height: 100%;
-	opacity: 0.6;
+    background-color: black;
+    position: absolute;
+    flex-grow: 1;
+    width: 100%;
+    height: 100%;
+    opacity: 0.6;
 
-	justify-content: center;
+    justify-content: center;
 }
 
 #GraphCreator,

@@ -4,14 +4,15 @@ using UnityEngine.UIElements;
 
 namespace Espionage.Engine.Editor.Internal
 {
-	[Library( "tool.content_tester", Title = "Content Tester", Help = "Quickly test compiled content in game" )]
-	[Icon( EditorIcons.Game ), HelpURL( "https://github.com/Woosh-Crew/Espionage.Engine/wiki" )]
+	[Library( "tool.content_tester", Title = "Content Tester", Help = "Quickly test compiled content in game", Group = "Testing" )]
+	[Icon( EditorIcons.Game )]
+	[HelpURL( "https://github.com/Woosh-Crew/Espionage.Engine/wiki" )]
 	public class ContentTester : Tool
 	{
 		[MenuItem( "Tools/Content Tester _F7", false, -150 )]
 		private static void ShowEditor()
 		{
-			var wind = EditorWindow.GetWindow<ContentTester>();
+			var wind = GetWindow<ContentTester>();
 		}
 
 		protected override void OnCreateGUI()
@@ -19,7 +20,7 @@ namespace Espionage.Engine.Editor.Internal
 			var texture = ClassInfo.Components.Get<IconAttribute>().Icon;
 			var icon = new Image() { image = texture };
 
-			var header = new HeaderBar( ClassInfo.title, ClassInfo.help, icon, "Header-Bottom-Border" );
+			var header = new HeaderBar( ClassInfo.Title, ClassInfo.Help, icon, "Header-Bottom-Border" );
 			rootVisualElement.Add( header );
 		}
 	}

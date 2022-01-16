@@ -9,9 +9,12 @@ namespace Espionage.Engine.Editor.Internal
 		public HeaderBar( string title, string subTitle, Image icon, params string[] classes )
 		{
 			// Icon
-			_icon = icon;
-			_icon.AddToClassList( "Icon" );
-			Add( _icon );
+			if ( icon is not null )
+			{
+				_icon = icon;
+				_icon.AddToClassList( "Icon" );
+				Add( _icon );
+			}
 
 			// Text Container
 			var element = new VisualElement() { name = "Title-Container" };
@@ -46,18 +49,12 @@ namespace Espionage.Engine.Editor.Internal
 
 		public string Title
 		{
-			set
-			{
-				_title.text = value;
-			}
+			set => _title.text = value;
 		}
 
 		public string SubTitle
 		{
-			set
-			{
-				_subTitle.text = value;
-			}
+			set => _subTitle.text = value;
 		}
 
 

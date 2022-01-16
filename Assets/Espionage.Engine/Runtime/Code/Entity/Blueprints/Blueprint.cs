@@ -12,7 +12,7 @@ namespace Espionage.Engine.Entities
 		{
 			try
 			{
-				if ( string.IsNullOrEmpty( ClassInfo.name ) )
+				if ( string.IsNullOrEmpty( ClassInfo.Name ) )
 				{
 					return;
 				}

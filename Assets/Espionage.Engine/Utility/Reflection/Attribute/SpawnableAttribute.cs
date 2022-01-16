@@ -16,7 +16,7 @@ namespace Espionage.Engine
 
 		public void OnAttached()
 		{
-			Library.spawnable = _spawnable;
+			Library.Spawnable = _spawnable;
 		}
 	}
 }

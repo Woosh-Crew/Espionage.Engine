@@ -3,20 +3,20 @@ using System;
 namespace Espionage.Engine
 {
 	[AttributeUsage( AttributeTargets.Class, Inherited = true )]
-	public sealed class HelpAttribute : Attribute, Library.IComponent
+	public sealed class GroupAttribute : Attribute, Library.IComponent
 	{
 		public Library Library { get; set; }
 
-		public HelpAttribute( string help )
+		public GroupAttribute( string group )
 		{
-			_help = help;
+			_group = group;
 		}
 
-		private readonly string _help;
+		private readonly string _group;
 
 		public void OnAttached()
 		{
-			Library.Help = _help;
+			Library.Group = _group;
 		}
 	}
 }

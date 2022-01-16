@@ -1,45 +1,45 @@
 :root {
-	/* MenuBar Colours */
-	--header-bar-colors-panel: #282828;
-	--header-bar-colors-border: #191919;
+    /* MenuBar Colours */
+    --header-bar-colors-panel: #282828;
+    --header-bar-colors-border: #191919;
 
-	--header-bar-colors-button-hover: #464646;
-	--header-bar-colors-button-click: #46607c;
-	flex-direction: row;
-	background-color: var(--header-bar-colors-panel);
-	height: 64px;
+    --header-bar-colors-button-hover: #464646;
+    --header-bar-colors-button-click: #46607c;
+    flex-direction: row;
+    background-color: var(--header-bar-colors-panel);
+    height: 64px;
 
-	padding: 16px;
+    padding: 16px;
 }
 
 .Header-Top-Border {
-	border-top-width: 1px;
-	border-top-color: var(--header-bar-colors-border);
+    border-top-width: 1px;
+    border-top-color: var(--header-bar-colors-border);
 }
 
 .Header-Bottom-Border {
-	border-bottom-width: 1px;
-	border-bottom-color: var(--header-bar-colors-border);
+    border-bottom-width: 1px;
+    border-bottom-color: var(--header-bar-colors-border);
 }
 
 .Icon {
-	height: 40px;
-	margin-left: 16px;
-	width: 40px;
+    height: 40px;
+    margin-left: 0px;
+    width: 40px;
 
-	align-self: center;
+    align-self: center;
 }
 
 .Title {
-	font-size: 18px;
+    font-size: 18px;
 }
 
 .Sub-Title {
-	font-size: 12px;
+    font-size: 12px;
 }
 
 #Title-Container {
-	align-self: center;
-	margin-left: 16px;
-	flex-direction: column;
+    align-self: center;
+    margin-left: 16px;
+    flex-direction: column;
 }

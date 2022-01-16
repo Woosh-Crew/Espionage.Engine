@@ -7,11 +7,16 @@ namespace Espionage.Engine.Editor.Internal
 	[StyleSheet( "Assets/Espionage.Engine/Editor/Code/Elements/MenuBar.uss" )]
 	public class MenuBar : Element
 	{
-		/// <param name="position"> 0 = Top, 1 = Bottom </param>
-		public MenuBar( int position = 0, params Button[] buttons )
+		public enum Position { Top, Bottom, None }
+
+		public MenuBar( Position position, params Button[] buttons )
 		{
 			AddToClassList( "Menu-Bar" );
-			AddToClassList( position is 1 ? "Bottom" : "Top" );
+
+			if ( position is not Position.None )
+			{
+				AddToClassList( position is Position.Bottom ? "Bottom" : "Top" );
+			}
 		}
 
 		public void Add( string title, GenericMenu menu = null )

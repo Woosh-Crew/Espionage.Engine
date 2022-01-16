@@ -5,7 +5,7 @@ using UnityEngine.Serialization;
 namespace Espionage.Engine
 {
 	/// <summary> Espionage.Engines string based Reflection System </summary>
-	[Serializable] // Instance Serialization
+	[Serializable]
 	public sealed partial class Library
 	{
 		private class InternalComponentDatabase : IDatabase<IComponent>
@@ -18,7 +18,7 @@ namespace Espionage.Engine
 			}
 
 			private readonly Library _target;
-			private readonly List<IComponent> _components = new List<IComponent>();
+			private readonly List<IComponent> _components = new();
 
 			public void Add( IComponent item )
 			{
@@ -45,21 +45,37 @@ namespace Espionage.Engine
 			}
 		}
 
+		public Library() { }
+
+		public Library( Type type )
+		{
+			Class = type;
+			Name = type.FullName;
+		}
+
 		// Meta
-		public string name;
-		public string title;
-		public string help;
-		public bool spawnable;
+		private string _name;
+
+		public string Name
+		{
+			get => _name;
+			set
+			{
+				_name = value;
+				Id = GenerateID( _name );
+			}
+		}
+
+		public string Title { get; set; }
+		public string Group { get; set; }
+		public string Help { get; set; }
+		public bool Spawnable { get; set; }
 
 		// Components
 		public IDatabase<IComponent> Components { get; private set; }
 
-		// Owner
-		[NonSerialized]
-		public Type Class;
-
-		// GUID
-		[NonSerialized]
-		public Guid Id;
+		// Owner & Identification
+		public Type Class { get; set; }
+		public Guid Id { get; private set; }
 	}
 }

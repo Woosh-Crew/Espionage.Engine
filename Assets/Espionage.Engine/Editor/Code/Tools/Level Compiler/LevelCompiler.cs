@@ -13,14 +13,15 @@ using System.Linq;
 
 namespace Espionage.Engine.Editor.Internal
 {
-	[Library( "tool.level_compiler", Title = "Level Compiler", Help = "Compiles a Level for use in-game" )]
-	[Icon( EditorIcons.Build ), HelpURL( "https://github.com/Woosh-Crew/Espionage.Engine/wiki" )]
+	[Library( "tool.level_compiler", Title = "Level Compiler", Help = "Compiles a Level for use in-game", Group = "Compiler" )]
+	[Icon( EditorIcons.Build )]
+	[HelpURL( "https://github.com/Woosh-Crew/Espionage.Engine/wiki" )]
 	public sealed class LevelCompiler : Tool
 	{
 		[MenuItem( "Tools/Level Compiler _F8", false, -150 )]
 		private static void ShowEditor()
 		{
-			var wind = EditorWindow.GetWindow<LevelCompiler>();
+			var wind = GetWindow<LevelCompiler>();
 		}
 
 		protected override void OnCreateGUI()
@@ -28,7 +29,7 @@ namespace Espionage.Engine.Editor.Internal
 			var texture = ClassInfo.Components.Get<IconAttribute>().Icon;
 			var icon = new Image() { image = texture };
 
-			var header = new HeaderBar( ClassInfo.title, "Select a level and press compile!", icon, "Header-Bottom-Border" );
+			var header = new HeaderBar( ClassInfo.Title, "Select a level and press compile!", icon, "Header-Bottom-Border" );
 			rootVisualElement.Add( header );
 
 			QuickCompilerUI();
@@ -45,7 +46,7 @@ namespace Espionage.Engine.Editor.Internal
 
 			// Quick Buttons
 			{
-				var getOpenScene = new Button( () => Compile( EditorSceneManager.GetActiveScene(), BuildTarget.StandaloneWindows ) ) { text = "Quick Compile Open Scene" };
+				var getOpenScene = new Button( () => Compile( SceneManager.GetActiveScene(), BuildTarget.StandaloneWindows ) ) { text = "Quick Compile Open Scene" };
 				rootVisualElement.Add( getOpenScene );
 			}
 		}
@@ -78,12 +79,10 @@ namespace Espionage.Engine.Editor.Internal
 		// Target Level
 
 		private SceneAsset _target;
+
 		public SceneAsset Target
 		{
-			get
-			{
-				return _target;
-			}
+			get => _target;
 			set
 			{
 				OnBlueprintChange( _target, value );
@@ -100,7 +99,9 @@ namespace Espionage.Engine.Editor.Internal
 		{
 			// Ask the user if they want to save the scene, if not don't export!
 			if ( !EditorSceneManager.SaveModifiedScenesIfUserWantsTo( new Scene[] { scene } ) )
+			{
 				return false;
+			}
 
 			var exportPath = $"Exports/Levels/{scene.name}/";
 
@@ -123,7 +124,9 @@ namespace Espionage.Engine.Editor.Internal
 				var levelAsset = AssetImporter.GetAtPath( "Assets/Level1.unity" );
 
 				if ( !Directory.Exists( Path.GetFullPath( exportPath ) ) )
+				{
 					Directory.CreateDirectory( Path.GetFullPath( exportPath ) );
+				}
 
 				// For each target build, build
 				foreach ( var target in buildTargets )
@@ -148,7 +151,9 @@ namespace Espionage.Engine.Editor.Internal
 
 				// Remove all bundle names
 				foreach ( var item in AssetDatabase.GetAllAssetBundleNames() )
+				{
 					AssetDatabase.RemoveAssetBundleName( item, true );
+				}
 
 				// Delete Level1, as its not needed anymore
 				AssetDatabase.DeleteAsset( "Assets/Level1.unity" );

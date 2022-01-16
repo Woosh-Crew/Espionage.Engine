@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEngine;
 
@@ -8,7 +9,7 @@ namespace Espionage.Engine.Editor.Internal
 	public class Tool : EditorWindow, ILibrary, ICallbacks
 	{
 		public Library ClassInfo { get; private set; }
-		
+
 		private void Awake()
 		{
 			Callback.Register( this );
@@ -17,7 +18,7 @@ namespace Espionage.Engine.Editor.Internal
 		protected virtual void OnEnable()
 		{
 			ClassInfo = Library.Database.Get( GetType() );
-			titleContent = new GUIContent( ClassInfo.title, ClassInfo.help );
+			titleContent = new GUIContent( ClassInfo.Title, ClassInfo.Help );
 
 			if ( ClassInfo.Components.TryGet<IconAttribute>( out var icon ) )
 			{
@@ -33,15 +34,21 @@ namespace Espionage.Engine.Editor.Internal
 		private void CreateGUI()
 		{
 			if ( ClassInfo.Components.TryGet<StyleSheetAttribute>( out var style ) )
+			{
 				rootVisualElement.styleSheets.Add( style.Style );
+			}
 
-			if ( MenuBarPosition == 0 )
+			if ( MenuBarPosition == MenuBar.Position.Top )
+			{
 				CreateMenuBar( MenuBarPosition );
+			}
 
 			OnCreateGUI();
 
-			if ( MenuBarPosition == 1 )
+			if ( MenuBarPosition == MenuBar.Position.Bottom )
+			{
 				CreateMenuBar( MenuBarPosition );
+			}
 		}
 
 		protected virtual void OnCreateGUI() { }
@@ -50,17 +57,28 @@ namespace Espionage.Engine.Editor.Internal
 		// Menu Bar
 		//
 
-		/// <summary> 0 = Top, 1 = Bottom </summary>
-		protected virtual int MenuBarPosition => 0;
+		protected virtual MenuBar.Position MenuBarPosition => 0;
 
 		private MenuBar _menuBar;
 
-		private void CreateMenuBar( int pos = 1 )
+		private void CreateMenuBar( MenuBar.Position pos )
 		{
 			_menuBar = new MenuBar( pos );
 			rootVisualElement.Add( _menuBar );
 
 			OnMenuBarCreated( _menuBar );
+
+			// Create Tools Menu
+			var toolsMenu = new GenericMenu();
+			_menuBar.Add( "Tools", toolsMenu );
+
+			foreach ( var item in Library.Database.GetAll<Tool>() )
+			{
+				if ( !string.Equals( item.Group, "hidden", StringComparison.CurrentCultureIgnoreCase ) )
+				{
+					toolsMenu.AddItem( new GUIContent( string.IsNullOrEmpty( item.Group ) ? "" : $"{item.Group}/" + item.Title ), false, () => GetWindow( item.Class ) );
+				}
+			}
 
 			// Create Help Menu
 			var helpMenu = new GenericMenu();
@@ -75,5 +93,20 @@ namespace Espionage.Engine.Editor.Internal
 		}
 
 		protected virtual void OnMenuBarCreated( MenuBar bar ) { }
+
+		//
+		// Dock Bar Button
+		//
+
+		private void ShowButton( Rect rect )
+		{
+			using ( _ = new GUILayout.AreaScope( rect ) )
+			{
+				OnBarButton();
+			}
+		}
+
+		/// <summary> IMGUI Container for Dock Bar Button </summary>
+		protected virtual void OnBarButton() { }
 	}
 }

@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Espionage.Engine.Internal;
-
 using Random = System.Random;
 
 namespace Espionage.Engine
@@ -14,27 +13,37 @@ namespace Espionage.Engine
 		private class InternalDatabase : IDatabase<Library>
 		{
 			public IEnumerable<Library> All => _records.Values;
-			private readonly Dictionary<string, Library> _records = new Dictionary<string, Library>();
+			private readonly Dictionary<string, Library> _records = new();
 
 			public void Add( Library item )
 			{
 				if ( item.Class is null )
-					throw new Exception( $"Library doesn't have an owning class: {item.name}" );
+				{
+					throw new Exception( $"Library doesn't have an owning class: {item.Name}" );
+				}
 
-				if ( string.IsNullOrEmpty( item.name ) )
-					item.name = item.Class.FullName;
+				if ( string.IsNullOrEmpty( item.Name ) )
+				{
+					item.Name = item.Class.FullName;
+				}
 
-				if ( string.IsNullOrEmpty( item.title ) )
-					item.title = item.name;
+				if ( string.IsNullOrEmpty( item.Title ) )
+				{
+					item.Title = item.Name;
+				}
 
-				// Generate the ID, so we can spawn it at runtime
-				item.Id = GenerateID( item.name );
+				if ( string.IsNullOrEmpty( item.Group ) )
+				{
+					item.Group = item.Class.Namespace;
+				}
 
 				// Check if we already contain that Id, this will fuck up networking
 				if ( _records.Any( e => e.Value.Id == item.Id ) )
+				{
 					throw new Exception( $"Library cache already contains GUID: {item.Id}" );
+				}
 
-				_records.Add( item.name ?? throw new InvalidOperationException(), item );
+				_records.Add( item.Name ?? throw new InvalidOperationException(), item );
 			}
 
 			public void Clear()
@@ -44,12 +53,12 @@ namespace Espionage.Engine
 
 			public bool Contains( Library item )
 			{
-				return _records.ContainsKey( item.name );
+				return _records.ContainsKey( item.Name );
 			}
 
 			public void Remove( Library item )
 			{
-				_records.Remove( item.name );
+				_records.Remove( item.Name );
 			}
 
 			public void Replace( Library oldItem, Library newItem )
@@ -60,13 +69,13 @@ namespace Espionage.Engine
 					return;
 				}
 
-				if ( oldItem.name != newItem.name )
+				if ( oldItem.Name != newItem.Name )
 				{
-					Debugging.Log.Warning( $"Cannot replace {oldItem.title} with {newItem.title}, because the name isn't the same." );
+					Debugging.Log.Warning( $"Cannot replace {oldItem.Title} with {newItem.Title}, because the name isn't the same." );
 					return;
 				}
 
-				_records[oldItem.name] = newItem;
+				_records[oldItem.Name] = newItem;
 			}
 
 			public string Serialize()

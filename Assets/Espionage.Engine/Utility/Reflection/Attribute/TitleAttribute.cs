@@ -16,7 +16,7 @@ namespace Espionage.Engine
 
 		public void OnAttached()
 		{
-			Library.title = _title;
+			Library.Title = _title;
 		}
 	}
 }

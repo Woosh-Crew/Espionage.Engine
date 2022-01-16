@@ -42,10 +42,25 @@ public static class LibraryDatabaseExtensions
 	// Exists
 	//
 
-	public static bool Exists<T>( this IDatabase<Library> database ) where T : ILibrary => database.Get<T>() is not null;
-	public static bool Exists( this IDatabase<Library> database, string name ) => database.Get( name ) is not null;
-	public static bool Exists( this IDatabase<Library> database, Type type ) => database.Get( type ) is not null;
-	public static bool Exists( this IDatabase<Library> database, Guid id ) => database.Get( id ) is not null;
+	public static bool Exists<T>( this IDatabase<Library> database ) where T : ILibrary
+	{
+		return database.Get<T>() is not null;
+	}
+
+	public static bool Exists( this IDatabase<Library> database, string name )
+	{
+		return database.Get( name ) is not null;
+	}
+
+	public static bool Exists( this IDatabase<Library> database, Type type )
+	{
+		return database.Get( type ) is not null;
+	}
+
+	public static bool Exists( this IDatabase<Library> database, Guid id )
+	{
+		return database.Get( id ) is not null;
+	}
 
 	//
 	// Get
@@ -53,12 +68,12 @@ public static class LibraryDatabaseExtensions
 
 	public static Library Get<T>( this IDatabase<Library> database ) where T : ILibrary
 	{
-		return database.All.FirstOrDefault( e => e.Class == typeof( T ) );
+		return database.All.FirstOrDefault( e => e.Class == typeof(T) );
 	}
 
 	public static Library Get( this IDatabase<Library> database, string name )
 	{
-		return database.All.FirstOrDefault( e => e.name == name );
+		return database.All.FirstOrDefault( e => e.Name == name );
 	}
 
 	public static Library Get( this IDatabase<Library> database, Type type )
@@ -117,13 +132,16 @@ public static class LibraryDatabaseExtensions
 	public static ILibrary Create( this IDatabase<Library> database, string name, bool assertMissing = false )
 	{
 		if ( database.TryGet( name, out var library ) )
+		{
 			return Library.Construct( library );
+		}
 
 		if ( assertMissing )
+		{
 			Debugging.Log.Error( $"Library doesnt contain [{name}], not creating ILibrary" );
+		}
 
 		return null;
-
 	}
 
 	public static T Create<T>( this IDatabase<Library> database, string name, bool assertMissing = false ) where T : class, ILibrary, new()
@@ -136,11 +154,12 @@ public static class LibraryDatabaseExtensions
 		var library = database.Get( id );
 
 		if ( id != default )
+		{
 			return Library.Construct( library );
+		}
 
 		Debugging.Log.Error( "Invalid ID" );
 		return null;
-
 	}
 
 	public static T Create<T>( this IDatabase<Library> database, Guid id ) where T : class, ILibrary, new()
@@ -160,7 +179,7 @@ public static class LibraryDatabaseExtensions
 		}
 		else
 		{
-			Debugging.Log.Warning( $"Couldn't not find {typeof( T ).FullName} in Library database" );
+			Debugging.Log.Warning( $"Couldn't not find {typeof(T).FullName} in Library database" );
 		}
 	}
 
@@ -226,5 +245,4 @@ public static class LibraryComponentDatabaseExtensions
 	{
 		return database.Get<T>() is not null;
 	}
-
 }
