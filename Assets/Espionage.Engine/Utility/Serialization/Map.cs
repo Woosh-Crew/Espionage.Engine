@@ -9,17 +9,17 @@ namespace Espionage.Engine
 	public class Map<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver
 	{
 		[SerializeField]
-		private List<TKey> keys = new List<TKey>();
+		private List<TKey> keys = new();
 
 		[SerializeField]
-		private List<TValue> values = new List<TValue>();
+		private List<TValue> values = new();
 
 		public void OnBeforeSerialize()
 		{
 			keys.Clear();
 			values.Clear();
 
-			foreach ( KeyValuePair<TKey, TValue> pair in this )
+			foreach ( var pair in this )
 			{
 				keys.Add( pair.Key );
 				values.Add( pair.Value );
@@ -28,13 +28,17 @@ namespace Espionage.Engine
 
 		public void OnAfterDeserialize()
 		{
-			this.Clear();
+			Clear();
 
 			if ( keys.Count != values.Count )
-				throw new Exception( string.Format( "There are {0} keys and {1} values after deserialization. Make sure that both key and value types are serializable." ) );
+			{
+				throw new Exception( $"There are {keys.Count} keys and {values.Count} values after deserialization. Make sure that both key and value types are serializable." );
+			}
 
-			for ( int i = 0; i < keys.Count; i++ )
-				this.Add( keys[i], values[i] );
+			for ( var i = 0; i < keys.Count; i++ )
+			{
+				Add( keys[i], values[i] );
+			}
 		}
 	}
 }

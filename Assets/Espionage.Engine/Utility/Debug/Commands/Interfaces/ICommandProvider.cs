@@ -20,7 +20,7 @@ namespace Espionage.Engine.Internal.Commands
 // Extensions
 //
 
-public static class ICommandProviderExtensions
+public static class CommandProviderExtensions
 {
 	public static void Invoke( this ICommandProvider provider, string commandLine )
 	{

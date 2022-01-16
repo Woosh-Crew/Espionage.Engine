@@ -2,13 +2,12 @@ using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Espionage.Engine.Internal;
-
 using Espionage.Engine.Internal.Logging;
 using Espionage.Engine.Internal.Commands;
 
 namespace Espionage.Engine
 {
-	[Manager( nameof( Initialize ), Layer = Layer.Runtime | Layer.Editor, Order = -200 )]
+	[Manager( nameof(Initialize), Layer = Layer.Runtime | Layer.Editor, Order = -200 )]
 	public static partial class Debugging
 	{
 		//
@@ -19,17 +18,14 @@ namespace Espionage.Engine
 		{
 			// We initialize logging without
 			// Async so we can log straight away
-
-			if ( Log is null )
-				Log = new SimpleLoggingProvider();
+			Log ??= new SimpleLoggingProvider();
 
 			Log.Initialize();
 
-			using ( Debugging.Stopwatch( "Debugging Initialized" ) )
+			using ( Stopwatch( "Debugging Initialized" ) )
 			{
 				// Setup Console
-				if ( Console is null )
-					Console = new AttributeCommandProvider<CmdAttribute>();
+				Console ??= new AttributeCommandProvider<CmdAttribute>();
 
 				await Task.WhenAll( Console.Initialize() );
 			}
@@ -51,21 +47,25 @@ namespace Espionage.Engine
 		// Stopwatch
 		//
 
-		[Debugging.Var( "debug.report_stopwatch" )]
-		public static bool ReportStopwatch { get; set; } = true;
+		[Var( "debug.report_stopwatch" )]
+		private static bool ReportStopwatch { get; set; } = true;
 
 		public static IDisposable Stopwatch( string message = null, bool alwaysReport = false )
 		{
 			if ( ReportStopwatch || alwaysReport )
+			{
 				return new TimedScope( message );
+			}
 			else
+			{
 				return null;
+			}
 		}
 
 		internal class TimedScope : IDisposable
 		{
-			private Stopwatch _stopwatch;
-			private string _message;
+			private readonly Stopwatch _stopwatch;
+			private readonly string _message;
 
 			public TimedScope( string message )
 			{
@@ -85,7 +85,7 @@ namespace Espionage.Engine
 					return;
 				}
 
-				Log.Info( $"{String.Format( _message )} | {time}" );
+				Log.Info( $"{string.Format( _message )} | {time}" );
 			}
 		}
 	}

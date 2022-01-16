@@ -8,8 +8,8 @@ namespace Espionage.Engine.Internal.Callbacks
 {
 	internal class AttributeCallbackProvider : ICallbackProvider
 	{
-		private static Dictionary<string, CallbackInfo.Group> _callbacks = new Dictionary<string, CallbackInfo.Group>();
-		private static Dictionary<Type, List<object>> _registered = new Dictionary<Type, List<object>>();
+		private Dictionary<string, CallbackInfo.Group> _callbacks = new();
+		private Dictionary<Type, List<object>> _registered = new();
 
 		public Task Initialize()
 		{
@@ -17,17 +17,20 @@ namespace Espionage.Engine.Internal.Callbacks
 			{
 				// Get every Callback using Linq
 				var methods = AppDomain.CurrentDomain.GetAssemblies()
-						.Where( e => Utility.IgnoreIfNotUserGeneratedAssembly( e ) )
-						.SelectMany( e => e.GetTypes()
-							// We gotta do this so it loads faster... I think its stupid having to have a library attribute
-							.SelectMany( e => e.GetMethods( BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy ) ) );
+					.Where( Utility.IgnoreIfNotUserGeneratedAssembly )
+					.SelectMany( e => e.GetTypes()
+						.SelectMany( type => type.GetMethods( BindingFlags.Instance | BindingFlags.Static |
+						                                      BindingFlags.Public | BindingFlags.NonPublic |
+						                                      BindingFlags.FlattenHierarchy ) ) );
 
 				foreach ( var info in methods )
 				{
 					var attribute = info.GetCustomAttribute<CallbackAttribute>();
 
 					if ( attribute is null )
+					{
 						continue;
+					}
 
 					if ( !_callbacks.ContainsKey( attribute.Name ) )
 					{
@@ -35,28 +38,23 @@ namespace Espionage.Engine.Internal.Callbacks
 					}
 
 					_callbacks.TryGetValue( attribute.Name, out var items );
-					items.Add( new CallbackInfo() { IsStatic = info.IsStatic }.FromType( info.DeclaringType ).WithCallback( Build( info ) ) );
+					items?.Add( new CallbackInfo {IsStatic = info.IsStatic}.FromType( info.DeclaringType )
+						.WithCallback( Build( info ) ) );
 				}
 			} );
-		}
-
-		internal CallbackInfo.Action Build( MethodInfo info )
-		{
-			return delegate ( object target, object[] args )
-			{
-				return info?.Invoke( target, args );
-			};
 		}
 
 		public object[] Run( string name, params object[] args )
 		{
 			if ( !_callbacks.ContainsKey( name ) )
+			{
 				return null;
+			}
 
 			var callbacks = _callbacks[name];
 
 			// Build the final object array
-			List<object> builder = new List<object>();
+			var builder = new List<object>();
 
 			foreach ( var callback in callbacks )
 			{
@@ -68,7 +66,9 @@ namespace Espionage.Engine.Internal.Callbacks
 					var arg = callback.Invoke( null, args );
 
 					if ( arg is not null )
+					{
 						builder.Add( arg );
+					}
 
 					continue;
 				}
@@ -76,16 +76,13 @@ namespace Espionage.Engine.Internal.Callbacks
 				// If the callback is from an instance, get all instances
 				// And invoke them, using the stored object from _registered
 
-				if ( _registered.ContainsKey( callback.Class ) )
+				if ( !_registered.ContainsKey( callback.Class ) )
 				{
-					foreach ( var obj in _registered[callback.Class] )
-					{
-						var arg = callback.Invoke( obj, args );
-
-						if ( arg is not null )
-							builder.Add( arg );
-					}
+					continue;
 				}
+
+				builder.AddRange( _registered[callback.Class].Select( obj => callback.Invoke( obj, args ) )
+					.Where( arg => arg is not null ) );
 			}
 
 			return builder.ToArray();
@@ -122,7 +119,12 @@ namespace Espionage.Engine.Internal.Callbacks
 			_callbacks?.Clear();
 			_callbacks = null;
 
-			Debugging.Log.Warning( "Dispoing ICallbackProvider" );
+			Debugging.Log.Warning( "Disposing ICallbackProvider" );
+		}
+
+		private static CallbackInfo.Action Build( MethodBase info )
+		{
+			return ( target, args ) => info?.Invoke( target, args );
 		}
 	}
 }

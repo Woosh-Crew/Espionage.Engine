@@ -1,13 +1,11 @@
-// Attribute based event callback system
-
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using Espionage.Engine.Internal.Callbacks;
 
 namespace Espionage.Engine
 {
-	[Manager( nameof( Initialize ), Layer = Layer.Editor | Layer.Runtime, Order = 50 )]
+	[Manager( nameof(Initialize), Layer = Layer.Editor | Layer.Runtime, Order = 50 )]
 	public static partial class Callback
 	{
 		//
@@ -16,6 +14,14 @@ namespace Espionage.Engine
 
 		private static bool _isInitializing;
 
+		// Initialization Queue
+
+		private static Queue<QueuedCallback> _callbackQueue = new();
+		private static ICallbackProvider Provider { get; set; }
+
+		[Debugging.Var( "callbacks.report" )]
+		private static bool Report { get; } = false;
+
 		internal static async void Initialize()
 		{
 			using ( Debugging.Stopwatch( "Callbacks Initialized" ) )
@@ -23,8 +29,7 @@ namespace Espionage.Engine
 				_isInitializing = true;
 
 				// AttributeCallbackProvider is the default provider
-				if ( Provider is null )
-					Provider = new AttributeCallbackProvider();
+				Provider ??= new AttributeCallbackProvider();
 
 				await Provider.Initialize();
 
@@ -32,64 +37,54 @@ namespace Espionage.Engine
 			}
 
 			// Dequeue any callbacks called when initializing
-			for ( int i = 0; i < _callbackQueue.Count; i++ )
+			for ( var i = 0; i < _callbackQueue.Count; i++ )
 			{
 				var item = _callbackQueue.Dequeue();
-				Run( item.name, item.args );
+				Run( item.Name, item.Args );
 			}
 
 			_callbackQueue.Clear();
 			_callbackQueue = null;
 		}
 
-		// Initialization Queue
-
-		private static Queue<QueuedCallback> _callbackQueue = new Queue<QueuedCallback>();
-
-		private struct QueuedCallback
-		{
-			public string name;
-			public object[] args;
-		}
-
-		[Debugging.Var( "callbacks.report" )]
-		private static bool Report { get; set; } = false;
-
 		//
 		// API
 		//
 
-		/// <summary> <inheritdoc cref="Callback.Run(string, object[])"/> With the option of it being unreliable. 
-		/// Which makes it so it wont run if the callback is initializing or something goes wrong. </summary>
+		/// <summary>
+		///     <inheritdoc cref="Callback.Run(string, object[])" /> With the option of it being unreliable.
+		///     Which makes it so it wont run if the callback is initializing or something goes wrong.
+		/// </summary>
 		public static void Run( string name, bool unreliable, params object[] args )
 		{
 			if ( unreliable && _isInitializing )
-				return;
-
-			try
 			{
-				Run( name, args );
+				return;
 			}
-			// Is this stupid?
-			finally { }
+
+			Run( name, args );
 		}
 
 		/// <summary> Runs a callback with an array of args. </summary>
 		public static void Run( string name, params object[] args )
 		{
 			if ( Provider is null || string.IsNullOrEmpty( name ) )
+			{
 				return;
+			}
 
-			// Queue if we are still init'in
+			// Queue if we are still initializing
 			if ( _isInitializing )
 			{
-				_callbackQueue.Enqueue( new QueuedCallback() { name = name, args = args } );
+				_callbackQueue.Enqueue( new QueuedCallback {Name = name, Args = args} );
 				Debugging.Log.Warning( $"Callbacks are still initializing, Queuing: {name}" );
 				return;
 			}
 
 			if ( Report )
+			{
 				Debugging.Log.Info( $"Invoking Callback: {name}" );
+			}
 
 			try
 			{
@@ -109,22 +104,24 @@ namespace Espionage.Engine
 		public static IEnumerable<T> Run<T>( string name, params object[] args )
 		{
 			if ( Provider is null || string.IsNullOrEmpty( name ) )
+			{
 				return null;
+			}
 
 			if ( _isInitializing )
+			{
 				throw new Exception( "Can't run a return value callback while initializing" );
+			}
 
 			if ( Report )
+			{
 				Debugging.Log.Info( $"Invoking Return Value Callback: {name}" );
+			}
 
 			try
 			{
 				var values = Provider.Run( name, args );
-
-				if ( values is null )
-					return null;
-
-				return values.Cast<T>();
+				return values?.Cast<T>();
 			}
 			catch ( KeyNotFoundException )
 			{
@@ -138,29 +135,32 @@ namespace Espionage.Engine
 			return null;
 		}
 
-		/// <summary> Register an object to recieve callbacks </summary>
+		/// <summary> Register an object to receive callbacks </summary>
 		public static void Register( ICallbacks item )
 		{
 			if ( item is null )
+			{
 				return;
+			}
 
 			Provider?.Register( item );
 		}
-
 
 		/// <summary> Unregister an object to stop receiving callbacks </summary>
 		public static void Unregister( ICallbacks item )
 		{
 			if ( item is null )
+			{
 				return;
+			}
 
 			Provider?.Unregister( item );
 		}
 
-		//
-		// Provider
-		//
-
-		internal static ICallbackProvider Provider { get; set; }
+		private struct QueuedCallback
+		{
+			public string Name;
+			public object[] Args;
+		}
 	}
 }

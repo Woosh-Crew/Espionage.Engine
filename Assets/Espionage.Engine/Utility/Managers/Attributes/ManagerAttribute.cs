@@ -7,11 +7,11 @@ namespace Espionage.Engine
 	{
 		public ManagerAttribute( string initializer )
 		{
-			init = initializer;
+			Method = initializer;
 		}
 
-		private string init;
-		public string Method => init;
+		public string Method { get; }
+
 		public int Order { get; set; }
 		public Layer Layer { get; set; } = Layer.Runtime;
 	}

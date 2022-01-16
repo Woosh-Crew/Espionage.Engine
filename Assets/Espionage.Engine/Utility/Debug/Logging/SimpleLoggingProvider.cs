@@ -17,7 +17,9 @@ namespace Espionage.Engine.Internal.Logging
 		public void Add( Entry entry )
 		{
 			if ( string.IsNullOrEmpty( entry.Message ) )
+			{
 				return;
+			}
 
 			switch ( entry.Type )
 			{
@@ -36,22 +38,25 @@ namespace Espionage.Engine.Internal.Logging
 				case Entry.Level.Exception:
 					UnityEngine.Debug.LogError( entry.Message );
 					break;
+				default:
+					throw new ArgumentOutOfRangeException();
 			}
-
 		}
 
 #if UNITY_EDITOR
-		static MethodInfo _clearConsoleMethod;
-		static MethodInfo clearConsoleMethod
+		private static MethodInfo _clearConsoleMethod;
+		private static MethodInfo ClearConsoleMethod
 		{
 			get
 			{
-				if ( _clearConsoleMethod == null )
+				if ( _clearConsoleMethod != null )
 				{
-					Assembly assembly = Assembly.GetAssembly( typeof( SceneView ) );
-					Type logEntries = assembly.GetType( "UnityEditor.LogEntries" );
-					_clearConsoleMethod = logEntries.GetMethod( "Clear" );
+					return _clearConsoleMethod;
 				}
+
+				var assembly = Assembly.GetAssembly( typeof(SceneView) );
+				var logEntries = assembly.GetType( "UnityEditor.LogEntries" );
+				_clearConsoleMethod = logEntries.GetMethod( "Clear" );
 				return _clearConsoleMethod;
 			}
 		}
@@ -60,7 +65,7 @@ namespace Espionage.Engine.Internal.Logging
 		public void Clear()
 		{
 #if UNITY_EDITOR
-			clearConsoleMethod.Invoke( new object(), null );
+			ClearConsoleMethod.Invoke( new object(), null );
 #endif
 		}
 	}

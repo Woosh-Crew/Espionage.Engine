@@ -11,33 +11,27 @@ namespace Espionage.Engine
 		[AttributeUsage( AttributeTargets.Method, Inherited = false, AllowMultiple = false )]
 		public class CmdAttribute : Attribute, ICommandCreator
 		{
-			private readonly string[] names;
+			private readonly string[] _names;
 
-			public string[] Names => names;
+			public string[] Names => _names;
 			public string Help { get; set; }
 
 			public CmdAttribute( params string[] names )
 			{
-				this.names = names;
+				_names = names;
 			}
 
 			public Command[] Create( MemberInfo info )
 			{
-				List<Command> commands = new List<Command>();
+				var commands = new List<Command>();
 
-				var helpBuilder = new StringBuilder( this.Help + " - (" );
+				var helpBuilder = new StringBuilder( Help + " - (" );
 				var helpMessage = BuildHelpMessage( info, helpBuilder );
 				helpBuilder.Append( " )" );
 
 				foreach ( var item in Names )
 				{
-					var command = new Command()
-					{
-						Name = item,
-						Help = helpBuilder.ToString(),
-						Owner = info.DeclaringType,
-						Info = info,
-					};
+					var command = new Command() {Name = item, Help = helpBuilder.ToString(), Owner = info.DeclaringType, Info = info};
 
 					OnCreate( ref command, info );
 					commands.Add( command );
@@ -49,7 +43,9 @@ namespace Espionage.Engine
 			protected virtual StringBuilder BuildHelpMessage( MemberInfo info, StringBuilder builder )
 			{
 				if ( info is not MethodInfo method )
+				{
 					return builder;
+				}
 
 				var parameters = method.GetParameters();
 
@@ -72,16 +68,17 @@ namespace Espionage.Engine
 			protected virtual void OnCreate( ref Command command, MemberInfo info )
 			{
 				var method = info as MethodInfo;
-				command.WithAction( ( e ) => method.Invoke( null, e ) );
+				command.WithAction( ( e ) => method?.Invoke( null, e ) );
 			}
 		}
 
 
 		[AttributeUsage( AttributeTargets.Property, Inherited = false, AllowMultiple = false )]
-		public class VarAttribute : CmdAttribute
+		public sealed class VarAttribute : CmdAttribute
 		{
 			/// <summary> TODO: Actually make this work </summary>
 			public bool Saved { get; set; }
+
 			public bool IsReadOnly { get; set; }
 
 			public VarAttribute( string name ) : base( name ) { }
@@ -92,31 +89,35 @@ namespace Espionage.Engine
 				var name = command.Name;
 
 				// if ( Saved )
-				// Set the propertys value when we create the command.
-				// Only static propertys should be allowed to be saved.
+				// Set the properties value when we create the command.
+				// Only static properties should be allowed to be saved.
 
 				command.WithAction(
 					( parameters ) =>
-				 	{
-						 if ( !IsReadOnly && parameters is not null && parameters.Length > 0 )
-						 {
-							 property.SetValue( null, parameters[0] );
-							 Debugging.Log.Info( $"{name} is now {property.GetValue( null )}" );
+					{
+						if ( !IsReadOnly && parameters is not null && parameters.Length > 0 )
+						{
+							property?.SetValue( null, parameters[0] );
+							Log.Info( $"{name} is now {property?.GetValue( null )}" );
 
-							 if ( Saved )
-								 SaveValue();
-						 }
-						 else
-						 {
-							 Debugging.Log.Info( $"{name} = {property.GetValue( null )}" );
-						 }
-				 	} );
+							if ( Saved )
+							{
+								SaveValue();
+							}
+						}
+						else
+						{
+							Log.Info( $"{name} = {property?.GetValue( null )}" );
+						}
+					} );
 			}
 
 			protected override StringBuilder BuildHelpMessage( MemberInfo info, StringBuilder builder )
 			{
 				if ( info is not PropertyInfo property )
+				{
 					return builder;
+				}
 
 				builder.Append( $" {property.PropertyType.Name} " );
 
@@ -124,10 +125,7 @@ namespace Espionage.Engine
 			}
 
 
-			protected virtual void SaveValue()
-			{
-
-			}
+			private void SaveValue() { }
 		}
 	}
 }

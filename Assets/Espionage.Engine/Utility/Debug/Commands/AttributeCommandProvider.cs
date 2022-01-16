@@ -12,12 +12,12 @@ namespace Espionage.Engine.Internal.Commands
 	{
 		//
 		// Commands
-		private Dictionary<string, Command> _commands = new Dictionary<string, Command>( StringComparer.CurrentCultureIgnoreCase );
+		private Dictionary<string, Command> _commands = new(StringComparer.CurrentCultureIgnoreCase);
 		public IReadOnlyCollection<Command> All => _commands.Values;
 
 		//
 		// History
-		private static HashSet<string> _history = new HashSet<string>();
+		private readonly HashSet<string> _history = new();
 		public IReadOnlyCollection<string> History => _history;
 
 		//
@@ -27,30 +27,37 @@ namespace Espionage.Engine.Internal.Commands
 		public Task Initialize()
 		{
 			return Task.Run( () =>
+			{
+				_commands ??= new Dictionary<string, Command>( StringComparer.CurrentCultureIgnoreCase );
+				_commands.Clear();
+
+				// Get every CmdAttribute using Linq
+				var types = AppDomain.CurrentDomain.GetAssemblies()
+					.Where( Utility.IgnoreIfNotUserGeneratedAssembly )
+					.SelectMany( e => e.GetTypes()
+						.SelectMany( type => type.GetMembers( BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic ) ) );
+
+				foreach ( var info in types )
 				{
-					_commands ??= new Dictionary<string, Command>( StringComparer.CurrentCultureIgnoreCase );
-					_commands.Clear();
+					var attribute = info.GetCustomAttribute<T>();
 
-					// Get every CmdAttribute using Linq
-					var types = AppDomain.CurrentDomain.GetAssemblies()
-									.Where( e => Utility.IgnoreIfNotUserGeneratedAssembly( e ) )
-									.SelectMany( e => e.GetTypes()
-										.SelectMany( e => e.GetMembers( BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic ) ) );
-
-					foreach ( var info in types )
+					if ( attribute is not ICommandCreator command )
 					{
-						var attribute = info.GetCustomAttribute<T>();
-
-						if ( attribute is ICommandCreator command )
-						{
-							foreach ( var item in command.Create( info ) )
-								Add( item );
-						}
+						continue;
 					}
-				} );
+
+					foreach ( var item in command.Create( info ) )
+					{
+						Add( item );
+					}
+				}
+			} );
 		}
 
-		public void Add( Command command ) => _commands.Add( command.Name, command );
+		private void Add( Command command )
+		{
+			_commands.Add( command.Name, command );
+		}
 
 		public void Invoke( string command, string[] args )
 		{
@@ -66,9 +73,6 @@ namespace Espionage.Engine.Internal.Commands
 			_history.Add( $"{command} {string.Join( ' ', args )}" );
 		}
 
-		public void LaunchArgs( string arg )
-		{
-
-		}
+		public void LaunchArgs( string arg ) { }
 	}
 }

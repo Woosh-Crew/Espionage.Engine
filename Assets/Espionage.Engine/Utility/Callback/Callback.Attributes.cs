@@ -13,16 +13,14 @@ namespace Espionage.Engine
 		}
 	}
 
-
 	[AttributeUsage( AttributeTargets.Method, Inherited = true, AllowMultiple = true )]
 	public class CallbackAttribute : Attribute
 	{
-		readonly string name;
-		public string Name => name;
+		public string Name { get; }
 
 		public CallbackAttribute( string name )
 		{
-			this.name = name;
+			this.Name = name;
 		}
 	}
 }
