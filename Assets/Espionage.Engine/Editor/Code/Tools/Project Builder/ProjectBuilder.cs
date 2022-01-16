@@ -53,12 +53,35 @@ namespace Espionage.Engine.Editor.Internal
 				buildSettings.options = options;
 
 				Callback.Run( "project_builder.building", target );
-
 				BuildPipeline.BuildPlayer( buildSettings );
+
+				// Load back into original scene, incase IO throws an exception
+				EditorSceneManager.OpenScene( originalScene, OpenSceneMode.Single );
+
+				// Delete Cache
 				AssetDatabase.DeleteAsset( "Assets/Espionage.Engine.Cache" );
 				AssetDatabase.Refresh();
 
-				EditorSceneManager.OpenScene( originalScene, OpenSceneMode.Single );
+				// Move all exported content to Game
+				// Create the Cache Dir if it doesnt exist
+				var contentPath = $"Exports/{PlayerSettings.productName}/{PlayerSettings.productName}_Content/";
+				if ( Directory.Exists( contentPath ) )
+					Directory.Delete( contentPath, true );
+
+				Directory.CreateDirectory( contentPath );
+
+				// LEVEL
+				// Create the Cache Dir if it doesnt exist
+				Directory.CreateDirectory( $"{contentPath}Levels" );
+
+				var levelFiles = Directory.GetFiles( "Exports/Levels/", "*.lvlw", SearchOption.AllDirectories );
+				foreach ( var item in levelFiles )
+				{
+					var name = Path.GetFileName( item );
+					Debugging.Log.Info( $"Moving {name}, to exported project" );
+					File.Copy( item, contentPath + "Levels/" + name );
+				}
+
 			}
 		}
 	}
