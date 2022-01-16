@@ -19,7 +19,7 @@ namespace Espionage.Engine.Editor.Internal
 			var texture = ClassInfo.Components.Get<IconAttribute>().Icon;
 			var icon = new Image() { image = texture };
 
-			var header = new HeaderBar( ClassInfo.Title, ClassInfo.Help, icon, "Header-Bottom-Border" );
+			var header = new HeaderBar( ClassInfo.title, ClassInfo.help, icon, "Header-Bottom-Border" );
 			rootVisualElement.Add( header );
 		}
 	}

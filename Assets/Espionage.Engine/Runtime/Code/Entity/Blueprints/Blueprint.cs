@@ -20,7 +20,7 @@ namespace Espionage.Engine.Entities
 		{
 			try
 			{
-				if ( !string.IsNullOrEmpty( ClassInfo.Name ) )
+				if ( !string.IsNullOrEmpty( ClassInfo.name ) )
 				{
 					ClassInfo.Class = typeof( Blueprint );
 					Library.Database.Add( ClassInfo );

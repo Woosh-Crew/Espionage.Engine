@@ -9,10 +9,9 @@ namespace Espionage.Engine
 
 		public OrderAttribute( int order )
 		{
-			_order = order;
+			Order = order;
 		}
 
-		private int _order;
-		public int Order => _order;
+		public int Order { get; }
 	}
 }

@@ -12,11 +12,11 @@ namespace Espionage.Engine
 			_title = title;
 		}
 
-		private string _title;
+		private readonly string _title;
 
 		public void OnAttached()
 		{
-			Library.Title = _title;
+			Library.title = _title;
 		}
 	}
 }

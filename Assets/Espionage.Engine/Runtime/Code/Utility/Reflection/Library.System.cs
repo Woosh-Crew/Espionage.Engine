@@ -23,7 +23,7 @@ namespace Espionage.Engine
 
 			if ( library.Class.IsAbstract )
 			{
-				Debugging.Log.Error( $"Can't construct, {library.Name} is abstract" );
+				Debugging.Log.Error( $"Can't construct, {library.name} is abstract" );
 				return null;
 			}
 
@@ -39,25 +39,25 @@ namespace Espionage.Engine
 
 		private static void Cache()
 		{
-			_database ??= new internal_Database();
-			_database.Clear();
+			Database ??= new InternalDatabase();
+			Database.Clear();
 
 			using ( Debugging.Stopwatch( "Library Initialized" ) )
 			{
 				// Select all types where ILibrary exists or if it has the correct attribute
 				var types = AppDomain.CurrentDomain.GetAssemblies()
-									.Where( e => Utility.IgnoreIfNotUserGeneratedAssembly( e ) )
+									.Where( Utility.IgnoreIfNotUserGeneratedAssembly )
 									.SelectMany( e => e.GetTypes()
-									.Where( ( e ) =>
+									.Where( ( type ) =>
 									{
-										if ( e.IsDefined( typeof( Skip ) ) )
+										if ( type.IsDefined( typeof( Skip ) ) )
 											return false;
 
-										return e.IsDefined( typeof( LibraryAttribute ) ) || e.HasInterface<ILibrary>();
+										return type.IsDefined( typeof( LibraryAttribute ) ) || type.HasInterface<ILibrary>();
 									} ) );
 
 				foreach ( var item in types )
-					_database.Add( CreateRecord( item ) );
+					Database.Add( CreateRecord( item ) );
 			}
 		}
 
@@ -77,7 +77,7 @@ namespace Espionage.Engine
 			record.Class = type;
 
 			// Create the components database
-			record.Components = new internal_ComponentDatabase( record );
+			record.Components = new InternalComponentDatabase( record );
 
 			// Get Components attached to type
 			foreach ( var item in type.GetCustomAttributes().Where( e => e is IComponent ) )

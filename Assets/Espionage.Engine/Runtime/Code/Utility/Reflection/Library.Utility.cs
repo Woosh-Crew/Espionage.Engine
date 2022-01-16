@@ -58,7 +58,7 @@ public static class LibraryDatabaseExtensions
 
 	public static Library Get( this IDatabase<Library> database, string name )
 	{
-		return database.All.FirstOrDefault( e => e.Name == name );
+		return database.All.FirstOrDefault( e => e.name == name );
 	}
 
 	public static Library Get( this IDatabase<Library> database, Type type )
@@ -77,34 +77,22 @@ public static class LibraryDatabaseExtensions
 
 	public static IEnumerable<Library> GetAll<T>( this IDatabase<Library> database ) where T : ILibrary
 	{
-		if ( !database.TryGet<T>( out var item ) )
-			return null;
-
-		return database.All.Where( e => e.Class.IsSubclassOf( item.Class ) );
+		return !database.TryGet<T>( out var item ) ? null : database.All.Where( e => e.Class.IsSubclassOf( item.Class ) );
 	}
 
 	public static IEnumerable<Library> GetAll( this IDatabase<Library> database, Type type )
 	{
-		if ( !database.TryGet( type, out var item ) )
-			return null;
-
-		return database.All.Where( e => e.Class.IsSubclassOf( item.Class ) );
+		return !database.TryGet( type, out var item ) ? null : database.All.Where( e => e.Class.IsSubclassOf( item.Class ) );
 	}
 
 	public static IEnumerable<Library> GetAll( this IDatabase<Library> database, string name )
 	{
-		if ( !database.TryGet( name, out var item ) )
-			return null;
-
-		return database.All.Where( e => e.Class.IsSubclassOf( item.Class ) );
+		return !database.TryGet( name, out var item ) ? null : database.All.Where( e => e.Class.IsSubclassOf( item.Class ) );
 	}
 
 	public static IEnumerable<Library> GetAll( this IDatabase<Library> database, Guid id )
 	{
-		if ( !database.TryGet( id, out var item ) )
-			return null;
-
-		return database.All.Where( e => e.Class.IsSubclassOf( item.Class ) );
+		return !database.TryGet( id, out var item ) ? null : database.All.Where( e => e.Class.IsSubclassOf( item.Class ) );
 	}
 
 	//
@@ -128,15 +116,14 @@ public static class LibraryDatabaseExtensions
 
 	public static ILibrary Create( this IDatabase<Library> database, string name, bool assertMissing = false )
 	{
-		if ( !database.TryGet( name, out var library ) )
-		{
-			if ( assertMissing )
-				Debugging.Log.Error( $"Library doesnt contain [{name}], not creating ILibrary" );
+		if ( database.TryGet( name, out var library ) )
+			return Library.Construct( library );
 
-			return null;
-		}
+		if ( assertMissing )
+			Debugging.Log.Error( $"Library doesnt contain [{name}], not creating ILibrary" );
 
-		return Library.Construct( library );
+		return null;
+
 	}
 
 	public static T Create<T>( this IDatabase<Library> database, string name, bool assertMissing = false ) where T : class, ILibrary, new()
@@ -148,13 +135,12 @@ public static class LibraryDatabaseExtensions
 	{
 		var library = database.Get( id );
 
-		if ( id == default )
-		{
-			Debugging.Log.Error( "Invalid ID" );
-			return null;
-		}
+		if ( id != default )
+			return Library.Construct( library );
 
-		return Library.Construct( library );
+		Debugging.Log.Error( "Invalid ID" );
+		return null;
+
 	}
 
 	public static T Create<T>( this IDatabase<Library> database, Guid id ) where T : class, ILibrary, new()
@@ -174,7 +160,7 @@ public static class LibraryDatabaseExtensions
 		}
 		else
 		{
-			Debugging.Log.Warning( $"Couldnt not find {typeof( T ).FullName} in Library database" );
+			Debugging.Log.Warning( $"Couldn't not find {typeof( T ).FullName} in Library database" );
 		}
 	}
 
@@ -186,7 +172,7 @@ public static class LibraryDatabaseExtensions
 		}
 		else
 		{
-			Debugging.Log.Warning( $"Couldnt not find {name} in Library database" );
+			Debugging.Log.Warning( $"Couldn't not find {name} in Library database" );
 		}
 	}
 
@@ -198,7 +184,7 @@ public static class LibraryDatabaseExtensions
 		}
 		else
 		{
-			Debugging.Log.Warning( $"Couldnt not find {id} in Library database" );
+			Debugging.Log.Warning( $"Couldn't not find {id} in Library database" );
 		}
 	}
 
@@ -210,7 +196,7 @@ public static class LibraryDatabaseExtensions
 		}
 		else
 		{
-			Debugging.Log.Warning( $"Couldnt not find {type.FullName} in Library database" );
+			Debugging.Log.Warning( $"Couldn't not find {type.FullName} in Library database" );
 		}
 	}
 }

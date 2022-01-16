@@ -17,7 +17,7 @@ namespace Espionage.Engine
 			_path = path;
 		}
 
-		private string _path;
+		private readonly string _path;
 
 #if UNITY_EDITOR
 		public Texture Icon => AssetDatabase.LoadAssetAtPath<Texture>( _path );

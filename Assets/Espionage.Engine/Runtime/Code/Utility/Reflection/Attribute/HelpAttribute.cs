@@ -12,11 +12,11 @@ namespace Espionage.Engine
 			_help = help;
 		}
 
-		private string _help;
+		private readonly string _help;
 
 		public void OnAttached()
 		{
-			Library.Help = _help;
+			Library.help = _help;
 		}
 	}
 }

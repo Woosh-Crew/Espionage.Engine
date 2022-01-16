@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Reflection;
 
 namespace Espionage.Engine.Internal
@@ -21,13 +22,7 @@ namespace Espionage.Engine.Internal
 
 		public static bool IgnoreIfNotUserGeneratedAssembly( Assembly assembly )
 		{
-			foreach ( var item in IgnoredAssemblies )
-			{
-				if ( assembly.FullName.StartsWith( item ) )
-					return false;
-			}
-
-			return true;
+			return IgnoredAssemblies.All( item => !assembly.FullName.StartsWith( item ) );
 		}
 	}
 }

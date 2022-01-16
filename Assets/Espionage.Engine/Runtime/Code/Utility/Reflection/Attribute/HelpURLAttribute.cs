@@ -9,10 +9,9 @@ namespace Espionage.Engine
 
 		public HelpURLAttribute( string url )
 		{
-			_url = url;
+			URL = url;
 		}
 
-		private string _url;
-		public string URL => _url;
+		public string URL { get; }
 	}
 }

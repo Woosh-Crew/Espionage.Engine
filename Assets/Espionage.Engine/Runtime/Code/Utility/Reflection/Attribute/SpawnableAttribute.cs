@@ -12,11 +12,11 @@ namespace Espionage.Engine
 			_spawnable = spawnable;
 		}
 
-		private bool _spawnable;
+		private readonly bool _spawnable;
 
 		public void OnAttached()
 		{
-			Library.Spawnable = _spawnable;
+			Library.spawnable = _spawnable;
 		}
 	}
 }

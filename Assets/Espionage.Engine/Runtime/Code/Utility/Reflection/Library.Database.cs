@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Espionage.Engine.Internal;
@@ -10,47 +11,45 @@ namespace Espionage.Engine
 {
 	public partial class Library
 	{
-		private static IDatabase<Library> _database;
-
-		private class internal_Database : IDatabase<Library>
+		private class InternalDatabase : IDatabase<Library>
 		{
-			private Dictionary<string, Library> records = new Dictionary<string, Library>();
-			public IEnumerable<Library> All => records.Values;
+			public IEnumerable<Library> All => _records.Values;
+			private readonly Dictionary<string, Library> _records = new Dictionary<string, Library>();
 
 			public void Add( Library item )
 			{
 				if ( item.Class is null )
-					throw new Exception( $"Library doesn't have an owning class: {item.Name}" );
+					throw new Exception( $"Library doesn't have an owning class: {item.name}" );
 
-				if ( string.IsNullOrEmpty( item.Name ) )
-					item.Name = item.Class.FullName;
+				if ( string.IsNullOrEmpty( item.name ) )
+					item.name = item.Class.FullName;
 
-				if ( string.IsNullOrEmpty( item.Title ) )
-					item.Title = item.Name;
+				if ( string.IsNullOrEmpty( item.title ) )
+					item.title = item.name;
 
 				// Generate the ID, so we can spawn it at runtime
-				item.Id = GenerateID( item.Name );
+				item.Id = GenerateID( item.name );
 
 				// Check if we already contain that Id, this will fuck up networking
-				if ( records.Any( e => e.Value.Id == item.Id ) )
+				if ( _records.Any( e => e.Value.Id == item.Id ) )
 					throw new Exception( $"Library cache already contains GUID: {item.Id}" );
 
-				records.Add( item.Name, item );
+				_records.Add( item.name ?? throw new InvalidOperationException(), item );
 			}
 
 			public void Clear()
 			{
-				records.Clear();
+				_records.Clear();
 			}
 
 			public bool Contains( Library item )
 			{
-				return records.ContainsKey( item.Name );
+				return _records.ContainsKey( item.name );
 			}
 
 			public void Remove( Library item )
 			{
-				records.Remove( item.Name );
+				_records.Remove( item.name );
 			}
 
 			public void Replace( Library oldItem, Library newItem )
@@ -61,13 +60,13 @@ namespace Espionage.Engine
 					return;
 				}
 
-				if ( oldItem.Name != newItem.Name )
+				if ( oldItem.name != newItem.name )
 				{
-					Debugging.Log.Warning( $"Cannot replace {oldItem.Title} with {newItem.Title}, because the name isn't the same." );
+					Debugging.Log.Warning( $"Cannot replace {oldItem.title} with {newItem.title}, because the name isn't the same." );
 					return;
 				}
 
-				records[oldItem.Name] = newItem;
+				_records[oldItem.name] = newItem;
 			}
 
 			public string Serialize()

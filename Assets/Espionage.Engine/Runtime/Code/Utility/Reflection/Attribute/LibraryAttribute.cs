@@ -21,10 +21,10 @@ namespace Espionage.Engine
 		{
 			return new Library()
 			{
-				Name = Name,
-				Help = Help,
-				Title = Title,
-				Spawnable = Spawnable,
+				name = Name,
+				help = Help,
+				title = Title,
+				spawnable = Spawnable,
 			};
 		}
 	}

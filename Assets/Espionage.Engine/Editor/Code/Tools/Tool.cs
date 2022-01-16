@@ -1,8 +1,5 @@
-
-using Espionage.Engine.Editor.Internal;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace Espionage.Engine.Editor.Internal
 {
@@ -10,8 +7,8 @@ namespace Espionage.Engine.Editor.Internal
 	/// ILibrary and callbacks registered and a menu bar </summary>
 	public class Tool : EditorWindow, ILibrary, ICallbacks
 	{
-		public Library ClassInfo { get; set; }
-
+		public Library ClassInfo { get; private set; }
+		
 		private void Awake()
 		{
 			Callback.Register( this );
@@ -20,7 +17,7 @@ namespace Espionage.Engine.Editor.Internal
 		protected virtual void OnEnable()
 		{
 			ClassInfo = Library.Database.Get( GetType() );
-			titleContent = new GUIContent( ClassInfo.Title, ClassInfo.Help );
+			titleContent = new GUIContent( ClassInfo.title, ClassInfo.help );
 
 			if ( ClassInfo.Components.TryGet<IconAttribute>( out var icon ) )
 			{
@@ -69,7 +66,7 @@ namespace Espionage.Engine.Editor.Internal
 			var helpMenu = new GenericMenu();
 
 			// About
-			helpMenu.AddItem( new GUIContent( "About" ), false, () => AboutWindow.ShowWindow() );
+			helpMenu.AddItem( new GUIContent( "About" ), false, AboutWindow.ShowWindow );
 
 			// Wiki
 			var helpUrl = ClassInfo.Components.Get<HelpURLAttribute>()?.URL ?? "https://github.com/Woosh-Crew/Espionage.Engine/wiki";

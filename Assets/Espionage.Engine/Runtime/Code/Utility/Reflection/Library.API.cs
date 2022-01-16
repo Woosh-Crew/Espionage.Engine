@@ -11,7 +11,7 @@ namespace Espionage.Engine
 	public partial class Library
 	{
 		/// <summary> Database for library records </summary>
-		public static IDatabase<Library> Database => _database;
+		public static IDatabase<Library> Database { get; private set; }
 
 		/// <summary> Attribute that skips the attached class from generating a library reference </summary>
 		[AttributeUsage( AttributeTargets.Class, Inherited = true )]
@@ -35,12 +35,12 @@ namespace Espionage.Engine
 		{
 			// Attribute
 
-			private string targetMethod;
+			private readonly string _targetMethod;
 
 			/// <param name="constructor"> Method should return ILibrary </param>
 			public Constructor( string constructor )
 			{
-				this.targetMethod = constructor;
+				this._targetMethod = constructor;
 			}
 
 			// Component
@@ -58,10 +58,9 @@ namespace Espionage.Engine
 			private delegate ILibrary Action( Library type );
 			private Action _constructor;
 
-
 			private Action GetConstructor()
 			{
-				var method = Library.Class.GetMethod( targetMethod, BindingFlags.FlattenHierarchy | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic );
+				var method = Library.Class.GetMethod( _targetMethod, BindingFlags.FlattenHierarchy | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic );
 
 				if ( method is null )
 					return null;

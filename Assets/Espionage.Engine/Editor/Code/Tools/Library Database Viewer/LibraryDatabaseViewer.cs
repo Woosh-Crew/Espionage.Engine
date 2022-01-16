@@ -22,7 +22,7 @@ namespace Espionage.Engine.Editor.Internal
 
 			foreach ( var item in Library.Database.All )
 			{
-				rootVisualElement.Add( new Label( $"{item.Name} - {item.Title}" ) );
+				rootVisualElement.Add( new Label( $"{item.name} - {item.title}" ) );
 			}
 		}
 	}

@@ -18,7 +18,7 @@ namespace Espionage.Engine
 			_path = path;
 		}
 
-		private string _path;
+		private readonly string _path;
 
 #if UNITY_EDITOR
 		public StyleSheet Style => AssetDatabase.LoadAssetAtPath<StyleSheet>( _path );

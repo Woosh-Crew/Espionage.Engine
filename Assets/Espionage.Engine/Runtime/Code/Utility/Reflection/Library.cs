@@ -1,10 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using Espionage.Engine.Internal;
-
-using Random = System.Random;
+using UnityEngine.Serialization;
 
 namespace Espionage.Engine
 {
@@ -12,17 +8,17 @@ namespace Espionage.Engine
 	[Serializable] // Instance Serialization
 	public sealed partial class Library
 	{
-		private class internal_ComponentDatabase : IDatabase<IComponent>
+		private class InternalComponentDatabase : IDatabase<IComponent>
 		{
 			public IEnumerable<IComponent> All => _components;
 
-			public internal_ComponentDatabase( Library library )
+			public InternalComponentDatabase( Library library )
 			{
 				_target = library;
 			}
 
-			private Library _target;
-			private List<IComponent> _components = new List<IComponent>();
+			private readonly Library _target;
+			private readonly List<IComponent> _components = new List<IComponent>();
 
 			public void Add( IComponent item )
 			{
@@ -50,23 +46,19 @@ namespace Espionage.Engine
 		}
 
 		// Meta
-
-		public string Name;
-		public string Title;
-		public string Help;
-		public bool Spawnable;
+		public string name;
+		public string title;
+		public string help;
+		public bool spawnable;
 
 		// Components
-
-		public IDatabase<IComponent> Components;
+		public IDatabase<IComponent> Components { get; private set; }
 
 		// Owner
-
 		[NonSerialized]
 		public Type Class;
 
 		// GUID
-
 		[NonSerialized]
 		public Guid Id;
 	}
