@@ -76,15 +76,6 @@ namespace Espionage.Engine
 			record ??= new Library();
 			record.Class = type;
 
-			if ( string.IsNullOrEmpty( record.Name ) )
-				record.Name = type.FullName;
-
-			if ( string.IsNullOrEmpty( record.Title ) )
-				record.Title = type.Name;
-
-			// Generate the ID, so we can spawn it at runtime
-			record.Id = GenerateID( record.Name );
-
 			// Create the components database
 			record.Components = new internal_ComponentDatabase( record );
 

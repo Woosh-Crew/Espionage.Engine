@@ -1,10 +1,4 @@
 using System;
-using UnityEngine;
-using UnityEngine.UIElements;
-
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
 namespace Espionage.Engine
 {

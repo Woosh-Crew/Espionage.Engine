@@ -54,6 +54,7 @@ namespace Espionage.Engine
 		public string Name;
 		public string Title;
 		public string Help;
+		public bool Spawnable;
 
 		// Components
 

@@ -10,7 +10,7 @@ namespace Espionage.Engine.Editor.Internal
 	[Icon( EditorIcons.Construct ), StyleSheet( "Assets/Espionage.Engine/Editor/Styles/Blueprints/BlueprintCreatorWindow.uss" )]
 	public class BlueprintCreatorWindow : Tool
 	{
-		[MenuItem( "Tools/Blueprint/Creator" )]
+		[MenuItem( "Tools/Blueprint/Creator", false, 0 )]
 		private static void ShowEditor()
 		{
 			var wind = EditorWindow.GetWindow<BlueprintCreatorWindow>();

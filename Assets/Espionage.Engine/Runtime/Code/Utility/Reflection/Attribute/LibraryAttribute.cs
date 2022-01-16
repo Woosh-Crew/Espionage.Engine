@@ -8,6 +8,7 @@ namespace Espionage.Engine
 		public string Name { get; set; }
 		public string Title { get; set; }
 		public string Help { get; set; }
+		public bool Spawnable { get; set; }
 
 		public LibraryAttribute() { }
 
@@ -23,6 +24,7 @@ namespace Espionage.Engine
 				Name = Name,
 				Help = Help,
 				Title = Title,
+				Spawnable = Spawnable,
 			};
 		}
 	}

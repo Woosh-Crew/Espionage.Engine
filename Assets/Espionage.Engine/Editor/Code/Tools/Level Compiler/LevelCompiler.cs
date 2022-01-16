@@ -39,7 +39,7 @@ namespace Espionage.Engine.Editor.Internal
 		{
 			var texture = AssetDatabase.LoadAssetAtPath<Texture>( EditorIcons.Map );
 			var icon = new Image() { image = texture };
-			var title = new TitleBar( "Quick Compile", icon );
+			var title = new TitleBar( "Quick Compile", icon, "Bottom" );
 
 			rootVisualElement.Add( title );
 

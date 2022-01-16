@@ -8,37 +8,32 @@ using UnityEditor;
 
 namespace Espionage.Engine.Entities
 {
-	[Library.Skip, CreateAssetMenu( menuName = "Espionage.Engine/Blueprint", fileName = "Blueprint" )]
-	public class Blueprint : ScriptableObject, ILibrary
+	[Title( "Blueprint" ), Spawnable( true ), Library.Constructor( nameof( Constructor ) )]
+	[CreateAssetMenu( menuName = "Espionage.Engine/Blueprint", fileName = "Blueprint" )]
+	public sealed class Blueprint : ScriptableObject, ILibrary
 	{
 		[field: SerializeField]
 		public Library ClassInfo { get; set; }
+
+		private void Awake()
+		{
+			try
+			{
+				if ( !string.IsNullOrEmpty( ClassInfo.Name ) )
+				{
+					ClassInfo.Class = typeof( Blueprint );
+					Library.Database.Add( ClassInfo );
+				}
+			}
+			catch ( Exception e )
+			{
+				Debugging.Log.Exception( e );
+			}
+		}
 
 		private static ILibrary Constructor( Library library )
 		{
 			return null;
 		}
-
-		//
-		// Editor
-		//
-
-#if UNITY_EDITOR
-
-		public VisualElement InspectorUI()
-		{
-			var root = new VisualElement();
-
-			OnInspectorUI( ref root );
-
-			return root;
-		}
-
-		protected virtual void OnInspectorUI( ref VisualElement root )
-		{
-
-		}
-
-#endif
 	}
 }

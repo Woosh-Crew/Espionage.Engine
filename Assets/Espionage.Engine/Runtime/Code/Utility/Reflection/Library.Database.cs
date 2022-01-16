@@ -19,7 +19,19 @@ namespace Espionage.Engine
 
 			public void Add( Library item )
 			{
-				// Check if we already contain that Id, this will fuckup networking
+				if ( item.Class is null )
+					throw new Exception( $"Library doesn't have an owning class: {item.Name}" );
+
+				if ( string.IsNullOrEmpty( item.Name ) )
+					item.Name = item.Class.FullName;
+
+				if ( string.IsNullOrEmpty( item.Title ) )
+					item.Title = item.Name;
+
+				// Generate the ID, so we can spawn it at runtime
+				item.Id = GenerateID( item.Name );
+
+				// Check if we already contain that Id, this will fuck up networking
 				if ( records.Any( e => e.Value.Id == item.Id ) )
 					throw new Exception( $"Library cache already contains GUID: {item.Id}" );
 
