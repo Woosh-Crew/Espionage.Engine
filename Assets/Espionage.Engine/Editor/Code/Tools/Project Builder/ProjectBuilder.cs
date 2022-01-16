@@ -23,7 +23,7 @@ namespace Espionage.Engine.Editor.Internal
 		{
 			base.OnCreateGUI();
 
-			rootVisualElement.Add( new Button( () => Build( BuildTarget.StandaloneWindows, BuildOptions.None ) ) );
+			rootVisualElement.Add( new Button( () => Build( BuildTarget.StandaloneWindows, BuildOptions.None ) ) { text = "Build Project" } );
 		}
 
 		public void Build( BuildTarget target, BuildOptions options )
@@ -44,13 +44,16 @@ namespace Espionage.Engine.Editor.Internal
 				EditorSceneManager.SetActiveScene( scene );
 
 				// Setup BuildPipeline
-				var buildSettings = new BuildPlayerOptions();
-				buildSettings.targetGroup = BuildTargetGroup.Standalone;
-				buildSettings.locationPathName = $"Exports/{PlayerSettings.productName}/{PlayerSettings.productName}.exe";
+				var buildSettings = new BuildPlayerOptions()
+				{
+					scenes = new string[] { "Assets/Espionage.Engine.Cache/Preload.unity" },
+					locationPathName = $"Exports/{PlayerSettings.productName}/{PlayerSettings.productName}.exe",
+					options = options,
 
-				buildSettings.scenes = new string[] { "Assets/Espionage.Engine.Cache/Preload.unity" };
-				buildSettings.target = target;
-				buildSettings.options = options;
+					target = target,
+					targetGroup = BuildTargetGroup.Standalone,
+				};
+
 
 				Callback.Run( "project_builder.building", target );
 				BuildPipeline.BuildPlayer( buildSettings );
