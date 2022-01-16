@@ -8,16 +8,8 @@ using UnityEditor;
 
 namespace Espionage.Engine
 {
-	public class Preloader
+	public class Preloader : MonoBehaviour
 	{
-#if UNITY_EDITOR
-
-		[InitializeOnLoadMethod]
-		private static void Setup()
-		{
-
-		}
-
-#endif
+		public List<Object> objects;
 	}
 }

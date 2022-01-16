@@ -14,8 +14,9 @@ namespace Espionage.Engine.Entities
 	{
 		[field: SerializeField]
 		public Library ClassInfo { get; set; }
+		private bool original = true;
 
-		private void Awake()
+		public void Cache()
 		{
 			try
 			{
@@ -31,8 +32,23 @@ namespace Espionage.Engine.Entities
 			}
 		}
 
+		public Blueprint Spawn()
+		{
+			if ( !original )
+			{
+				Debugging.Log.Warning( $"Cannot Spawn {this}, because its not an original" );
+				return null;
+			}
+
+			var newBp = ScriptableObject.Instantiate( this );
+			newBp.original = false;
+
+			return newBp;
+		}
+
 		private static ILibrary Constructor( Library library )
 		{
+			// Pull name from database, and return an instance of it.
 			return null;
 		}
 	}

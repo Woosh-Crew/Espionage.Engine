@@ -9,11 +9,10 @@ using UnityEditor;
 
 namespace Espionage.Engine.Entities
 {
-	[CreateAssetMenu( menuName = "Espionage.Engine/Entities/Database", fileName = "Entity Database" )]
 	public class Database : ScriptableObject, IDatabase<Blueprint>
 	{
-		[SerializeField]
-		private List<Blueprint> references;
+		[SerializeField, HideInInspector]
+		private List<Blueprint> references = new List<Blueprint>();
 
 		public IEnumerable<Blueprint> All => references;
 
@@ -43,10 +42,34 @@ namespace Espionage.Engine.Entities
 
 #if UNITY_EDITOR
 
-		[InitializeOnLoadMethod]
-		private static void CreateInstance()
+		public static Database Grab()
 		{
-			var path = Path.GetFullPath( $"{Application.dataPath}/Espionage.Engine/Runtime/Resources" );
+			var assets = AssetDatabase.FindAssets( "t: Espionage.Engine.Entities.Database" );
+
+			if ( assets.Length == 0 )
+				return null;
+
+			return AssetDatabase.LoadAssetAtPath<Database>( assets[0] );
+		}
+
+		private static void Build()
+		{
+			if ( AssetDatabase.FindAssets( "t: Espionage.Engine.Entities.Database" ).Length > 0 )
+				return;
+
+			var path = "Assets/Espionage.Engine.Cache/Resources";
+			if ( !Directory.Exists( path ) )
+				Directory.CreateDirectory( path );
+
+			var database = ScriptableObject.CreateInstance<Database>();
+			AssetDatabase.CreateAsset( database, $"{path}/Blueprint Database.asset" );
+
+			foreach ( var item in AssetDatabase.FindAssets( "t: Espionage.Engine.Entities.Blueprint" ) )
+			{
+				database.Add( AssetDatabase.LoadAssetAtPath<Blueprint>( item ) );
+			}
+
+			AssetDatabase.SaveAssets();
 		}
 
 #endif
