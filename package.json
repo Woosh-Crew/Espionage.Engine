@@ -1,14 +1,14 @@
 ﻿{
-  "name": "com.dilmergames.core",
-  "displayName": "DilmerGames Core Package",
+  "name": "Espionage.Engine",
+  "displayName": "Espionage.Engine",
   "version": "1.0.2",
-  "unity": "2019.1",
-  "author": "Dilmer Valecillos",
+  "unity": "2022.1",
+  "author": "Woosh Crew",
   "description": "Core Utilities for Unity Games",
   "dependencies": {
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dilmerv/com.dilmergames.core.git"
+    "url": "https://github.com/Woosh-Crew/Espionage.Engine.git"
   }
 }
