@@ -8,10 +8,10 @@ using UnityEditor;
 namespace Espionage.Engine
 {
 	[AttributeUsage( AttributeTargets.Class, Inherited = true )]
-	public sealed class IconAttribute : Attribute, Library.IComponent
+	public sealed class IconAttribute : Attribute, Library.IComponent, Property.IComponent
 	{
 		private readonly string _path;
-		
+
 		public IconAttribute( string path )
 		{
 			_path = path;
@@ -23,5 +23,6 @@ namespace Espionage.Engine
 		public Texture Icon => throw new NotImplementedException();
 #endif
 		public void OnAttached( ref Library library ) { }
+		public void OnAttached( ref Property property ) { }
 	}
 }

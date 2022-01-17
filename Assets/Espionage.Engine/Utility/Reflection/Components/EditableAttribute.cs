@@ -3,13 +3,13 @@ using System;
 namespace Espionage.Engine
 {
 	[AttributeUsage( AttributeTargets.Class, Inherited = true )]
-	public sealed class HelpURLAttribute : Attribute, Library.IComponent, Property.IComponent
+	public sealed class EditableAttribute : Attribute, Library.IComponent, Property.IComponent
 	{
-		public string URL { get; }
+		public bool Editable { get; }
 
-		public HelpURLAttribute( string url )
+		public EditableAttribute( bool editable )
 		{
-			URL = url;
+			Editable = editable;
 		}
 
 		public void OnAttached( ref Library library ) { }

@@ -31,10 +31,9 @@ namespace Espionage.Engine
 
 		public interface IComponent
 		{
-			void OnAttached( ref Property item );
-			void OnDetached();
+			void OnAttached( ref Property property );
+			void OnDetached() { }
 		}
-
 
 		private class InternalComponentDatabase : IDatabase<IComponent>
 		{

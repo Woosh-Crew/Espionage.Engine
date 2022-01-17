@@ -3,7 +3,7 @@ using System;
 namespace Espionage.Engine
 {
 	[AttributeUsage( AttributeTargets.Class, Inherited = true )]
-	public sealed class OrderAttribute : Attribute, Library.IComponent
+	public sealed class OrderAttribute : Attribute, Library.IComponent, Property.IComponent
 	{
 		public int Order { get; }
 
@@ -13,5 +13,6 @@ namespace Espionage.Engine
 		}
 
 		public void OnAttached( ref Library library ) { }
+		public void OnAttached( ref Property property ) { }
 	}
 }

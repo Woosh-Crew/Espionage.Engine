@@ -2,8 +2,8 @@ using System;
 
 namespace Espionage.Engine
 {
-	[AttributeUsage( AttributeTargets.Class, Inherited = true )]
-	public sealed class TitleAttribute : Attribute, Library.IComponent
+	[AttributeUsage( AttributeTargets.Class | AttributeTargets.Property, Inherited = true )]
+	public sealed class TitleAttribute : Attribute, Library.IComponent, Property.IComponent
 	{
 		private readonly string _title;
 
@@ -15,6 +15,11 @@ namespace Espionage.Engine
 		public void OnAttached( ref Library library )
 		{
 			library.Title = _title;
+		}
+
+		public void OnAttached( ref Property property )
+		{
+			property.Title = _title;
 		}
 	}
 }
