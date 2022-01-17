@@ -1,16 +1,14 @@
 ﻿{
-  "name": "com.wooshcrew.espionage.engine",
-  "version": "1.2.3",
-  "displayName": "Espionage.Engine",
-  "description": "A Package that allows you to build games super easily",
-  "unity": "2022.1",
-  "unityRelease": "0b2",
-  "documentationUrl": "https://example.com/",
-  "changelogUrl": "https://example.com/changelog.html",
-  "licensesUrl": "https://example.com/licensing.html",
-  "author": {
-    "name": "Woosh Crew",
-    "email": "wooshcrew@support.com",
-    "url": "https://www.wooshcrew.com"
+  "name": "com.dilmergames.core",
+  "displayName": "DilmerGames Core Package",
+  "version": "1.0.2",
+  "unity": "2019.1",
+  "author": "Dilmer Valecillos",
+  "description": "Core Utilities for Unity Games",
+  "dependencies": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dilmerv/com.dilmergames.core.git"
   }
 }
