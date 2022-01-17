@@ -2,7 +2,7 @@ using System;
 
 namespace Espionage.Engine
 {
-	[AttributeUsage( AttributeTargets.Class, Inherited = true )]
+	[AttributeUsage( AttributeTargets.Class )]
 	public sealed class HelpAttribute : Attribute, Library.IComponent, Property.IComponent
 	{
 		private readonly string _help;

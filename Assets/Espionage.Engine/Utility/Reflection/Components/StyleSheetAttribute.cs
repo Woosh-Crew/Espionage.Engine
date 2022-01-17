@@ -8,7 +8,7 @@ using UnityEditor;
 
 namespace Espionage.Engine
 {
-	[AttributeUsage( AttributeTargets.Class, Inherited = true )]
+	[AttributeUsage( AttributeTargets.Class )]
 	public sealed class StyleSheetAttribute : Attribute, Library.IComponent
 	{
 		private readonly string _path;

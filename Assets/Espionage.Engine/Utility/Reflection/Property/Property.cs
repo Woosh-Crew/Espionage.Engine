@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using UnityEditor;
 
@@ -13,6 +14,17 @@ namespace Espionage.Engine
 
 			Name = info.Name;
 			Title = info.Name;
+
+			//
+			// Components
+			Components = new InternalComponentDatabase( this );
+
+			// This is really expensive (6ms)...
+			// Get Components attached to type
+			foreach ( var item in Info.GetCustomAttributes().Where( e => e is IComponent ) )
+			{
+				Components.Add( item as IComponent );
+			}
 		}
 
 		public string Name { get; set; }
@@ -22,6 +34,16 @@ namespace Espionage.Engine
 
 		public Library ClassInfo { get; }
 		public PropertyInfo Info { get; }
+
+		public void SetValue( object from, object value )
+		{
+			Info.SetValue( from, value );
+		}
+
+		public object GetValue( object from )
+		{
+			return Info.GetValue( from );
+		}
 
 		//
 		// Component

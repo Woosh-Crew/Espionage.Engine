@@ -2,7 +2,7 @@ using System;
 
 namespace Espionage.Engine
 {
-	[AttributeUsage( AttributeTargets.Class, Inherited = true )]
+	[AttributeUsage( AttributeTargets.Class )]
 	public sealed class OrderAttribute : Attribute, Library.IComponent, Property.IComponent
 	{
 		public int Order { get; }

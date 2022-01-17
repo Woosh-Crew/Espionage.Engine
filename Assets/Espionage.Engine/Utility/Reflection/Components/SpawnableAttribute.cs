@@ -2,7 +2,7 @@ using System;
 
 namespace Espionage.Engine
 {
-	[AttributeUsage( AttributeTargets.Class, Inherited = true )]
+	[AttributeUsage( AttributeTargets.Class )]
 	public sealed class SpawnableAttribute : Attribute, Library.IComponent
 	{
 		private readonly bool _spawnable;

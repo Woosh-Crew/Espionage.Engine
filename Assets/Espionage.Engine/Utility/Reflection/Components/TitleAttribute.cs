@@ -2,7 +2,7 @@ using System;
 
 namespace Espionage.Engine
 {
-	[AttributeUsage( AttributeTargets.Class | AttributeTargets.Property, Inherited = true )]
+	[AttributeUsage( AttributeTargets.Class | AttributeTargets.Property )]
 	public sealed class TitleAttribute : Attribute, Library.IComponent, Property.IComponent
 	{
 		private readonly string _title;

@@ -7,7 +7,7 @@ using UnityEditor;
 
 namespace Espionage.Engine
 {
-	[AttributeUsage( AttributeTargets.Class, Inherited = true )]
+	[AttributeUsage( AttributeTargets.Class )]
 	public sealed class IconAttribute : Attribute, Library.IComponent, Property.IComponent
 	{
 		private readonly string _path;

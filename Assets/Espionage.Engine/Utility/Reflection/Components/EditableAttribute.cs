@@ -2,7 +2,7 @@ using System;
 
 namespace Espionage.Engine
 {
-	[AttributeUsage( AttributeTargets.Class, Inherited = true )]
+	[AttributeUsage( AttributeTargets.Class )]
 	public sealed class EditableAttribute : Attribute, Library.IComponent, Property.IComponent
 	{
 		public bool Editable { get; }
