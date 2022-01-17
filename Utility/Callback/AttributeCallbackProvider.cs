@@ -38,7 +38,7 @@ namespace Espionage.Engine.Internal.Callbacks
 					}
 
 					_callbacks.TryGetValue( attribute.Name, out var items );
-					items?.Add( new CallbackInfo {IsStatic = info.IsStatic}.FromType( info.DeclaringType )
+					items?.Add( new CallbackInfo { IsStatic = info.IsStatic }.FromType( info.DeclaringType )
 						.WithCallback( Build( info ) ) );
 				}
 			} );
@@ -81,8 +81,8 @@ namespace Espionage.Engine.Internal.Callbacks
 					continue;
 				}
 
-				builder.AddRange( _registered[callback.Class].Select( obj => callback.Invoke( obj, args ) )
-					.Where( arg => arg is not null ) );
+				var targets = _registered[callback.Class];
+				builder.AddRange( from item in targets where ((ICallbacks)item).CanCallback( name ) select callback.Invoke( item, args ) );
 			}
 
 			return builder.ToArray();
