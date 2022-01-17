@@ -1,12 +1,3 @@
-# Unity generated directory
-[Ll]ibrary/
-[Tt]emp/
-[Oo]bj/
-[Uu]serSettings/
-[Ll]ogs/
-[Uu]IElementsSchema/
-Assets/AssetStoreTools*
-
 # Espionage.Engine Cache
 Assets/Espionage.Engine.Cache
 Assets/Espionage.Engine.Cache.meta
