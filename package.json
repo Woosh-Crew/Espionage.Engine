@@ -1,0 +1,14 @@
+﻿{
+  "name": "com.dilmergames.core",
+  "displayName": "Espionage.Engine",
+  "version": "0.0.5",
+  "unity": "2022.1",
+  "author": "Woosh Crew",
+  "description": "A Unity game base.",
+  "dependencies": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dilmerv/com.dilmergames.core.git"
+  }
+}
