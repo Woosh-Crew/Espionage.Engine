@@ -1,12 +1,27 @@
 ﻿using System;
+using System.Reflection;
 
 namespace Espionage.Engine
 {
 	[AttributeUsage( AttributeTargets.Property, Inherited = true, AllowMultiple = false )]
-	sealed class PropertyAttribute : Attribute
+	internal sealed class PropertyAttribute : Attribute
 	{
-		public PropertyAttribute()
+		public string Name { get; set; }
+		public string Title { get; set; }
+		public string Group { get; set; }
+		public string Help { get; set; }
+
+
+		public PropertyAttribute() { }
+
+		public PropertyAttribute( string name )
 		{
+			Name = name;
+		}
+
+		public Property CreateRecord( Library library, PropertyInfo info )
+		{
+			return new Property( library, info ) { Name = Name, Help = Help, Title = Title, Group = Group };
 		}
 	}
 }
