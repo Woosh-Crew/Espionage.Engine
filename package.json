@@ -1,0 +1,17 @@
+{
+  "name": "com.wooshcrew.espionage.engine",
+  "version": "1.2.3",
+  "displayName": "Espionage.Engine",
+  "description": "A Package that allows you to create games easily",
+  "unity": "2022.1",
+  "unityRelease": "0b1",
+  "dependencies": {
+  },
+  "keywords": [
+  ],
+  "author": {
+    "name": "Woosh Crew",
+    "email": "wooshcrew@team.com",
+    "url": "https://www.wooshcrew.com"
+  }
+}
