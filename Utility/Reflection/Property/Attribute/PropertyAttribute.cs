@@ -3,6 +3,9 @@ using System.Reflection;
 
 namespace Espionage.Engine
 {
+	/// <summary>
+	/// Properties are variables that are changeable by the editor.
+	/// </summary>
 	[AttributeUsage( AttributeTargets.Property, Inherited = true, AllowMultiple = false )]
 	internal sealed class PropertyAttribute : Attribute
 	{

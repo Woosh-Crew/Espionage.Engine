@@ -40,19 +40,12 @@ namespace Espionage.Engine
 			// Get Properties
 			Properties = new InternalPropertyDatabase();
 
-			// Get all Properties
-			const BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
-			foreach ( var propertyInfo in Class.GetProperties( flags ) )
+			// Get all Properties (Defined by the User)
+			const BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;
+			foreach ( var propertyInfo in Class.GetProperties( flags ).Where( e => e.IsDefined( typeof( PropertyAttribute ) ) ) )
 			{
-				if ( propertyInfo.IsDefined( typeof( PropertyAttribute ) ) )
-				{
-					var attribute = propertyInfo.GetCustomAttribute<PropertyAttribute>();
-					Properties.Add( attribute.CreateRecord( this, propertyInfo ) );
-				}
-				else
-				{
-					Properties.Add( new Property( this, propertyInfo ) );
-				}
+				var attribute = propertyInfo.GetCustomAttribute<PropertyAttribute>();
+				Properties.Add( attribute.CreateRecord( this, propertyInfo ) );
 			}
 		}
 
@@ -75,7 +68,7 @@ namespace Espionage.Engine
 
 		private class InternalPropertyDatabase : IDatabase<Property>
 		{
-			private Dictionary<string, Property> _all = new();
+			private readonly Dictionary<string, Property> _all = new();
 			public IEnumerable<Property> All => _all.Values;
 
 			public void Add( Property item )
