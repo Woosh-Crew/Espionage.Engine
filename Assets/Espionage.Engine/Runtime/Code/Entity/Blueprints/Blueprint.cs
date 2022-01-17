@@ -3,7 +3,9 @@ using UnityEngine;
 
 namespace Espionage.Engine.Entities
 {
-	[Title( "Blueprint" ), Spawnable( true ), Library.Constructor( nameof(Constructor) )]
+	[Title( "Blueprint" )]
+	[Spawnable( true )]
+	[Constructor( nameof( Constructor ) )]
 	public sealed class Blueprint : ScriptableObject, ILibrary
 	{
 		public Library ClassInfo { get; set; }
@@ -17,7 +19,7 @@ namespace Espionage.Engine.Entities
 					return;
 				}
 
-				ClassInfo.Class = typeof(Blueprint);
+				ClassInfo.Class = typeof( Blueprint );
 				Library.Database.Add( ClassInfo );
 			}
 			catch ( Exception e )
