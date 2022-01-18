@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Espionage.Engine.Entities.Nodes
@@ -19,10 +20,25 @@ namespace Espionage.Engine.Entities.Nodes
 
 			// Data
 			[SerializeField]
+			private string _name;
+
+			[SerializeField]
 			private Node _node;
-			
+
 			[SerializeField]
 			private IO _direction;
+
+			[SerializeField]
+			private List<Connection> _connections;
+
+			//
+			// Connect
+			//
+
+			public bool IsConnectedTo( Port port )
+			{
+				return _connections.Any( t => t.target == port );
+			}
 
 			public void Connect( Port port )
 			{
@@ -31,6 +47,9 @@ namespace Espionage.Engine.Entities.Nodes
 					Debugging.Log.Warning( "Cannot Connect Port" );
 					return;
 				}
+
+				Node.OnCreateConnection( this, port );
+				port.Node.OnCreateConnection( this, port );
 			}
 
 			public bool CanConnect( Port port )
@@ -47,19 +66,26 @@ namespace Espionage.Engine.Entities.Nodes
 
 				return true;
 			}
-		
+
+			//
+			// Disconnect
+			//
+
+			public void Disconnect( Port port ) { }
+
+			//
+			// Serialization
+			//
+
 			[Serializable]
 			private class Connection
 			{
-				public Node node;
-				public Port Port => _port;
+				public Port target;
+				public List<Vector2> reroutes;
 
-				[SerializeField] private Port _port;
-				 public List<Vector2> reroutePoints = new List<Vector2>();
-
-				public Connection( Port port ) {
-					this._port = port;
-					node = port.Node;
+				public Connection( Port target )
+				{
+					this.target = target;
 				}
 			}
 		}

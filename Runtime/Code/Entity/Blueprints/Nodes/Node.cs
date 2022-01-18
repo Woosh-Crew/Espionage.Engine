@@ -19,6 +19,42 @@ namespace Espionage.Engine.Entities.Nodes
 			Callback.Unregister( this );
 		}
 
+		//
+		// Logic Flow
+		//
+
+		public virtual void Initialize() { }
+
+		public virtual bool Execute()
+		{
+			return true;
+		}
+
+		//
+		// Helpers
+		//
+
+		public IEnumerable<Port> Ports => ports.Values;
+		public IEnumerable<Port> Outputs => Ports.Where( port => port.IsOutput );
+		public IEnumerable<Port> Inputs => Ports.Where( port => port.IsInput );
+
+		public Port GetPort( string portName )
+		{
+			return ports.TryGetValue( portName, out var port ) ? port : null;
+		}
+
+		public bool HasPort( string portName )
+		{
+			return ports.ContainsKey( portName );
+		}
+
+		public virtual void OnCreateConnection( Port from, Port to ) { }
+		public virtual void OnRemoveConnection( Port port ) { }
+
+		//
+		// Serialization
+		//
+
 		[SerializeField]
 		public Graph graph;
 
@@ -27,23 +63,6 @@ namespace Espionage.Engine.Entities.Nodes
 
 		[SerializeField]
 		private PortMap ports = new();
-
-		//
-		// Helpers
-		//
-
-		/// <summary> Iterate over all ports on this node. </summary>
-		public IEnumerable<Port> Ports => ports.Values;
-
-		/// <summary> Iterate over all outputs on this node. </summary>
-		public IEnumerable<Port> Outputs => Ports.Where( port => port.IsOutput );
-
-		/// <summary> Iterate over all inputs on this node. </summary>
-		public IEnumerable<Port> Inputs => Ports.Where( port => port.IsInput );
-
-		//
-		// Serialization
-		//
 
 		[Serializable]
 		private class PortMap : Map<string, Port> { }
