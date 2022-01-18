@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using UnityEngine;
 
 namespace Espionage.Engine
 {
@@ -50,10 +51,20 @@ namespace Espionage.Engine
 		}
 
 		// Meta
+		[field : SerializeField]
 		public string Name { get; set; }
+
+		[field : SerializeField]
+
 		public string Title { get; set; }
+
+		[field : SerializeField]
 		public string Group { get; set; }
+
+		[field : SerializeField]
 		public string Help { get; set; }
+
+		[field : SerializeField]
 		public bool Spawnable { get; set; }
 
 		// Owner & Identification
