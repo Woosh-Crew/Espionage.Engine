@@ -5,15 +5,15 @@
 Espionage.Engine is a Unity game base, where you design games off it (duh). Its meant to be a similar workflow to Unreal Engine or s&box where you can do a majority of the work for your game straight in code.
  
 ## Current Features
-It comes with a handfull of nice features and major workflow changes.
+It comes with a handful of nice features and major workflow changes.
 
 ### > Callback System
-Easy attribute based event system that I'm calling the Callback system. Just assign a method the "Callback" attribute and itll do the rest behind the scenes.
+Easy attribute based event system that I'm calling the Callback system. Just assign a method the "Callback" attribute and it'll do the rest behind the scenes.
 ``` csharp
 [Callback( "callback.frame" )]
 private void Frame() { }
 ``` 
-Or you can predine your own attributes to auto assign the callback property.
+Or you can predefined your own attributes to auto assign the callback property.
 ``` csharp
 [Callback.Frame]
 private void Frame() { }
@@ -60,28 +60,24 @@ private static void ChangeViewportDebug( int shaderId )
    // Blah blah, change viewport replace shader
 }
 ``` 
-or alternativly you can use the `Debugging.Var` attribute on a property, so you can change it or use it as a readonly value
+or alternatively you can use the `Debugging.Var` attribute on a property, so you can change it or use it as a readonly value
 ```csharp
 [Debugging.Var( "sv.cheats", Help = "Enable cheats on the server", IsReadOnly = false )
 private static bool Cheats { get; set; } = false;
 ```
 
 ## Planned Features
-These are planned features that are going to be implimented in the future
+These are planned features that are going to be implemented in the future
+
+### > Generic Node Graph
+This system will provide a generic node graph that can be applied to anything. Examples include, visual scripting, node based audio engine, node based animation controller, UI node network, etc. 
  
 ### > Networking
 Networking is a fork of Tom Weiland's Riptide, with major improvements to it. Such as:
-- Networked objects being indicted by using an interface, where it impliments a network identity object.
-
-### > Entity System
-An entity system similar to source. So its super easy to make custom maps etc, without having to update a map maker code base everytime you impliment a new feature. It uses a similar system / principles to an FDG file.
-
-This is also better then MonoBehaviours becuase its all C# based. No expensive get components calls or anything like that and to me it just makes sense. Not everything needs to be a component.
-
-Entity system also removes the need for everything to be scene dependent / prefab based too. Which is also something I find incredibly stupid with unity.
+- Networked objects being indicted by using an interface, where it implements a network identity object.
 
 ### > Assets
-All assets are loaded at runtime using AssetBundles. this provides many benifits such as everything not being scene dependent.
+A majority of assets should be loaded at runtime using AssetBundles (Such as Scenes, Possibly textures and sounds) this provides many benefits such as everything not being scene dependent.
 
 # Games & Projects using Espionage.Engine
 ### Espionage
