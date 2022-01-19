@@ -24,6 +24,8 @@ namespace Espionage.Engine.Nodes
 		{
 			public enum IO { Input, Output }
 
+			public enum ConnectionType { Multiple, Single }
+
 			public Port()
 			{
 				connections = new List<Connection>();

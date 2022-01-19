@@ -13,7 +13,7 @@ namespace Espionage.Engine.Nodes
 	/// Node based audio effects, Node base animation drivers. 
 	/// </para>
 	/// </summary>
-	public abstract class Graph : ScriptableObject, ILibrary, ICallbacks, IDatabase<Node>
+	public abstract class Graph : ScriptableObject, ILibrary, ICallbacks
 	{
 		public Library ClassInfo { get; set; }
 
@@ -87,11 +87,6 @@ namespace Espionage.Engine.Nodes
 		public bool Contains( Node item )
 		{
 			return nodes.Contains( item );
-		}
-
-		public void Remove( Node item )
-		{
-			nodes.Remove( item );
 		}
 
 		public void Clear()
