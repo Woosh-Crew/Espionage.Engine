@@ -5,6 +5,8 @@ using UnityEngine;
 
 namespace Espionage.Engine.Nodes
 {
+	[Title( "Node" )]
+	[Help( "Abstract Node" )]
 	public abstract partial class Node : ScriptableObject, ILibrary, ICallbacks
 	{
 		public Library ClassInfo { get; set; }
@@ -63,15 +65,5 @@ namespace Espionage.Engine.Nodes
 
 		[Serializable]
 		private class PortMap : Map<string, Port> { }
-
-		//
-		// Attributes
-		//
-
-		[AttributeUsage( AttributeTargets.Property, Inherited = true )]
-		protected class InputAttribute : Attribute { }
-
-		[AttributeUsage( AttributeTargets.Property, Inherited = true )]
-		protected class OutputAttribute : Attribute { }
 	}
 }

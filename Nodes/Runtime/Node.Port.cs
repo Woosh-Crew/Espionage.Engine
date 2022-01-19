@@ -7,6 +7,18 @@ namespace Espionage.Engine.Nodes
 {
 	public abstract partial class Node
 	{
+		/// <summary>
+		/// Used on properties to define Inputs.
+		/// </summary>
+		[AttributeUsage( AttributeTargets.Property, Inherited = true )]
+		protected class InputAttribute : Attribute { }
+
+		/// <summary>
+		/// Used on properties to define Outputs.
+		/// </summary>
+		[AttributeUsage( AttributeTargets.Property, Inherited = true )]
+		protected class OutputAttribute : Attribute { }
+
 		[Serializable]
 		public sealed class Port
 		{

@@ -1,0 +1,14 @@
+{
+    "name": "Espionage.Engine.Blueprints",
+    "rootNamespace": "Espionage.Engine.Blueprints",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

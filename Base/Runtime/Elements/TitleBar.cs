@@ -3,7 +3,7 @@ using UnityEditor;
 
 namespace Espionage.Engine.Editor.Internal
 {
-	[StyleSheet( "Assets/Espionage.Engine/Editor/Code/Elements/TitleBar.uss" )]
+	[StyleSheet( "Assets/Espionage.Engine/Base/Runtime/Elements/TitleBar.uss" )]
 	public class TitleBar : Element
 	{
 		public TitleBar( string title, Image icon, params string[] classes )
@@ -38,10 +38,7 @@ namespace Espionage.Engine.Editor.Internal
 
 		public string Title
 		{
-			set
-			{
-				_title.text = value;
-			}
+			set => _title.text = value;
 		}
 
 		//
