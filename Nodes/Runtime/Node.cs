@@ -5,6 +5,12 @@ using UnityEngine;
 
 namespace Espionage.Engine.Nodes
 {
+	/// <summary>
+	/// Node that is only applicable to graph T
+	/// </summary>
+	/// <typeparam name="T"> Node only works with this type of graph </typeparam>
+	public abstract class Node<T> : Node where T : Graph { }
+
 	[Title( "Node" )]
 	[Help( "Abstract Node" )]
 	public abstract partial class Node : ScriptableObject, ILibrary, ICallbacks
