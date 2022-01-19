@@ -14,7 +14,7 @@ public static class LibraryDatabaseExtensions
 	// Try Get
 	//
 
-	public static bool TryGet<T>( this IDatabase<Library> database, out Library library ) where T : ILibrary
+	public static bool TryGet<T>( this IDatabase<Library> database, out Library library ) where T : class
 	{
 		library = database.Get<T>();
 		return library is not null;
@@ -42,7 +42,7 @@ public static class LibraryDatabaseExtensions
 	// Exists
 	//
 
-	public static bool Exists<T>( this IDatabase<Library> database ) where T : ILibrary
+	public static bool Exists<T>( this IDatabase<Library> database ) where T : class
 	{
 		return database.Get<T>() is not null;
 	}
@@ -66,7 +66,7 @@ public static class LibraryDatabaseExtensions
 	// Get
 	//
 
-	public static Library Get<T>( this IDatabase<Library> database ) where T : ILibrary
+	public static Library Get<T>( this IDatabase<Library> database ) where T : class
 	{
 		return database.All.FirstOrDefault( e => e.Class == typeof( T ) );
 	}
@@ -90,7 +90,7 @@ public static class LibraryDatabaseExtensions
 	// Get All
 	//
 
-	public static IEnumerable<Library> GetAll<T>( this IDatabase<Library> database ) where T : ILibrary
+	public static IEnumerable<Library> GetAll<T>( this IDatabase<Library> database ) where T : class
 	{
 		return !database.TryGet<T>( out var item ) ? null : database.All.Where( e => e.Class.IsSubclassOf( item.Class ) );
 	}
@@ -114,7 +114,7 @@ public static class LibraryDatabaseExtensions
 	// Create
 	//
 
-	public static T Create<T>( this IDatabase<Library> database ) where T : class, ILibrary, new()
+	public static T Create<T>( this IDatabase<Library> database ) where T : class, new()
 	{
 		return Library.Construct( database.Get<T>() ) as T;
 	}
@@ -162,7 +162,7 @@ public static class LibraryDatabaseExtensions
 		return null;
 	}
 
-	public static T Create<T>( this IDatabase<Library> database, Guid id ) where T : class, ILibrary, new()
+	public static T Create<T>( this IDatabase<Library> database, Guid id ) where T : class, new()
 	{
 		return database.Create( id ) as T;
 	}
@@ -171,7 +171,7 @@ public static class LibraryDatabaseExtensions
 	// Replace
 	//
 
-	public static void Replace<T>( this IDatabase<Library> database, Library newLibrary ) where T : ILibrary
+	public static void Replace<T>( this IDatabase<Library> database, Library newLibrary ) where T : class
 	{
 		if ( database.TryGet<T>( out var item ) )
 		{

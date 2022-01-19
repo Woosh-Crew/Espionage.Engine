@@ -67,10 +67,10 @@ namespace Espionage.Engine.Nodes
 		// Tree
 		//
 
+		public IEnumerable<Node> All => nodes;
+
 		[SerializeField]
 		private List<Node> nodes;
-
-		public IEnumerable<Node> All => nodes;
 
 		public void Add( Node item )
 		{
@@ -82,6 +82,7 @@ namespace Espionage.Engine.Nodes
 
 			item.graph = this;
 			nodes.Add( item );
+			OnNodeAdded( item );
 		}
 
 		public bool Contains( Node item )
@@ -101,5 +102,12 @@ namespace Espionage.Engine.Nodes
 
 			nodes.Clear();
 		}
+
+		//
+		// Callbacks
+		//
+
+		public virtual void OnNodeAdded( Node newNode ) { }
+		public virtual void OnNodeDeleted( Node newNode ) { }
 	}
 }

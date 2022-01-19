@@ -1,0 +1,11 @@
+﻿:root{
+    flex-grow: 1;
+}
+
+GridBackground{
+    --line-color: #2c2c2c;
+    --thick-line-color: #1d1d1d;
+    --grid-background-color: #262626;
+    --spacing: 16;
+    --thick-lines: 64;
+}

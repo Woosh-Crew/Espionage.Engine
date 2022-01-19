@@ -15,11 +15,7 @@ namespace Espionage.Engine.Nodes
 	[Help( "Abstract Node" )]
 	public abstract partial class Node : ScriptableObject, ILibrary, ICallbacks
 	{
-		//
-		// API
-		//
-
-		public Library ClassInfo { get; set; }
+		public Library ClassInfo { get; private set; }
 		public IEnumerable<Port> Ports => ports.Values;
 		public IEnumerable<Port> Outputs => Ports.Where( port => port.IsOutput );
 		public IEnumerable<Port> Inputs => Ports.Where( port => port.IsInput );
@@ -31,6 +27,7 @@ namespace Espionage.Engine.Nodes
 		private void OnEnable()
 		{
 			Callback.Register( this );
+			ClassInfo = Library.Database.Get( GetType() );
 		}
 
 		private void OnDestroy()
@@ -41,6 +38,7 @@ namespace Espionage.Engine.Nodes
 				port.Clear();
 			}
 
+			graph.OnNodeDeleted( this );
 			Callback.Unregister( this );
 		}
 
@@ -50,14 +48,10 @@ namespace Espionage.Engine.Nodes
 
 		public virtual void Initialize() { }
 
-		public virtual bool Execute()
-		{
-			return true;
-		}
-
 		//
 		// Helpers
 		//
+
 		public Port GetPort( string portName )
 		{
 			return ports.TryGetValue( portName, out var port ) ? port : null;

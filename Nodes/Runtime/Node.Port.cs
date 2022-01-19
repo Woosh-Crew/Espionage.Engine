@@ -7,17 +7,37 @@ namespace Espionage.Engine.Nodes
 {
 	public abstract partial class Node
 	{
+		//
+		// Attributes
+		//
+
+		protected abstract class PortAttribute : Attribute
+		{
+			public Port.Capacity Capacity { get; set; }
+			public virtual Port.IO Direction { get; }
+		}
+
 		/// <summary>
 		/// Used on properties to define Inputs.
 		/// </summary>
-		[AttributeUsage( AttributeTargets.Property, Inherited = true )]
-		protected class InputAttribute : Attribute { }
+		[AttributeUsage( AttributeTargets.Property | AttributeTargets.Method, Inherited = true )]
+		protected class InputAttribute : PortAttribute
+		{
+			public override Port.IO Direction => Port.IO.Input;
+		}
 
 		/// <summary>
 		/// Used on properties to define Outputs.
 		/// </summary>
 		[AttributeUsage( AttributeTargets.Property, Inherited = true )]
-		protected class OutputAttribute : Attribute { }
+		protected class OutputAttribute : PortAttribute
+		{
+			public override Port.IO Direction => Port.IO.Output;
+		}
+
+		//
+		// Port
+		//
 
 		[Serializable]
 		public sealed class Port

@@ -4,6 +4,8 @@ using UnityEngine.UIElements;
 
 namespace Espionage.Engine.Nodes.Editor
 {
+	[Library]
+	[StyleSheet( "Assets/Espionage.Engine/Nodes/Editor/Elements/GraphUI.uss" )]
 	public class GraphUI : GraphView
 	{
 		private Graph _target;
@@ -16,6 +18,11 @@ namespace Espionage.Engine.Nodes.Editor
 			this.AddManipulator( new ContentDragger() );
 			this.AddManipulator( new SelectionDragger() );
 			this.AddManipulator( new RectangleSelector() );
+
+			foreach ( var item in Library.Database.Get<GraphUI>().Components.GetAll<StyleSheetAttribute>() )
+			{
+				styleSheets.Add( item.Style );
+			}
 		}
 
 		public void Populate( Graph graph )
@@ -30,6 +37,13 @@ namespace Espionage.Engine.Nodes.Editor
 			{
 				AddElement( new NodeUI( node ) );
 			}
+		}
+
+		public override void BuildContextualMenu( ContextualMenuPopulateEvent evt )
+		{
+			base.BuildContextualMenu( evt );
+
+			evt.menu.AppendAction( "shit", ( e ) => { } );
 		}
 
 		private GraphViewChange OnGraphChanged( GraphViewChange graphViewChange )
