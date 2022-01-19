@@ -1,4 +1,6 @@
-﻿namespace Espionage.Engine
+﻿using Steamworks;
+
+namespace Espionage.Engine
 {
 	public abstract class Game : ILibrary, ICallbacks
 	{
@@ -14,5 +16,14 @@
 		{
 			Callback.Unregister( this );
 		}
+
+		//
+		// Required
+		//
+
+		public abstract uint AppId { get; }
+
+		public abstract void OnReady();
+		public abstract void OnShutdown();
 	}
 }
