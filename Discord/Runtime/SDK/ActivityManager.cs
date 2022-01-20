@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace Discord
+namespace DiscordAPI
 {
-    public partial class ActivityManager
-    {
-        public void RegisterCommand()
-        {
-            RegisterCommand(null);
-        }
-    }
+	public partial class ActivityManager
+	{
+		public void RegisterCommand()
+		{
+			RegisterCommand( null );
+		}
+	}
 }

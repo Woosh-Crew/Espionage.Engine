@@ -1,9 +1,9 @@
 ﻿using System;
 
-namespace Discord
+namespace DiscordAPI
 {
-    static class Constants
-    {
-        public const string DllName = "discord_game_sdk";
-    }
+	internal static class Constants
+	{
+		public const string DllName = "discord_game_sdk";
+	}
 }
