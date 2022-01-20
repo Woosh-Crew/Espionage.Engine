@@ -33,6 +33,8 @@ namespace Espionage.Engine
 			{
 				Debugging.Log.Exception( e );
 			}
+
+			Game.OnReady();
 		}
 	}
 }
