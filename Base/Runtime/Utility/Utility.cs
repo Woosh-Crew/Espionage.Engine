@@ -18,7 +18,8 @@ namespace Espionage.Engine.Internal
 			"nunit.framework",
 			"PlayerBuildProgram",
 			"Mono",
-			"JetBrains"
+			"JetBrains",
+			"Report"
 		};
 
 		public static bool IgnoreIfNotUserGeneratedAssembly( Assembly assembly )
