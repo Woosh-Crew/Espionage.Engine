@@ -3,8 +3,9 @@ using UnityEditor;
 using UnityEditor.EditorTools;
 using UnityEditor.Toolbars;
 using UnityEngine;
+using Espionage.Engine.Editor;
 
-namespace Espionage.Engine.Editor.Internal
+namespace Espionage.Engine.Tools.Editor
 {
 	/// <summary> A Tool is just an EditorWindow with 
 	/// ILibrary and callbacks registered and a menu bar </summary>

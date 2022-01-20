@@ -1,6 +1,6 @@
 using UnityEngine.UIElements;
 
-namespace Espionage.Engine.Editor.Internal
+namespace Espionage.Engine.Editor
 {
 	public class Element : VisualElement, ILibrary, ICallbacks
 	{
@@ -12,7 +12,9 @@ namespace Espionage.Engine.Editor.Internal
 			Callback.Register( this );
 
 			foreach ( var item in ClassInfo.Components.GetAll<StyleSheetAttribute>() )
+			{
 				styleSheets.Add( item.Style );
+			}
 		}
 
 		~Element()

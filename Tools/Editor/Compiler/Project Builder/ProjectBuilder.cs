@@ -1,14 +1,16 @@
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
+using Espionage.Engine.Editor;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEditor;
+using UnityEngine.SceneManagement;
 using UnityEditor.SceneManagement;
 using UnityEngine.UIElements;
-using System.IO;
 using UnityEditor.UIElements;
 
-namespace Espionage.Engine.Editor.Internal
+
+namespace Espionage.Engine.Tools.Editor
 {
 	[Title( "Project Builder" ), Group( "Compiler" ), Icon( EditorIcons.Code ), HelpURL( "https://github.com/Woosh-Crew/Espionage.Engine/wiki" ), StyleSheet( GUID = "286338582a0f405dad4fcb85ab99dcc7" )]
 	public class ProjectBuilder : Tool
@@ -24,7 +26,17 @@ namespace Espionage.Engine.Editor.Internal
 			// Header
 			rootVisualElement.Add( new HeaderBar( "Project Builder", "Builds the project to the target platform.", new Image() { image = ClassInfo.Components.Get<IconAttribute>().Icon }, "Header-Bottom-Border" ) );
 
-			rootVisualElement.Add( new TitleBar( "Meta Data", null, "Bottom" ) );
+			// Build Preset
+			{
+				var box = new VisualElement();
+				box.AddToClassList( "Box" );
+				rootVisualElement.Add( box );
+
+				box.Add( new ObjectField( "Build Preset" ) { objectType = typeof( ScriptableObject ) } );
+			}
+
+			// Meta
+			rootVisualElement.Add( new TitleBar( "Meta Data", null, "Bottom", "Top" ) );
 			{
 				var box = new VisualElement();
 				box.AddToClassList( "Box" );

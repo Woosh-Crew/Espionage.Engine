@@ -1,12 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Espionage.Engine.Editor;
 
-namespace Espionage.Engine.Editor.Internal
+namespace Espionage.Engine.Tools.Editor
 {
-	[Title( "Terminal" )]
-	[Icon( EditorIcons.Terminal )]
-	[Group( "Debug" )]
+	[Title( "Terminal" ), Icon( EditorIcons.Terminal ), Group( "Debug" )]
 	public class EditorTerminal : Tool
 	{
 		protected override void OnCreateGUI()

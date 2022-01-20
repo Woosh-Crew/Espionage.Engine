@@ -1,13 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor;
+using Espionage.Engine.Editor;
 
-namespace Espionage.Engine.Editor.Internal
+
+namespace Espionage.Engine.Tools.Editor
 {
-	[Library( Title = "Library Viewer", Group = "Debug" )]
-	[Icon( EditorIcons.Terminal )]
+	[Library( Title = "Library Viewer", Group = "Debug" ), Icon( EditorIcons.Terminal )]
 	public class LibraryDatabaseViewer : Tool
 	{
 		[MenuItem( "Tools/Debug/Library Viewer", false, 500 )]

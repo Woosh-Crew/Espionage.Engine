@@ -1,7 +1,7 @@
 using UnityEngine.UIElements;
 using UnityEditor;
 
-namespace Espionage.Engine.Editor.Internal
+namespace Espionage.Engine.Editor
 {
 	[StyleSheet( GUID = "9c815de4a74e979499b715c9567688db" )]
 	public class TitleBar : Element

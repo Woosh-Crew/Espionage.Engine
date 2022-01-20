@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
+using Espionage.Engine.Editor;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -11,11 +12,9 @@ using UnityEditor.UIElements;
 using System.Threading.Tasks;
 using System.Linq;
 
-namespace Espionage.Engine.Editor.Internal
+namespace Espionage.Engine.Tools.Editor
 {
-	[Library( "tool.level_compiler", Title = "Level Compiler", Help = "Compiles a Level for use in-game", Group = "Compiler" )]
-	[Icon( EditorIcons.Build )]
-	[HelpURL( "https://github.com/Woosh-Crew/Espionage.Engine/wiki" )]
+	[Library( "tool.level_compiler", Title = "Level Compiler", Help = "Compiles a Level for use in-game", Group = "Compiler" ), Icon( EditorIcons.Build ), HelpURL( "https://github.com/Woosh-Crew/Espionage.Engine/wiki" )]
 	public sealed class LevelCompiler : Tool
 	{
 		[MenuItem( "Tools/Level Compiler _F8", false, -150 )]

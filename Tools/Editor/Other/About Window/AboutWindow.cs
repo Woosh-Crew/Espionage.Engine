@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Espionage.Engine.Editor;
 using UnityEngine;
 using UnityEditor;
 
-namespace Espionage.Engine.Editor.Internal
+namespace Espionage.Engine.Tools.Editor
 {
 	[Library( Title = "About Window", Group = "Hidden" )]
 	public class AboutWindow : Tool

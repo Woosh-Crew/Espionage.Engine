@@ -2,7 +2,7 @@ using System;
 using UnityEditor;
 using UnityEngine.UIElements;
 
-namespace Espionage.Engine.Editor.Internal
+namespace Espionage.Engine.Editor
 {
 	[StyleSheet( GUID = "e00c1473ba1e95a4fac4ee7549c06e6c" )]
 	public class MenuBar : Element
