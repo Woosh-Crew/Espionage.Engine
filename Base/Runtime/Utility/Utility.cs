@@ -17,12 +17,19 @@ namespace Espionage.Engine.Internal
 			"Bee.BeeDriver",
 			"nunit.framework",
 			"PlayerBuildProgram",
-			"Mono"
+			"Mono",
+			"JetBrains"
 		};
 
 		public static bool IgnoreIfNotUserGeneratedAssembly( Assembly assembly )
 		{
-			return IgnoredAssemblies.All( item => !assembly.FullName.StartsWith( item ) );
+			if ( IgnoredAssemblies.All( item => !assembly.FullName.StartsWith( item ) ) )
+			{
+				Debugging.Log.Info( assembly.FullName );
+				return true;
+			}
+
+			return false;
 		}
 	}
 }
