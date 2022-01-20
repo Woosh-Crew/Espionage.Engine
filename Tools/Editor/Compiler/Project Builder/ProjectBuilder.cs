@@ -18,7 +18,7 @@ namespace Espionage.Engine.Tools.Editor
 		[MenuItem( "Tools/Project Builder _F5", false, -150 )]
 		private static void ShowEditor()
 		{
-			var wind = GetWindow<ProjectBuilder>();
+			GetWindow<ProjectBuilder>();
 		}
 
 		protected override void OnCreateGUI()
@@ -88,8 +88,11 @@ namespace Espionage.Engine.Tools.Editor
 			{
 				// Original Scene
 				var originalScene = SceneManager.GetActiveScene().path;
-
 				var scene = EditorSceneManager.NewScene( NewSceneSetup.DefaultGameObjects, NewSceneMode.Single );
+
+				//
+				// Build Game
+				//
 
 				try
 				{
@@ -106,13 +109,12 @@ namespace Espionage.Engine.Tools.Editor
 					// Setup BuildPipeline
 					var buildSettings = new BuildPlayerOptions()
 					{
-						scenes = new string[] { "Assets/Espionage.Engine.Cache/Preload.unity" },
+						scenes = new[] { "Assets/Espionage.Engine.Cache/Preload.unity" },
 						locationPathName = $"Exports/{PlayerSettings.productName}/{PlayerSettings.productName}.exe",
 						options = options,
 						target = target,
 						targetGroup = BuildTargetGroup.Standalone
 					};
-
 
 					Callback.Run( "project_builder.building", target );
 					BuildPipeline.BuildPlayer( buildSettings );
@@ -133,6 +135,10 @@ namespace Espionage.Engine.Tools.Editor
 					AssetDatabase.DeleteAsset( "Assets/Espionage.Engine.Cache" );
 					AssetDatabase.Refresh();
 				}
+
+				//
+				// Move Content
+				//
 
 				// Move all exported content to Game
 				// Create the Cache Dir if it doesnt exist
