@@ -2,7 +2,7 @@
 
 namespace Espionage.Engine
 {
-	public abstract class Game : ILibrary, ICallbacks
+	public abstract class Game : ILibrary, ICallbacks, IProject
 	{
 		public Library ClassInfo { get; }
 
@@ -23,5 +23,6 @@ namespace Espionage.Engine
 
 		public abstract void OnReady();
 		public abstract void OnShutdown();
+		public abstract void OnCompile();
 	}
 }

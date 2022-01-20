@@ -11,7 +11,7 @@ namespace Espionage.Engine.Editor.Internal
 {
 	[Title( "Project Builder" )]
 	[Group( "Compiler" )]
-	[Icon( EditorIcons.Terminal )]
+	[Icon( EditorIcons.Code )]
 	[HelpURL( "https://github.com/Woosh-Crew/Espionage.Engine/wiki" )]
 	public class ProjectBuilder : Tool
 	{
@@ -25,6 +25,7 @@ namespace Espionage.Engine.Editor.Internal
 		{
 			base.OnCreateGUI();
 
+			rootVisualElement.Add( new HeaderBar( "Project Builder", "Builds the project to the target platform.", new Image() { image = ClassInfo.Components.Get<IconAttribute>().Icon }, "Header-Bottom-Border" ) );
 			rootVisualElement.Add( new Button( () => Build( BuildTarget.StandaloneWindows, BuildOptions.None ) ) { text = "Build Project" } );
 		}
 
