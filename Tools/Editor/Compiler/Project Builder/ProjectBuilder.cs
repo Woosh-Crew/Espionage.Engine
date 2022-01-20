@@ -81,7 +81,14 @@ namespace Espionage.Engine.Editor.Internal
 				BuildPipeline.BuildPlayer( buildSettings );
 
 				// Load back into original scene, in case IO throws an exception
-				EditorSceneManager.OpenScene( originalScene, OpenSceneMode.Single );
+				if ( string.IsNullOrEmpty( originalScene ) )
+				{
+					EditorSceneManager.NewScene( NewSceneSetup.DefaultGameObjects, NewSceneMode.Single );
+				}
+				else
+				{
+					EditorSceneManager.OpenScene( originalScene, OpenSceneMode.Single );
+				}
 
 				// Delete Cache
 				AssetDatabase.DeleteAsset( "Assets/Espionage.Engine.Cache" );
