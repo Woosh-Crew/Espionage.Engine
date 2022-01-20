@@ -36,7 +36,8 @@ namespace Espionage.Engine.Editor.Internal
 			}
 
 			// Scenes
-			rootVisualElement.Add( new TitleBar( "Scenes", null, "Bottom", "Top" ) );
+			const string help = "Reason there is only these two options is because all maps should be loaded at runtime using Espionage.Engine's level manager";
+			rootVisualElement.Add( new TitleBar( "Scenes", null, "Bottom", "Top" ) { tooltip = help } );
 			{
 				var scenesBox = new VisualElement();
 				scenesBox.AddToClassList( "Box" );
@@ -71,43 +72,48 @@ namespace Espionage.Engine.Editor.Internal
 
 				var scene = EditorSceneManager.NewScene( NewSceneSetup.DefaultGameObjects, NewSceneMode.Single );
 
-				// Create the Cache Dir if it doesnt exist
-				if ( !Directory.Exists( Path.GetFullPath( "Assets/Espionage.Engine.Cache/" ) ) )
+				try
 				{
-					Directory.CreateDirectory( Path.GetFullPath( "Assets/Espionage.Engine.Cache/" ) );
+					// Create the Cache Dir if it doesnt exist
+					if ( !Directory.Exists( Path.GetFullPath( "Assets/Espionage.Engine.Cache/" ) ) )
+					{
+						Directory.CreateDirectory( Path.GetFullPath( "Assets/Espionage.Engine.Cache/" ) );
+					}
+
+					// Save the preload scene so we can export with it
+					EditorSceneManager.SaveScene( scene, "Assets/Espionage.Engine.Cache/Preload.unity" );
+					SceneManager.SetActiveScene( scene );
+
+					// Setup BuildPipeline
+					var buildSettings = new BuildPlayerOptions()
+					{
+						scenes = new string[] { "Assets/Espionage.Engine.Cache/Preload.unity" },
+						locationPathName = $"Exports/{PlayerSettings.productName}/{PlayerSettings.productName}.exe",
+						options = options,
+						target = target,
+						targetGroup = BuildTargetGroup.Standalone
+					};
+
+
+					Callback.Run( "project_builder.building", target );
+					BuildPipeline.BuildPlayer( buildSettings );
+
+					// Load back into original scene, in case IO throws an exception
+					if ( string.IsNullOrEmpty( originalScene ) )
+					{
+						EditorSceneManager.NewScene( NewSceneSetup.DefaultGameObjects, NewSceneMode.Single );
+					}
+					else
+					{
+						EditorSceneManager.OpenScene( originalScene, OpenSceneMode.Single );
+					}
 				}
-
-				// Save the preload scene so we can export with it
-				EditorSceneManager.SaveScene( scene, "Assets/Espionage.Engine.Cache/Preload.unity" );
-				SceneManager.SetActiveScene( scene );
-
-				// Setup BuildPipeline
-				var buildSettings = new BuildPlayerOptions()
+				finally
 				{
-					scenes = new string[] { "Assets/Espionage.Engine.Cache/Preload.unity" },
-					locationPathName = $"Exports/{PlayerSettings.productName}/{PlayerSettings.productName}.exe",
-					options = options,
-					target = target,
-					targetGroup = BuildTargetGroup.Standalone
-				};
-
-
-				Callback.Run( "project_builder.building", target );
-				BuildPipeline.BuildPlayer( buildSettings );
-
-				// Load back into original scene, in case IO throws an exception
-				if ( string.IsNullOrEmpty( originalScene ) )
-				{
-					EditorSceneManager.NewScene( NewSceneSetup.DefaultGameObjects, NewSceneMode.Single );
+					// Delete Cache
+					AssetDatabase.DeleteAsset( "Assets/Espionage.Engine.Cache" );
+					AssetDatabase.Refresh();
 				}
-				else
-				{
-					EditorSceneManager.OpenScene( originalScene, OpenSceneMode.Single );
-				}
-
-				// Delete Cache
-				AssetDatabase.DeleteAsset( "Assets/Espionage.Engine.Cache" );
-				AssetDatabase.Refresh();
 
 				// Move all exported content to Game
 				// Create the Cache Dir if it doesnt exist
