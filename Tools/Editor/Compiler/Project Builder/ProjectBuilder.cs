@@ -72,7 +72,14 @@ namespace Espionage.Engine.Tools.Editor
 
 			// Build
 			rootVisualElement.Add( new TitleBar( "Build", null, "Bottom", "Top" ) );
-			rootVisualElement.Add( new Button( () => Build( BuildTarget.StandaloneWindows, BuildOptions.None ) ) { text = "Build Project" } );
+			{
+				var box = new VisualElement();
+				box.AddToClassList( "Box" );
+				rootVisualElement.Add( box );
+
+				box.Add( new Button( () => Build( BuildTarget.StandaloneWindows, BuildOptions.None ) ) { text = "Build Game" } );
+				box.Add( new Button( () => Build( BuildTarget.StandaloneWindows, BuildOptions.None ) ) { text = "Build Server" } );
+			}
 		}
 
 		public static void Build( BuildTarget target, BuildOptions options )
