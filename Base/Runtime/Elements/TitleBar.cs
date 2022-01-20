@@ -3,7 +3,7 @@ using UnityEditor;
 
 namespace Espionage.Engine.Editor.Internal
 {
-	[StyleSheet( "Assets/Espionage.Engine/Base/Runtime/Elements/TitleBar.uss" )]
+	[StyleSheet( GUID = "9c815de4a74e979499b715c9567688db" )]
 	public class TitleBar : Element
 	{
 		public TitleBar( string title, Image icon, params string[] classes )

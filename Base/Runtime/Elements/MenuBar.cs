@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 
 namespace Espionage.Engine.Editor.Internal
 {
-	[StyleSheet( "Assets/Espionage.Engine/Base/Runtime/Elements/MenuBar.uss" )]
+	[StyleSheet( GUID = "e00c1473ba1e95a4fac4ee7549c06e6c" )]
 	public class MenuBar : Element
 	{
 		public enum Position { Top, Bottom, None }

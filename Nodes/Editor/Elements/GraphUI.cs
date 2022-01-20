@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 namespace Espionage.Engine.Nodes.Editor
 {
 	[Library]
-	[StyleSheet( "Assets/Espionage.Engine/Nodes/Editor/Elements/GraphUI.uss" )]
+	[StyleSheet( GUID = "a2e2c40f2b404d688b1c72f86486fa32" )]
 	public class GraphUI : GraphView
 	{
 		private Graph _target;
