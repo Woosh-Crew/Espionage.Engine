@@ -1,15 +1,15 @@
 ﻿using System;
 
-namespace Espionage.Engine.Steam
+namespace Espionage.Engine.Discord
 {
 	[AttributeUsage( AttributeTargets.Class )]
 	public class DiscordAttribute : Attribute, Library.IComponent
 	{
 		public uint Id { get; }
 
-		public DiscordAttribute( uint appId )
+		public DiscordAttribute( uint id )
 		{
-			AppId = appId;
+			Id = id;
 		}
 
 		public void OnAttached( ref Library library ) { }
