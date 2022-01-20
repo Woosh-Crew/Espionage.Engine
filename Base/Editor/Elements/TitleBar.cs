@@ -9,9 +9,12 @@ namespace Espionage.Engine.Editor.Internal
 		public TitleBar( string title, Image icon, params string[] classes )
 		{
 			// Icon
-			_icon = icon;
-			_icon.AddToClassList( "Icon" );
-			Add( _icon );
+			if ( icon is not null )
+			{
+				_icon = icon;
+				_icon.AddToClassList( "Icon" );
+				Add( _icon );
+			}
 
 			_title = new Label( title );
 			_title.AddToClassList( "Title" );

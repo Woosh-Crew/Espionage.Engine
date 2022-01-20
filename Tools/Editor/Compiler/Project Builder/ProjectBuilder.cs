@@ -6,13 +6,11 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine.UIElements;
 using System.IO;
+using UnityEditor.UIElements;
 
 namespace Espionage.Engine.Editor.Internal
 {
-	[Title( "Project Builder" )]
-	[Group( "Compiler" )]
-	[Icon( EditorIcons.Code )]
-	[HelpURL( "https://github.com/Woosh-Crew/Espionage.Engine/wiki" )]
+	[Title( "Project Builder" ), Group( "Compiler" ), Icon( EditorIcons.Code ), HelpURL( "https://github.com/Woosh-Crew/Espionage.Engine/wiki" )]
 	public class ProjectBuilder : Tool
 	{
 		[MenuItem( "Tools/Project Builder _F5", false, -150 )]
@@ -25,7 +23,27 @@ namespace Espionage.Engine.Editor.Internal
 		{
 			base.OnCreateGUI();
 
+			// Header
 			rootVisualElement.Add( new HeaderBar( "Project Builder", "Builds the project to the target platform.", new Image() { image = ClassInfo.Components.Get<IconAttribute>().Icon }, "Header-Bottom-Border" ) );
+
+			rootVisualElement.Add( new TitleBar( "Meta Data", null, "Bottom" ) );
+
+			rootVisualElement.Add( new Label( Application.productName ) );
+			rootVisualElement.Add( new Label( Application.companyName ) );
+			rootVisualElement.Add( new Label( Application.version ) );
+
+			// Scenes
+			rootVisualElement.Add( new TitleBar( "Scenes", null, "Bottom", "Top" ) );
+			rootVisualElement.Add( new ObjectField( "Splash Screen" ) { objectType = typeof( SceneAsset ), tooltip = "Splash Screen is used for Loading Assets and hiding Initialization" } );
+			rootVisualElement.Add( new ObjectField( "Main Menu" ) { objectType = typeof( SceneAsset ), tooltip = "Main Menu is loaded after the Splash Screen" } );
+
+			// Post Build
+			rootVisualElement.Add( new TitleBar( "Post Build", null, "Bottom", "Top" ) );
+			rootVisualElement.Add( new Toggle( "Launch Game" ) );
+			rootVisualElement.Add( new Toggle( "Upload to Steam" ) );
+
+			// Build
+			rootVisualElement.Add( new TitleBar( "Build", null, "Bottom", "Top" ) );
 			rootVisualElement.Add( new Button( () => Build( BuildTarget.StandaloneWindows, BuildOptions.None ) ) { text = "Build Project" } );
 		}
 
