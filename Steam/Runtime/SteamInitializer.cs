@@ -1,3 +1,4 @@
+#if STEAM_API
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using UnityEngine;
 
 namespace Espionage.Engine.Steam
 {
-	public static class SteamInitializer
+	internal static class SteamInitializer
 	{
 		[Callback( "game.ready" )]
 		private static void Initialize()
@@ -34,3 +35,4 @@ namespace Espionage.Engine.Steam
 		}
 	}
 }
+#endif

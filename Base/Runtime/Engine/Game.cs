@@ -20,6 +20,7 @@ namespace Espionage.Engine
 		//
 		// Required
 		//
+
 		public abstract void OnReady();
 		public abstract void OnShutdown();
 	}
