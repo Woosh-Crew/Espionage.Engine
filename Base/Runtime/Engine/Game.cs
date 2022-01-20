@@ -1,6 +1,4 @@
-﻿using Steamworks;
-
-namespace Espionage.Engine
+﻿namespace Espionage.Engine
 {
 	public abstract class Game : ILibrary, ICallbacks, IProject
 	{
