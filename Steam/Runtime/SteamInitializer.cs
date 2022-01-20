@@ -1,4 +1,3 @@
-#if STEAM_API
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -35,4 +34,3 @@ namespace Espionage.Engine.Steam
 		}
 	}
 }
-#endif
