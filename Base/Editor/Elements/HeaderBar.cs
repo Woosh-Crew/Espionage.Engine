@@ -6,6 +6,10 @@ namespace Espionage.Engine.Editor.Internal
 	[StyleSheet( GUID = "4f913390e11109d438024966ae758619" )]
 	public class HeaderBar : Element
 	{
+		public new class UxmlFactory : UxmlFactory<HeaderBar> { }
+
+		public HeaderBar() { }
+
 		public HeaderBar( string title, string subTitle, Image icon, params string[] classes )
 		{
 			// Icon

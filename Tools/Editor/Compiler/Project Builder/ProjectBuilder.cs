@@ -10,7 +10,7 @@ using UnityEditor.UIElements;
 
 namespace Espionage.Engine.Editor.Internal
 {
-	[Title( "Project Builder" ), Group( "Compiler" ), Icon( EditorIcons.Code ), HelpURL( "https://github.com/Woosh-Crew/Espionage.Engine/wiki" )]
+	[Title( "Project Builder" ), Group( "Compiler" ), Icon( EditorIcons.Code ), HelpURL( "https://github.com/Woosh-Crew/Espionage.Engine/wiki" ), StyleSheet( GUID = "286338582a0f405dad4fcb85ab99dcc7" )]
 	public class ProjectBuilder : Tool
 	{
 		[MenuItem( "Tools/Project Builder _F5", false, -150 )]
@@ -21,26 +21,41 @@ namespace Espionage.Engine.Editor.Internal
 
 		protected override void OnCreateGUI()
 		{
-			base.OnCreateGUI();
-
 			// Header
 			rootVisualElement.Add( new HeaderBar( "Project Builder", "Builds the project to the target platform.", new Image() { image = ClassInfo.Components.Get<IconAttribute>().Icon }, "Header-Bottom-Border" ) );
 
 			rootVisualElement.Add( new TitleBar( "Meta Data", null, "Bottom" ) );
+			{
+				var box = new VisualElement();
+				box.AddToClassList( "Box" );
+				rootVisualElement.Add( box );
 
-			rootVisualElement.Add( new Label( Application.productName ) );
-			rootVisualElement.Add( new Label( Application.companyName ) );
-			rootVisualElement.Add( new Label( Application.version ) );
+				box.Add( new TextField( "Product" ) { isReadOnly = true, value = Application.productName } );
+				box.Add( new TextField( "Company" ) { isReadOnly = true, value = Application.companyName } );
+				box.Add( new TextField( "Version" ) { isReadOnly = true, value = Application.version } );
+			}
 
 			// Scenes
 			rootVisualElement.Add( new TitleBar( "Scenes", null, "Bottom", "Top" ) );
-			rootVisualElement.Add( new ObjectField( "Splash Screen" ) { objectType = typeof( SceneAsset ), tooltip = "Splash Screen is used for Loading Assets and hiding Initialization" } );
-			rootVisualElement.Add( new ObjectField( "Main Menu" ) { objectType = typeof( SceneAsset ), tooltip = "Main Menu is loaded after the Splash Screen" } );
+			{
+				var scenesBox = new VisualElement();
+				scenesBox.AddToClassList( "Box" );
+				rootVisualElement.Add( scenesBox );
+
+				scenesBox.Add( new ObjectField( "Splash Screen" ) { objectType = typeof( SceneAsset ), tooltip = "Splash Screen is used for Loading Assets and hiding Initialization" } );
+				scenesBox.Add( new ObjectField( "Main Menu" ) { objectType = typeof( SceneAsset ), tooltip = "Main Menu is loaded after the Splash Screen" } );
+			}
 
 			// Post Build
 			rootVisualElement.Add( new TitleBar( "Post Build", null, "Bottom", "Top" ) );
-			rootVisualElement.Add( new Toggle( "Launch Game" ) );
-			rootVisualElement.Add( new Toggle( "Upload to Steam" ) );
+			{
+				var box = new VisualElement();
+				box.AddToClassList( "Box" );
+				rootVisualElement.Add( box );
+
+				box.Add( new Toggle( "Launch Game" ) );
+				box.Add( new Toggle( "Upload to Steam" ) );
+			}
 
 			// Build
 			rootVisualElement.Add( new TitleBar( "Build", null, "Bottom", "Top" ) );
