@@ -1,0 +1,19 @@
+{
+    "name": "Espionage.Engine.Steam.Editor",
+    "rootNamespace": "Espionage.Engine.Steam.Editor",
+    "references": [
+        "GUID:51df6056187750b4a9cd5760fdc5e76a",
+        "GUID:bc4f920fa64c6da42a663b8aa1615037"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

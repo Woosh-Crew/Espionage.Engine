@@ -24,16 +24,7 @@ namespace Espionage.Engine
 
 			Game = Library.Database.Create<Game>( target.Class );
 
-			// Init Steam/
-			try
-			{
-				SteamClient.Init( Game.AppId );
-			}
-			catch ( Exception e )
-			{
-				Debugging.Log.Exception( e );
-			}
-
+			Callback.Run( "game.ready" );
 			Game.OnReady();
 		}
 	}
