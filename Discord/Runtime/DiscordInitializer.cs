@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Discord;
 using Espionage.Engine;
-using UnityEngine;
 
 namespace Espionage.Engine.Discord
 {
