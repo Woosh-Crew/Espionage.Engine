@@ -20,7 +20,8 @@ namespace Espionage.Engine.Tools.Editor
 
 		protected virtual void OnEnable()
 		{
-			ClassInfo = Library.Database.Get( GetType() );
+			ClassInfo = Library.Database[GetType()];
+
 			titleContent = new GUIContent( ClassInfo.Title, ClassInfo.Help );
 
 			if ( ClassInfo.Components.TryGet<IconAttribute>( out var icon ) )

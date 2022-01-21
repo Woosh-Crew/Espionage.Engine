@@ -119,6 +119,11 @@ public static class LibraryDatabaseExtensions
 		return Library.Construct( database.Get<T>() ) as T;
 	}
 
+	public static T Create<T>( this IDatabase<Library> database, Library library ) where T : class, ILibrary
+	{
+		return Library.Construct( library ) as T;
+	}
+
 	public static object Create( this IDatabase<Library> database, Type type )
 	{
 		return Library.Construct( database.Get( type ) );
@@ -165,58 +170,6 @@ public static class LibraryDatabaseExtensions
 	public static T Create<T>( this IDatabase<Library> database, Guid id ) where T : class, new()
 	{
 		return database.Create( id ) as T;
-	}
-
-	//
-	// Replace
-	//
-
-	public static void Replace<T>( this IDatabase<Library> database, Library newLibrary ) where T : class
-	{
-		if ( database.TryGet<T>( out var item ) )
-		{
-			database.Replace( item, newLibrary );
-		}
-		else
-		{
-			Debugging.Log.Warning( $"Couldn't not find {typeof( T ).FullName} in Library database" );
-		}
-	}
-
-	public static void Replace( this IDatabase<Library> database, string name, Library newLibrary )
-	{
-		if ( database.TryGet( name, out var item ) )
-		{
-			database.Replace( item, newLibrary );
-		}
-		else
-		{
-			Debugging.Log.Warning( $"Couldn't not find {name} in Library database" );
-		}
-	}
-
-	public static void Replace( this IDatabase<Library> database, Guid id, Library newLibrary )
-	{
-		if ( database.TryGet( id, out var item ) )
-		{
-			database.Replace( item, newLibrary );
-		}
-		else
-		{
-			Debugging.Log.Warning( $"Couldn't not find {id} in Library database" );
-		}
-	}
-
-	public static void Replace( this IDatabase<Library> database, Type type, Library newLibrary )
-	{
-		if ( database.TryGet( type, out var item ) )
-		{
-			database.Replace( item, newLibrary );
-		}
-		else
-		{
-			Debugging.Log.Warning( $"Couldn't not find {type.FullName} in Library database" );
-		}
 	}
 }
 

@@ -10,10 +10,17 @@ namespace Espionage.Engine
 {
 	public partial class Library
 	{
-		private class InternalDatabase : IDatabase<Library>
+		/// <summary> Database for library records </summary>
+		public static IDatabase<Library, string, Type> Database { get; private set; }
+
+		private class InternalDatabase : IDatabase<Library, string, Type>
 		{
 			public IEnumerable<Library> All => _records.Values;
 			private readonly Dictionary<string, Library> _records = new();
+
+			public Library this[ string key ] => _records[key];
+			public Library this[ Type key ] => this.Get( key );
+
 
 			public void Add( Library item )
 			{
@@ -29,7 +36,7 @@ namespace Espionage.Engine
 
 				if ( string.IsNullOrEmpty( item.Title ) )
 				{
-					item.Title = item.Name;
+					item.Title = item.Class.Name;
 				}
 
 				if ( string.IsNullOrEmpty( item.Group ) )
@@ -37,7 +44,7 @@ namespace Espionage.Engine
 					item.Group = item.Class.Namespace;
 				}
 
-				_records.Add( item.Name ?? throw new InvalidOperationException(), item );
+				_records.Add( item.Name!, item );
 			}
 
 			public void Clear()
@@ -53,29 +60,6 @@ namespace Espionage.Engine
 			public void Remove( Library item )
 			{
 				_records.Remove( item.Name );
-			}
-
-			public void Replace( Library oldItem, Library newItem )
-			{
-				if ( !Contains( oldItem ) )
-				{
-					Debugging.Log.Warning( $"Library doesnt contain item {oldItem}" );
-					return;
-				}
-
-				if ( oldItem.Name != newItem.Name )
-				{
-					Debugging.Log.Warning( $"Cannot replace {oldItem.Title} with {newItem.Title}, because the name isn't the same." );
-					return;
-				}
-
-				_records[oldItem.Name] = newItem;
-			}
-
-			public string Serialize()
-			{
-				var json = UnityEngine.JsonUtility.ToJson( this, true );
-				return json;
 			}
 		}
 	}
