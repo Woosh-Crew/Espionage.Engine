@@ -1,6 +1,8 @@
-﻿namespace Espionage.Engine
+﻿using UnityEngine;
+
+namespace Espionage.Engine
 {
-	public abstract class Game : ILibrary, ICallbacks, IProject
+	public abstract class Game : Object, ILibrary, ICallbacks, IProject
 	{
 		public Library ClassInfo { get; }
 
@@ -8,6 +10,8 @@
 		{
 			ClassInfo = Library.Database.Get( GetType() );
 			Callback.Register( this );
+
+			name = ClassInfo.Title;
 		}
 
 		~Game()
@@ -16,7 +20,17 @@
 		}
 
 		//
-		// Required
+		// Required Scenes
+		//
+
+		/// <summary>A Path to the Splash Screen Scene</summary>
+		public abstract string SplashScreen { get; }
+
+		/// <summary>A Path to the Main Menu Scene</summary>
+		public abstract string MainMenu { get; }
+
+		//
+		// Required Methods
 		//
 
 		public abstract void OnReady();

@@ -32,7 +32,12 @@ namespace Espionage.Engine.Tools.Editor
 				box.AddToClassList( "Box" );
 				rootVisualElement.Add( box );
 
-				box.Add( new ObjectField( "Build Preset" ) { objectType = typeof( ScriptableObject ) } );
+				box.Add( new ObjectField( "Target Game" )
+				{
+					objectType = typeof( Game ),
+					value = Engine.Game,
+					allowSceneObjects = false
+				} );
 			}
 
 			// Meta
@@ -55,8 +60,19 @@ namespace Espionage.Engine.Tools.Editor
 				scenesBox.AddToClassList( "Box" );
 				rootVisualElement.Add( scenesBox );
 
-				scenesBox.Add( new ObjectField( "Splash Screen" ) { objectType = typeof( SceneAsset ), tooltip = "Splash Screen is used for Loading Assets and hiding Initialization" } );
-				scenesBox.Add( new ObjectField( "Main Menu" ) { objectType = typeof( SceneAsset ), tooltip = "Main Menu is loaded after the Splash Screen" } );
+				scenesBox.Add( new ObjectField( "Splash Screen" )
+				{
+					objectType = typeof( SceneAsset ),
+					tooltip = "Splash Screen is used for Loading Assets and hiding Initialization",
+					value = AssetDatabase.LoadAssetAtPath<SceneAsset>( Engine.Game?.SplashScreen )
+				} );
+
+				scenesBox.Add( new ObjectField( "Main Menu" )
+				{
+					objectType = typeof( SceneAsset ),
+					tooltip = "Main Menu is loaded after the Splash Screen",
+					value = AssetDatabase.LoadAssetAtPath<SceneAsset>( Engine.Game?.MainMenu )
+				} );
 			}
 
 			// Post Build
@@ -110,7 +126,7 @@ namespace Espionage.Engine.Tools.Editor
 					var buildSettings = new BuildPlayerOptions()
 					{
 						scenes = new[] { "Assets/Espionage.Engine.Cache/Preload.unity" },
-						locationPathName = $"Exports/{PlayerSettings.productName}/{PlayerSettings.productName}.exe",
+						locationPathName = $"Exports/{PlayerSettings.productName} {PlayerSettings.bundleVersion}/{PlayerSettings.productName}.exe",
 						options = options,
 						target = target,
 						targetGroup = BuildTargetGroup.Standalone
