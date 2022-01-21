@@ -46,7 +46,7 @@ namespace Espionage.Engine.Tools.Editor
 			}
 
 			// Meta
-			rootVisualElement.Add( new TitleBar( "Meta Data", null, "Bottom", "Top" ) );
+			rootVisualElement.Add( new TitleBar( $"Meta Data - (From: {Engine.Game?.ClassInfo.Name})", null, "Bottom", "Top" ) );
 			{
 				var box = new VisualElement();
 				box.AddToClassList( "Box" );
@@ -55,24 +55,15 @@ namespace Espionage.Engine.Tools.Editor
 				box.Add( new TextField( "Product" ) { isReadOnly = true, value = Application.productName } );
 				box.Add( new TextField( "Company" ) { isReadOnly = true, value = Application.companyName } );
 				box.Add( new TextField( "Version" ) { isReadOnly = true, value = Application.version } );
-			}
 
-			// Scenes
-			const string help = "Reason there is only these two options is because all maps should be loaded at runtime using Espionage.Engine's level manager";
-			rootVisualElement.Add( new TitleBar( "Scenes", null, "Bottom", "Top" ) { tooltip = help } );
-			{
-				var scenesBox = new VisualElement();
-				scenesBox.AddToClassList( "Box" );
-				rootVisualElement.Add( scenesBox );
-
-				scenesBox.Add( new ObjectField( "Splash Screen" )
+				box.Add( new ObjectField( "Splash Screen" )
 				{
 					objectType = typeof( SceneAsset ),
 					tooltip = "Splash Screen is used for Loading Assets and hiding Initialization",
 					value = AssetDatabase.LoadAssetAtPath<SceneAsset>( Engine.Game?.SplashScreen )
 				} );
 
-				scenesBox.Add( new ObjectField( "Main Menu" )
+				box.Add( new ObjectField( "Main Menu" )
 				{
 					objectType = typeof( SceneAsset ),
 					tooltip = "Main Menu is loaded after the Splash Screen",
