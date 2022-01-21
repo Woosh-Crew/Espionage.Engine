@@ -2,7 +2,7 @@
 
 namespace Espionage.Engine
 {
-	public abstract class Game : Object, ILibrary, ICallbacks, IProject
+	public abstract class Game : ILibrary, ICallbacks, IProject
 	{
 		public Library ClassInfo { get; }
 
@@ -10,8 +10,6 @@ namespace Espionage.Engine
 		{
 			ClassInfo = Library.Database.Get( GetType() );
 			Callback.Register( this );
-
-			name = ClassInfo.Title;
 		}
 
 		~Game()

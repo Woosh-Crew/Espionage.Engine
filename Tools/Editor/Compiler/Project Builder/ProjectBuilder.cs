@@ -32,12 +32,17 @@ namespace Espionage.Engine.Tools.Editor
 				box.AddToClassList( "Box" );
 				rootVisualElement.Add( box );
 
-				box.Add( new ObjectField( "Target Game" )
+				box.Add( new Label( $"Target Game - {Engine.Game?.ClassInfo.Name ?? "None"}" ) );
+
+				if ( Engine.Game is null )
 				{
-					objectType = typeof( Game ),
-					value = Engine.Game,
-					allowSceneObjects = false
-				} );
+					box.Add( new Label( $"Please create a game in order to build" ) );
+				}
+			}
+
+			if ( Engine.Game is null )
+			{
+				return;
 			}
 
 			// Meta
