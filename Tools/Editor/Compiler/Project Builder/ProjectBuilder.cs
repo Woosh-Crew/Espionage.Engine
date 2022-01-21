@@ -46,7 +46,7 @@ namespace Espionage.Engine.Tools.Editor
 			}
 
 			// Meta
-			rootVisualElement.Add( new TitleBar( $"Meta Data - (From: {Engine.Game?.ClassInfo.Name})", null, "Bottom", "Top" ) );
+			rootVisualElement.Add( new TitleBar( $"Meta Data - [From: {Engine.Game.ClassInfo.Name} / {Engine.Game.ClassInfo.Title}]", null, "Bottom", "Top" ) );
 			{
 				var box = new VisualElement();
 				box.AddToClassList( "Box" );
@@ -121,7 +121,7 @@ namespace Espionage.Engine.Tools.Editor
 					// Setup BuildPipeline
 					var buildSettings = new BuildPlayerOptions()
 					{
-						scenes = new[] { "Assets/Espionage.Engine.Cache/Preload.unity" },
+						scenes = new[] { "Assets/Espionage.Engine.Cache/Preload.unity", Engine.Game.SplashScreen, Engine.Game.MainMenu },
 						locationPathName = $"Exports/{PlayerSettings.productName} {PlayerSettings.bundleVersion}/{PlayerSettings.productName}.exe",
 						options = options,
 						target = target,
@@ -152,9 +152,8 @@ namespace Espionage.Engine.Tools.Editor
 				// Move Content
 				//
 
-				// Move all exported content to Game
-				// Create the Cache Dir if it doesnt exist
 				var contentPath = $"Exports/{PlayerSettings.productName}/{PlayerSettings.productName}_Content/";
+
 				if ( Directory.Exists( contentPath ) )
 				{
 					Directory.Delete( contentPath, true );
@@ -162,16 +161,21 @@ namespace Espionage.Engine.Tools.Editor
 
 				Directory.CreateDirectory( contentPath );
 
-				// LEVEL
-				// Create the Cache Dir if it doesnt exist
-				Directory.CreateDirectory( $"{contentPath}Levels" );
+				//
+				// Move Levels
+				//
 
-				var levelFiles = Directory.GetFiles( "Exports/Levels/", "*.lvlw", SearchOption.AllDirectories );
-				foreach ( var item in levelFiles )
+				if ( Directory.Exists( "Exports/Levels/" ) )
 				{
-					var name = Path.GetFileName( item );
-					Debugging.Log.Info( $"Moving {name}, to exported project" );
-					File.Copy( item, contentPath + "Levels/" + name );
+					Directory.CreateDirectory( $"{contentPath}Levels" );
+
+					var levelFiles = Directory.GetFiles( "Exports/Levels/", "*.lvlw", SearchOption.AllDirectories );
+					foreach ( var item in levelFiles )
+					{
+						var name = Path.GetFileName( item );
+						Debugging.Log.Info( $"Moving {name}, to exported project" );
+						File.Copy( item, contentPath + "Levels/" + name );
+					}
 				}
 			}
 		}
