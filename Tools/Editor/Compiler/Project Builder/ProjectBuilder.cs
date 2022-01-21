@@ -149,10 +149,10 @@ namespace Espionage.Engine.Tools.Editor
 				}
 
 				//
-				// Move Content
+				// Create Content Directory
 				//
 
-				var contentPath = $"Exports/{PlayerSettings.productName}/{PlayerSettings.productName}_Content/";
+				var contentPath = $"Exports/{PlayerSettings.productName} {PlayerSettings.bundleVersion}/{PlayerSettings.productName}_Content/";
 
 				if ( Directory.Exists( contentPath ) )
 				{
