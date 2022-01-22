@@ -9,7 +9,7 @@ namespace Espionage.Engine.Tools.Editor
 {
 	/// <summary> A Tool is just an EditorWindow with 
 	/// ILibrary and callbacks registered and a menu bar </summary>
-	public class Tool : EditorWindow, ILibrary, ICallbacks
+	public class EditorTool : EditorWindow, ILibrary, ICallbacks
 	{
 		public Library ClassInfo { get; private set; }
 
@@ -76,7 +76,7 @@ namespace Espionage.Engine.Tools.Editor
 			var toolsMenu = new GenericMenu();
 			_menuBar.Add( "Tools", toolsMenu );
 
-			foreach ( var item in Library.Database.GetAll<Tool>() )
+			foreach ( var item in Library.Database.GetAll<EditorTool>() )
 			{
 				if ( !string.Equals( item.Group, "hidden", StringComparison.CurrentCultureIgnoreCase ) )
 				{

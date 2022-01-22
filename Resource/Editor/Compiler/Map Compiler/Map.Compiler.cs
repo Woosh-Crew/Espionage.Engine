@@ -15,7 +15,7 @@ using System.Linq;
 namespace Espionage.Engine.Tools.Editor
 {
 	[Library( "tool.map_compiler", Title = "Map Compiler", Help = "Compiles a Map for use in-game", Group = "Compiler" ), Icon( EditorIcons.Build ), HelpURL( "https://github.com/Woosh-Crew/Espionage.Engine/wiki" )]
-	public sealed class MapCompiler : Tool
+	public sealed class MapCompiler : EditorTool
 	{
 		[MenuItem( "Tools/Map Compiler _F8", false, -150 )]
 		private static void ShowEditor()
@@ -90,10 +90,7 @@ namespace Espionage.Engine.Tools.Editor
 					{
 						new AssetBundleBuild()
 						{
-							assetNames = new[]
-							{
-								"Assets/Map.unity"
-							},
+							assetNames = new[] { "Assets/Map.unity" },
 							assetBundleName = $"{scene.name}.map"
 						}
 					};

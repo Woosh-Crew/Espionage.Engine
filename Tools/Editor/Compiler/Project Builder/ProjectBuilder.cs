@@ -13,7 +13,7 @@ using UnityEditor.UIElements;
 namespace Espionage.Engine.Tools.Editor
 {
 	[Title( "Project Builder" ), Group( "Compiler" ), Icon( EditorIcons.Code ), HelpURL( "https://github.com/Woosh-Crew/Espionage.Engine/wiki" ), StyleSheet( GUID = "286338582a0f405dad4fcb85ab99dcc7" )]
-	public class ProjectBuilder : Tool
+	public class ProjectBuilder : EditorTool
 	{
 		[MenuItem( "Tools/Project Builder _F5", false, -150 )]
 		private static void ShowEditor()

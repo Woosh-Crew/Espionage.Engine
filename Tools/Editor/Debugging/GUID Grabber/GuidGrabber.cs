@@ -6,7 +6,7 @@ using Espionage.Engine.Editor;
 namespace Espionage.Engine.Tools.Editor
 {
 	[Group( "Debug" ), Title( "GUID Grabber" )]
-	internal class GuidGrabber : Tool
+	internal class GuidGrabber : EditorTool
 	{
 		private Label _label;
 		private Button _button;
