@@ -6,13 +6,13 @@ namespace Espionage.Engine.Resources
 	{
 		public string Path { get; }
 		public bool IsLoading { get; }
-		
-		public void Load( Action onLoad = null )
+
+		public bool Load( Action onLoad = null )
 		{
 			throw new NotImplementedException();
 		}
 
-		public void Unload( Action onUnload = null )
+		public bool Unload( Action onUnload = null )
 		{
 			throw new NotImplementedException();
 		}

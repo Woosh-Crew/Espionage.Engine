@@ -8,7 +8,7 @@ namespace Espionage.Engine.Resources
 		string Path { get; }
 		bool IsLoading { get; }
 
-		void Load( Action onLoad = null );
-		void Unload( Action onUnload = null );
+		bool Load( Action onLoad = null );
+		bool Unload( Action onUnload = null );
 	}
 }
