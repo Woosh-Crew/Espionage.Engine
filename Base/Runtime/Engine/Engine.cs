@@ -19,15 +19,18 @@ namespace Espionage.Engine
 				return;
 			}
 
-			Game = Library.Database.Create<Game>( target.Class );
+			using ( Debugging.Stopwatch( "Engine / Game Ready" ) )
+			{
+				Game = Library.Database.Create<Game>( target.Class );
 
-			// Setup Callbacks
-			Application.quitting -= OnShutdown;
-			Application.quitting += OnShutdown;
+				// Setup Callbacks
+				Application.quitting -= OnShutdown;
+				Application.quitting += OnShutdown;
 
-			// Ready Up Project
-			Callback.Run( "game.ready" );
-			Game.OnReady();
+				// Ready Up Project
+				Callback.Run( "game.ready" );
+				Game.OnReady();
+			}
 
 			// Setup PlayerSettings based off of Project
 #if UNITY_EDITOR
