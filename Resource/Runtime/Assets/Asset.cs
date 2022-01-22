@@ -27,6 +27,13 @@ namespace Espionage.Engine.Resources
 		{
 #if UNITY_EDITOR
 			var exportPath = $"Exports/{ClassInfo.Group}/{name}/";
+			var extension = ClassInfo.Components.Get<FileAttribute>()?.Extension;
+
+			if ( string.IsNullOrEmpty( extension ) )
+			{
+				Debugging.Log.Error( $"{ClassInfo.Title} doesn't have an extension. Not compiling" );
+				return;
+			}
 
 			using ( Debugging.Stopwatch( $"{ClassInfo.Title} Compiled" ) )
 			{
@@ -42,7 +49,7 @@ namespace Espionage.Engine.Resources
 						new AssetBundleBuild()
 						{
 							assetNames = new[] { AssetDatabase.GetAssetPath( this ) },
-							assetBundleName = $"{name}.ast"
+							assetBundleName = $"{name}.{extension}"
 						}
 					};
 
