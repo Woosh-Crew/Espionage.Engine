@@ -76,38 +76,27 @@ namespace Espionage.Engine.Resources
 			Current?.Unload();
 			Current = this;
 
-			// If there is no bundle
-			// We will load it and call the method again
-			if ( Bundle is null )
+			// Load Bundle
+			var bundleLoadRequest = AssetBundle.LoadFromFileAsync( Path );
+			bundleLoadRequest.completed += ( _ ) =>
 			{
-				// Load Bundle
-				var bundleLoadRequest = AssetBundle.LoadFromFileAsync( Path );
-				bundleLoadRequest.completed += ( _ ) =>
+				// When we've finished loading the asset
+				// bundle, go onto loading the scene itself
+				Bundle = bundleLoadRequest.assetBundle;
+				Debugging.Log.Info( "Finished Loading Bundle" );
+
+				// Load the scene by getting all scene
+				// paths from a bundle, and getting the first index
+				var scenePath = Bundle.GetAllScenePaths()[0];
+				var sceneLoadRequest = SceneManager.LoadSceneAsync( scenePath, LoadSceneMode.Additive );
+				sceneLoadRequest.completed += ( _ ) =>
 				{
-					// When we've finished loading the asset
-					// bundle, go onto loading the scene itself
-					Bundle = bundleLoadRequest.assetBundle;
-					Debugging.Log.Info( "Finished Loading Bundle" );
-
-					// Call load again now that we've already got the bundle
-					// Doing this is fucking stupid
+					// We've finished loading the scene.
+					Debugging.Log.Info( "Finished Loading Scene" );
+					onLoad?.Invoke();
 					IsLoading = false;
-					Load( onLoad );
+					Scene = SceneManager.GetSceneByPath( scenePath );
 				};
-			}
-
-			// Load the scene by getting all scene
-			// paths from a bundle, and getting the first index
-			var scenePath = Bundle.GetAllScenePaths()[0];
-			var sceneLoadRequest = SceneManager.LoadSceneAsync( scenePath, LoadSceneMode.Additive );
-
-			sceneLoadRequest.completed += ( _ ) =>
-			{
-				// We've finished loading the scene.
-				Debugging.Log.Info( "Finished Loading Scene" );
-				onLoad?.Invoke();
-				IsLoading = false;
-				Scene = SceneManager.GetSceneByPath( scenePath );
 			};
 
 			return true;
