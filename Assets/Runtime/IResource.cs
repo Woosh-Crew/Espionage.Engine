@@ -7,10 +7,8 @@ namespace Espionage.Engine.Assets
 	{
 		string Path { get; }
 		bool IsLoading { get; }
-		AssetBundle Bundle { get; }
-		
-		
-		void Load( Action onLoad = null  );
+
+		void Load( Action onLoad = null );
 		void Unload( Action onUnload = null );
 	}
 }
