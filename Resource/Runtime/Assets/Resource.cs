@@ -1,11 +1,12 @@
 ﻿using System;
 using System.IO;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Espionage.Engine.Resources
 {
 	[Title( "Resource" ), Help( "Allows loading precompiled assets at runtime" )]
-	public class Resource<T> : IResource where T : Asset
+	public class Resource<T> : IResource where T : Object
 	{
 		public T Asset { get; private set; }
 
