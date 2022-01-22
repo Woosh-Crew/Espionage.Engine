@@ -167,7 +167,7 @@ namespace Espionage.Engine.Tools.Editor
 				if ( Directory.Exists( exportedMapsPath ) )
 				{
 					var mapsPath = $"{dataPath}/Maps";
-					if ( Directory.Exists( mapsPath ) )
+					if ( !Directory.Exists( mapsPath ) )
 					{
 						Directory.CreateDirectory( mapsPath );
 					}
