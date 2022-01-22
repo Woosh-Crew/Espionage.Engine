@@ -2,6 +2,7 @@
 
 namespace Espionage.Engine
 {
+	[Spawnable( true )]
 	public abstract class Game : ILibrary, ICallbacks, IProject
 	{
 		public Library ClassInfo { get; }

@@ -9,7 +9,7 @@ namespace Espionage.Engine
 		public string Title { get; set; }
 		public string Group { get; set; }
 		public string Help { get; set; }
-		public bool Spawnable { get; set; }
+		public bool Spawnable { get; set; } = true;
 
 		public LibraryAttribute() { }
 

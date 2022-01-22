@@ -23,6 +23,7 @@ namespace Espionage.Engine
 
 			if ( !library.Spawnable )
 			{
+				Debugging.Log.Error( $"{library.Name} is not spawnable. Set Spawnable to true in classes meta." );
 				return null;
 			}
 

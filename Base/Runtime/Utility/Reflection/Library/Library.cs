@@ -64,7 +64,7 @@ namespace Espionage.Engine
 		public string Help { get; set; }
 
 		[field : SerializeField]
-		public bool Spawnable { get; set; }
+		public bool Spawnable { get; set; } = true;
 
 		// Owner & Identification
 		public Type Class { get; set; }
