@@ -5,14 +5,13 @@ namespace Espionage.Engine.Assets
 	public sealed partial class Map
 	{
 		public static IDatabase<Map, string> Database { get; private set; }
-		
+
 		private class InternalDatabase : IDatabase<Map, string>
 		{
 			public IEnumerable<Map> All => _records.Values;
 			private readonly Dictionary<string, Map> _records = new();
 
 			public Map this[ string key ] => _records[key];
-
 
 			public void Add( Map item )
 			{
