@@ -172,7 +172,7 @@ namespace Espionage.Engine.Tools.Editor
 						Directory.CreateDirectory( mapsPath );
 					}
 
-					var levelFiles = Directory.GetFiles( exportedMapsPath, " *.map", SearchOption.AllDirectories );
+					var levelFiles = Directory.GetFiles( exportedMapsPath, "*.map", SearchOption.AllDirectories );
 					foreach ( var item in levelFiles )
 					{
 						var name = Path.GetFileName( item );
