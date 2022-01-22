@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -6,7 +7,7 @@ using Object = UnityEngine.Object;
 namespace Espionage.Engine.Resources
 {
 	[Title( "Resource" ), Help( "Allows loading precompiled assets at runtime" )]
-	public class Resource<T> : IResource where T : Object
+	public class Resource<T> : IResource, IDisposable where T : Object
 	{
 		public T Asset { get; private set; }
 
@@ -19,7 +20,19 @@ namespace Espionage.Engine.Resources
 			}
 
 			Path = path;
+			Database.Add( this );
 		}
+
+		static Resource()
+		{
+			Database = new InternalDatabase();
+		}
+
+		public void Dispose()
+		{
+			Unload( () => Database.Remove( this ) );
+		}
+
 
 		//
 		// Resource
@@ -76,6 +89,48 @@ namespace Espionage.Engine.Resources
 			};
 
 			return true;
+		}
+
+		//
+		// Database
+		//
+
+		public static IDatabase<IResource, string> Database { get; private set; }
+
+		private class InternalDatabase : IDatabase<IResource, string>
+		{
+			public IEnumerable<IResource> All => _records.Values;
+			private readonly Dictionary<string, IResource> _records = new();
+
+			public IResource this[ string key ] => _records[key];
+
+			public void Add( IResource item )
+			{
+				// Store it in Database
+				if ( _records.ContainsKey( item.Path! ) )
+				{
+					_records[item.Path] = item;
+				}
+				else
+				{
+					_records.Add( item.Path!, item );
+				}
+			}
+
+			public void Clear()
+			{
+				_records.Clear();
+			}
+
+			public bool Contains( IResource item )
+			{
+				return _records.ContainsKey( item.Path );
+			}
+
+			public void Remove( IResource item )
+			{
+				_records.Remove( item.Path );
+			}
 		}
 	}
 }
