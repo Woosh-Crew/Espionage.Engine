@@ -35,27 +35,40 @@ namespace Espionage.Engine.Resources
 
 		public void Load( Action onLoad = null )
 		{
+			if ( IsLoading )
+			{
+				Debugging.Log.Warning( "Already loading map" );
+				return;
+			}
+
 			IsLoading = true;
 
-			var bundleLoadRequest = AssetBundle.LoadFromFileAsync( Path );
-			bundleLoadRequest.completed += ( _ ) =>
+			if ( Bundle is null )
 			{
-				// When we've finished loading the asset
-				// bundle, go onto loading the scene itself
-				Bundle = bundleLoadRequest.assetBundle;
-				Debugging.Log.Info( "Finished Loading Bundle" );
-
-				var scenePath = Bundle.GetAllScenePaths()[0];
-				var sceneLoadRequest = SceneManager.LoadSceneAsync( scenePath, LoadSceneMode.Single );
-
-				sceneLoadRequest.completed += ( _ ) =>
+				// Load Bundle
+				var bundleLoadRequest = AssetBundle.LoadFromFileAsync( Path );
+				bundleLoadRequest.completed += ( _ ) =>
 				{
-					// We've finished loading the scene.
-					Debugging.Log.Info( "Finished Loading Scene" );
-					onLoad?.Invoke();
-					IsLoading = false;
-					Scene = SceneManager.GetSceneByPath( scenePath );
+					// When we've finished loading the asset
+					// bundle, go onto loading the scene itself
+					Bundle = bundleLoadRequest.assetBundle;
+					Debugging.Log.Info( "Finished Loading Bundle" );
+
+					// Call load again now that we've already got the bundle
+					Load( onLoad );
 				};
+			}
+
+			var scenePath = Bundle.GetAllScenePaths()[0];
+			var sceneLoadRequest = SceneManager.LoadSceneAsync( scenePath, LoadSceneMode.Single );
+
+			sceneLoadRequest.completed += ( _ ) =>
+			{
+				// We've finished loading the scene.
+				Debugging.Log.Info( "Finished Loading Scene" );
+				onLoad?.Invoke();
+				IsLoading = false;
+				Scene = SceneManager.GetSceneByPath( scenePath );
 			};
 		}
 
