@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Espionage.Engine.Assets
+namespace Espionage.Engine.Resources
 {
 	[Title( "Map" ), Help( "Allows the loading of scene through a resource" )]
-	public sealed partial class Map : IResource, ILibrary, IDisposable
+	public sealed partial class Map : IResource, IDisposable
 	{
-		public Library ClassInfo { get; }
 		public string Name { get; set; }
 		public string Description { get; set; }
 
@@ -18,10 +17,6 @@ namespace Espionage.Engine.Assets
 		public Map( string path )
 		{
 			Path = path;
-			ClassInfo = Library.Database[GetType()];
-
-			var list = new List<Map>();
-
 			Database ??= new InternalDatabase();
 			Database.Add( this );
 		}
@@ -43,7 +38,7 @@ namespace Espionage.Engine.Assets
 			IsLoading = true;
 
 			var bundleLoadRequest = AssetBundle.LoadFromFileAsync( Path );
-			bundleLoadRequest.completed += ( e ) =>
+			bundleLoadRequest.completed += ( _ ) =>
 			{
 				// When we've finished loading the asset
 				// bundle, go onto loading the scene itself
@@ -52,6 +47,7 @@ namespace Espionage.Engine.Assets
 
 				var scenePath = Bundle.GetAllScenePaths()[0];
 				var sceneLoadRequest = SceneManager.LoadSceneAsync( scenePath, LoadSceneMode.Single );
+
 				sceneLoadRequest.completed += ( _ ) =>
 				{
 					// We've finished loading the scene.

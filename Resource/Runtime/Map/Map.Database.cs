@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Espionage.Engine.Assets
+namespace Espionage.Engine.Resources
 {
 	public sealed partial class Map
 	{

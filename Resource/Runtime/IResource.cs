@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Espionage.Engine.Assets
+namespace Espionage.Engine.Resources
 {
 	public interface IResource
 	{
