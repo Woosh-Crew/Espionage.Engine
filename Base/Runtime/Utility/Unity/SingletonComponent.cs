@@ -2,7 +2,7 @@
 
 namespace Espionage.Engine
 {
-	public class SingletonComponent<T> : MonoBehaviour  where T : Component
+	public class SingletonComponent<T> : MonoBehaviour where T : Component
 	{
 		private static T _instance;
 
@@ -18,7 +18,7 @@ namespace Espionage.Engine
 				{
 					return _instance;
 				}
-				
+
 				// Find the instance
 				_instance = FindObjectOfType<T>();
 				if ( _instance != null )
@@ -26,7 +26,7 @@ namespace Espionage.Engine
 					return _instance;
 				}
 
-				var obj = new GameObject { name = typeof(T).Name };
+				var obj = new GameObject { name = typeof( T ).Name };
 				_instance = obj.AddComponent<T>();
 
 				return _instance;
@@ -35,21 +35,23 @@ namespace Espionage.Engine
 
 		protected virtual void Awake()
 		{
-			if (_instance == null)
+			if ( _instance == null )
 			{
 				_instance = this as T;
-				DontDestroyOnLoad(this.gameObject);
+				DontDestroyOnLoad( gameObject );
 			}
 			else
 			{
-				Destroy(gameObject);
+				Destroy( gameObject );
 			}
 		}
 
 		protected virtual void OnDestroy()
 		{
-			if(_instance == this)
+			if ( _instance == this )
+			{
 				_instance = null;
+			}
 		}
 	}
 }
