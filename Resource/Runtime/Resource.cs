@@ -1,9 +1,10 @@
 ﻿using System;
 using System.IO;
+using UnityEngine;
 
 namespace Espionage.Engine.Resources
 {
-	[Title("Resource"), Help( "Allows loading precompiled assets at runtime" )]
+	[Title( "Resource" ), Help( "Allows loading precompiled assets at runtime" )]
 	public class Resource<T> : IResource where T : Asset
 	{
 		public T Asset { get; private set; }
@@ -12,28 +13,68 @@ namespace Espionage.Engine.Resources
 		{
 			if ( !Directory.Exists( path ) )
 			{
-				Debugging.Log.Error( "Invalid Map Path" );
+				Debugging.Log.Error( "Invalid Resource Path" );
 				throw new DirectoryNotFoundException();
 			}
-			
+
 			Path = path;
 		}
-		
+
 		//
 		// Resource
 		//
-		
+
 		public string Path { get; }
-		public bool IsLoading { get; }
+		public bool IsLoading { get; private set; }
+		private AssetBundle Bundle { get; set; }
 
 		public virtual bool Load( Action onLoad = null )
 		{
-			throw new NotImplementedException();
+			if ( IsLoading )
+			{
+				Debugging.Log.Warning( "Already performing an operation action on map" );
+				return false;
+			}
+
+			IsLoading = true;
+
+			// Load Bundle
+			var bundleLoadRequest = AssetBundle.LoadFromFileAsync( Path );
+			bundleLoadRequest.completed += ( _ ) =>
+			{
+				// When we've finished loading the asset
+				// bundle, go onto loading the scene itself
+				Bundle = bundleLoadRequest.assetBundle;
+				Debugging.Log.Info( "Finished Loading Bundle" );
+
+				Asset = Bundle.LoadAsset<T>( Bundle.GetAllAssetNames()[0] );
+
+				IsLoading = false;
+			};
+
+			return true;
 		}
 
 		public virtual bool Unload( Action onUnload = null )
 		{
-			throw new NotImplementedException();
+			if ( IsLoading )
+			{
+				Debugging.Log.Warning( "Already performing an operation action on map" );
+				return false;
+			}
+
+			IsLoading = true;
+
+			// Unload Bundle
+			var request = Bundle.UnloadAsync( true );
+			request.completed += ( _ ) =>
+			{
+				Debugging.Log.Info( "Finished Unloading Bundle" );
+				Asset = null;
+				IsLoading = false;
+			};
+
+			return true;
 		}
 	}
 }
