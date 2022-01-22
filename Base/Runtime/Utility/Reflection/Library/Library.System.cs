@@ -21,6 +21,11 @@ namespace Espionage.Engine
 				return null;
 			}
 
+			if ( !library.Spawnable )
+			{
+				return null;
+			}
+
 			if ( library.Components.TryGet<ConstructorAttribute>( out var constructor ) )
 			{
 				return constructor.Invoke();
@@ -76,7 +81,6 @@ namespace Espionage.Engine
 			{
 				var attribute = type.GetCustomAttribute<LibraryAttribute>();
 				record = attribute.CreateRecord( type );
-				record.Class = type;
 			}
 
 			// If still null just use type defaults

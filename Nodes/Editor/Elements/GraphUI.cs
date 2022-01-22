@@ -4,8 +4,7 @@ using UnityEngine.UIElements;
 
 namespace Espionage.Engine.Nodes.Editor
 {
-	[Library]
-	[StyleSheet( GUID = "a2e2c40f2b404d688b1c72f86486fa32" )]
+	[Library, StyleSheet( GUID = "a2e2c40f2b404d688b1c72f86486fa32" )]
 	public class GraphUI : GraphView
 	{
 		private Graph _target;
@@ -37,13 +36,6 @@ namespace Espionage.Engine.Nodes.Editor
 			{
 				AddElement( new NodeUI( node ) );
 			}
-		}
-
-		public override void BuildContextualMenu( ContextualMenuPopulateEvent evt )
-		{
-			base.BuildContextualMenu( evt );
-
-			evt.menu.AppendAction( "shit", ( e ) => { } );
 		}
 
 		private GraphViewChange OnGraphChanged( GraphViewChange graphViewChange )

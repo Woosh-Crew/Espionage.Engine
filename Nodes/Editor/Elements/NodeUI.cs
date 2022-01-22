@@ -11,6 +11,11 @@ namespace Espionage.Engine.Nodes.Editor
 		{
 			Owner = node;
 
+			if ( node is null )
+			{
+				return;
+			}
+
 			style.left = node.position.x;
 			style.top = node.position.y;
 		}
@@ -18,6 +23,12 @@ namespace Espionage.Engine.Nodes.Editor
 		public override void SetPosition( Rect newPos )
 		{
 			base.SetPosition( newPos );
+
+			if ( Owner is null )
+			{
+				return;
+			}
+
 			Owner.position = new Vector2( newPos.x, newPos.y );
 		}
 	}

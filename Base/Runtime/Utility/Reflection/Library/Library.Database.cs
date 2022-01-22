@@ -10,7 +10,10 @@ namespace Espionage.Engine
 {
 	public partial class Library
 	{
-		/// <summary> Database for library records </summary>
+		/// <summary>
+		/// Database for Library Records. Allows the access of all records.
+		/// Use extension methods to add functionality to database access.
+		/// </summary>
 		public static IDatabase<Library, string, Type> Database { get; private set; }
 
 		private class InternalDatabase : IDatabase<Library, string, Type>
@@ -44,7 +47,15 @@ namespace Espionage.Engine
 					item.Group = item.Class.Namespace;
 				}
 
-				_records.Add( item.Name!, item );
+				// Store it in Database
+				if ( _records.ContainsKey( item.Name! ) )
+				{
+					_records[item.Name] = item;
+				}
+				else
+				{
+					_records.Add( item.Name!, item );
+				}
 			}
 
 			public void Clear()

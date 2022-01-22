@@ -176,6 +176,7 @@ public static class LibraryDatabaseExtensions
 //
 // IDatabase<Library.Component>
 //
+
 public static class LibraryComponentDatabaseExtensions
 {
 	public static T Get<T>( this IDatabase<Library.IComponent> database ) where T : Library.IComponent

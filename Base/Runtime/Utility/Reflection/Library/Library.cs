@@ -74,12 +74,19 @@ namespace Espionage.Engine
 		// Properties
 		// 
 
-		public IDatabase<Property> Properties { get; private set; }
+		/// <summary>
+		/// All the properties on this library. These are the members
+		/// that have the Property attribute on them. They are used for
+		/// serialization.
+		/// </summary>
+		public IDatabase<Property, string> Properties { get; private set; }
 
-		private class InternalPropertyDatabase : IDatabase<Property>
+		private class InternalPropertyDatabase : IDatabase<Property, string>
 		{
 			private readonly Dictionary<string, Property> _all = new();
 			public IEnumerable<Property> All => _all.Values;
+
+			public Property this[ string key ] => _all[key];
 
 			public void Add( Property item )
 			{
@@ -106,6 +113,11 @@ namespace Espionage.Engine
 		// Components
 		//
 
+		/// <summary>
+		/// Components are added meta data onto that library, this can
+		/// include icons, company, stylesheet, etc. They allow us
+		/// to do some really crazy cool shit
+		/// </summary>
 		public IDatabase<IComponent> Components { get; private set; }
 
 		private class InternalComponentDatabase : IDatabase<IComponent>
