@@ -3,9 +3,13 @@
     "rootNamespace": "Espionage.Engine.Resources.Editor",
     "references": [
         "GUID:51df6056187750b4a9cd5760fdc5e76a",
-        "GUID:1d607c9ed40850c4a9e5d6d3784d671a"
+        "GUID:44e6658ada25272479b8e9b82573256f",
+        "GUID:1d607c9ed40850c4a9e5d6d3784d671a",
+        "GUID:f99da0bb99a7b4644893ad7c751864a2"
     ],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

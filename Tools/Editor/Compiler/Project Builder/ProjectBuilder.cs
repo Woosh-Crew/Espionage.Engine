@@ -121,7 +121,12 @@ namespace Espionage.Engine.Tools.Editor
 					// Setup BuildPipeline
 					var buildSettings = new BuildPlayerOptions()
 					{
-						scenes = new[] { "Assets/Espionage.Engine.Cache/Preload.unity", Engine.Game.SplashScreen, Engine.Game.MainMenu },
+						scenes = new[]
+						{
+							"Assets/Espionage.Engine.Cache/Preload.unity",
+							Engine.Game.SplashScreen,
+							Engine.Game.MainMenu
+						},
 						locationPathName = $"Exports/{PlayerSettings.productName} {PlayerSettings.bundleVersion}/{PlayerSettings.productName}.exe",
 						options = options,
 						target = target,
@@ -130,7 +135,9 @@ namespace Espionage.Engine.Tools.Editor
 
 					Callback.Run( "project_builder.building", target );
 					BuildPipeline.BuildPlayer( buildSettings );
-
+				}
+				finally
+				{
 					// Load back into original scene, in case IO throws an exception
 					if ( string.IsNullOrEmpty( originalScene ) )
 					{
@@ -140,9 +147,7 @@ namespace Espionage.Engine.Tools.Editor
 					{
 						EditorSceneManager.OpenScene( originalScene, OpenSceneMode.Single );
 					}
-				}
-				finally
-				{
+
 					// Delete Cache
 					AssetDatabase.DeleteAsset( "Assets/Espionage.Engine.Cache" );
 					AssetDatabase.Refresh();
@@ -152,29 +157,27 @@ namespace Espionage.Engine.Tools.Editor
 				// Create Content Directory
 				//
 
-				var contentPath = $"Exports/{PlayerSettings.productName} {PlayerSettings.bundleVersion}/{PlayerSettings.productName}_Content/";
-
-				if ( Directory.Exists( contentPath ) )
-				{
-					Directory.Delete( contentPath, true );
-				}
-
-				Directory.CreateDirectory( contentPath );
+				var dataPath = $"Exports/{PlayerSettings.productName} {PlayerSettings.bundleVersion}/{PlayerSettings.productName}_Data";
 
 				//
 				// Move Levels
 				//
 
-				if ( Directory.Exists( "Exports/Levels/" ) )
+				const string exportedMapsPath = "Exports/Maps/";
+				if ( Directory.Exists( exportedMapsPath ) )
 				{
-					Directory.CreateDirectory( $"{contentPath}Levels" );
+					var mapsPath = $"{dataPath}/Maps";
+					if ( Directory.Exists( mapsPath ) )
+					{
+						Directory.CreateDirectory( mapsPath );
+					}
 
-					var levelFiles = Directory.GetFiles( "Exports/Levels/", "*.lvlw", SearchOption.AllDirectories );
+					var levelFiles = Directory.GetFiles( exportedMapsPath, " *.map", SearchOption.AllDirectories );
 					foreach ( var item in levelFiles )
 					{
 						var name = Path.GetFileName( item );
 						Debugging.Log.Info( $"Moving {name}, to exported project" );
-						File.Copy( item, contentPath + "Levels/" + name );
+						File.Copy( item, $"{mapsPath}/{name}" );
 					}
 				}
 			}
