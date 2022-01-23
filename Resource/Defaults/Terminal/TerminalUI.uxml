@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<UXML xmlns="UnityEngine.UIElements">
+    <Style src="TerminalUI.uss"/>
+    <VisualElement class="Box">
+        <VisualElement class="Header">
+            <Label text="Terminal"/>
+        </VisualElement>
+        <VisualElement  class="Output Inset">
+            
+        </VisualElement>
+        <VisualElement style="flex-direction: row; margin: 8px;">
+            <TextField class="Input Inset" style="flex-grow: 1;"/>
+            <Button text="Submit" class="Box" style="color: lightgray; font-size: 10px; padding: 4px; width: 64px;" />
+        </VisualElement>
+    </VisualElement>
+</UXML>
