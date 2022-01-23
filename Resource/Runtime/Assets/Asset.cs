@@ -18,7 +18,7 @@ namespace Espionage.Engine.Resources
 		}
 	}
 
-	public abstract class Asset : ScriptableObject, ILibrary
+	public abstract class Asset : ScriptableObject, ILibrary, IAsset
 	{
 		public Library ClassInfo { get; private set; }
 

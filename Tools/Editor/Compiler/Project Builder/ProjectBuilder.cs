@@ -189,7 +189,7 @@ namespace Espionage.Engine.Tools.Editor
 					}
 				}
 
-				foreach ( var library in Library.Database.GetAll<IResource>() )
+				foreach ( var library in Library.Database.GetAll<IAsset>() )
 				{
 					Debugging.Log.Info( library.Name );
 				}

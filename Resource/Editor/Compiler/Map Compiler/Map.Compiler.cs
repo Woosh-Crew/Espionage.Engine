@@ -11,6 +11,7 @@ using UnityEngine.UIElements;
 using UnityEditor.UIElements;
 using System.Threading.Tasks;
 using System.Linq;
+using Espionage.Engine.Resources;
 
 namespace Espionage.Engine.Tools.Editor
 {
@@ -86,12 +87,14 @@ namespace Espionage.Engine.Tools.Editor
 						Directory.CreateDirectory( Path.GetFullPath( exportPath ) );
 					}
 
+					var extension = Library.Database.Get<Map>().Components.Get<FileAttribute>().Extension ?? "map";
+
 					var builds = new[]
 					{
 						new AssetBundleBuild()
 						{
 							assetNames = new[] { "Assets/Map.unity" },
-							assetBundleName = $"{scene.name}.map"
+							assetBundleName = $"{scene.name}.{extension}"
 						}
 					};
 

@@ -9,9 +9,10 @@ namespace Espionage.Engine.Resources
 	/// <summary>
 	/// A reference to a map file (.map).
 	/// </summary>
-	[Title( "Map" ), Help( "Allows the loading of scene through a resource" )]
-	public sealed partial class Map : IResource, IDisposable
+	[Title( "Map" ), Help( "Allows the loading of scene through a resource" ), File( Extension = "map" )]
+	public sealed partial class Map : IResource, IDisposable, IAsset, ILibrary
 	{
+		public Library ClassInfo { get; }
 		public static Map Current { get; private set; }
 
 		//
@@ -31,6 +32,7 @@ namespace Espionage.Engine.Resources
 				throw new DirectoryNotFoundException();
 			}
 
+			ClassInfo = Library.Database.Get<Map>();
 			Path = path;
 			Database.Add( this );
 		}
