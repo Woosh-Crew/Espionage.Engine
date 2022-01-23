@@ -185,7 +185,7 @@ namespace Espionage.Engine.Tools.Editor
 					{
 						var name = Path.GetFileName( item );
 						Debugging.Log.Info( $"Moving {name}, to exported project" );
-						File.Copy( item, $"{mapsPath}/{name}" );
+						File.Copy( item, $"{mapsPath}/{name}", true );
 					}
 				}
 
