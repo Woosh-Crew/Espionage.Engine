@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace Espionage.Engine.Resources
 {
+	/// <summary>
+	/// A Resource is a reference to an asset
+	/// </summary>
 	public interface IResource
 	{
 		string Path { get; }

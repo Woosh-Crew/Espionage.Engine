@@ -62,7 +62,7 @@ namespace Espionage.Engine.Tools.Editor
 				return false;
 			}
 
-			var exportPath = $"Exports/Maps/{scene.name}/";
+			var exportPath = $"Exports/{Library.Database.Get<Map>().Group}/{scene.name}/";
 
 			// Track how long exporting took
 			using ( Debugging.Stopwatch( "Level Compiled", true ) )
