@@ -2,6 +2,7 @@ using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using Espionage.Engine.Editor;
+using Espionage.Engine.Resources;
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.SceneManagement;
@@ -52,9 +53,21 @@ namespace Espionage.Engine.Tools.Editor
 				box.AddToClassList( "Box" );
 				rootVisualElement.Add( box );
 
-				box.Add( new TextField( "Product" ) { isReadOnly = true, value = Application.productName } );
-				box.Add( new TextField( "Company" ) { isReadOnly = true, value = Application.companyName } );
-				box.Add( new TextField( "Version" ) { isReadOnly = true, value = Application.version } );
+				box.Add( new TextField( "Product" )
+				{
+					isReadOnly = true,
+					value = Application.productName
+				} );
+				box.Add( new TextField( "Company" )
+				{
+					isReadOnly = true,
+					value = Application.companyName
+				} );
+				box.Add( new TextField( "Version" )
+				{
+					isReadOnly = true,
+					value = Application.version
+				} );
 
 				box.Add( new ObjectField( "Splash Screen" )
 				{
@@ -121,12 +134,7 @@ namespace Espionage.Engine.Tools.Editor
 					// Setup BuildPipeline
 					var buildSettings = new BuildPlayerOptions()
 					{
-						scenes = new[]
-						{
-							"Assets/Espionage.Engine.Cache/Preload.unity",
-							Engine.Game.SplashScreen,
-							Engine.Game.MainMenu
-						},
+						scenes = new[] { "Assets/Espionage.Engine.Cache/Preload.unity", Engine.Game.SplashScreen, Engine.Game.MainMenu },
 						locationPathName = $"Exports/{PlayerSettings.productName} {PlayerSettings.bundleVersion}/{PlayerSettings.productName}.exe",
 						options = options,
 						target = target,
@@ -179,6 +187,11 @@ namespace Espionage.Engine.Tools.Editor
 						Debugging.Log.Info( $"Moving {name}, to exported project" );
 						File.Copy( item, $"{mapsPath}/{name}" );
 					}
+				}
+
+				foreach ( var library in Library.Database.GetAll<IResource>() )
+				{
+					Debugging.Log.Info( library.Name );
 				}
 			}
 		}

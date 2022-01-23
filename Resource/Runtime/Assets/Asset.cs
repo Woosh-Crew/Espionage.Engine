@@ -1,14 +1,24 @@
 using System.IO;
-using UnityEditor;
+using UnityEngine;
 using Object = UnityEngine.Object;
 
 #if UNITY_EDITOR
-using UnityEngine;
+using UnityEditor;
 #endif
 
 namespace Espionage.Engine.Resources
 {
-	public abstract class Asset<T> : ScriptableObject, ILibrary where T : Object
+	public abstract class Asset<T> : Asset where T : Object
+	{
+		public T asset;
+
+		public override bool CanCompile()
+		{
+			return asset != null;
+		}
+	}
+
+	public abstract class Asset : ScriptableObject, ILibrary
 	{
 		public Library ClassInfo { get; private set; }
 
@@ -17,11 +27,10 @@ namespace Espionage.Engine.Resources
 			ClassInfo = Library.Database[GetType()];
 		}
 
-		//
-		// Asset
-		//
-
-		public T asset;
+		public virtual bool CanCompile()
+		{
+			return true;
+		}
 
 		public virtual void Compile()
 		{

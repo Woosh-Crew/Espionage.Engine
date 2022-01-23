@@ -9,13 +9,18 @@ namespace Espionage.Engine.Resources.Editor
 	[CustomEditor( typeof( Asset<> ), true )]
 	public class AssetCompiler : UnityEditor.Editor
 	{
+		private Asset Asset => target as Asset;
+
 		public override void OnInspectorGUI()
 		{
 			base.OnInspectorGUI();
 
-			if ( GUILayout.Button( "Compile" ) )
+			using ( _ = new EditorGUI.DisabledScope( !Asset.CanCompile() ) )
 			{
-				Debugging.Log.Info( "Compile!" );
+				if ( GUILayout.Button( "Compile" ) )
+				{
+					Asset.Compile();
+				}
 			}
 		}
 	}
