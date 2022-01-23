@@ -1,6 +1,7 @@
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Espionage.Engine.Editor;
 using Espionage.Engine.Resources;
 using UnityEngine;
@@ -168,30 +169,37 @@ namespace Espionage.Engine.Tools.Editor
 				var dataPath = $"Exports/{PlayerSettings.productName} {PlayerSettings.bundleVersion}/{PlayerSettings.productName}_Data";
 
 				//
-				// Move Levels
+				// Move Content to Game
 				//
 
-				const string exportedMapsPath = "Exports/Maps/";
-				if ( Directory.Exists( exportedMapsPath ) )
+				foreach ( var library in Library.Database.GetAll<IAsset>().Where( e => !e.Class.IsAbstract ) )
 				{
-					var mapsPath = $"{dataPath}/Maps";
-					if ( !Directory.Exists( mapsPath ) )
+					if ( !library.Components.TryGet<FileAttribute>( out var file ) )
 					{
-						Directory.CreateDirectory( mapsPath );
+						Debugging.Log.Warning( $"{library.Name} does have file component. Not moving " );
+						continue;
 					}
 
-					var levelFiles = Directory.GetFiles( exportedMapsPath, "*.map", SearchOption.AllDirectories );
-					foreach ( var item in levelFiles )
-					{
-						var name = Path.GetFileName( item );
-						Debugging.Log.Info( $"Moving {name}, to exported project" );
-						File.Copy( item, $"{mapsPath}/{name}", true );
-					}
-				}
+					var exportedPath = $"Exports/{library.Group}/";
 
-				foreach ( var library in Library.Database.GetAll<IAsset>() )
-				{
-					Debugging.Log.Info( library.Name );
+					if ( Directory.Exists( exportedPath ) )
+					{
+						var path = $"{dataPath}/{library.Group}";
+
+						if ( !Directory.Exists( path ) )
+						{
+							Directory.CreateDirectory( path );
+						}
+
+						var levelFiles = Directory.GetFiles( exportedPath, $"*.{file.Extension}", SearchOption.AllDirectories );
+
+						foreach ( var item in levelFiles )
+						{
+							var name = Path.GetFileName( item );
+							Debugging.Log.Info( $"Moving {name}, to exported project" );
+							File.Copy( item, $"{path}/{name}", true );
+						}
+					}
 				}
 			}
 		}
