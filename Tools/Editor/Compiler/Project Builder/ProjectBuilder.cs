@@ -163,14 +163,12 @@ namespace Espionage.Engine.Tools.Editor
 				}
 
 				//
-				// Create Content Directory
-				//
-
-				var dataPath = $"Exports/{PlayerSettings.productName} {PlayerSettings.bundleVersion}/{PlayerSettings.productName}_Data";
-
-				//
 				// Move Content to Game
 				//
+
+				// TODO: Need to add support for having a deep clean project build. Where it clears all old content.
+
+				var dataPath = $"Exports/{PlayerSettings.productName} {PlayerSettings.bundleVersion}/{PlayerSettings.productName}_Data";
 
 				foreach ( var library in Library.Database.GetAll<IAsset>().Where( e => !e.Class.IsAbstract ) )
 				{
@@ -181,23 +179,24 @@ namespace Espionage.Engine.Tools.Editor
 					}
 
 					var exportedPath = $"Exports/{library.Group}/";
+					var destinationPath = $"{dataPath}/{library.Group}";
 
+					// Create the built games, asset dir
+					if ( !Directory.Exists( destinationPath ) )
+					{
+						Directory.CreateDirectory( destinationPath );
+					}
+
+					// if we have any compiled assets of that type, copy them
 					if ( Directory.Exists( exportedPath ) )
 					{
-						var path = $"{dataPath}/{library.Group}";
-
-						if ( !Directory.Exists( path ) )
-						{
-							Directory.CreateDirectory( path );
-						}
-
 						var levelFiles = Directory.GetFiles( exportedPath, $"*.{file.Extension}", SearchOption.AllDirectories );
 
 						foreach ( var item in levelFiles )
 						{
 							var name = Path.GetFileName( item );
 							Debugging.Log.Info( $"Moving {name}, to exported project" );
-							File.Copy( item, $"{path}/{name}", true );
+							File.Copy( item, $"{destinationPath}/{name}", true );
 						}
 					}
 				}
