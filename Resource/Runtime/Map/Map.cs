@@ -24,7 +24,7 @@ namespace Espionage.Engine.Resources
 
 		/// <summary>Make a map reference from a path.</summary>
 		/// <param name="path">Where is the map located? Is relative to the game's directory</param>
-		public Map( string path )
+		private Map( string path )
 		{
 			if ( !Directory.Exists( path ) )
 			{
@@ -35,6 +35,12 @@ namespace Espionage.Engine.Resources
 			ClassInfo = Library.Database.Get<Map>();
 			Path = path;
 			Database.Add( this );
+		}
+
+		public static Map Find( string path )
+		{
+			var map = new Map( path );
+			return map;
 		}
 
 		static Map()

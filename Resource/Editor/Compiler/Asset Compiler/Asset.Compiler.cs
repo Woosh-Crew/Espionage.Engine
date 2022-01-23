@@ -6,7 +6,7 @@ using UnityEditor;
 
 namespace Espionage.Engine.Resources.Editor
 {
-	[CustomEditor( typeof( Asset<> ), true )]
+	[CustomEditor( typeof( Asset ), true )]
 	public class AssetCompiler : UnityEditor.Editor
 	{
 		private Asset Asset => target as Asset;
