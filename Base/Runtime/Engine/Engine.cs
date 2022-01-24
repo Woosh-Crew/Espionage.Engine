@@ -16,6 +16,7 @@ namespace Espionage.Engine
 			if ( target is null )
 			{
 				Debugging.Log.Warning( "Game couldn't be found." );
+				Callback.Run( "game.not_found" );
 				return;
 			}
 

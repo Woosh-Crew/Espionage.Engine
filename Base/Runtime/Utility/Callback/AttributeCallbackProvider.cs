@@ -25,21 +25,19 @@ namespace Espionage.Engine.Internal.Callbacks
 
 				foreach ( var info in methods )
 				{
-					var attribute = info.GetCustomAttribute<CallbackAttribute>();
+					var attributes = info.GetCustomAttributes<CallbackAttribute>();
 
-					if ( attribute is null )
+					foreach ( var attribute in attributes )
 					{
-						continue;
-					}
+						if ( !_callbacks.ContainsKey( attribute.Name ) )
+						{
+							_callbacks.Add( attribute.Name, new CallbackInfo.Group() );
+						}
 
-					if ( !_callbacks.ContainsKey( attribute.Name ) )
-					{
-						_callbacks.Add( attribute.Name, new CallbackInfo.Group() );
+						_callbacks.TryGetValue( attribute.Name, out var items );
+						items?.Add( new CallbackInfo { IsStatic = info.IsStatic }.FromType( info.DeclaringType )
+							.WithCallback( Build( info ) ) );
 					}
-
-					_callbacks.TryGetValue( attribute.Name, out var items );
-					items?.Add( new CallbackInfo { IsStatic = info.IsStatic }.FromType( info.DeclaringType )
-						.WithCallback( Build( info ) ) );
 				}
 			} );
 		}
