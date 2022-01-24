@@ -189,7 +189,7 @@ namespace Espionage.Engine.Resources
 		public interface IComponent
 		{
 			void OnAttached( ref Map map );
-			void OnDetached();
+			void OnDetached() { }
 
 			void OnLoad() { }
 			void OnUnload() { }
