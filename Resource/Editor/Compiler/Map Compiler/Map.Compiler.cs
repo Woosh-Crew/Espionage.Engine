@@ -132,15 +132,15 @@ namespace Espionage.Engine.Tools.Editor
 			// Testing
 			var menu = new GenericMenu();
 
-			menu.AddItem( new GUIContent( "Test/Current Map" ), false, () =>
-			{
-				Debugging.Log.Info( Map.Current );
-			} );
-
-			menu.AddItem( new GUIContent( "Test/Open Map" ), false, () =>
+			menu.AddItem( new GUIContent( "Testing/Open Map" ), false, () =>
 			{
 				// Open Map
 				var path = EditorUtility.OpenFilePanel( "Select Map", "Exports/Maps", "map" );
+
+				if ( string.IsNullOrEmpty( path ) )
+				{
+					return;
+				}
 
 				if ( !EditorApplication.isPlaying )
 				{
@@ -151,12 +151,17 @@ namespace Espionage.Engine.Tools.Editor
 				Map.Find( Path.GetFullPath( path ) ).Load();
 			} );
 
-			menu.AddItem( new GUIContent( "Test/Unload Map" ), false, () =>
+			menu.AddItem( new GUIContent( "Testing/Current Map" ), false, () =>
+			{
+				Debugging.Log.Info( Map.Current );
+			} );
+
+			menu.AddItem( new GUIContent( "Testing/Unload Map" ), false, () =>
 			{
 				Map.Current.Unload();
 			} );
 
-			bar.Add( "File", menu );
+			bar.Add( "Runtime", menu );
 		}
 	}
 }

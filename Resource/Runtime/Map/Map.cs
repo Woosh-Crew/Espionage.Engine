@@ -78,16 +78,32 @@ namespace Espionage.Engine.Resources
 		{
 			if ( IsLoading )
 			{
-				Debugging.Log.Warning( "Already performing an operation action on map" );
+				Debugging.Log.Warning( "Already performing an operation action this map" );
 				return false;
 			}
 
 			IsLoading = true;
 
 			// Unload the current map
-			Current?.Unload();
-			Current = this;
+			try
+			{
+				if ( Current != null )
+				{
+					return Current.Unload( () => Internal_LoadRequest( onLoad ) );
+				}
 
+				Internal_LoadRequest( onLoad );
+			}
+			finally
+			{
+				Current = this;
+			}
+
+			return true;
+		}
+
+		private void Internal_LoadRequest( Action onLoad = null )
+		{
 			// Load Bundle
 			var bundleLoadRequest = AssetBundle.LoadFromFileAsync( Path );
 			bundleLoadRequest.completed += ( _ ) =>
@@ -116,8 +132,6 @@ namespace Espionage.Engine.Resources
 					}
 				};
 			};
-
-			return true;
 		}
 
 		/// <summary>
@@ -130,7 +144,7 @@ namespace Espionage.Engine.Resources
 		{
 			if ( IsLoading )
 			{
-				Debugging.Log.Warning( "Already performing an operation action on map" );
+				Debugging.Log.Warning( "Already performing an operation action this map" );
 				return false;
 			}
 
@@ -154,8 +168,9 @@ namespace Espionage.Engine.Resources
 			var request = Bundle.UnloadAsync( true );
 			request.completed += ( e ) =>
 			{
-				onUnload?.Invoke();
+				Debugging.Log.Info( "Finished Unloading Bundle" );
 				IsLoading = false;
+				onUnload?.Invoke();
 
 				// Tell components we've Unloaded
 				foreach ( var component in Components.All )
