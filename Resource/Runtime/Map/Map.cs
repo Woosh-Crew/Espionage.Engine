@@ -19,8 +19,11 @@ namespace Espionage.Engine.Resources
 		// Meta Data
 		//
 
-		public string Title { get; set; }
-		public string Description { get; set; }
+		/// <summary>
+		/// Components contain map meta data.
+		/// This could include a reference to a steam workshop item
+		/// </summary>
+		public IDatabase<IComponent> Components { get; }
 
 		/// <summary>Make a map reference from a path.</summary>
 		/// <param name="path">Where is the map located? Is relative to the game's directory</param>
@@ -35,12 +38,13 @@ namespace Espionage.Engine.Resources
 			ClassInfo = Library.Database.Get<Map>();
 			Path = path;
 			Database.Add( this );
+
+			Components = new InternalComponentDatabase( this );
 		}
 
 		public static Map Find( string path )
 		{
-			var map = new Map( path );
-			return map;
+			return Database[path] ?? new Map( path );
 		}
 
 		static Map()
@@ -104,6 +108,12 @@ namespace Espionage.Engine.Resources
 					onLoad?.Invoke();
 					IsLoading = false;
 					Scene = SceneManager.GetSceneByPath( scenePath );
+
+					// Tell components we've loaded
+					foreach ( var component in Components.All )
+					{
+						component.OnLoad();
+					}
 				};
 			};
 
@@ -113,7 +123,9 @@ namespace Espionage.Engine.Resources
 		/// <summary>
 		/// Unload this Resource from memory.
 		/// </summary>
-		/// <param name="onUnload">What to do when we finish unloading</param>
+		/// <param name="onUnload">
+		/// What to do when we finish unloading
+		/// </param>
 		public bool Unload( Action onUnload = null )
 		{
 			if ( IsLoading )
@@ -139,9 +151,78 @@ namespace Espionage.Engine.Resources
 			{
 				onUnload?.Invoke();
 				IsLoading = false;
+
+				// Tell components we've Unloaded
+				foreach ( var component in Components.All )
+				{
+					component.OnUnload();
+				}
 			};
 
 			return true;
 		}
+
+		//
+		// Components
+		//
+
+		public interface IComponent
+		{
+			void OnAttached( ref Map map );
+			void OnDetached();
+
+			void OnLoad() { }
+			void OnUnload() { }
+		}
+
+		private class InternalComponentDatabase : IDatabase<IComponent>
+		{
+			public IEnumerable<IComponent> All => _components;
+
+			public InternalComponentDatabase( Map map )
+			{
+				_target = map;
+			}
+
+			private Map _target;
+			private readonly List<IComponent> _components = new();
+
+			public void Add( IComponent item )
+			{
+				_components.Add( item );
+				item.OnAttached( ref _target );
+			}
+
+			public void Clear()
+			{
+				foreach ( var item in _components )
+				{
+					Remove( item );
+				}
+
+				_components.Clear();
+			}
+
+			public bool Contains( IComponent item )
+			{
+				return _components.Contains( item );
+			}
+
+			public void Remove( IComponent item )
+			{
+				_components.Remove( item );
+				item.OnDetached();
+			}
+		}
+
+		//
+		// Commands
+		//
+
+		[Debugging.Cmd( "map" )]
+		private static void CmdGetMap() { }
+
+		[Debugging.Cmd( "map.load" )]
+		private static void CmdLoadFromPath( string path ) { }
 	}
 }

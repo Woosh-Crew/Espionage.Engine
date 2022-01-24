@@ -130,8 +130,6 @@ namespace Espionage.Engine.Tools.Editor
 		protected override void OnMenuBarCreated( MenuBar bar )
 		{
 			bar.Add( "File", null );
-			bar.Add( "Edit", null );
-			bar.Add( "View", null );
 		}
 	}
 }

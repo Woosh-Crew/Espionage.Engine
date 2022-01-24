@@ -1,13 +1,9 @@
 using System.IO;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using Espionage.Engine.Editor;
 using Espionage.Engine.Resources;
 using UnityEngine;
 using UnityEditor;
-using UnityEngine.SceneManagement;
-using UnityEditor.SceneManagement;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
 
@@ -111,53 +107,23 @@ namespace Espionage.Engine.Tools.Editor
 		{
 			using ( Debugging.Stopwatch( "Project Build Finished", true ) )
 			{
-				// Original Scene
-				var originalScene = SceneManager.GetActiveScene().path;
-				var scene = EditorSceneManager.NewScene( NewSceneSetup.DefaultGameObjects, NewSceneMode.Single );
-
-				//
-				// Build Game
-				//
-
 				try
 				{
-					// Create the Cache Dir if it doesnt exist
-					if ( !Directory.Exists( Path.GetFullPath( "Assets/Espionage.Engine.Cache/" ) ) )
-					{
-						Directory.CreateDirectory( Path.GetFullPath( "Assets/Espionage.Engine.Cache/" ) );
-					}
-
-					// Save the preload scene so we can export with it
-					EditorSceneManager.SaveScene( scene, "Assets/Espionage.Engine.Cache/Preload.unity" );
-					SceneManager.SetActiveScene( scene );
-
 					// Setup BuildPipeline
 					var buildSettings = new BuildPlayerOptions()
 					{
-						scenes = new[] { "Assets/Espionage.Engine.Cache/Preload.unity", Engine.Game.SplashScreen, Engine.Game.MainMenu },
+						scenes = new[] { Engine.Game.SplashScreen, Engine.Game.MainMenu },
 						locationPathName = $"Exports/{PlayerSettings.productName} {PlayerSettings.bundleVersion}/{PlayerSettings.productName}.exe",
 						options = options,
 						target = target,
 						targetGroup = BuildTargetGroup.Standalone
 					};
 
-					Callback.Run( "project_builder.building", target );
-					BuildPipeline.BuildPlayer( buildSettings );
+					Callback.Run( "project_builder.building", target, buildSettings );
+					var report = BuildPipeline.BuildPlayer( buildSettings );
 				}
 				finally
 				{
-					// Load back into original scene, in case IO throws an exception
-					if ( string.IsNullOrEmpty( originalScene ) )
-					{
-						EditorSceneManager.NewScene( NewSceneSetup.DefaultGameObjects, NewSceneMode.Single );
-					}
-					else
-					{
-						EditorSceneManager.OpenScene( originalScene, OpenSceneMode.Single );
-					}
-
-					// Delete Cache
-					AssetDatabase.DeleteAsset( "Assets/Espionage.Engine.Cache" );
 					AssetDatabase.Refresh();
 				}
 
