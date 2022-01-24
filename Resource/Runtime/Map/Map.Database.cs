@@ -11,7 +11,7 @@ namespace Espionage.Engine.Resources
 			public IEnumerable<Map> All => _records.Values;
 			private readonly Dictionary<string, Map> _records = new();
 
-			public Map this[ string key ] => _records[key];
+			public Map this[ string key ] => _records.ContainsKey( key ) ? _records[key] : null;
 
 			public void Add( Map item )
 			{

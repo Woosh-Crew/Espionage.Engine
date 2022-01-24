@@ -129,7 +129,34 @@ namespace Espionage.Engine.Tools.Editor
 
 		protected override void OnMenuBarCreated( MenuBar bar )
 		{
-			bar.Add( "File", null );
+			// Testing
+			var menu = new GenericMenu();
+
+			menu.AddItem( new GUIContent( "Test/Current Map" ), false, () =>
+			{
+				Debugging.Log.Info( Map.Current );
+			} );
+
+			menu.AddItem( new GUIContent( "Test/Open Map" ), false, () =>
+			{
+				// Open Map
+				var path = EditorUtility.OpenFilePanel( "Select Map", "Exports/Maps", "map" );
+
+				if ( !EditorApplication.isPlaying )
+				{
+					EditorApplication.EnterPlaymode();
+				}
+
+				Debugging.Log.Info( path );
+				Map.Find( Path.GetFullPath( path ) ).Load();
+			} );
+
+			menu.AddItem( new GUIContent( "Test/Unload Map" ), false, () =>
+			{
+				Map.Current.Unload();
+			} );
+
+			bar.Add( "File", menu );
 		}
 	}
 }

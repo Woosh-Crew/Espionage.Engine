@@ -29,7 +29,7 @@ namespace Espionage.Engine.Resources
 		/// <param name="path">Where is the map located? Is relative to the game's directory</param>
 		private Map( string path )
 		{
-			if ( !Directory.Exists( path ) )
+			if ( !File.Exists( path ) )
 			{
 				Debugging.Log.Error( "Invalid Map Path" );
 				throw new DirectoryNotFoundException();
@@ -145,6 +145,11 @@ namespace Espionage.Engine.Resources
 			// Unload scene and bundle
 			Scene?.Unload();
 			Scene = null;
+
+			if ( Current == this )
+			{
+				Current = null;
+			}
 
 			var request = Bundle.UnloadAsync( true );
 			request.completed += ( e ) =>
