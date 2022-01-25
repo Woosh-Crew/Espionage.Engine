@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -9,7 +10,7 @@ namespace Espionage.Engine.Resources
 	/// <summary>
 	/// A reference to a map file (.map).
 	/// </summary>
-	[Title( "Map" ), Group( "Maps" ), File( Extension = "map" )]
+	[Title( "Map" ), Group( "Maps" ), File( Extension = "map" ), Manager( nameof( Cache ), Order = 600, Layer = Layer.Editor | Layer.Runtime )]
 	public sealed partial class Map : IResource, IDisposable, IAsset, ILibrary
 	{
 		public Library ClassInfo { get; }
@@ -19,6 +20,9 @@ namespace Espionage.Engine.Resources
 		// Meta Data
 		//
 
+		public string Title { get; set; }
+		public string Description { get; set; }
+
 		/// <summary>
 		/// Components contain map meta data.
 		/// This could include a reference to a steam workshop item
@@ -27,7 +31,7 @@ namespace Espionage.Engine.Resources
 
 		/// <summary>Make a map reference from a path.</summary>
 		/// <param name="path">Where is the map located? Is relative to the game's directory</param>
-		private Map( string path )
+		public Map( string path )
 		{
 			if ( !File.Exists( path ) )
 			{
@@ -47,14 +51,25 @@ namespace Espionage.Engine.Resources
 			return Database[path] ?? new Map( path );
 		}
 
+		//
+		// Cache
+		// 
+
 		static Map()
 		{
 			Database = new InternalDatabase();
 		}
 
-		public void Dispose()
+		internal static void Cache()
 		{
-			Unload( () => Database.Remove( this ) );
+			using var stopwatch = Debugging.Stopwatch( "Caching Maps" );
+
+			var path = Application.isEditor ? "Exports/Maps" : Application.dataPath;
+
+			foreach ( var map in Directory.GetFiles( path, "*.map", SearchOption.AllDirectories ) )
+			{
+				Database.Add( new Map( map ) );
+			}
 		}
 
 		//
@@ -180,6 +195,11 @@ namespace Espionage.Engine.Resources
 			};
 
 			return true;
+		}
+
+		public void Dispose()
+		{
+			Unload( () => Database.Remove( this ) );
 		}
 
 		//
