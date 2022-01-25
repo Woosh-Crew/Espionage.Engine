@@ -8,6 +8,6 @@ namespace Espionage.Engine.Internal.Logging
 		public string StackTrace;
 		public Level Type;
 
-		public enum Level { Info, Warning, Error, Exception }
+		public enum Level { Debug, Info, Warning, Error, Exception }
 	}
 }

@@ -79,8 +79,8 @@ namespace Espionage.Engine.Resources
 		public string Path { get; }
 		public bool IsLoading { get; private set; }
 
-		private AssetBundle Bundle { get; set; }
-		private Scene? Scene { get; set; }
+		private AssetBundle _bundle;
+		private Scene? _scene;
 
 		/// <summary>
 		/// Loads the asset bundle if null, then will load the scene.
@@ -125,12 +125,12 @@ namespace Espionage.Engine.Resources
 			{
 				// When we've finished loading the asset
 				// bundle, go onto loading the scene itself
-				Bundle = bundleLoadRequest.assetBundle;
+				_bundle = bundleLoadRequest.assetBundle;
 				Debugging.Log.Info( "Finished Loading Bundle" );
 
 				// Load the scene by getting all scene
 				// paths from a bundle, and getting the first index
-				var scenePath = Bundle.GetAllScenePaths()[0];
+				var scenePath = _bundle.GetAllScenePaths()[0];
 				var sceneLoadRequest = SceneManager.LoadSceneAsync( scenePath, LoadSceneMode.Additive );
 				sceneLoadRequest.completed += ( _ ) =>
 				{
@@ -138,7 +138,7 @@ namespace Espionage.Engine.Resources
 					Debugging.Log.Info( "Finished Loading Scene" );
 					onLoad?.Invoke();
 					IsLoading = false;
-					Scene = SceneManager.GetSceneByPath( scenePath );
+					_scene = SceneManager.GetSceneByPath( scenePath );
 
 					// Tell components we've loaded
 					foreach ( var component in Components.All )
@@ -163,7 +163,7 @@ namespace Espionage.Engine.Resources
 				return false;
 			}
 
-			if ( Bundle is null )
+			if ( _bundle is null )
 			{
 				Debugging.Log.Warning( "Invalid Bundle. Cannot Unload" );
 				return false;
@@ -171,16 +171,23 @@ namespace Espionage.Engine.Resources
 
 			IsLoading = true;
 
-			// Unload scene and bundle
-			Scene?.Unload();
-			Scene = null;
-
 			if ( Current == this )
 			{
 				Current = null;
 			}
 
-			var request = Bundle.UnloadAsync( true );
+			Internal_UnloadRequest( onUnload );
+
+			return true;
+		}
+
+		private void Internal_UnloadRequest( Action onUnload = null )
+		{
+			// Unload scene and bundle
+			_scene?.Unload();
+			_scene = null;
+
+			var request = _bundle.UnloadAsync( true );
 			request.completed += ( e ) =>
 			{
 				Debugging.Log.Info( "Finished Unloading Bundle" );
@@ -193,8 +200,6 @@ namespace Espionage.Engine.Resources
 					component.OnUnload();
 				}
 			};
-
-			return true;
 		}
 
 		public void Dispose()
@@ -260,9 +265,21 @@ namespace Espionage.Engine.Resources
 		//
 
 		[Debugging.Cmd( "map" )]
-		private static void CmdGetMap() { }
+		private static void CmdGetMap()
+		{
+			if ( Current is null )
+			{
+				Debugging.Log.Info( "No Map" );
+				return;
+			}
+
+			Debugging.Log.Info( $"[{Current.Title}] - {Current.Path}" );
+		}
 
 		[Debugging.Cmd( "map.load" )]
-		private static void CmdLoadFromPath( string path ) { }
+		private static void CmdLoadFromPath( string path )
+		{
+			Find( path )?.Load();
+		}
 	}
 }

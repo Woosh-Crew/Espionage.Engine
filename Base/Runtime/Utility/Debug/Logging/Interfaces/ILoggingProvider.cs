@@ -22,12 +22,16 @@ namespace Espionage.Engine.Internal.Logging
 // Extensions
 // 
 
-public static class ILoggingProviderExtensions
+public static class LoggingProviderExtensions
 {
-	/// <summary> Dumps the target object into the console </summary>
-	public static void Dump( this object target )
+	public static void Debug( this ILoggingProvider provider, object message )
 	{
-		Espionage.Engine.Debugging.Log.Info( target.ToString() );
+		provider?.Add( new Entry()
+		{
+			Message = message.ToString(),
+			StackTrace = Environment.StackTrace,
+			Type = Entry.Level.Debug
+		} );
 	}
 
 	public static void Info( this ILoggingProvider provider, object message )
@@ -35,8 +39,8 @@ public static class ILoggingProviderExtensions
 		provider?.Add( new Entry()
 		{
 			Message = message.ToString(),
-			StackTrace = System.Environment.StackTrace,
-			Type = Entry.Level.Info,
+			StackTrace = Environment.StackTrace,
+			Type = Entry.Level.Info
 		} );
 	}
 
@@ -45,8 +49,8 @@ public static class ILoggingProviderExtensions
 		provider?.Add( new Entry()
 		{
 			Message = message.ToString(),
-			StackTrace = System.Environment.StackTrace,
-			Type = Entry.Level.Warning,
+			StackTrace = Environment.StackTrace,
+			Type = Entry.Level.Warning
 		} );
 	}
 
@@ -55,8 +59,8 @@ public static class ILoggingProviderExtensions
 		provider?.Add( new Entry()
 		{
 			Message = message.ToString(),
-			StackTrace = System.Environment.StackTrace,
-			Type = Entry.Level.Error,
+			StackTrace = Environment.StackTrace,
+			Type = Entry.Level.Error
 		} );
 	}
 
@@ -65,8 +69,8 @@ public static class ILoggingProviderExtensions
 		provider?.Add( new Entry()
 		{
 			Message = exception.Message,
-			StackTrace = System.Environment.StackTrace,
-			Type = Entry.Level.Error,
+			StackTrace = Environment.StackTrace,
+			Type = Entry.Level.Error
 		} );
 	}
 }

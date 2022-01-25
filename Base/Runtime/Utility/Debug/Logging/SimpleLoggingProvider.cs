@@ -23,22 +23,23 @@ namespace Espionage.Engine.Internal.Logging
 
 			switch ( entry.Type )
 			{
-				case Entry.Level.Info:
+				case Entry.Level.Debug :
+				case Entry.Level.Info :
 					UnityEngine.Debug.Log( entry.Message );
 					break;
 
-				case Entry.Level.Warning:
+				case Entry.Level.Warning :
 					UnityEngine.Debug.LogWarning( entry.Message );
 					break;
 
-				case Entry.Level.Error:
+				case Entry.Level.Error :
 					UnityEngine.Debug.LogError( entry.Message );
 					break;
 
-				case Entry.Level.Exception:
+				case Entry.Level.Exception :
 					UnityEngine.Debug.LogError( entry.Message );
 					break;
-				default:
+				default :
 					throw new ArgumentOutOfRangeException();
 			}
 		}
@@ -54,7 +55,7 @@ namespace Espionage.Engine.Internal.Logging
 					return _clearConsoleMethod;
 				}
 
-				var assembly = Assembly.GetAssembly( typeof(SceneView) );
+				var assembly = Assembly.GetAssembly( typeof( SceneView ) );
 				var logEntries = assembly.GetType( "UnityEditor.LogEntries" );
 				_clearConsoleMethod = logEntries.GetMethod( "Clear" );
 				return _clearConsoleMethod;

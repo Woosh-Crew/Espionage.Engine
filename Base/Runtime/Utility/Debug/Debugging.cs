@@ -7,7 +7,7 @@ using Espionage.Engine.Internal.Commands;
 
 namespace Espionage.Engine
 {
-	[Manager( nameof(Initialize), Layer = Layer.Runtime | Layer.Editor, Order = -200 )]
+	[Manager( nameof( Initialize ), Layer = Layer.Runtime | Layer.Editor, Order = -200 )]
 	public static partial class Debugging
 	{
 		//
@@ -48,34 +48,39 @@ namespace Espionage.Engine
 		//
 
 		[Var( "debug.report_stopwatch" )]
-		private static bool ReportStopwatch { get; set; } = true;
+		private static bool ReportStopwatch { get; set; } = false;
 
 		public static IDisposable Stopwatch( string message = null, bool alwaysReport = false )
 		{
-			if ( ReportStopwatch || alwaysReport )
-			{
-				return new TimedScope( message );
-			}
-			else
-			{
-				return null;
-			}
+			return ReportStopwatch || alwaysReport ? new TimedScope( message, 0 ) : null;
+		}
+
+		public static IDisposable Stopwatch( string message, int reportIfOverTime )
+		{
+			return ReportStopwatch ? new TimedScope( message, reportIfOverTime ) : null;
 		}
 
 		internal class TimedScope : IDisposable
 		{
 			private readonly Stopwatch _stopwatch;
 			private readonly string _message;
+			private readonly int _reportTime;
 
-			public TimedScope( string message )
+			public TimedScope( string message, int reportTime )
 			{
-				_stopwatch = System.Diagnostics.Stopwatch.StartNew();
 				_message = message;
+				_reportTime = reportTime;
+				_stopwatch = System.Diagnostics.Stopwatch.StartNew();
 			}
 
 			public void Dispose()
 			{
 				_stopwatch.Stop();
+
+				if ( _stopwatch.ElapsedMilliseconds <= _reportTime )
+				{
+					return;
+				}
 
 				var time = $"{_stopwatch.ElapsedMilliseconds}ms";
 
