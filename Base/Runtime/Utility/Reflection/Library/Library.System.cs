@@ -50,7 +50,7 @@ namespace Espionage.Engine
 			Database ??= new InternalDatabase();
 			Database.Clear();
 
-			using ( Debugging.Stopwatch( "Library Initialized" ) )
+			using ( Debugging.Stopwatch( "Library Initialized", 10 ) )
 			{
 				// Select all types where ILibrary exists or if it has the correct attribute
 				var types = AppDomain.CurrentDomain.GetAssemblies()

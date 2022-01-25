@@ -42,11 +42,17 @@ namespace Espionage.Engine
 			Properties = new InternalPropertyDatabase();
 
 			// Get all Properties (Defined by the User)
-			const BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;
-			foreach ( var propertyInfo in Class.GetProperties( flags ).Where( e => e.IsDefined( typeof( PropertyAttribute ) ) ) )
+			const BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static;
+			foreach ( var propertyInfo in Class.GetProperties( flags ) )
 			{
-				var attribute = propertyInfo.GetCustomAttribute<PropertyAttribute>();
-				Properties.Add( attribute.CreateRecord( this, propertyInfo ) );
+				if ( propertyInfo.IsDefined( typeof( PropertyAttribute ) ) )
+				{
+					var attribute = propertyInfo.GetCustomAttribute<PropertyAttribute>();
+					Properties.Add( attribute.CreateRecord( this, propertyInfo ) );
+					return;
+				}
+
+				Properties.Add( new Property( this, propertyInfo ) );
 			}
 		}
 

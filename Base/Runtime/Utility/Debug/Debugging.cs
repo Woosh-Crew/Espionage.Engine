@@ -57,7 +57,7 @@ namespace Espionage.Engine
 
 		public static IDisposable Stopwatch( string message, int reportIfOverTime )
 		{
-			return ReportStopwatch ? new TimedScope( message, reportIfOverTime ) : null;
+			return new TimedScope( message, reportIfOverTime );
 		}
 
 		internal class TimedScope : IDisposable
