@@ -71,6 +71,8 @@ namespace Espionage.Engine
 					Database.Add( CreateRecord( item ) );
 				}
 			}
+
+			Callback.Run( "library.ready" );
 		}
 
 		private static Library CreateRecord( Type type )

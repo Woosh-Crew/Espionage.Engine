@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using UnityEditor;
 
 namespace Espionage.Engine
 {
@@ -15,7 +14,6 @@ namespace Espionage.Engine
 			Name = info.Name;
 			Title = info.Name;
 
-			//
 			// Components
 			Components = new InternalComponentDatabase( this );
 
@@ -32,17 +30,21 @@ namespace Espionage.Engine
 		public string Group { get; set; }
 		public string Help { get; set; }
 
-		public Library ClassInfo { get; }
-		public PropertyInfo Info { get; }
+		private Library ClassInfo { get; }
+		private PropertyInfo Info { get; }
 
-		public void SetValue( object from, object value )
+		public object this[ object from ]
 		{
-			Info.SetValue( from, value );
-		}
+			get => Info.GetValue( from );
+			set
+			{
+				Info.SetValue( from, value );
 
-		public object GetValue( object from )
-		{
-			return Info.GetValue( from );
+				foreach ( var component in Components.All )
+				{
+					component.OnValueChanged();
+				}
+			}
 		}
 
 		//
@@ -55,6 +57,8 @@ namespace Espionage.Engine
 		{
 			void OnAttached( ref Property property );
 			void OnDetached() { }
+
+			void OnValueChanged() { }
 		}
 
 		private class InternalComponentDatabase : IDatabase<IComponent>
