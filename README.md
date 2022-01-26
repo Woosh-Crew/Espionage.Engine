@@ -246,6 +246,9 @@ or alternatively you can use the `Debugging.Var` attribute on a property, so you
 private static bool Cheats { get; set; } = false;
 ```
 
+## > Localisation System
+This is currently in Alpha, and may not work at times. Readme will be updated once finished
+
 # Planned Features
 These are planned features that are going to be implemented in the future
 
