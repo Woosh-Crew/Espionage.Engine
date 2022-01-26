@@ -65,6 +65,7 @@ namespace Espionage.Engine.Languages
 				var language = JsonUtility.FromJson<Language>( Path );
 				name = language.name;
 				localisation = language.localisation;
+				Languages.Localisation.Database.Add( this );
 			}
 
 			IsLoading = false;
@@ -76,6 +77,7 @@ namespace Espionage.Engine.Languages
 		{
 			name = null;
 			localisation = null;
+			Languages.Localisation.Database.Remove( this );
 
 			return true;
 		}
