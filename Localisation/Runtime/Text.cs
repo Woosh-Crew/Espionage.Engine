@@ -25,7 +25,7 @@ namespace Espionage.Engine.Languages
 
 		public static implicit operator string( Text text )
 		{
-			return Localisation.Current.Localisation[text._id];
+			return Localisation.Current.Localisation[text._id] ?? "NULL";
 		}
 	}
 }

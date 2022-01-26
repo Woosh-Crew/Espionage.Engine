@@ -22,16 +22,16 @@ namespace Espionage.Engine.Resources
 
 		public string Title { get; set; }
 		public string Description { get; set; }
-
-		/// <summary>
-		/// Components contain map meta data.
-		/// This could include a reference to a steam workshop item
-		/// </summary>
-		public IDatabase<IComponent> Components { get; }
+		public IMapProvider Provider { get; }
 
 		/// <summary>Make a map reference from a path.</summary>
 		/// <param name="path">Where is the map located? Is relative to the game's directory</param>
-		public Map( string path )
+		public Map( string path ) : this( path, new AssetBundleMapProvider() ) { }
+
+		/// <summary><inheritdoc cref="Map(string)"/></summary>
+		/// <param name="path">Where is the map located? Is relative to the game's directory</param>
+		/// <param name="provider">What provider should we use for loading and unloading maps</param>
+		public Map( string path, IMapProvider provider )
 		{
 			if ( !File.Exists( path ) )
 			{
@@ -39,7 +39,8 @@ namespace Espionage.Engine.Resources
 				throw new DirectoryNotFoundException();
 			}
 
-			ClassInfo = Library.Database.Get<Map>();
+			Provider = provider;
+			ClassInfo = Library.Database[GetType()];
 			Path = path;
 			Database.Add( this );
 
@@ -65,8 +66,9 @@ namespace Espionage.Engine.Resources
 			using var stopwatch = Debugging.Stopwatch( "Caching Maps" );
 
 			var path = Application.isEditor ? "Exports/Maps" : Application.dataPath;
+			var extension = Library.Database.Get<Map>().Components.Get<FileAttribute>().Extension;
 
-			foreach ( var map in Directory.GetFiles( path, "*.map", SearchOption.AllDirectories ) )
+			foreach ( var map in Directory.GetFiles( path, $"*.{extension}", SearchOption.AllDirectories ) )
 			{
 				Database.Add( new Map( map ) );
 			}
@@ -77,10 +79,7 @@ namespace Espionage.Engine.Resources
 		//
 
 		public string Path { get; }
-		public bool IsLoading { get; private set; }
-
-		private AssetBundle _bundle;
-		private Scene? _scene;
+		public bool IsLoading => Provider.IsLoading;
 
 		/// <summary>
 		/// Loads the asset bundle if null, then will load the scene.
@@ -96,8 +95,6 @@ namespace Espionage.Engine.Resources
 				Debugging.Log.Warning( "Already performing an operation action this map" );
 				return false;
 			}
-
-			IsLoading = true;
 
 			// Unload the current map
 			try
@@ -119,34 +116,15 @@ namespace Espionage.Engine.Resources
 
 		private void Internal_LoadRequest( Action onLoad = null )
 		{
-			// Load Bundle
-			var bundleLoadRequest = AssetBundle.LoadFromFileAsync( Path );
-			bundleLoadRequest.completed += ( _ ) =>
+			onLoad += () =>
 			{
-				// When we've finished loading the asset
-				// bundle, go onto loading the scene itself
-				_bundle = bundleLoadRequest.assetBundle;
-				Debugging.Log.Info( "Finished Loading Bundle" );
-
-				// Load the scene by getting all scene
-				// paths from a bundle, and getting the first index
-				var scenePath = _bundle.GetAllScenePaths()[0];
-				var sceneLoadRequest = SceneManager.LoadSceneAsync( scenePath, LoadSceneMode.Additive );
-				sceneLoadRequest.completed += ( _ ) =>
+				foreach ( var component in Components.All )
 				{
-					// We've finished loading the scene.
-					Debugging.Log.Info( "Finished Loading Scene" );
-					onLoad?.Invoke();
-					IsLoading = false;
-					_scene = SceneManager.GetSceneByPath( scenePath );
-
-					// Tell components we've loaded
-					foreach ( var component in Components.All )
-					{
-						component.OnLoad();
-					}
-				};
+					component.OnLoad();
+				}
 			};
+
+			Provider.Load( Path, onLoad );
 		}
 
 		/// <summary>
@@ -163,14 +141,6 @@ namespace Espionage.Engine.Resources
 				return false;
 			}
 
-			if ( _bundle is null )
-			{
-				Debugging.Log.Warning( "Invalid Bundle. Cannot Unload" );
-				return false;
-			}
-
-			IsLoading = true;
-
 			if ( Current == this )
 			{
 				Current = null;
@@ -183,23 +153,15 @@ namespace Espionage.Engine.Resources
 
 		private void Internal_UnloadRequest( Action onUnload = null )
 		{
-			// Unload scene and bundle
-			_scene?.Unload();
-			_scene = null;
-
-			var request = _bundle.UnloadAsync( true );
-			request.completed += ( e ) =>
+			onUnload += () =>
 			{
-				Debugging.Log.Info( "Finished Unloading Bundle" );
-				IsLoading = false;
-				onUnload?.Invoke();
-
-				// Tell components we've Unloaded
 				foreach ( var component in Components.All )
 				{
 					component.OnUnload();
 				}
 			};
+
+			Provider.Unload( Path, onUnload );
 		}
 
 		public void Dispose()
@@ -210,6 +172,12 @@ namespace Espionage.Engine.Resources
 		//
 		// Components
 		//
+
+		/// <summary>
+		/// Components contain map meta data.
+		/// This could include a reference to a steam workshop item
+		/// </summary>
+		public IDatabase<IComponent> Components { get; }
 
 		public interface IComponent
 		{

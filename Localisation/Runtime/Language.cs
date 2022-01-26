@@ -9,7 +9,7 @@ using UnityEngine.Serialization;
 
 namespace Espionage.Engine.Languages
 {
-	[Serializable, Group( "Languages" ), File( Extension = ".lng", Serialization = "json" )]
+	[Serializable, Library, Group( "Languages" ), File( Extension = ".lng", Serialization = "json" )]
 	public class Language : IDisposable, IResource, IAsset
 	{
 		public string Name => name;
