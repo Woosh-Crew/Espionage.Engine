@@ -58,9 +58,12 @@ public class Entity : Object, ILibrary
 public static class Utility  { }
 ``` 
 
+### General Features
+* Spawning objects with a string identifier
+* Adding per-class meta.
+
 ### How do we use the Library system in Espionage.Engine? 
 We use it almost everywhere, like I stated above. But here are some cool uses of it
-
 
 #### Map.cs
 ```c#
@@ -182,9 +185,7 @@ Now in one of our tools, all the hard work and boilerplate code is not needed an
 public class ProjectBuilder : EditorTool { }
 ```
 
-### General Features
-* Spawning objects with a string identifier
-* Adding per-class meta.
+You can do other crazy cool stuff I haven't gone through here, just look through Espionage.Engines code base to see how extensively I've used the Library System.
 
 ## > Callback System
 Easy attribute based event system that I'm calling the Callback system. Just assign a method the "Callback" attribute and it'll do the rest behind the scenes.
