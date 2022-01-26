@@ -1,0 +1,18 @@
+{
+    "name": "Espionage.Engine.Language.Editor",
+    "rootNamespace": "Espionage.Engine.Language.Editor",
+    "references": [
+        "GUID:51df6056187750b4a9cd5760fdc5e76a",
+        "GUID:44e6658ada25272479b8e9b82573256f",
+        "GUID:f99da0bb99a7b4644893ad7c751864a2"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
