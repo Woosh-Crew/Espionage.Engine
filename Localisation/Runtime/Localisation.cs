@@ -10,7 +10,7 @@ namespace Espionage.Engine.Languages
 		public static void Switch( Language language )
 		{
 			Current = language;
-			Callback.Run( "localisation.switched" );
+			Callback.Run( "language.switched" );
 		}
 
 		//

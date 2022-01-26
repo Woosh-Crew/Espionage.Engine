@@ -11,11 +11,16 @@ namespace Espionage.Engine.Languages
 	/// </summary>
 	public class Text
 	{
-		private string _id;
+		private readonly string _id;
 
-		public Text( string id )
+		private Text( string id )
 		{
 			_id = id;
+		}
+
+		public static implicit operator Text( string id )
+		{
+			return new Text( id );
 		}
 
 		public static implicit operator string( Text text )
