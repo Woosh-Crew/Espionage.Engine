@@ -78,12 +78,12 @@ In element.cs we use ILibrary for something cooler. we use it for getting the st
 ```c#
 public Element()
 {
-	ClassInfo = Library.Database.Get( GetType() );
-	Callback.Register( this );
-	foreach ( var item in ClassInfo.Components.GetAll<StyleSheetAttribute>() )
-	{
-		styleSheets.Add( item.Style );
-	}
+    ClassInfo = Library.Database.Get( GetType() );
+    Callback.Register( this );
+    foreach ( var item in ClassInfo.Components.GetAll<StyleSheetAttribute>() )
+    {
+        styleSheets.Add( item.Style );
+    }
 }
 ```
 
@@ -91,8 +91,8 @@ As you can see here we assign the style sheet on construct.
 Now in one of our UI element classes **HeaderBar.cs** we inherit from Element which will automatically assign the stylesheet based of that StyleSheet Library component.
 
 ```c#
-	[StyleSheet( GUID = "4f913390e11109d438024966ae758619" )]
-	public class HeaderBar : Element { }
+[StyleSheet( GUID = "4f913390e11109d438024966ae758619" )]
+public class HeaderBar : Element { }
 ```
 
 #### Engine.cs
