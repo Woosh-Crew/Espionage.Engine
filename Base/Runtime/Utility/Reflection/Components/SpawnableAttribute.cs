@@ -7,14 +7,14 @@ namespace Espionage.Engine
 	{
 		private readonly bool _spawnable;
 
-		public SpawnableAttribute( bool spawnable )
+		public SpawnableAttribute( bool spawnable = true )
 		{
 			_spawnable = spawnable;
 		}
 
 		public void OnAttached( ref Library library )
 		{
-			library.Spawnable = _spawnable;
+			library.Spawnable = true;
 		}
 	}
 }

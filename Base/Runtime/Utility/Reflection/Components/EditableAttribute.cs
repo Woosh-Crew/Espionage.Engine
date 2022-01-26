@@ -7,7 +7,7 @@ namespace Espionage.Engine
 	{
 		public bool Editable { get; }
 
-		public EditableAttribute( bool editable )
+		public EditableAttribute( bool editable = true )
 		{
 			Editable = editable;
 		}

@@ -29,6 +29,7 @@ namespace Espionage.Engine
 		public string Title { get; set; }
 		public string Group { get; set; }
 		public string Help { get; set; }
+		public bool Serialized { get; set; }
 
 		private Library ClassInfo { get; }
 		private PropertyInfo Info { get; }
