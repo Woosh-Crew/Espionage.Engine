@@ -7,6 +7,7 @@ namespace Espionage.Engine
 	{
 		public string Name { get; set; }
 		public string Extension { get; set; }
+		public string Serialization { get; set; }
 
 		public void OnAttached( ref Library library ) { }
 	}

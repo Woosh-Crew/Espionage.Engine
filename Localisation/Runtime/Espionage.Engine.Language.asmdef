@@ -2,7 +2,8 @@
     "name": "Espionage.Engine.Language",
     "rootNamespace": "Espionage.Engine.Language",
     "references": [
-        "GUID:51df6056187750b4a9cd5760fdc5e76a"
+        "GUID:51df6056187750b4a9cd5760fdc5e76a",
+        "GUID:1d607c9ed40850c4a9e5d6d3784d671a"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
