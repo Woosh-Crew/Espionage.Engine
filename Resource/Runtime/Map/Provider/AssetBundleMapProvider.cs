@@ -14,7 +14,7 @@ namespace Espionage.Engine.Resources
 		public Scene? Scene { get; private set; }
 
 		// Loading Meta
-		public float Progress => !_bundleRequestOperation.isDone ? _bundleRequestOperation.progress / 2 : _sceneLoadOperation.progress / 2 + 0.5f;
+		public float Progress => _bundleRequestOperation.progress / 2 + _sceneLoadOperation.progress / 2;
 		public bool IsLoading { get; private set; }
 
 		public AssetBundleMapProvider( string path )
