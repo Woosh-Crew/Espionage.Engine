@@ -20,19 +20,18 @@ namespace Espionage.Engine.Resources
 		// Meta Data
 		//
 
+		private IMapProvider Provider { get; }
+
 		public string Identifier => Provider.Identifier;
 		public string Title { get; set; }
 		public string Description { get; set; }
-
-
-		private IMapProvider Provider { get; }
 
 		//
 		// Constructors
 		//
 
-		/// <summary><inheritdoc cref="Map(string)"/></summary>
-		/// <param name="provider">What provider should we use for loading and unloading maps</param>
+		/// <summary>Make a reference to a map, using a provider.</summary>
+		/// <param name="provider">What provider should we use for loading and unloading maps?</param>
 		public Map( IMapProvider provider )
 		{
 			ClassInfo = Library.Database[GetType()];
@@ -71,6 +70,16 @@ namespace Espionage.Engine.Resources
 		public static implicit operator Scene( Map map )
 		{
 			return map.Provider.Scene ?? default;
+		}
+
+		public static implicit operator Map( string path )
+		{
+			return Find( path );
+		}
+
+		public static implicit operator Map( int index )
+		{
+			return Find( index );
 		}
 
 		//
@@ -282,7 +291,13 @@ namespace Espionage.Engine.Resources
 			Debugging.Log.Info( $"Map: [{Current.Title}] - [{Current.Identifier}]" );
 		}
 
-		[Debugging.Cmd( "map.load" )]
+		[Debugging.Cmd( "map.load_index" )]
+		private static void CmdLoadFromPath( int index )
+		{
+			Find( index )?.Load();
+		}
+
+		[Debugging.Cmd( "map.load_path" )]
 		private static void CmdLoadFromPath( string path )
 		{
 			Find( path )?.Load();
