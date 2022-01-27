@@ -4,15 +4,14 @@ namespace Espionage.Engine.Resources
 {
 	public sealed partial class Map
 	{
-		public static IDatabase<Map, string, int> Database { get; private set; }
+		public static IDatabase<Map, string> Database { get; private set; }
 
-		private class InternalDatabase : IDatabase<Map, string, int>
+		private class InternalDatabase : IDatabase<Map, string>
 		{
 			public IEnumerable<Map> All => _records.Values;
 			private readonly Dictionary<string, Map> _records = new();
 
 			public Map this[ string key ] => _records.ContainsKey( key ) ? _records[key] : null;
-			public Map this[ int key ] => throw new System.NotImplementedException();
 
 			public void Add( Map item )
 			{
