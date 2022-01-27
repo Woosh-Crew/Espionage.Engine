@@ -33,11 +33,11 @@ namespace Espionage.Engine
 			set => _setup.FieldOfView = value;
 		}
 
-		protected abstract void Simulate();
+		protected abstract void Update();
 
 		public void Build( ref Setup camSetup )
 		{
-			Simulate();
+			Update();
 			_setup = camSetup;
 
 			if ( camSetup.FieldOfView == 0 )

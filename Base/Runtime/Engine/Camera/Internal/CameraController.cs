@@ -12,6 +12,7 @@ namespace Espionage.Engine
 		{
 			base.Awake();
 
+			gameObject.tag = "MainCamera";
 			_target = GetComponent<Camera>();
 		}
 
@@ -20,6 +21,8 @@ namespace Espionage.Engine
 			var trans = transform;
 			trans.position = camSetup.Position;
 			trans.rotation = camSetup.Rotation;
+
+			_target.fieldOfView = camSetup.FieldOfView;
 		}
 
 		private void OnDrawGizmos()
