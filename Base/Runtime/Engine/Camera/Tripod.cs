@@ -17,20 +17,20 @@ namespace Espionage.Engine
 
 		protected Vector3 Position
 		{
-			get { return _setup.Position; } 
-			set { _setup.Position = value; }
+			get => _setup.Position;
+			set => _setup.Position = value;
 		}
 
 		protected Quaternion Rotation
 		{
-			get { return _setup.Rotation; } 
-			set { _setup.Rotation = value; }
+			get => _setup.Rotation;
+			set => _setup.Rotation = value;
 		}
 
 		protected float FieldOfView
 		{
-			get { return _setup.FieldOfView; }
-			set { _setup.FieldOfView = value; }
+			get => _setup.FieldOfView;
+			set => _setup.FieldOfView = value;
 		}
 
 		protected abstract void Simulate();
@@ -38,10 +38,12 @@ namespace Espionage.Engine
 		public void Build( ref Setup camSetup )
 		{
 			Simulate();
-			camSetup = _setup;
+			_setup = camSetup;
 
 			if ( camSetup.FieldOfView == 0 )
+			{
 				camSetup.FieldOfView = 90;
+			}
 		}
 
 		public struct Setup

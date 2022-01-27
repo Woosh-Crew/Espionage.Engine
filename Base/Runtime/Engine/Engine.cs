@@ -75,6 +75,7 @@ namespace Espionage.Engine
 				_lastSetup = Game.BuildCamera( _lastSetup );
 
 				// Get Camera Component
+				CameraController.Instance.Finalise( _lastSetup );
 			}
 		}
 	}
