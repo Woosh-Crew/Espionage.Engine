@@ -7,19 +7,19 @@ namespace Espionage.Engine.Resources
 {
 	public class AssetBundleMapProvider : IMapProvider
 	{
-		public Scene? Scene { get; private set;  }
-		public bool IsLoading { get; private set;  }
-		
+		public Scene? Scene { get; private set; }
+		public bool IsLoading { get; private set; }
+
 		//
 		// Resource Loading & Unloading
 		//
-		
+
 		private AssetBundle _bundle;
 
 		public void Load( string path, Action finished )
 		{
 			IsLoading = true;
-			
+
 			// Load Bundle
 			var bundleLoadRequest = AssetBundle.LoadFromFileAsync( path );
 			bundleLoadRequest.completed += ( _ ) =>
@@ -39,6 +39,7 @@ namespace Espionage.Engine.Resources
 					Debugging.Log.Info( "Finished Loading Scene" );
 					IsLoading = false;
 					Scene = SceneManager.GetSceneByPath( scenePath );
+					SceneManager.SetActiveScene( Scene.Value );
 					finished?.Invoke();
 				};
 			};

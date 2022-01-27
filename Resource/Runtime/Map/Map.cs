@@ -29,7 +29,7 @@ namespace Espionage.Engine.Resources
 		public Map( string path ) : this( path, new AssetBundleMapProvider() ) { }
 
 		/// <summary><inheritdoc cref="Map(string)"/></summary>
-		/// <param name="path">Where is the map located? Is relative to the game's directory</param>
+		/// <param name="path"><inheritdoc cref="Map(string)"/></param>
 		/// <param name="provider">What provider should we use for loading and unloading maps</param>
 		public Map( string path, IMapProvider provider )
 		{
