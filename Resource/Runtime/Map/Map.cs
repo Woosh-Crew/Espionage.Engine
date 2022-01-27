@@ -130,6 +130,8 @@ namespace Espionage.Engine.Resources
 		{
 			onLoad += () =>
 			{
+				Callback.Run( "map.loaded" );
+
 				foreach ( var component in Components.All )
 				{
 					component.OnLoad();
@@ -167,6 +169,8 @@ namespace Espionage.Engine.Resources
 		{
 			onUnload += () =>
 			{
+				Callback.Run( "map.unloaded" );
+
 				foreach ( var component in Components.All )
 				{
 					component.OnUnload();
