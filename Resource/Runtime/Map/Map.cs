@@ -22,7 +22,7 @@ namespace Espionage.Engine.Resources
 
 		public string Title { get; set; }
 		public string Description { get; set; }
-		public IMapProvider Provider { get; }
+		private IMapProvider Provider { get; }
 
 		/// <summary>Make a map reference from a path.</summary>
 		/// <param name="path">Where is the map located? Is relative to the game's directory</param>
@@ -39,9 +39,9 @@ namespace Espionage.Engine.Resources
 				throw new DirectoryNotFoundException();
 			}
 
+			Path = path;
 			Provider = provider;
 			ClassInfo = Library.Database[GetType()];
-			Path = path;
 			Database.Add( this );
 
 			Components = new InternalComponentDatabase( this );
@@ -71,6 +71,18 @@ namespace Espionage.Engine.Resources
 			foreach ( var map in Directory.GetFiles( path, $"*.{extension}", SearchOption.AllDirectories ) )
 			{
 				Database.Add( new Map( map ) );
+			}
+		}
+
+		//
+		// Utility
+		//
+
+		public void Add( GameObject gameObject )
+		{
+			if ( Provider.Scene != null )
+			{
+				SceneManager.MoveGameObjectToScene( gameObject, Provider.Scene.Value );
 			}
 		}
 
