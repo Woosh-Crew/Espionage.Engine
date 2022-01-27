@@ -249,6 +249,9 @@ private static bool Cheats { get; set; } = false;
 ## > Localisation System
 This is currently in Alpha, and may not work at times. Readme will be updated once finished
 
+## > Camera System
+This is also currently in Alpha, and may not work at times. Readme will be updated once finished
+
 # Planned Features
 These are planned features that are going to be implemented in the future
 
