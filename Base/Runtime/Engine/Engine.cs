@@ -11,22 +11,30 @@ namespace Espionage.Engine
 
 		private static void Initialize()
 		{
-			var target = Library.Database.GetAll<Game>().FirstOrDefault( e => !e.Class.IsAbstract );
-
-			if ( target is null )
-			{
-				Debugging.Log.Warning( "Game couldn't be found." );
-				Callback.Run( "game.not_found" );
-				return;
-			}
-
 			using ( Debugging.Stopwatch( "Engine / Game Ready" ) )
 			{
-				Game = Library.Database.Create<Game>( target.Class );
-
 				// Setup Callbacks
 				Application.quitting -= OnShutdown;
 				Application.quitting += OnShutdown;
+
+				if ( Application.isPlaying )
+				{
+					// Frame Update
+					Application.onBeforeRender -= OnFrame;
+					Application.onBeforeRender += OnFrame;
+				}
+
+				// Setup Game
+				var target = Library.Database.GetAll<Game>().FirstOrDefault( e => !e.Class.IsAbstract );
+
+				if ( target is null )
+				{
+					Debugging.Log.Warning( "Game couldn't be found." );
+					Callback.Run( "game.not_found" );
+					return;
+				}
+
+				Game = Library.Database.Create<Game>( target.Class );
 
 				// Ready Up Project
 				Callback.Run( "game.ready" );
@@ -44,9 +52,30 @@ namespace Espionage.Engine
 #endif
 		}
 
+		private static void OnFrame()
+		{
+			// Setup Camera
+		}
+
 		private static void OnShutdown()
 		{
-			Game.OnShutdown();
+			Game?.OnShutdown();
+		}
+
+		//
+		// Camera Building
+		//
+
+		private static Tripod.Setup _lastSetup;
+
+		private static void SetupCamera()
+		{
+			if ( Game != null )
+			{
+				_lastSetup = Game.BuildCamera( _lastSetup );
+
+				// Get Camera Component
+			}
 		}
 	}
 }

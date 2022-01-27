@@ -18,6 +18,9 @@ namespace Espionage.Engine
 			Callback.Unregister( this );
 		}
 
+		public virtual void OnReady() { }
+		public virtual void OnShutdown() { }
+
 		//
 		// Required Scenes
 		//
@@ -29,11 +32,35 @@ namespace Espionage.Engine
 		public abstract string MainMenu { get; }
 
 		//
-		// Required Methods
+		// Build Camera
 		//
 
-		public abstract void OnReady();
-		public abstract void OnShutdown();
-		public abstract void OnCompile();
+		private ICamera LastCamera { get; set; }
+
+		protected virtual ICamera FindActiveCamera()
+		{
+			return null;
+		}
+
+		public Tripod.Setup BuildCamera( Tripod.Setup camSetup )
+		{
+			var cam = FindActiveCamera();
+
+			if ( LastCamera != cam )
+			{
+				LastCamera?.Deactivated();
+				LastCamera = cam;
+				LastCamera?.Activated();
+			}
+
+			cam?.Build( ref camSetup );
+
+			// if we have no cam, lets use the pawn's eyes directly
+			PostCameraSetup( ref camSetup );
+
+			return camSetup;
+		}
+
+		protected virtual void PostCameraSetup( ref Tripod.Setup camSetup ) { }
 	}
 }
