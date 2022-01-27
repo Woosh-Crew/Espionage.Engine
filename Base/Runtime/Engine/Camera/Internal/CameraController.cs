@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Espionage.Engine
 {
-	[RequireComponent( typeof( Camera ) )]
+	[RequireComponent( typeof( Camera ), typeof( AudioListener ) )]
 	internal class CameraController : SingletonComponent<CameraController>
 	{
 		private Camera _target;
@@ -19,6 +20,11 @@ namespace Espionage.Engine
 			var trans = transform;
 			trans.position = camSetup.Position;
 			trans.rotation = camSetup.Rotation;
+		}
+
+		private void OnDrawGizmos()
+		{
+			Gizmos.DrawWireSphere( transform.position, 0.8f );
 		}
 	}
 }
