@@ -19,7 +19,7 @@ namespace Espionage.Engine.Resources
 				throw new DirectoryNotFoundException();
 			}
 
-			Path = path;
+			Identifier = path;
 			Database.Add( this );
 		}
 
@@ -44,7 +44,7 @@ namespace Espionage.Engine.Resources
 		// Resource
 		//
 
-		public string Path { get; }
+		public string Identifier { get; }
 		public bool IsLoading { get; private set; }
 		private AssetBundle Bundle { get; set; }
 
@@ -59,7 +59,7 @@ namespace Espionage.Engine.Resources
 			IsLoading = true;
 
 			// Load Bundle
-			var bundleLoadRequest = AssetBundle.LoadFromFileAsync( Path );
+			var bundleLoadRequest = AssetBundle.LoadFromFileAsync( Identifier );
 			bundleLoadRequest.completed += ( _ ) =>
 			{
 				// When we've finished loading the asset

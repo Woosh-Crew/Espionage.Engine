@@ -41,7 +41,7 @@ namespace Espionage.Engine.Languages
 				throw new DirectoryNotFoundException();
 			}
 
-			Path = path;
+			Identifier = path;
 		}
 
 		public void Dispose()
@@ -53,7 +53,7 @@ namespace Espionage.Engine.Languages
 		// Resource
 		//
 
-		public string Path { get; }
+		public string Identifier { get; }
 		public bool IsLoading { get; private set; }
 
 		public bool Load( Action onLoad = null )
@@ -62,7 +62,7 @@ namespace Espionage.Engine.Languages
 
 			using ( Debugging.Stopwatch( "Language Loaded", 5 ) )
 			{
-				var language = JsonUtility.FromJson<Language>( Path );
+				var language = JsonUtility.FromJson<Language>( Identifier );
 				name = language.name;
 				localisation = language.localisation;
 				Languages.Localisation.Database.Add( this );

@@ -16,13 +16,13 @@ namespace Espionage.Engine.Resources
 			public void Add( IResource item )
 			{
 				// Store it in Database
-				if ( _records.ContainsKey( item.Path! ) )
+				if ( _records.ContainsKey( item.Identifier! ) )
 				{
-					_records[item.Path] = item;
+					_records[item.Identifier] = item;
 				}
 				else
 				{
-					_records.Add( item.Path!, item );
+					_records.Add( item.Identifier!, item );
 				}
 			}
 
@@ -33,12 +33,12 @@ namespace Espionage.Engine.Resources
 
 			public bool Contains( IResource item )
 			{
-				return _records.ContainsKey( item.Path );
+				return _records.ContainsKey( item.Identifier );
 			}
 
 			public void Remove( IResource item )
 			{
-				_records.Remove( item.Path );
+				_records.Remove( item.Identifier );
 			}
 		}
 	}

@@ -7,33 +7,54 @@ namespace Espionage.Engine.Resources
 {
 	public class AssetBundleMapProvider : IMapProvider
 	{
+		// Id
+		public string Identifier => _path;
+
+		// Outcome
 		public Scene? Scene { get; private set; }
+
+		// Loading Meta
+		public float Progress => !_bundleRequestOperation.isDone ? _bundleRequestOperation.progress : _sceneLoadOperation.progress;
 		public bool IsLoading { get; private set; }
 
+		public AssetBundleMapProvider( string path )
+		{
+			if ( !File.Exists( path ) )
+			{
+				throw new DirectoryNotFoundException( "Invalid Map Path" );
+			}
+
+			_path = path;
+		}
+
 		//
-		// Resource Loading & Unloading
+		// Resource
 		//
 
+		private AssetBundleCreateRequest _bundleRequestOperation;
+		private AsyncOperation _sceneLoadOperation;
+
+		private readonly string _path;
 		private AssetBundle _bundle;
 
-		public void Load( string path, Action finished )
+		public void Load( Action finished )
 		{
 			IsLoading = true;
 
 			// Load Bundle
-			var bundleLoadRequest = AssetBundle.LoadFromFileAsync( path );
-			bundleLoadRequest.completed += ( _ ) =>
+			_bundleRequestOperation = AssetBundle.LoadFromFileAsync( _path );
+			_bundleRequestOperation.completed += ( _ ) =>
 			{
 				// When we've finished loading the asset
 				// bundle, go onto loading the scene itself
-				_bundle = bundleLoadRequest.assetBundle;
+				_bundle = _bundleRequestOperation.assetBundle;
 				Debugging.Log.Info( "Finished Loading Bundle" );
 
 				// Load the scene by getting all scene
 				// paths from a bundle, and getting the first index
 				var scenePath = _bundle.GetAllScenePaths()[0];
-				var sceneLoadRequest = SceneManager.LoadSceneAsync( scenePath, LoadSceneMode.Additive );
-				sceneLoadRequest.completed += ( _ ) =>
+				_sceneLoadOperation = SceneManager.LoadSceneAsync( scenePath, LoadSceneMode.Additive );
+				_sceneLoadOperation.completed += ( _ ) =>
 				{
 					// We've finished loading the scene.
 					Debugging.Log.Info( "Finished Loading Scene" );
@@ -45,7 +66,7 @@ namespace Espionage.Engine.Resources
 			};
 		}
 
-		public void Unload( string path, Action finished )
+		public void Unload( Action finished )
 		{
 			// Unload scene and bundle
 			Scene?.Unload();

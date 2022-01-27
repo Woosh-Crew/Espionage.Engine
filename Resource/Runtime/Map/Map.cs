@@ -20,36 +20,57 @@ namespace Espionage.Engine.Resources
 		// Meta Data
 		//
 
+		public string Identifier => Provider.Identifier;
 		public string Title { get; set; }
 		public string Description { get; set; }
+
+
 		private IMapProvider Provider { get; }
 
-		/// <summary>Make a map reference from a path.</summary>
-		/// <param name="path">Where is the map located? Is relative to the game's directory</param>
-		public Map( string path ) : this( path, new AssetBundleMapProvider() ) { }
+		//
+		// Constructors
+		//
 
 		/// <summary><inheritdoc cref="Map(string)"/></summary>
-		/// <param name="path"><inheritdoc cref="Map(string)"/></param>
 		/// <param name="provider">What provider should we use for loading and unloading maps</param>
-		public Map( string path, IMapProvider provider )
+		public Map( IMapProvider provider )
 		{
-			if ( !File.Exists( path ) )
-			{
-				Debugging.Log.Error( "Invalid Map Path" );
-				throw new DirectoryNotFoundException();
-			}
-
-			Path = path;
-			Provider = provider;
 			ClassInfo = Library.Database[GetType()];
+
+			Provider = provider;
 			Database.Add( this );
 
 			Components = new InternalComponentDatabase( this );
 		}
 
+		/// <summary>Make a map reference from a path.</summary>
+		/// <param name="path">Where is the map located?</param>
+		public Map( string path ) : this( new AssetBundleMapProvider( path ) ) { }
+
+		/// <summary>
+		/// Make a map reference from a build index.
+		/// This shouldn't be used but it is there if you need it.
+		/// </summary>
+		/// <param name="buildIndex">Build Index of the scene in Build Scenes list</param>
+		public Map( int buildIndex ) : this( new BuildIndexMapProvider( buildIndex ) ) { }
+
+		public static Map Find( int index )
+		{
+			return Database[$"index:{index}"] ?? new Map( index );
+		}
+
 		public static Map Find( string path )
 		{
 			return Database[path] ?? new Map( path );
+		}
+
+		//
+		// Operators
+		//
+
+		public static implicit operator Scene( Map map )
+		{
+			return map.Provider.Scene ?? default;
 		}
 
 		//
@@ -64,6 +85,8 @@ namespace Espionage.Engine.Resources
 		internal static void Cache()
 		{
 			using var stopwatch = Debugging.Stopwatch( "Caching Maps" );
+
+			// Cache Asset Bundle Maps
 
 			var path = Application.isEditor ? "Exports/Maps" : Application.dataPath;
 			var extension = Library.Database.Get<Map>().Components.Get<FileAttribute>().Extension;
@@ -90,7 +113,6 @@ namespace Espionage.Engine.Resources
 		// Resource 
 		//
 
-		public string Path { get; }
 		public bool IsLoading => Provider.IsLoading;
 
 		/// <summary>
@@ -138,7 +160,7 @@ namespace Espionage.Engine.Resources
 				}
 			};
 
-			Provider.Load( Path, onLoad );
+			Provider.Load( onLoad );
 		}
 
 		/// <summary>
@@ -177,7 +199,7 @@ namespace Espionage.Engine.Resources
 				}
 			};
 
-			Provider.Unload( Path, onUnload );
+			Provider.Unload( onUnload );
 		}
 
 		public void Dispose()
@@ -257,7 +279,7 @@ namespace Espionage.Engine.Resources
 				return;
 			}
 
-			Debugging.Log.Info( $"[{Current.Title}] - {Current.Path}" );
+			Debugging.Log.Info( $"Map: [{Current.Title}] - [{Current.Identifier}]" );
 		}
 
 		[Debugging.Cmd( "map.load" )]

@@ -5,10 +5,18 @@ namespace Espionage.Engine.Resources
 {
 	public interface IMapProvider
 	{
+		// Id
+		string Identifier { get; }
+
+		// Outcome
 		Scene? Scene { get; }
+
+		// Loading Meta
+		float Progress { get; }
 		bool IsLoading { get; }
-		
-		void Load( string path, Action finished );
-		void Unload( string path, Action finished );
+
+		// Resource
+		void Load( Action finished );
+		void Unload( Action finished );
 	}
 }

@@ -4,25 +4,26 @@ namespace Espionage.Engine.Resources
 {
 	public sealed partial class Map
 	{
-		public static IDatabase<Map, string> Database { get; private set; }
+		public static IDatabase<Map, string, int> Database { get; private set; }
 
-		private class InternalDatabase : IDatabase<Map, string>
+		private class InternalDatabase : IDatabase<Map, string, int>
 		{
 			public IEnumerable<Map> All => _records.Values;
 			private readonly Dictionary<string, Map> _records = new();
 
 			public Map this[ string key ] => _records.ContainsKey( key ) ? _records[key] : null;
+			public Map this[ int key ] => throw new System.NotImplementedException();
 
 			public void Add( Map item )
 			{
 				// Store it in Database
-				if ( _records.ContainsKey( item.Path! ) )
+				if ( _records.ContainsKey( item.Identifier! ) )
 				{
-					_records[item.Path] = item;
+					_records[item.Identifier] = item;
 				}
 				else
 				{
-					_records.Add( item.Path!, item );
+					_records.Add( item.Identifier!, item );
 				}
 			}
 
@@ -33,12 +34,12 @@ namespace Espionage.Engine.Resources
 
 			public bool Contains( Map item )
 			{
-				return _records.ContainsKey( item.Path );
+				return _records.ContainsKey( item.Identifier );
 			}
 
 			public void Remove( Map item )
 			{
-				_records.Remove( item.Path );
+				_records.Remove( item.Identifier );
 			}
 		}
 	}

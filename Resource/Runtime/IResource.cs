@@ -8,7 +8,7 @@ namespace Espionage.Engine.Resources
 	/// </summary>
 	public interface IResource
 	{
-		string Path { get; }
+		string Identifier { get; }
 		bool IsLoading { get; }
 
 		bool Load( Action onLoad = null );

@@ -34,12 +34,14 @@ namespace Espionage.Engine
 		/// Unload this Scene.
 		/// </summary>
 		/// <param name="self">A Scene instance.</param>
-		public static void Unload( this Scene self )
+		public static AsyncOperation Unload( this Scene self )
 		{
 			if ( self.isLoaded && self.IsValid() )
 			{
-				SceneManager.UnloadSceneAsync( self.name );
+				return SceneManager.UnloadSceneAsync( self.name );
 			}
+
+			return null;
 		}
 
 		/// <summary>
