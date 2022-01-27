@@ -254,10 +254,6 @@ These are planned features that are going to be implemented in the future
 
 ## > Generic Node Graph
 This system will provide a generic node graph that can be applied to anything. Examples include, visual scripting, node based audio engine, node based animation controller, UI node network, etc. 
- 
-### > Networking
-Networking is a fork of Tom Weiland's Riptide, with major improvements to it. Such as:
-- Networked objects being indicted by using an interface, where it implements a network identity object.
 
 # Publicly Released Extensions
 Here are a list of our extensions and third party extensions.
