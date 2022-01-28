@@ -22,12 +22,13 @@ namespace Espionage.Engine.Components
 
 		public bool Contains( IComponent<T> item )
 		{
-			return	_components.Contains( item );
+			return _components.Contains( item );
 		}
 
 		public void Remove( IComponent<T> item )
 		{
 			_components.Remove( item );
+			item.OnDetached( _target );
 		}
 
 		public void Clear()

@@ -181,31 +181,3 @@ public static class LibraryDatabaseExtensions
 		return database.Create( id ) as T;
 	}
 }
-
-//
-// IDatabase<Library.Component>
-//
-
-public static class LibraryComponentDatabaseExtensions
-{
-	public static T Get<T>( this IDatabase<Library.IComponent> database ) where T : Library.IComponent
-	{
-		return (T)database.All.FirstOrDefault( e => e is T );
-	}
-
-	public static IEnumerable<T> GetAll<T>( this IDatabase<Library.IComponent> database ) where T : Library.IComponent
-	{
-		return database.All.Select( e => (T)e );
-	}
-
-	public static bool TryGet<T>( this IDatabase<Library.IComponent> database, out T component ) where T : Library.IComponent
-	{
-		component = database.Get<T>();
-		return component is not null;
-	}
-
-	public static bool Exists<T>( this IDatabase<Library.IComponent> database ) where T : Library.IComponent
-	{
-		return database.Get<T>() is not null;
-	}
-}
