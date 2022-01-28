@@ -55,6 +55,7 @@ namespace Espionage.Engine
 		private static void OnFrame()
 		{
 			// Setup Camera
+			SetupCamera();
 		}
 
 		private static void OnShutdown()
@@ -70,13 +71,16 @@ namespace Espionage.Engine
 
 		private static void SetupCamera()
 		{
-			if ( Game != null )
+			if ( Game == null )
 			{
-				_lastSetup = Game.BuildCamera( _lastSetup );
-
-				// Get Camera Component
-				CameraController.Instance.Finalise( _lastSetup );
+				return;
 			}
+
+			// Build the camSetup, from game.
+			_lastSetup = Game.BuildCamera( _lastSetup );
+
+			// Get Camera Component
+			CameraController.Instance.Finalise( _lastSetup );
 		}
 	}
 }
