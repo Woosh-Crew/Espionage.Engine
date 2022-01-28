@@ -1,9 +1,10 @@
 using System;
+using Espionage.Engine.Components;
 
 namespace Espionage.Engine
 {
 	[AttributeUsage( AttributeTargets.Class )]
-	public sealed class EditableAttribute : Attribute, Library.IComponent, Property.IComponent
+	public sealed class EditableAttribute : Attribute, IComponent<Library>, IComponent<Property>
 	{
 		public bool Editable { get; }
 
@@ -12,7 +13,7 @@ namespace Espionage.Engine
 			Editable = editable;
 		}
 
-		public void OnAttached( ref Library library ) { }
-		public void OnAttached( ref Property property ) { }
+		public void OnAttached( Library library ) { }
+		public void OnAttached( Property property ) { }
 	}
 }

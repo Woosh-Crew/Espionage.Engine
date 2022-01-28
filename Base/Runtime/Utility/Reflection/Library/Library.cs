@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using Espionage.Engine.Components;
 using UnityEngine;
 
 namespace Espionage.Engine
@@ -28,13 +29,13 @@ namespace Espionage.Engine
 
 			//
 			// Components
-			Components = new InternalComponentDatabase( this );
+			Components = new ComponentDatabase<Library>( this );
 
 			// This is really expensive (6ms)...
 			// Get Components attached to type
-			foreach ( var item in Class.GetCustomAttributes().Where( e => e is IComponent ) )
+			foreach ( var item in Class.GetCustomAttributes().Where( e => e is IComponent<Library> ) )
 			{
-				Components.Add( item as IComponent );
+				Components.Add( item as IComponent<Library> );
 			}
 
 			//
@@ -124,46 +125,6 @@ namespace Espionage.Engine
 		/// include icons, company, stylesheet, etc. They allow us
 		/// to do some really crazy cool shit
 		/// </summary>
-		public IDatabase<IComponent> Components { get; private set; }
-
-		private class InternalComponentDatabase : IDatabase<IComponent>
-		{
-			public IEnumerable<IComponent> All => _components;
-
-			public InternalComponentDatabase( Library library )
-			{
-				_target = library;
-			}
-
-			private Library _target;
-			private readonly List<IComponent> _components = new();
-
-			public void Add( IComponent item )
-			{
-				_components.Add( item );
-				item.OnAttached( ref _target );
-			}
-
-			public void Clear()
-			{
-				foreach ( var item in _components )
-				{
-					Remove( item );
-				}
-
-				_components.Clear();
-			}
-
-			public bool Contains( IComponent item )
-			{
-				return _components.Contains( item );
-			}
-
-			public void Remove( IComponent item )
-			{
-				_components.Remove( item );
-				item.OnDetached();
-			}
-		}
+		public IDatabase<IComponent<Library>> Components { get; private set; }
 	}
 }

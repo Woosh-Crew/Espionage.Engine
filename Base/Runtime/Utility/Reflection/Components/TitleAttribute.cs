@@ -1,9 +1,10 @@
 using System;
+using Espionage.Engine.Components;
 
 namespace Espionage.Engine
 {
 	[AttributeUsage( AttributeTargets.Class | AttributeTargets.Property )]
-	public sealed class TitleAttribute : Attribute, Library.IComponent, Property.IComponent
+	public sealed class TitleAttribute : Attribute, IComponent<Library>, IComponent<Property>
 	{
 		private readonly string _title;
 
@@ -12,12 +13,12 @@ namespace Espionage.Engine
 			_title = title;
 		}
 
-		public void OnAttached( ref Library library )
+		public void OnAttached( Library library )
 		{
 			library.Title = _title;
 		}
 
-		public void OnAttached( ref Property property )
+		public void OnAttached( Property property )
 		{
 			property.Title = _title;
 		}

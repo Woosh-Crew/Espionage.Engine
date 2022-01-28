@@ -1,4 +1,5 @@
 using System;
+using Espionage.Engine.Components;
 using UnityEngine;
 
 #if UNITY_EDITOR
@@ -8,7 +9,7 @@ using UnityEditor;
 namespace Espionage.Engine
 {
 	[AttributeUsage( AttributeTargets.Class | AttributeTargets.Property )]
-	public sealed class IconAttribute : Attribute, Library.IComponent, Property.IComponent
+	public sealed class IconAttribute : Attribute, IComponent<Library>, IComponent<Property>
 	{
 		private readonly string _path;
 
@@ -22,7 +23,7 @@ namespace Espionage.Engine
 #else
 		public Texture Icon => throw new NotImplementedException();
 #endif
-		public void OnAttached( ref Library library ) { }
-		public void OnAttached( ref Property property ) { }
+		public void OnAttached( Library library ) { }
+		public void OnAttached( Property property ) { }
 	}
 }

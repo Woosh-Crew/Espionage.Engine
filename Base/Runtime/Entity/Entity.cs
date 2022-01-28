@@ -4,62 +4,64 @@ using UnityEngine;
 
 namespace Espionage.Engine
 {
-    public abstract class Entity : Object, ILibrary, ICallbacks
-    {
-	    public static List<Entity> All { get; }
-	    
-	    static Entity()
-	    {
-		    All = new List<Entity>();
-	    }
+	public abstract class Entity : Object, ILibrary, ICallbacks
+	{
+		public static List<Entity> All { get; }
 
-	    // Entity
+		static Entity()
+		{
+			All = new List<Entity>();
+		}
 
-	    public Library ClassInfo { get; set; }
+		// Entity
 
-	    public Entity()
-	    {
-		    ClassInfo = Library.Database[GetType()];
-		    Callback.Register( this );
-		    All.Add( this );
-		    
-		    CreateHook();
-	    }
+		public Library ClassInfo { get; set; }
 
-	    private void OnDestroy()
-	    {
-		    All.Remove( this );
-		    Callback.Unregister( this );
-		    
-		    DeleteHook();
-	    }
-	    
-	    // Hook
+		public Entity()
+		{
+			ClassInfo = Library.Database[GetType()];
+			Callback.Register( this );
+			All.Add( this );
 
-	    public GameObject Hook => _gameObject;
-	    private GameObject _gameObject;
+			CreateHook();
+		}
 
-	    private void CreateHook()
-	    {
-		    _gameObject = new GameObject( ClassInfo.Name );
-		    
-		    // Add Entity reference component
-	    }
+		private void OnDestroy()
+		{
+			All.Remove( this );
+			Callback.Unregister( this );
 
-	    private void DeleteHook()
-	    {
-		    Destroy(_gameObject);
-	    }
-	    
-	    // Validation
+			DeleteHook();
+		}
 
-	    public virtual bool IsValid()
-	    {
-		    return _gameObject != null;
-	    }
-	    
-	    //
-	    // Components
-	    //
-    }
+		// Hook
+
+		public GameObject Hook => _gameObject;
+		private GameObject _gameObject;
+
+		private void CreateHook()
+		{
+			_gameObject = new GameObject( ClassInfo.Name );
+
+			// Add Entity reference component
+		}
+
+		private void DeleteHook()
+		{
+			Destroy( _gameObject );
+		}
+
+		// Validation
+
+		public virtual bool IsValid()
+		{
+			return _gameObject != null;
+		}
+
+		//
+		// Components
+		//
+
+		public interface IComponent { }
+	}
 }

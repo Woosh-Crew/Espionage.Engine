@@ -1,10 +1,11 @@
 using System;
 using System.Linq;
+using Espionage.Engine.Components;
 
 namespace Espionage.Engine
 {
 	[AttributeUsage( AttributeTargets.Class | AttributeTargets.Property )]
-	public sealed class TagsAttribute : Attribute, Library.IComponent, Property.IComponent
+	public sealed class TagsAttribute : Attribute, IComponent<Library>, IComponent<Property>
 	{
 		public string[] Tags { get; }
 
@@ -13,8 +14,8 @@ namespace Espionage.Engine
 			Tags = tags;
 		}
 
-		public void OnAttached( ref Library library ) { }
+		public void OnAttached( Library library ) { }
 
-		public void OnAttached( ref Property property ) { }
+		public void OnAttached( Property property ) { }
 	}
 }

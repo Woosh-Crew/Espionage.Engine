@@ -1,4 +1,5 @@
 using System;
+using Espionage.Engine.Components;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -9,7 +10,7 @@ using UnityEditor;
 namespace Espionage.Engine
 {
 	[AttributeUsage( AttributeTargets.Class )]
-	public sealed class StyleSheetAttribute : Attribute, Library.IComponent
+	public sealed class StyleSheetAttribute : Attribute, IComponent<Library>
 	{
 		/// <summary>Don't use path if you are distributing this class.</summary>
 		public string Path { get; set; }
@@ -38,6 +39,6 @@ namespace Espionage.Engine
 #else
 		public StyleSheet Style => throw new NotImplementedException();
 #endif
-		public void OnAttached( ref Library library ) { }
+		public void OnAttached( Library library ) { }
 	}
 }

@@ -1,9 +1,10 @@
 using System;
+using Espionage.Engine.Components;
 
 namespace Espionage.Engine
 {
 	[AttributeUsage( AttributeTargets.Class | AttributeTargets.Property )]
-	public sealed class CompanyAttribute : Attribute, Library.IComponent, Property.IComponent
+	public sealed class CompanyAttribute : Attribute, IComponent<Library>, IComponent<Property>
 	{
 		public string Company { get; }
 
@@ -12,8 +13,8 @@ namespace Espionage.Engine
 			Company = company;
 		}
 
-		public void OnAttached( ref Library library ) { }
+		public void OnAttached( Library library ) { }
 
-		public void OnAttached( ref Property property ) { }
+		public void OnAttached( Property property ) { }
 	}
 }

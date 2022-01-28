@@ -1,9 +1,10 @@
 using System;
+using Espionage.Engine.Components;
 
 namespace Espionage.Engine
 {
 	[AttributeUsage( AttributeTargets.Class | AttributeTargets.Property )]
-	public sealed class OrderAttribute : Attribute, Library.IComponent, Property.IComponent
+	public sealed class OrderAttribute : Attribute, IComponent<Library>, IComponent<Property>
 	{
 		public int Order { get; }
 
@@ -12,7 +13,7 @@ namespace Espionage.Engine
 			Order = order;
 		}
 
-		public void OnAttached( ref Library library ) { }
-		public void OnAttached( ref Property property ) { }
+		public void OnAttached( Library library ) { }
+		public void OnAttached( Property property ) { }
 	}
 }

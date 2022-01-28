@@ -1,9 +1,10 @@
 using System;
+using Espionage.Engine.Components;
 
 namespace Espionage.Engine
 {
 	[AttributeUsage( AttributeTargets.Class )]
-	public sealed class SpawnableAttribute : Attribute, Library.IComponent
+	public sealed class SpawnableAttribute : Attribute, IComponent<Library>
 	{
 		private readonly bool _spawnable;
 
@@ -12,7 +13,7 @@ namespace Espionage.Engine
 			_spawnable = spawnable;
 		}
 
-		public void OnAttached( ref Library library )
+		public void OnAttached( Library library )
 		{
 			library.Spawnable = true;
 		}

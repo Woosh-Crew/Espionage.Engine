@@ -1,9 +1,10 @@
 using System;
+using Espionage.Engine.Components;
 
 namespace Espionage.Engine
 {
 	[AttributeUsage( AttributeTargets.Property )]
-	public sealed class SerializeAttribute : Attribute, Property.IComponent
+	public sealed class SerializeAttribute : Attribute, IComponent<Property>
 	{
 		private readonly bool _serialize;
 
@@ -12,7 +13,7 @@ namespace Espionage.Engine
 			_serialize = serialize;
 		}
 
-		public void OnAttached( ref Property property )
+		public void OnAttached( Property property )
 		{
 			property.Serialized = _serialize;
 		}
