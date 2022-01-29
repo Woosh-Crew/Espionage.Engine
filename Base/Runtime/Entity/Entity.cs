@@ -45,6 +45,7 @@ namespace Espionage.Engine
 		private void CreateHook()
 		{
 			_gameObject = new GameObject( ClassInfo.Name );
+			_gameObject.AddComponent<EntityReference>();
 
 			// Add Entity reference component
 		}
