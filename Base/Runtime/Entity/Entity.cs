@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Espionage.Engine.Components;
 using UnityEngine;
 
 namespace Espionage.Engine
@@ -20,6 +21,8 @@ namespace Espionage.Engine
 		public Entity()
 		{
 			ClassInfo = Library.Database[GetType()];
+			Components = new ComponentDatabase<Entity>( this );
+
 			Callback.Register( this );
 			All.Add( this );
 
@@ -62,6 +65,6 @@ namespace Espionage.Engine
 		// Components
 		//
 
-		public interface IComponent { }
+		public ComponentDatabase<Entity> Components { get; }
 	}
 }

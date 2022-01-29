@@ -123,6 +123,6 @@ namespace Espionage.Engine
 		/// include icons, company, stylesheet, etc. They allow us
 		/// to do some really crazy cool shit
 		/// </summary>
-		public ComponentDatabase<Library> Components { get; private set; }
+		public ComponentDatabase<Library> Components { get; }
 	}
 }

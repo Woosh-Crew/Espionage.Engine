@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Espionage.Engine.Components;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,8 +13,9 @@ namespace Espionage.Engine.Resources
 	[Title( "Map" ), Group( "Maps" ), File( Extension = "map" ), Manager( nameof( Cache ), Order = 600, Layer = Layer.Editor | Layer.Runtime )]
 	public sealed partial class Map : IResource, IDisposable, IAsset, ILibrary
 	{
-		public Library ClassInfo { get; }
 		public static Map Current { get; private set; }
+		public Library ClassInfo { get; }
+		public ComponentDatabase<Map> Components { get; }
 
 		//
 		// Meta Data
@@ -38,7 +40,7 @@ namespace Espionage.Engine.Resources
 			Provider = provider;
 			Database.Add( this );
 
-			Components = new InternalComponentDatabase( this );
+			Components = new ComponentDatabase<Map>( this );
 		}
 
 		/// <summary>Make a map reference from a path.</summary>
@@ -161,11 +163,6 @@ namespace Espionage.Engine.Resources
 			onLoad += () =>
 			{
 				Callback.Run( "map.loaded" );
-
-				foreach ( var component in Components.All )
-				{
-					component.OnLoad();
-				}
 			};
 
 			Provider.Load( onLoad );
@@ -200,11 +197,6 @@ namespace Espionage.Engine.Resources
 			onUnload += () =>
 			{
 				Callback.Run( "map.unloaded" );
-
-				foreach ( var component in Components.All )
-				{
-					component.OnUnload();
-				}
 			};
 
 			Provider.Unload( onUnload );
@@ -213,65 +205,6 @@ namespace Espionage.Engine.Resources
 		public void Dispose()
 		{
 			Unload( () => Database.Remove( this ) );
-		}
-
-		//
-		// Components
-		//
-
-		/// <summary>
-		/// Components contain map meta data.
-		/// This could include a reference to a steam workshop item
-		/// </summary>
-		public IDatabase<IComponent> Components { get; }
-
-		public interface IComponent
-		{
-			void OnAttached( ref Map map );
-			void OnDetached() { }
-
-			void OnLoad() { }
-			void OnUnload() { }
-		}
-
-		private class InternalComponentDatabase : IDatabase<IComponent>
-		{
-			public IEnumerable<IComponent> All => _components;
-
-			public InternalComponentDatabase( Map map )
-			{
-				_target = map;
-			}
-
-			private Map _target;
-			private readonly List<IComponent> _components = new();
-
-			public void Add( IComponent item )
-			{
-				_components.Add( item );
-				item.OnAttached( ref _target );
-			}
-
-			public void Clear()
-			{
-				foreach ( var item in _components )
-				{
-					Remove( item );
-				}
-
-				_components.Clear();
-			}
-
-			public bool Contains( IComponent item )
-			{
-				return _components.Contains( item );
-			}
-
-			public void Remove( IComponent item )
-			{
-				_components.Remove( item );
-				item.OnDetached();
-			}
 		}
 
 		//
