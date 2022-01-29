@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace Espionage.Engine
 {
+	/// <summary>
+	/// Behaviour is a Networked Class that at its core is just a
+	/// <see cref="MonoBehaviour"/> with Espionage.Engine Functionality
+	/// </summary>
 	public class Behaviour : MonoBehaviour, ILibrary, ICallbacks
 	{
 		public Library ClassInfo { get; private set; }
@@ -10,7 +14,7 @@ namespace Espionage.Engine
 		private void Awake()
 		{
 			ClassInfo = Library.Database[GetType()];
-			Callback.Register(this);
+			Callback.Register( this );
 		}
 
 		protected virtual void OnDestroy()

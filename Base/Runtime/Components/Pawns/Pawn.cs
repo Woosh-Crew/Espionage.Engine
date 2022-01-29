@@ -4,5 +4,5 @@ using UnityEngine;
 
 namespace Espionage.Engine
 {
-	public class Pawn : MonoBehaviour { }
+	public class Pawn : Behaviour { }
 }

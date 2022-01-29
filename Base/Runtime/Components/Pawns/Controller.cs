@@ -2,8 +2,5 @@
 
 namespace Espionage.Engine
 {
-	public class Controller : MonoBehaviour
-	{
-		
-	}
+	public class Controller : Behaviour { }
 }

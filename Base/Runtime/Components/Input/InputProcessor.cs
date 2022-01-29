@@ -4,11 +4,12 @@ using UnityEngine;
 
 namespace Espionage.Engine
 {
-    public class InputProcessor : MonoBehaviour
-    {
+	[Group( "Input" ), Title( "Input Processor" )]
+	public class InputProcessor : Behaviour
+	{
 		private void Update()
-        {
+		{
 			// Process Input	
-        }
-    }
+		}
+	}
 }

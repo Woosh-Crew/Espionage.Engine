@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Espionage.Engine
 {
@@ -29,7 +30,9 @@ namespace Espionage.Engine
 
 				if ( string.IsNullOrEmpty( item.Name ) )
 				{
-					item.Name = item.Class.FullName;
+					// Do space before uppercase char
+					var type = item.Class;
+					item.Name = string.Concat( type.FullName!.Select( x => char.IsUpper( x ) ? " " + x : x.ToString() ) ).TrimStart( ' ' );
 				}
 
 				if ( string.IsNullOrEmpty( item.Title ) )
