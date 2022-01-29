@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Espionage.Engine.Internal;
+using Espionage.Engine.Components;
 using UnityEngine;
 using Random = System.Random;
 
