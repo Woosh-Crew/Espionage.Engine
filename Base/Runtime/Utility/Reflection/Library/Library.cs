@@ -27,7 +27,6 @@ namespace Espionage.Engine
 			Class = type;
 			Name = type.FullName;
 
-			//
 			// Components
 			Components = new ComponentDatabase<Library>( this );
 
@@ -38,8 +37,7 @@ namespace Espionage.Engine
 				Components.Add( item as IComponent<Library> );
 			}
 
-			//
-			// Get Properties
+			// Properties
 			Properties = new InternalPropertyDatabase();
 
 			// Get all Properties (Defined by the User)
@@ -125,6 +123,6 @@ namespace Espionage.Engine
 		/// include icons, company, stylesheet, etc. They allow us
 		/// to do some really crazy cool shit
 		/// </summary>
-		public IDatabase<IComponent<Library>> Components { get; private set; }
+		public ComponentDatabase<Library> Components { get; private set; }
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace Espionage.Engine.Components
 {
@@ -39,6 +40,26 @@ namespace Espionage.Engine.Components
 			}
 
 			_components.Clear();
+		}
+
+		//
+		// Accessors
+		//
+
+		public TComponent Get<TComponent>() where TComponent : class, IComponent<T>
+		{
+			return All.FirstOrDefault( e => e is TComponent ) as TComponent;
+		}
+
+		public IEnumerable<TComponent> GetAll<TComponent>() where TComponent : class, IComponent<T>
+		{
+			return All.OfType<TComponent>();
+		}
+
+		public bool TryGet<TComponent>( out TComponent output ) where TComponent : class, IComponent<T>
+		{
+			output = Get<TComponent>();
+			return output != null;
 		}
 	}
 }
