@@ -5,29 +5,26 @@ namespace Espionage.Engine
 	[AttributeUsage( AttributeTargets.Class )]
 	public sealed class LibraryAttribute : Attribute
 	{
-		public string Name { get; set; }
-		public string Title { get; set; }
-		public string Group { get; set; }
-		public string Help { get; set; }
-		public bool Spawnable { get; set; } = true;
+		private readonly string _name;
 
 		public LibraryAttribute() { }
 
 		public LibraryAttribute( string name )
 		{
-			Name = name;
+			_name = name;
 		}
 
 		public Library CreateRecord( Type type )
 		{
-			return new Library( type )
+			var library = new Library( type );
+
+			// This looks really stupid
+			if ( !string.IsNullOrEmpty( _name ) )
 			{
-				Name = Name,
-				Help = Help,
-				Title = Title,
-				Spawnable = Spawnable,
-				Group = Group
-			};
+				library.Name = _name;
+			}
+
+			return library;
 		}
 	}
 }

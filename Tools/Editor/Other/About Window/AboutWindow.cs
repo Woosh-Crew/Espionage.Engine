@@ -6,7 +6,7 @@ using UnityEditor;
 
 namespace Espionage.Engine.Tools.Editor
 {
-	[Library( Title = "About Window", Group = "Hidden" )]
+	[Library, Group( "Hidden" )]
 	public class AboutWindow : EditorTool
 	{
 		protected override MenuBar.Position MenuBarPosition => MenuBar.Position.None;

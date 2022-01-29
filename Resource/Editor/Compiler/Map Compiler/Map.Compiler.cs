@@ -15,7 +15,7 @@ using Espionage.Engine.Resources;
 
 namespace Espionage.Engine.Tools.Editor
 {
-	[Library( "tool.map_compiler", Title = "Map Compiler", Help = "Compiles a Map for use in-game", Group = "Compiler" ), Icon( EditorIcons.Build ), HelpURL( "https://github.com/Woosh-Crew/Espionage.Engine/wiki" )]
+	[Library( "tool.map_compiler" ), Title( "Map Compiler" ), Icon( EditorIcons.Build ), HelpURL( "https://github.com/Woosh-Crew/Espionage.Engine/wiki" )]
 	public sealed class MapCompiler : EditorTool
 	{
 		[MenuItem( "Tools/Map Compiler _F8", false, -150 )]
