@@ -34,9 +34,9 @@ namespace Espionage.Engine.Components
 
 		public void Clear()
 		{
-			foreach ( var item in _components )
+			for ( var i = 0; i < _components.Count; i++ )
 			{
-				Remove( item );
+				Remove( _components[i] );
 			}
 
 			_components.Clear();
