@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Espionage.Engine
 {
-	[Group( "Input" ), Title( "Input Processor" )]
+	[Group( "Input" ), Title( "Processor" )]
 	public class InputProcessor : Behaviour
 	{
 		private void Update()

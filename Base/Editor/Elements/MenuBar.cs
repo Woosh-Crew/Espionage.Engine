@@ -9,7 +9,7 @@ namespace Espionage.Engine.Editor
 	{
 		public enum Position { Top, Bottom, None }
 
-		public MenuBar( Position position, params Button[] buttons )
+		public MenuBar( Position position )
 		{
 			AddToClassList( "Menu-Bar" );
 
