@@ -31,11 +31,22 @@ namespace Espionage.Engine
 
 		private void OnDestroy()
 		{
+			// Clear Components, just in case.
+			Components.Clear();
+
 			All.Remove( this );
 			Callback.Unregister( this );
 
 			DeleteHook();
 		}
+
+		// Transform
+
+		public Transform Transform => _gameObject.transform;
+
+		public Vector3 Position => Transform.position;
+		public Quaternion Rotation => Transform.rotation;
+		public Vector3 Scale => Transform.localScale;
 
 		// Hook
 
