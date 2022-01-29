@@ -5,7 +5,7 @@ using Espionage.Engine.Internal.Callbacks;
 
 namespace Espionage.Engine
 {
-	[Manager( nameof(Initialize), Layer = Layer.Editor | Layer.Runtime, Order = 50 )]
+	[Manager( nameof( Initialize ), Layer = Layer.Editor | Layer.Runtime, Order = 50 )]
 	public static partial class Callback
 	{
 		//
@@ -76,7 +76,11 @@ namespace Espionage.Engine
 			// Queue if we are still initializing
 			if ( _isInitializing )
 			{
-				_callbackQueue.Enqueue( new QueuedCallback {Name = name, Args = args} );
+				_callbackQueue.Enqueue( new QueuedCallback
+				{
+					Name = name,
+					Args = args
+				} );
 				Debugging.Log.Warning( $"Callbacks are still initializing, Queuing: {name}" );
 				return;
 			}
@@ -161,6 +165,59 @@ namespace Espionage.Engine
 		{
 			public string Name;
 			public object[] Args;
+		}
+
+		//
+		// Callback Var
+		//
+
+		public class Var<T>
+		{
+			public Var( string eventName )
+			{
+				_callback = ( oldValue, newValue ) =>
+				{
+					Run( eventName, oldValue, newValue );
+				};
+			}
+
+			public Var( Action<T, T> callback )
+			{
+				_callback = callback;
+			}
+
+			private T _value;
+
+			private T Value
+			{
+				set
+				{
+					if ( value.Equals( _value ) )
+					{
+						return;
+					}
+
+
+					_callback?.Invoke( _value, value );
+					_value = value;
+				}
+				get => _value;
+			}
+
+			//
+			// Callback Event
+			//
+
+			private Action<T, T> _callback;
+
+			//
+			// Operators
+			//
+
+			public static implicit operator T( Var<T> callbackVar )
+			{
+				return callbackVar.Value;
+			}
 		}
 	}
 }
