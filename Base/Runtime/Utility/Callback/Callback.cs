@@ -208,7 +208,7 @@ namespace Espionage.Engine
 			// Callback Event
 			//
 
-			private Action<T, T> _callback;
+			private readonly Action<T, T> _callback;
 
 			//
 			// Operators
