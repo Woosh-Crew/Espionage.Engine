@@ -1,0 +1,20 @@
+{
+    "name": "Espionage.Engine.Behaviours.Editor",
+    "rootNamespace": "Espionage.Engine.Behaviours.Editor",
+    "references": [
+        "GUID:f1f30d4010345fc4f913cf84210b8ab1",
+        "GUID:51df6056187750b4a9cd5760fdc5e76a",
+        "GUID:44e6658ada25272479b8e9b82573256f"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
