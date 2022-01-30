@@ -11,8 +11,7 @@ namespace Espionage.Engine.Nodes
 	/// <typeparam name="T"> Node only works with this type of graph </typeparam>
 	public abstract class Node<T> : Node where T : Graph { }
 
-	[Title( "Node" )]
-	[Help( "Abstract Node" )]
+	[Title( "Node" ), Help( "Abstract Node" )]
 	public abstract partial class Node : ScriptableObject, ILibrary, ICallbacks
 	{
 		public Library ClassInfo { get; private set; }
@@ -73,9 +72,9 @@ namespace Espionage.Engine.Nodes
 		public Vector2 position;
 
 		[SerializeField]
-		private PortMap ports = new();
+		private PortSerializedDictionary ports = new();
 
 		[Serializable]
-		private class PortMap : Map<string, Port> { }
+		private class PortSerializedDictionary : SerializedDictionary<string, Port> { }
 	}
 }

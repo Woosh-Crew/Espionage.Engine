@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Espionage.Engine
 {
 	[Serializable]
-	public class Map<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver
+	public class SerializedDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver
 	{
 		[SerializeField]
 		private List<TKey> keys = new();
