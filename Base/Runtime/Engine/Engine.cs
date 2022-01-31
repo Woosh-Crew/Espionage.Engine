@@ -66,6 +66,7 @@ namespace Espionage.Engine
 		{
 			// Create engine layer scene
 			Scene = SceneManager.CreateScene( "Engine Layer" );
+			Callback.Run( "engine.layer_created", Scene );
 		}
 
 		//
