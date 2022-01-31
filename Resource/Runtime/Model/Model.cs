@@ -3,7 +3,7 @@
 namespace Espionage.Engine.Resources
 {	
 	[Title( "Model" ), Group( "Models" ), File( Extension = "mdl" )]
-	public class Model: IResource, IDisposable, IAsset, ILibrary
+	public class Model : IResource, IDisposable, IAsset, ILibrary
 	{
 		public Library ClassInfo { get; }
 		

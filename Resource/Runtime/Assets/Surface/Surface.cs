@@ -2,9 +2,6 @@
 
 namespace Espionage.Engine.Resources
 {
-	[CreateAssetMenu, Group("Surfaces"), File( Extension = "surface" )]
-	public class Surface : Asset
-	{
-		
-	}
+	[CreateAssetMenu, Group( "Surfaces" ), File( Extension = "sfc" )]
+	public class Surface : Asset { }
 }
