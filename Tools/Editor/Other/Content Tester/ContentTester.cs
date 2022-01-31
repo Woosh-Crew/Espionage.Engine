@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.UIElements;
 using Espionage.Engine.Editor;
+using Espionage.Engine.Resources;
 
 namespace Espionage.Engine.Tools.Editor
 {
@@ -21,6 +22,11 @@ namespace Espionage.Engine.Tools.Editor
 
 			var header = new HeaderBar( ClassInfo.Title, ClassInfo.Help, icon, "Header-Bottom-Border" );
 			rootVisualElement.Add( header );
+
+			// Map testing
+
+			var button = new Button( () => Map.Find( EditorUtility.OpenFilePanel( "Map File", "Exports/Maps", "map" ) ).Load() ) { text = "Test Map" };
+			rootVisualElement.Add( button );
 		}
 	}
 }
