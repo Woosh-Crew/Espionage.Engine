@@ -2,7 +2,7 @@
 
 namespace Espionage.Engine
 {
-	[Spawnable]
+	[Spawnable, Group( "Engine" )]
 	public abstract class Game : ILibrary, ICallbacks, IProject
 	{
 		public Library ClassInfo { get; }
@@ -20,6 +20,14 @@ namespace Espionage.Engine
 
 		public virtual void OnReady() { }
 		public virtual void OnShutdown() { }
+
+		//
+		// Networking
+		//
+
+		protected virtual void OnClientJoined() { }
+		protected virtual void OnClientDisconnect() { }
+		protected virtual void OnClientReady() { }
 
 		//
 		// Required Scenes

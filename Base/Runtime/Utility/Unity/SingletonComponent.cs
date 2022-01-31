@@ -6,9 +6,6 @@ namespace Espionage.Engine
 	{
 		private static T _instance;
 
-		/// <summary>
-		/// Singleton instance.
-		/// </summary>
 		public static T Instance
 		{
 			get

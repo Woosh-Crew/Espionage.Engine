@@ -11,7 +11,7 @@ namespace Espionage.Engine
 	{
 		public Library ClassInfo { get; private set; }
 
-		private void Awake()
+		protected virtual void Awake()
 		{
 			ClassInfo = Library.Database[GetType()];
 			Callback.Register( this );

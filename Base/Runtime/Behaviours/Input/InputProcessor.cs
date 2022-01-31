@@ -9,7 +9,6 @@ namespace Espionage.Engine
 	{
 		private void Update()
 		{
-			// Process Input	
 		}
 	}
 }
