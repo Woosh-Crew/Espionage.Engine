@@ -10,12 +10,12 @@ namespace Espionage.Engine
 
 		// Controller
 
-		protected Controller Controller { get; set; }
-		public Controller DevController { get; set; }
+		protected PawnController PawnController { get; set; }
+		public PawnController DevPawnController { get; set; }
 
-		public Controller GetActiveController()
+		public PawnController GetActiveController()
 		{
-			return DevController ? DevController : Controller;
+			return DevPawnController ? DevPawnController : PawnController;
 		}
 	}
 }
