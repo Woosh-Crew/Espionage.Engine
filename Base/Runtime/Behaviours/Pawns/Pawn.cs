@@ -19,7 +19,7 @@ namespace Espionage.Engine
 		// Controller
 		//
 
-		public PawnController GetActiveController()
+		protected virtual PawnController GetActiveController()
 		{
 			return DevController ? DevController : Controller;
 		}
@@ -41,7 +41,6 @@ namespace Espionage.Engine
 					return null;
 				}
 
-				((IComponent<Pawn>)Controller)?.OnAttached( this );
 				_controller = comp;
 				return _controller;
 			}
@@ -58,6 +57,7 @@ namespace Espionage.Engine
 					return;
 				}
 
+				((IComponent<Pawn>)value)?.OnAttached( this );
 				_controller = value;
 			}
 		}

@@ -7,13 +7,11 @@ using UnityEngine.SceneManagement;
 
 namespace Espionage.Engine.Resources
 {
-	/// <summary>
-	/// A reference to a map file (.map).
-	/// </summary>
+	/// <summary>A reference to a map file (.map).</summary>
 	[Title( "Map" ), Group( "Maps" ), File( Extension = "map" ), Manager( nameof( Cache ), Order = 600, Layer = Layer.Editor | Layer.Runtime )]
 	public sealed partial class Map : IResource, IDisposable, IAsset, ILibrary
 	{
-		public static Map Current { get; private set; }
+		public static Map Current { get; internal set; }
 		public Library ClassInfo { get; }
 		public ComponentDatabase<Map> Components { get; }
 
@@ -36,11 +34,10 @@ namespace Espionage.Engine.Resources
 		public Map( IMapProvider provider )
 		{
 			ClassInfo = Library.Database[GetType()];
+			Components = new ComponentDatabase<Map>( this );
 
 			Provider = provider;
 			Database.Add( this );
-
-			Components = new ComponentDatabase<Map>( this );
 		}
 
 		/// <summary>Make a map reference from a path.</summary>

@@ -1,6 +1,7 @@
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Espionage.Engine
 {
@@ -11,18 +12,15 @@ namespace Espionage.Engine
 
 		private static void Initialize()
 		{
-			using ( Debugging.Stopwatch( "Engine / Game Ready" ) )
+			using ( Debugging.Stopwatch( "Engine / Game Ready", true ) )
 			{
 				// Setup Callbacks
 				Application.quitting -= OnShutdown;
 				Application.quitting += OnShutdown;
 
-				if ( Application.isPlaying )
-				{
-					// Frame Update
-					Application.onBeforeRender -= OnFrame;
-					Application.onBeforeRender += OnFrame;
-				}
+				// Frame Update
+				Application.onBeforeRender -= OnFrame;
+				Application.onBeforeRender += OnFrame;
 
 				// Setup Game
 				var target = Library.Database.GetAll<Game>().FirstOrDefault( e => !e.Class.IsAbstract );
@@ -52,8 +50,36 @@ namespace Espionage.Engine
 #endif
 		}
 
+		[RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.BeforeSceneLoad )]
+		private static void Runtime_Initialize()
+		{
+			CreateEngineLayer();
+		}
+
+		//
+		// Layer
+		//
+
+		public static Scene Scene { get; private set; }
+
+		private static void CreateEngineLayer()
+		{
+			// Create engine layer scene
+			Scene = SceneManager.CreateScene( "Engine Layer" );
+		}
+
+		//
+		// Callbacks
+		//
+
 		private static void OnFrame()
 		{
+			// Guard clause just in case.
+			if ( !Application.isPlaying )
+			{
+				return;
+			}
+
 			// Setup Camera
 			SetupCamera();
 		}

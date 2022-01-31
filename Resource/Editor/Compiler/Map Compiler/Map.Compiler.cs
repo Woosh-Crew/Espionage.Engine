@@ -153,7 +153,7 @@ namespace Espionage.Engine.Tools.Editor
 
 			menu.AddItem( new GUIContent( "Testing/Current Map" ), false, () =>
 			{
-				Debugging.Log.Info( Map.Current );
+				Debugging.Log.Info( Map.Current?.Identifier ?? "Nothing" );
 			} );
 
 			menu.AddItem( new GUIContent( "Testing/Unload Map" ), false, () =>

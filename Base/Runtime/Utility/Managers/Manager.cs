@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.iOS;
 
 namespace Espionage.Engine.Internal
 {
@@ -42,7 +43,7 @@ namespace Espionage.Engine.Internal
 		// Runtime
 		//
 
-		[RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.AfterAssembliesLoaded )]
+		[RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.BeforeSceneLoad )]
 		private static void InvokeRuntime()
 		{
 			Invoker( Layer.Runtime );
