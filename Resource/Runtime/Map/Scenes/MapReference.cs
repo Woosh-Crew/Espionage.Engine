@@ -11,7 +11,7 @@ using UnityEditor.SceneManagement;
 
 namespace Espionage.Engine.Resources
 {
-	[CreateAssetMenu( fileName = "Map", menuName = "Map", order = 0 ), Group( "Maps" )]
+	[CreateAssetMenu( fileName = "Map", menuName = "Map", order = 0 ), File( Extension = "map" ), Group( "Maps" )]
 	public sealed class MapReference : Asset
 	{
 		public string title;
