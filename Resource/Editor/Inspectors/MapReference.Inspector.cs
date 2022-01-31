@@ -58,6 +58,13 @@ namespace Espionage.Engine.Resources.Editor
 				{
 					OnCompileGUI();
 				}
+
+				GUILayout.Space( 8 );
+
+				using ( _ = new EditorGUILayout.VerticalScope( Styles.Group ) )
+				{
+					OnTesterGUI();
+				}
 			}
 		}
 
@@ -100,6 +107,22 @@ namespace Espionage.Engine.Resources.Editor
 				if ( GUILayout.Button( "Compile", Styles.CompileButton, GUILayout.Height( 28 ) ) )
 				{
 					Map.Compile();
+				}
+			}
+		}
+
+		private void OnTesterGUI()
+		{
+			EditorGUILayout.LabelField( "Testing", EditorStyles.boldLabel );
+			GUILayout.Space( 2 );
+
+			// GUILayout.Space( 4 );
+
+			using ( _ = new EditorGUI.DisabledGroupScope( !Map.CanCompile() ) )
+			{
+				if ( GUILayout.Button( "Test", Styles.CompileButton, GUILayout.Height( 28 ) ) )
+				{
+					Debugging.Log.Error( "Does Nothing" );
 				}
 			}
 		}
