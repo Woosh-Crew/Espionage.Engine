@@ -32,9 +32,10 @@ namespace Espionage.Engine.Resources
 			return true;
 		}
 
-		public virtual void Compile()
-		{
 #if UNITY_EDITOR
+
+		public virtual void Compile( params BuildTarget[] buildTargets )
+		{
 			var exportPath = $"Exports/{ClassInfo.Group}/{name}/";
 			var extension = ClassInfo.Components.Get<FileAttribute>()?.Extension;
 
@@ -75,9 +76,8 @@ namespace Espionage.Engine.Resources
 					AssetDatabase.Refresh();
 				}
 			}
-#else
-			Debugging.Log.Error("You can only compile while in the editor.");
-#endif
 		}
+
+#endif
 	}
 }

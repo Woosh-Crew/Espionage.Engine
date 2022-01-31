@@ -9,7 +9,7 @@ namespace Espionage.Engine.Resources
 {
 	/// <summary>A reference to a map file (.map).</summary>
 	[Title( "Map" ), Group( "Maps" ), File( Extension = "map" ), Manager( nameof( Cache ), Order = 600, Layer = Layer.Editor | Layer.Runtime )]
-	public sealed partial class Map : IResource, IDisposable, IAsset, ILibrary
+	public sealed partial class Map : IResource, IDisposable, ILibrary
 	{
 		public static Map Current { get; internal set; }
 		public Library ClassInfo { get; }
