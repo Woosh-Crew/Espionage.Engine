@@ -47,7 +47,7 @@ namespace Espionage.Engine
 
 		protected virtual ICamera FindActiveCamera()
 		{
-			return null;
+			return Local.Pawn.Tripod;
 		}
 
 		public Tripod.Setup BuildCamera( Tripod.Setup camSetup )
