@@ -9,19 +9,21 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 #endif
 
-namespace Espionage.Engine.Resources.Scenes
+namespace Espionage.Engine.Resources
 {
 	[CreateAssetMenu( fileName = "Map", menuName = "Map", order = 0 ), Group( "Maps" )]
-	public sealed class SceneReference : Asset
+	public sealed class MapReference : Asset
 	{
-		public string fileName;
-		
+		public string title;
+		public string description;
+		public Texture2D icon;
+
 		//
 		// Editor Only
 		//
-		
+
 #if UNITY_EDITOR
-		
+
 		public SceneAsset sceneAsset;
 		public BuildAssetBundleOptions buildOptions = BuildAssetBundleOptions.ChunkBasedCompression;
 
@@ -34,21 +36,25 @@ namespace Espionage.Engine.Resources.Scenes
 		{
 			var lastActiveScene = SceneManager.GetActiveScene().path;
 			var sceneAssetPath = AssetDatabase.GetAssetPath( sceneAsset );
-			
+
 			// Ask the user if they want to save the scene, if not don't export!
 			if ( !EditorSceneManager.SaveModifiedScenesIfUserWantsTo( new[] { SceneManager.GetActiveScene() } ) )
 			{
 				return;
 			}
 
-			var processedFileName = string.IsNullOrEmpty(fileName) ? sceneAsset.name : fileName;
+			var processedFileName = string.IsNullOrEmpty( name ) ? sceneAsset.name : name;
 			var exportPath = $"Exports/{Library.Database.Get<Map>().Group}/{processedFileName}/";
 
 			// Track how long exporting took
 			using ( Debugging.Stopwatch( "Level Compiled", true ) )
 			{
+				//
+				// Export Level Processes
+				//
+
 				var scene = EditorSceneManager.OpenScene( sceneAssetPath );
-				
+
 				if ( Callback.Run<bool>( "compiler.sanity_check", scene )?.Any( e => e is false ) ?? false )
 				{
 					Debug.Log( "Sanity check failed" );
@@ -81,7 +87,7 @@ namespace Espionage.Engine.Resources.Scenes
 					};
 
 					var shit = new BuildTarget[] { BuildTarget.StandaloneWindows };
-					
+
 					// For each target build, build
 					foreach ( var target in shit )
 					{
@@ -96,7 +102,7 @@ namespace Espionage.Engine.Resources.Scenes
 				}
 				catch ( Exception e )
 				{
-					Debugging.Log.Exception(e);					
+					Debugging.Log.Exception( e );
 				}
 				finally
 				{
@@ -106,6 +112,10 @@ namespace Espionage.Engine.Resources.Scenes
 					AssetDatabase.DeleteAsset( "Assets/Map.unity" );
 					AssetDatabase.Refresh();
 				}
+
+				//
+				// Export Meta Data
+				//
 			}
 		}
 
