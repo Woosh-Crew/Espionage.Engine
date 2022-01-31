@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Espionage.Engine.Components;
@@ -8,6 +9,11 @@ namespace Espionage.Engine
 	public class Pawn : Behaviour
 	{
 		public Tripod Tripod { get; protected set; }
+
+		private void Update()
+		{
+			GetActiveController()?.Simulate();
+		}
 
 		//
 		// Controller

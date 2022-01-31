@@ -7,6 +7,6 @@ namespace Espionage.Engine
 	{
 		void IComponent<Pawn>.OnAttached( Pawn item ) { }
 
-		public virtual void Simulate( InputProcessor input ) { }
+		public virtual void Simulate() { }
 	}
 }
