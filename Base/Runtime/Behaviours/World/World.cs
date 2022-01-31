@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Espionage.Engine.Components;
 using UnityEngine;
 
-namespace Espionage.Engine.World
+namespace Espionage.Engine
 {
 	[Library( "esp.world" ), Group( "Maps" )]
 	public class World : Behaviour

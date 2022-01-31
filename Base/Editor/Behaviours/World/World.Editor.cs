@@ -1,6 +1,6 @@
 ﻿using UnityEditor;
 
-namespace Espionage.Engine.World.Editor
+namespace Espionage.Engine.Editor
 {
 	[CustomEditor( typeof( World ) )]
 	public class WorldEditor : UnityEditor.Editor
