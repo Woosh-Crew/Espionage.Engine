@@ -1,4 +1,5 @@
 using System.Linq;
+using Espionage.Engine.UI;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -66,7 +67,17 @@ namespace Espionage.Engine
 		{
 			// Create engine layer scene
 			Scene = SceneManager.CreateScene( "Engine Layer" );
-			Callback.Run( "engine.layer_created", Scene );
+			Callback.Run( "engine.layer_created" );
+
+			// This should be done in the callback but wont work?
+			// TODO: Make this shit work?
+
+			AddToLayer( Terminal.Instance.gameObject );
+		}
+
+		public static void AddToLayer( GameObject gameObject )
+		{
+			SceneManager.MoveGameObjectToScene( gameObject, Scene );
 		}
 
 		//
