@@ -34,8 +34,7 @@ namespace Espionage.Engine
 		// Gamemode
 		//
 
-		public Gamemode Gamemode => _gamemode;
-		private Gamemode _gamemode;
+		public Gamemode Gamemode { get; private set; }
 
 		public void SwitchGamemode( Gamemode gamemode )
 		{
@@ -49,7 +48,7 @@ namespace Espionage.Engine
 			Gamemode.Finish();
 
 			// Start new Gamemode
-			_gamemode = gamemode;
+			Gamemode = gamemode;
 			Gamemode.Begin();
 
 			Callback.Run( "gamemodes.switched", true, gamemode );
