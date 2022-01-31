@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Espionage.Engine.Gamemodes;
+using UnityEngine;
 
 namespace Espionage.Engine
 {
@@ -28,6 +29,31 @@ namespace Espionage.Engine
 		protected virtual void OnClientJoined() { }
 		protected virtual void OnClientDisconnect() { }
 		protected virtual void OnClientReady() { }
+
+		//
+		// Gamemode
+		//
+
+		public Gamemode Gamemode => _gamemode;
+		private Gamemode _gamemode;
+
+		public void SwitchGamemode( Gamemode gamemode )
+		{
+			if ( !gamemode.Validate() )
+			{
+				Debugging.Log.Warning( $"Gamemode {gamemode.ClassInfo.Name} is not valid for map" );
+				return;
+			}
+
+			// Finish and do Cleanup
+			Gamemode.Finish();
+
+			// Start new Gamemode
+			_gamemode = gamemode;
+			Gamemode.Begin();
+
+			Callback.Run( "gamemodes.switched", true, gamemode );
+		}
 
 		//
 		// Required Scenes
