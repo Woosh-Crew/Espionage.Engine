@@ -7,7 +7,7 @@ namespace Espionage.Engine
 	/// Behaviour is a Networked Class that at its core is just a
 	/// <see cref="MonoBehaviour"/> with Espionage.Engine Functionality
 	/// </summary>
-	[Group( "Game" ), Constructor( nameof( Constructor ) )]
+	[Constructor( nameof( Constructor ) )]
 	public abstract class Behaviour : MonoBehaviour, ILibrary, ICallbacks
 	{
 		public Library ClassInfo { get; private set; }
