@@ -10,10 +10,6 @@ namespace Espionage.Engine
 	[Manager( nameof( Initialize ), Layer = Layer.Runtime | Layer.Editor, Order = -200 )]
 	public static partial class Debugging
 	{
-		//
-		// Initialize
-		//
-
 		public static async void Initialize()
 		{
 			// We initialize logging without
@@ -31,17 +27,16 @@ namespace Espionage.Engine
 			}
 		}
 
-		//
-		// Console
-		//
-
 		public static ICommandProvider Console { get; private set; }
-
-		//
-		// Logging
-		//
-
 		public static ILoggingProvider Log { get; private set; }
+		public static IDebugOverlayProvider Overlay => throw new NotImplementedException();
+
+		//
+		// Overlay
+		//
+
+		[Var( "debug.overlay" )]
+		private static bool ShowOverlays { get => Overlay.Show; set => Overlay.Show = value; }
 
 		//
 		// Stopwatch
