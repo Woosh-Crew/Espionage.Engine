@@ -32,7 +32,7 @@ namespace Espionage.Engine.Resources
 			return sceneAsset != null;
 		}
 
-		public override void Compile( params BuildTarget[] buildTargets )
+		public override void Compile( params BuildTarget[] targets )
 		{
 			var lastActiveScene = SceneManager.GetActiveScene().path;
 			var sceneAssetPath = AssetDatabase.GetAssetPath( sceneAsset );
@@ -86,10 +86,8 @@ namespace Espionage.Engine.Resources
 						}
 					};
 
-					var shit = new BuildTarget[] { BuildTarget.StandaloneWindows };
-
 					// For each target build, build
-					foreach ( var target in shit )
+					foreach ( var target in targets )
 					{
 						var bundle = BuildPipeline.BuildAssetBundles( exportPath, builds, buildOptions, target );
 

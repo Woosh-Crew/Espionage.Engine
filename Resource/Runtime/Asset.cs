@@ -8,16 +8,6 @@ using UnityEditor;
 
 namespace Espionage.Engine.Resources
 {
-	public abstract class Asset<T> : Asset where T : Object
-	{
-		public T asset;
-
-		public override bool CanCompile()
-		{
-			return asset != null;
-		}
-	}
-
 	public abstract class Asset : ScriptableObject, ILibrary, IAsset
 	{
 		public Library ClassInfo { get; private set; }
@@ -34,7 +24,7 @@ namespace Espionage.Engine.Resources
 
 #if UNITY_EDITOR
 
-		public virtual void Compile( params BuildTarget[] buildTargets )
+		public virtual void Compile( params BuildTarget[] targets )
 		{
 			var exportPath = $"Exports/{ClassInfo.Group}/{name}/";
 			var extension = ClassInfo.Components.Get<FileAttribute>()?.Extension;

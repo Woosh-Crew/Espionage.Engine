@@ -106,7 +106,7 @@ namespace Espionage.Engine.Resources.Editor
 			{
 				if ( GUILayout.Button( "Compile", Styles.CompileButton, GUILayout.Height( 28 ) ) )
 				{
-					Map.Compile();
+					Map.Compile( BuildTarget.StandaloneWindows );
 				}
 			}
 		}
