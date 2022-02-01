@@ -1,0 +1,20 @@
+{
+    "name": "Espionage.Engine.Sound.Editor",
+    "rootNamespace": "Espionage.Engine.Sound.Editor",
+    "references": [
+        "GUID:51df6056187750b4a9cd5760fdc5e76a",
+        "GUID:1d607c9ed40850c4a9e5d6d3784d671a",
+        "GUID:86ec66cd9dfa5fe4da1b26893262e5ce"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
