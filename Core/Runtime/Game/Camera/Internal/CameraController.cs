@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Espionage.Engine
 {
 	[RequireComponent( typeof( Camera ), typeof( AudioListener ) )]
-	internal class CameraController : SingletonComponent<CameraController>
+	internal class CameraController : Behaviour
 	{
 		private Camera _target;
 

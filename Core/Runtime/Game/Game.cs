@@ -1,4 +1,5 @@
-﻿using Espionage.Engine.Gamemodes;
+﻿using System;
+using Espionage.Engine.Gamemodes;
 using UnityEngine;
 
 namespace Espionage.Engine
@@ -95,7 +96,7 @@ namespace Espionage.Engine
 
 		protected virtual ICamera FindActiveCamera()
 		{
-			return Local.Pawn.Tripod;
+			return null;
 		}
 
 		public Tripod.Setup BuildCamera( Tripod.Setup camSetup )

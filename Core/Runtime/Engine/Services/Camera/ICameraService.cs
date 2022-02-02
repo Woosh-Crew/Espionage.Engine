@@ -1,4 +1,6 @@
-﻿namespace Espionage.Engine.Services.Camera
+﻿using UnityEngine;
+
+namespace Espionage.Engine.Services.Camera
 {
 	public interface ICameraService : IService { }
 
@@ -8,21 +10,36 @@
 
 		public void OnReady()
 		{
-			_camera = CameraController.Instance;
-			Engine.AddToLayer( _camera.gameObject );
+			if ( !Application.isPlaying )
+			{
+				return;
+			}
+
+			var obj = new GameObject( "Camera" );
+			_camera = obj.AddComponent<CameraController>();
+
+			Engine.AddToLayer( obj );
 		}
-		
+
 		public void OnShutdown() { }
-		
+
 		// Frame
 
 		private CameraController _camera;
-		private Tripod.Setup _lastSetup;
+
+		private Tripod.Setup _lastSetup = new()
+		{
+			Rotation = Quaternion.identity,
+			FieldOfView = 74,
+			Position = Vector3.zero
+		};
 
 		public void OnUpdate()
 		{
 			if ( Engine.Game == null )
+			{
 				return;
+			}
 
 			// Build the camSetup, from game.
 			_lastSetup = Engine.Game.BuildCamera( _lastSetup );

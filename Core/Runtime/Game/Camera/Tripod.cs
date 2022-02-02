@@ -40,8 +40,9 @@ namespace Espionage.Engine
 
 		public void Build( ref Setup camSetup )
 		{
-			Update();
 			_setup = camSetup;
+
+			Update();
 
 			if ( camSetup.FieldOfView == 0 )
 			{
