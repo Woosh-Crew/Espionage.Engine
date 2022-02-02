@@ -3,6 +3,10 @@ using Espionage.Engine.Components;
 
 namespace Espionage.Engine
 {
+	/// <summary>
+	/// Reflection Component for storing what group does this class belong too.
+	/// Will override the Library.Group value.
+	/// </summary>
 	[AttributeUsage( AttributeTargets.Class | AttributeTargets.Property )]
 	public sealed class GroupAttribute : Attribute, IComponent<Library>, IComponent<Property>
 	{

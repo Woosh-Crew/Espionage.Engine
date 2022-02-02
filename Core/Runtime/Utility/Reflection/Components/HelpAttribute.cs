@@ -3,6 +3,9 @@ using Espionage.Engine.Components;
 
 namespace Espionage.Engine
 {
+	/// <summary>
+	/// Reflection Component that stores a help message or tooltip.
+	/// </summary>
 	[AttributeUsage( AttributeTargets.Class )]
 	public sealed class HelpAttribute : Attribute, IComponent<Library>, IComponent<Property>
 	{

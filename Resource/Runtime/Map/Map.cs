@@ -7,12 +7,29 @@ using UnityEngine.SceneManagement;
 
 namespace Espionage.Engine.Resources
 {
-	/// <summary>A reference to a map file (.map).</summary>
+	/// <summary>
+	/// <para>
+	/// Allows the loading and unloading of maps at runtime.
+	/// </para>
+	/// </summary>
+	/// <remarks>
+	/// You should be using this instead of UnityEngine.SceneManager.
+	/// </remarks>
 	[Title( "Map" ), Group( "Maps" ), File( Extension = "map" ), Manager( nameof( Cache ), Order = 600, Layer = Layer.Editor | Layer.Runtime )]
 	public sealed partial class Map : IResource, IDisposable, ILibrary
 	{
+		/// <summary>
+		/// The Current map that is loaded and running.
+		/// </summary>
 		public static Map Current { get; internal set; }
+
+		/// <summary><inheritdoc cref="ILibrary.ClassInfo"/></summary>
 		public Library ClassInfo { get; }
+
+		/// <summary>
+		/// Any other meta data that is attached to this class.
+		/// Such as a SteamUGC reference, Icon, etc.
+		/// </summary>
 		public ComponentDatabase<Map> Components { get; }
 
 		//
@@ -51,11 +68,21 @@ namespace Espionage.Engine.Resources
 		/// <param name="buildIndex">Build Index of the scene in Build Scenes list</param>
 		public Map( int buildIndex ) : this( new BuildIndexMapProvider( buildIndex ) ) { }
 
+		/// <summary>
+		/// Gets the map at a build index.
+		/// </summary>
+		/// <param name="index">The build index.</param>
+		/// <returns>The found map, if applicable.</returns>
 		public static Map Find( int index )
 		{
 			return Database[$"index:{index}"] ?? new Map( index );
 		}
 
+		/// <summary>
+		/// Gets the map at a path.
+		/// </summary>
+		/// <param name="path">The path to this map.</param>
+		/// <returns><inheritdoc cref="Find(int)"/></returns>
 		public static Map Find( string path )
 		{
 			return Database[path] ?? new Map( path );
@@ -108,6 +135,10 @@ namespace Espionage.Engine.Resources
 		// Utility
 		//
 
+		/// <summary>
+		/// Add a GameObject to this map through code.
+		/// </summary>
+		/// <param name="gameObject">The GameObject to add</param>
 		public void Add( GameObject gameObject )
 		{
 			if ( Provider.Scene != null )
@@ -123,8 +154,7 @@ namespace Espionage.Engine.Resources
 		public bool IsLoading => Provider.IsLoading;
 
 		/// <summary>
-		/// Loads the asset bundle if null, then will load the scene.
-		/// Should be using this for loading map data and their scene.
+		/// Loads this map. Behind the scenes it'll run the providers load method.
 		/// </summary>
 		/// <param name="onLoad">
 		/// What to do when we finish loading both the scene and asset bundle
@@ -199,6 +229,9 @@ namespace Espionage.Engine.Resources
 			Provider.Unload( onUnload );
 		}
 
+		/// <summary>
+		/// Unload and remove it from the database.
+		/// </summary>
 		public void Dispose()
 		{
 			Unload( () => Database.Remove( this ) );

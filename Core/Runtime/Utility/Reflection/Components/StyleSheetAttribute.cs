@@ -9,6 +9,9 @@ using UnityEditor;
 
 namespace Espionage.Engine
 {
+	/// <summary>
+	/// Reflection Component that stores a reference to a StyleSheet.
+	/// </summary>
 	[AttributeUsage( AttributeTargets.Class )]
 	public sealed class StyleSheetAttribute : Attribute, IComponent<Library>
 	{

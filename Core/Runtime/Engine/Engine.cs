@@ -5,9 +5,15 @@ using UnityEngine.SceneManagement;
 
 namespace Espionage.Engine
 {
+	/// <summary>
+	/// Espionage.Engine Entry Point. Initializes all its systems, and sets up the Game.
+	/// </summary>
 	[Manager( nameof( Initialize ), Layer = Layer.Runtime | Layer.Editor, Order = 500 )]
 	public static class Engine
 	{
+		/// <summary>
+		/// The Current game that is in session.
+		/// </summary>
 		public static Game Game { get; private set; }
 
 		private static void Initialize()
@@ -60,6 +66,9 @@ namespace Espionage.Engine
 		// Layer
 		//
 
+		/// <summary>
+		/// The Engine Layer scene. This should never be unloaded.
+		/// </summary>
 		public static Scene Scene { get; private set; }
 
 		private static void CreateEngineLayer()
@@ -69,6 +78,10 @@ namespace Espionage.Engine
 			Callback.Run( "engine.layer_created" );
 		}
 
+		/// <summary>
+		/// Adds an Object to the Engine Layer scene.
+		/// </summary>
+		/// <param name="gameObject">The GameObject to add</param>
 		public static void AddToLayer( GameObject gameObject )
 		{
 			SceneManager.MoveGameObjectToScene( gameObject, Scene );

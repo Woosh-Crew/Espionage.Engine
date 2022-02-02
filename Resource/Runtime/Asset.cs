@@ -8,6 +8,9 @@ using UnityEditor;
 
 namespace Espionage.Engine.Resources
 {
+	/// <summary>
+	/// An asset that can be compiled for use at Runtime.
+	/// </summary>
 	public abstract class Asset : ScriptableObject, ILibrary, IAsset
 	{
 		public Library ClassInfo { get; private set; }

@@ -4,8 +4,10 @@ using Espionage.Engine.Components;
 
 namespace Espionage.Engine
 {
-	/// <summary> Attribute that allows the definition of a custom constructor
-	/// Must return an ILibrary and Must have one parameter that takes in a Library </summary>
+	/// <summary>
+	/// Attribute that allows the definition of a custom constructor.
+	/// Must return an ILibrary and Must have one parameter that takes in a Library.
+	/// </summary>
 	[AttributeUsage( AttributeTargets.Class, Inherited = true )]
 	public sealed class ConstructorAttribute : Attribute, IComponent<Library>
 	{

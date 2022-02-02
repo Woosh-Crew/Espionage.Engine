@@ -6,9 +6,12 @@ using UnityEngine;
 
 namespace Espionage.Engine
 {
-	public class Pawn : Behaviour
+	/// <summary>
+	/// Pawns can be possessed by clients, and allows the game to flow. 
+	/// </summary>
+	public sealed class Pawn : Behaviour
 	{
-		public Tripod Tripod { get; protected set; }
+		public Tripod Tripod { get; set; }
 
 		private void Update()
 		{
@@ -19,13 +22,16 @@ namespace Espionage.Engine
 		// Controller
 		//
 
-		protected virtual PawnController GetActiveController()
+		private PawnController GetActiveController()
 		{
 			return DevController ? DevController : Controller;
 		}
 
 		private PawnController _controller;
 
+		/// <summary>
+		/// The controller that is used for controlling this pawn.
+		/// </summary>
 		public PawnController Controller
 		{
 			get
@@ -62,6 +68,10 @@ namespace Espionage.Engine
 			}
 		}
 
+		/// <summary>
+		/// This controller will override the normal controller.
+		/// Is used for dev shit like no clip.
+		/// </summary>
 		public PawnController DevController { get; set; }
 	}
 }

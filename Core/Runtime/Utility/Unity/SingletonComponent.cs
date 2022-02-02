@@ -2,6 +2,10 @@
 
 namespace Espionage.Engine
 {
+	/// <summary>
+	/// A Component where there can be only one instance of it. 
+	/// </summary>
+	/// <typeparam name="T">The type of component there should only be one instance of.</typeparam>
 	public class SingletonComponent<T> : MonoBehaviour where T : Component
 	{
 		private static T _instance;

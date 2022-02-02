@@ -4,6 +4,9 @@ using Espionage.Engine.Components;
 
 namespace Espionage.Engine
 {
+	/// <summary>
+	/// Reflection Component for storing Tags / Aliases.
+	/// </summary>
 	[AttributeUsage( AttributeTargets.Class | AttributeTargets.Property )]
 	public sealed class TagsAttribute : Attribute, IComponent<Library>, IComponent<Property>
 	{

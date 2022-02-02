@@ -11,6 +11,9 @@ using UnityEditor.SceneManagement;
 
 namespace Espionage.Engine.Resources
 {
+	/// <summary>
+	/// A reference to a scene. This is used for compiling maps.
+	/// </summary>
 	[CreateAssetMenu( fileName = "Map", menuName = "Map", order = 0 ), File( Extension = "map" ), Group( "Maps" )]
 	public sealed class MapReference : Asset
 	{

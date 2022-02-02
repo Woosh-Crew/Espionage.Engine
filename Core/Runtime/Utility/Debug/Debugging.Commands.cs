@@ -38,8 +38,6 @@ namespace Espionage.Engine
 		[Cmd( "quit", "exit", Help = "Quits the application" )]
 		private static void QuitCmd()
 		{
-			Log.Warning( "This should probably quit the game" );
-
 #if UNITY_STANDALONE
 			Application.Quit();
 #elif UNITY_EDITOR

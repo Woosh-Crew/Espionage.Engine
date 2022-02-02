@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace Espionage.Engine
 {
+	/// <summary>
+	/// Central point of a map.
+	/// </summary>
 	[Library( "esp.world" ), Group( "Maps" )]
 	public class World : Behaviour
 	{

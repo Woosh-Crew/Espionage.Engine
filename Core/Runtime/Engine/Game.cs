@@ -3,12 +3,15 @@ using UnityEngine;
 
 namespace Espionage.Engine
 {
+	/// <summary>
+	/// The Entry point for your game. Use this as your "GameManager".
+	/// </summary>
 	[Spawnable, Group( "Engine" )]
 	public abstract class Game : ILibrary, ICallbacks, IProject
 	{
 		public Library ClassInfo { get; }
 
-		public Game()
+		protected Game()
 		{
 			ClassInfo = Library.Database.Get( GetType() );
 			Callback.Register( this );
@@ -19,7 +22,14 @@ namespace Espionage.Engine
 			Callback.Unregister( this );
 		}
 
+		/// <summary>
+		/// Called when the Engine & Game finishes initializing.
+		/// </summary>
 		public virtual void OnReady() { }
+
+		/// <summary>
+		/// Called when the Application is being shutdown.
+		/// </summary>
 		public virtual void OnShutdown() { }
 
 		//
@@ -34,8 +44,15 @@ namespace Espionage.Engine
 		// Gamemode
 		//
 
+		/// <summary>
+		/// The current gamemode in play.
+		/// </summary>
 		public Gamemode Gamemode { get; private set; }
 
+		/// <summary>
+		/// Switch the gamemode to a new one.
+		/// </summary>
+		/// <param name="gamemode">The new gamemode.</param>
 		public void SwitchGamemode( Gamemode gamemode )
 		{
 			if ( !gamemode.Validate() )
@@ -58,10 +75,16 @@ namespace Espionage.Engine
 		// Required Scenes
 		//
 
-		/// <summary>A Path to the Splash Screen Scene</summary>
+		/// <summary>
+		/// A Path to the Splash Screen Scene, this will be the first scene
+		/// that is loaded at runtime. Espionage.Engine uses this for
+		/// asset and engine initialization.
+		/// </summary>
 		public abstract string SplashScreen { get; }
 
-		/// <summary>A Path to the Main Menu Scene</summary>
+		/// <summary>
+		/// A Path to the Main Menu Scene
+		/// </summary>
 		public abstract string MainMenu { get; }
 
 		//

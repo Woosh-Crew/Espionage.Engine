@@ -3,6 +3,9 @@ using Espionage.Engine.Components;
 
 namespace Espionage.Engine
 {
+	/// <summary>
+	/// Reflection Component that overrides the spawnable field on a library.
+	/// </summary>
 	[AttributeUsage( AttributeTargets.Class )]
 	public sealed class SpawnableAttribute : Attribute, IComponent<Library>
 	{

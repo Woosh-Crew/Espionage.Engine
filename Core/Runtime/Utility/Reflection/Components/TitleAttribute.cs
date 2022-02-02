@@ -3,6 +3,9 @@ using Espionage.Engine.Components;
 
 namespace Espionage.Engine
 {
+	/// <summary>
+	/// Reflection Component that changes the Tile value on a Library or Property.
+	/// </summary>
 	[AttributeUsage( AttributeTargets.Class | AttributeTargets.Property )]
 	public sealed class TitleAttribute : Attribute, IComponent<Library>, IComponent<Property>
 	{

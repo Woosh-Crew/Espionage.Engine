@@ -4,8 +4,12 @@ using UnityEngine;
 
 namespace Espionage.Engine
 {
-    public static class Local
-    {
-	    public static Pawn Pawn { get; set; }
-    }
+	/// <summary>
+	/// Local stores meta about the local game state.
+	/// Such as Client, their pawn, their name, etc.
+	/// </summary>
+	public static class Local
+	{
+		public static Pawn Pawn { get; set; }
+	}
 }

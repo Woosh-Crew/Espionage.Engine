@@ -3,7 +3,10 @@ using Espionage.Engine.Components;
 
 namespace Espionage.Engine
 {
-	[AttributeUsage( AttributeTargets.Class )]
+	/// <summary>
+	/// Reflection component for letting this class or property be editable or not.
+	/// </summary>
+	[AttributeUsage( AttributeTargets.Class | AttributeTargets.Property )]
 	public sealed class EditableAttribute : Attribute, IComponent<Library>, IComponent<Property>
 	{
 		public bool Editable { get; }
