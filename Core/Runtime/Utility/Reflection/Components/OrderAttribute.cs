@@ -3,6 +3,9 @@ using Espionage.Engine.Components;
 
 namespace Espionage.Engine
 {
+	/// <summary>
+	/// Reflection Component that stores an order of operation.
+	/// </summary>
 	[AttributeUsage( AttributeTargets.Class | AttributeTargets.Property )]
 	public sealed class OrderAttribute : Attribute, IComponent<Library>, IComponent<Property>
 	{

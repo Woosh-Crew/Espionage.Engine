@@ -8,6 +8,9 @@ using UnityEditor;
 
 namespace Espionage.Engine
 {
+	/// <summary>
+	/// Reflection Component that stores a reference to an Icon.
+	/// </summary>
 	[AttributeUsage( AttributeTargets.Class | AttributeTargets.Property )]
 	public sealed class IconAttribute : Attribute, IComponent<Library>, IComponent<Property>
 	{
