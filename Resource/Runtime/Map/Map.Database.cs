@@ -7,7 +7,7 @@ namespace Espionage.Engine.Resources
 		/// <summary>
 		/// A reference to all the maps that have already been found or loaded.
 		/// </summary>
-		public static IDatabase<Map, string> Database { get; private set; }
+		public static IDatabase<Map, string> Database { get; } = new InternalDatabase();
 
 		private class InternalDatabase : IDatabase<Map, string>
 		{

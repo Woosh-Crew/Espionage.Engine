@@ -15,7 +15,7 @@ namespace Espionage.Engine.Resources
 	/// <remarks>
 	/// You should be using this instead of UnityEngine.SceneManager.
 	/// </remarks>
-	[Title( "Map" ), Group( "Maps" ), File( Extension = "map" ), Manager( nameof( Cache ), Order = 600, Layer = Layer.Editor | Layer.Runtime )]
+	[Title( "Map" ), Group( "Maps" ), File( Extension = "map" )]
 	public sealed partial class Map : IResource, IDisposable, ILibrary
 	{
 		/// <summary>
@@ -105,30 +105,6 @@ namespace Espionage.Engine.Resources
 		public static implicit operator Map( int index )
 		{
 			return Find( index );
-		}
-
-		//
-		// Cache
-		// 
-
-		static Map()
-		{
-			Database = new InternalDatabase();
-		}
-
-		internal static void Cache()
-		{
-			using var stopwatch = Debugging.Stopwatch( "Caching Maps" );
-
-			// Cache Asset Bundle Maps
-
-			var path = Application.isEditor ? "Exports/Maps" : Application.dataPath;
-			var extension = Library.Database.Get<Map>().Components.Get<FileAttribute>().Extension;
-
-			foreach ( var map in Directory.GetFiles( path, $"*.{extension}", SearchOption.AllDirectories ) )
-			{
-				Database.Add( new Map( map ) );
-			}
 		}
 
 		//
