@@ -1,7 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Espionage.Engine.Internal;
 using Espionage.Engine.Services;
-using Espionage.Engine.Services.Camera;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -10,22 +11,29 @@ namespace Espionage.Engine
 	/// <summary>
 	/// Espionage.Engine Entry Point. Initializes all its services, and sets up the Game.
 	/// </summary>
-	// [Manager( nameof( Initialize ), Layer = Layer.Runtime | Layer.Editor, Order = 500 )]
+	[Manager( nameof( Initialize ), Layer = Layer.Runtime, Order = 600 )]
 	public static class Engine
 	{
 		public static Game Game { get; private set; }
 
-		[RuntimeInitializeOnLoadMethod]
 		private static void Initialize()
 		{
 			using ( Debugging.Stopwatch( "Engine / Game Ready", true ) )
 			{
+				CreateEngineLayer();
+
+				if ( !SetupGame() )
+				{
+					Debugging.Log.Error( "Game couldn't be found. Make sure to make a class inherited from Game" );
+					return;
+				}
+
+				Services = new ServiceDatabase();
+
 				// Setup Callbacks
 				Application.quitting -= OnShutdown;
 				Application.quitting += OnShutdown;
 
-				CreateEngineLayer();
-				SetupGame();
 
 				// Tell Services we're ready
 				foreach ( var service in Services.All )
@@ -34,23 +42,22 @@ namespace Espionage.Engine
 				}
 
 				// Frame Update
-				Application.onBeforeRender -= OnFrame;
-				Application.onBeforeRender += OnFrame;
+				Application.onBeforeRender -= OnUpdate;
+				Application.onBeforeRender += OnUpdate;
 
 				Game?.OnReady();
 			}
 		}
 
-		private static void SetupGame()
+		private static bool SetupGame()
 		{
 			// Setup Game
 			var target = Library.Database.GetAll<Game>().FirstOrDefault( e => !e.Class.IsAbstract );
 
 			if ( target is null )
 			{
-				Debugging.Log.Error( "Game couldn't be found. Make sure to make a class inherited from Game" );
 				Callback.Run( "game.not_found" );
-				return;
+				return false;
 			}
 
 			Game = Library.Database.Create<Game>( target.Class );
@@ -60,19 +67,35 @@ namespace Espionage.Engine
 			// Setup PlayerSettings based off of Project
 			UnityEditor.PlayerSettings.productName = Game.ClassInfo.Title;
 #endif
+
+			return true;
 		}
 
 		//
 		// Services
 		//
 
-		public static IDatabase<IService> Services { get; } = new ServiceDatabase();
+		public static IDatabase<IService> Services { get; private set; }
 
 		private class ServiceDatabase : IDatabase<IService>
 		{
 			public IEnumerable<IService> All => _services;
 
-			private readonly List<IService> _services = new() { new CameraService() };
+			private readonly List<IService> _services = new() { };
+
+			public ServiceDatabase()
+			{
+				// Cache all Services
+				var types = AppDomain.CurrentDomain.GetAssemblies()
+					.Where( Utility.IgnoreIfNotUserGeneratedAssembly )
+					.SelectMany( e => e.GetTypes()
+						.Where( ( type ) => type.HasInterface<IService>() && !type.IsAbstract ) );
+
+				foreach ( var type in types )
+				{
+					Add( (IService)Activator.CreateInstance( type ) );
+				}
+			}
 
 			public void Add( IService item )
 			{
@@ -124,14 +147,14 @@ namespace Espionage.Engine
 		// Callbacks
 		//
 
-		private static void OnFrame()
+		private static void OnUpdate()
 		{
 			foreach ( var service in Services.All )
 			{
 				service.OnUpdate();
 			}
 
-			Game?.OnFrame();
+			Game?.OnUpdate();
 		}
 
 		private static void OnShutdown()
