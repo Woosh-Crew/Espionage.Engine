@@ -11,7 +11,7 @@ namespace Espionage.Engine
 	{
 		public Library ClassInfo { get; }
 
-		public Game()
+		protected Game()
 		{
 			ClassInfo = Library.Database.Get( GetType() );
 			Callback.Register( this );
