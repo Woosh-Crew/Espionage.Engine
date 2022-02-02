@@ -2,12 +2,16 @@
 
 namespace Espionage.Engine.Gamemodes
 {
+	/// <summary>
+	/// A Gamemode is where your game-flow happens. It controls how a game
+	/// functions in a SOLID way.
+	/// </summary>
 	public abstract class Gamemode : Behaviour, IComponent<World>
 	{
 		void IComponent<World>.OnAttached( World item ) { }
-		
+
 		// Validation
-		
+
 		public bool Validate()
 		{
 			return OnValidation();
@@ -17,15 +21,15 @@ namespace Espionage.Engine.Gamemodes
 		{
 			return true;
 		}
-		
+
 		// States
 
 		public void Begin()
 		{
 			Debugging.Log.Info( $"Starting Gamemode - [{ClassInfo.Title}]" );
-			OnBegin();	
+			OnBegin();
 		}
-		
+
 		protected virtual void OnBegin() { }
 
 		public void Finish()
@@ -33,9 +37,9 @@ namespace Espionage.Engine.Gamemodes
 			Debugging.Log.Info( $"Finishing Gamemode - [{ClassInfo.Title}]" );
 			OnFinish();
 		}
-		
+
 		protected virtual void OnFinish() { }
-		
+
 		//
 		// Round
 		//
