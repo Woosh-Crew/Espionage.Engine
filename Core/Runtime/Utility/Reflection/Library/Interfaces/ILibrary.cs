@@ -6,6 +6,9 @@ namespace Espionage.Engine
 	/// </summary>
 	public interface ILibrary
 	{
+		/// <summary>
+		/// The Library reference for this class.
+		/// </summary>
 		Library ClassInfo { get; }
 	}
 }
