@@ -2,9 +2,7 @@
 
 namespace Espionage.Engine.Services.Camera
 {
-	public interface ICameraService : IService { }
-
-	internal class CameraService : ICameraService
+	internal class CameraService : IService
 	{
 		// Ready
 

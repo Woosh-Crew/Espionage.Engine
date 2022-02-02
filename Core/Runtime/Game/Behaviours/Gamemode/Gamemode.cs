@@ -1,4 +1,5 @@
 ﻿using Espionage.Engine.Components;
+using UnityEngine;
 
 namespace Espionage.Engine.Gamemodes
 {
@@ -6,6 +7,7 @@ namespace Espionage.Engine.Gamemodes
 	/// A Gamemode is where your game-flow happens. It controls how a game
 	/// functions in a SOLID way.
 	/// </summary>
+	[RequireComponent( typeof( World ) )]
 	public abstract class Gamemode : Behaviour, IComponent<World>
 	{
 		void IComponent<World>.OnAttached( World item ) { }
