@@ -6,6 +6,12 @@ using Random = UnityEngine.Random;
 
 namespace Espionage.Engine
 {
+	public class Shitgame : Game
+	{
+		public override string SplashScreen { get; }
+		public override string MainMenu { get; }
+	}
+
 	/// <summary>
 	/// The Entry point for your game. Use this as your "GameManager".
 	/// </summary>
@@ -38,7 +44,7 @@ namespace Espionage.Engine
 		/// <summary>
 		/// Called every application frame.
 		/// </summary>
-		public virtual void OnFrame() { }
+		public virtual void OnUpdate() { }
 
 		//
 		// Networking
