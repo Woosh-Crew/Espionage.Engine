@@ -35,6 +35,11 @@ namespace Espionage.Engine
 		/// </summary>
 		public virtual void OnShutdown() { }
 
+		/// <summary>
+		/// Called every application frame.
+		/// </summary>
+		public virtual void OnFrame() { }
+
 		//
 		// Networking
 		//

@@ -18,8 +18,6 @@ namespace Espionage.Engine
 		[RuntimeInitializeOnLoadMethod]
 		private static void Initialize()
 		{
-			Callback.Run( "engine.initialize" );
-
 			using ( Debugging.Stopwatch( "Engine / Game Ready", true ) )
 			{
 				// Setup Callbacks
@@ -132,6 +130,8 @@ namespace Espionage.Engine
 			{
 				service.OnUpdate();
 			}
+
+			Game?.OnFrame();
 		}
 
 		private static void OnShutdown()
