@@ -4,6 +4,9 @@ namespace Espionage.Engine.Resources
 {
 	public sealed partial class Map
 	{
+		/// <summary>
+		/// A reference to all the maps that have already been found or loaded.
+		/// </summary>
 		public static IDatabase<Map, string> Database { get; private set; }
 
 		private class InternalDatabase : IDatabase<Map, string>
