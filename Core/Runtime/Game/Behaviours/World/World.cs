@@ -8,7 +8,7 @@ namespace Espionage.Engine
 	/// <summary>
 	/// Central point of a map.
 	/// </summary>
-	[Library( "esp.world" ), Group( "Maps" )]
+	[Library( "env.world" ), Group( "Maps" )]
 	public class World : Behaviour
 	{
 		// Singleton
@@ -54,9 +54,5 @@ namespace Espionage.Engine
 				_instance = null;
 			}
 		}
-
-		// Instance
-		public string title;
-		public string description;
 	}
 }
