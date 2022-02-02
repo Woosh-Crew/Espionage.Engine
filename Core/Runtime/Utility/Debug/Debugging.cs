@@ -7,10 +7,65 @@ using Espionage.Engine.Internal.Commands;
 
 namespace Espionage.Engine
 {
+	/// <summary>
+	/// Espionage.Engine's core Debugging Library. Has support for
+	/// logging, commands, overlays, and other utility features.
+	/// You should be using this over Unity's debug library.
+	/// </summary>
 	[Manager( nameof( Initialize ), Layer = Layer.Runtime | Layer.Editor, Order = -200 )]
 	public static partial class Debugging
 	{
-		public static async void Initialize()
+		// Providers
+
+		/// <summary>
+		/// Command Console. Use Run(string, object[]) to run a command. Reason
+		/// its not its own static class is so we can add extension methods to it.
+		/// It also provides a SOLID way of handling it. Your game can have its own
+		/// Console provider.
+		/// </summary>
+		public static ICommandProvider Console { get; private set; }
+
+		/// <summary>
+		/// Logging in a SOLID way. Add your own extension methods if need be,
+		/// since this is an instanced class.
+		/// </summary>
+		public static ILoggingProvider Log { get; private set; }
+
+		/// <summary>
+		/// Draw Debug Overlays on the Viewport, such as spheres, cubes, etc.
+		/// Very useful for debugging volumes and collisions.
+		/// </summary>
+		/// <exception cref="NotImplementedException">Hasn't been implemented yet.</exception>
+		public static IDebugOverlayProvider Overlay => throw new NotImplementedException();
+
+		// Stopwatch
+
+		/// <summary>
+		/// Runs a stopwatch on a IDisposable Scope. Use this in a using() expression
+		/// to record how long it took to execute that code block.
+		/// </summary>
+		/// <param name="message">The message that should print along side the completion time.</param>
+		/// <param name="alwaysReport">Should we always report? or only report if the Var is set.</param>
+		public static IDisposable Stopwatch( string message = null, bool alwaysReport = false )
+		{
+			return ReportStopwatch || alwaysReport ? new TimedScope( message, 0 ) : null;
+		}
+
+		/// <summary>
+		/// <inheritdoc cref="Stopwatch(string,bool)"/>
+		/// </summary>
+		/// <param name="message"><inheritdoc cref="Stopwatch(string,bool)"/></param>
+		/// <param name="reportIfOverTime">If the stopwatch goes past this time, we will report it.</param>
+		public static IDisposable Stopwatch( string message, int reportIfOverTime )
+		{
+			return new TimedScope( message, reportIfOverTime );
+		}
+
+		//
+		// Initialize
+		//
+
+		private static async void Initialize()
 		{
 			// We initialize logging without
 			// Async so we can log straight away
@@ -27,10 +82,6 @@ namespace Espionage.Engine
 			}
 		}
 
-		public static ICommandProvider Console { get; private set; }
-		public static ILoggingProvider Log { get; private set; }
-		public static IDebugOverlayProvider Overlay => throw new NotImplementedException();
-
 		//
 		// Overlay
 		//
@@ -44,16 +95,6 @@ namespace Espionage.Engine
 
 		[Var( "debug.report_stopwatch" )]
 		private static bool ReportStopwatch { get; set; } = true;
-
-		public static IDisposable Stopwatch( string message = null, bool alwaysReport = false )
-		{
-			return ReportStopwatch || alwaysReport ? new TimedScope( message, 0 ) : null;
-		}
-
-		public static IDisposable Stopwatch( string message, int reportIfOverTime )
-		{
-			return new TimedScope( message, reportIfOverTime );
-		}
 
 		internal class TimedScope : IDisposable
 		{
