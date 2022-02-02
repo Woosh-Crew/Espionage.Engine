@@ -8,17 +8,25 @@ namespace Espionage.Engine
 {
 	public static partial class Debugging
 	{
-		[AttributeUsage( AttributeTargets.Method, Inherited = false, AllowMultiple = false )]
+		/// <summary>
+		/// Add this attribute to a method for it be added to the command database. Then later 
+		/// invoked using its name / identifier. Attribute must be attached to a static method.
+		/// </summary>
+		[AttributeUsage( AttributeTargets.Method, Inherited = false )]
 		public class CmdAttribute : Attribute, ICommandCreator
 		{
-			private readonly string[] _names;
+			public string[] Names { get; }
 
-			public string[] Names => _names;
+			/// <summary>
+			/// What should we print when help is invoked in the console.
+			/// </summary>
 			public string Help { get; set; }
 
+			/// <summary><inheritdoc cref="CmdAttribute"/></summary>
+			/// <param name="names">What is the name of the command to invoke this method.</param>
 			public CmdAttribute( params string[] names )
 			{
-				_names = names;
+				Names = names;
 			}
 
 			public Command[] Create( MemberInfo info )
@@ -31,7 +39,13 @@ namespace Espionage.Engine
 
 				foreach ( var item in Names )
 				{
-					var command = new Command() {Name = item, Help = helpBuilder.ToString(), Owner = info.DeclaringType, Info = info};
+					var command = new Command()
+					{
+						Name = item,
+						Help = helpBuilder.ToString(),
+						Owner = info.DeclaringType,
+						Info = info
+					};
 
 					OnCreate( ref command, info );
 					commands.Add( command );
@@ -73,12 +87,22 @@ namespace Espionage.Engine
 		}
 
 
-		[AttributeUsage( AttributeTargets.Property, Inherited = false, AllowMultiple = false )]
+		/// <summary>
+		/// A Var is basically a <see cref="CmdAttribute"/>, with the command prebuilt when initializing.
+		/// This var allows you to change and read a property at any time. You can also serialize the value
+		/// for persistence. Attribute must be attached to a static property.
+		/// </summary>
+		[AttributeUsage( AttributeTargets.Property )]
 		public sealed class VarAttribute : CmdAttribute
 		{
-			/// <summary> TODO: Actually make this work </summary>
+			/// <summary>
+			/// Will this Var be serialized, and saved for use after the application closes?
+			/// </summary>
 			public bool Saved { get; set; }
 
+			/// <summary>
+			/// If True, user wont be able to set the value of the target property.
+			/// </summary>
 			public bool IsReadOnly { get; set; }
 
 			public VarAttribute( string name ) : base( name ) { }
