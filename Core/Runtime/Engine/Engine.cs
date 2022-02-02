@@ -5,6 +5,9 @@ using UnityEngine.SceneManagement;
 
 namespace Espionage.Engine
 {
+	/// <summary>
+	/// Espionage.Engine Entry Point. Initializes all its systems, and sets up the Game.
+	/// </summary>
 	[Manager( nameof( Initialize ), Layer = Layer.Runtime | Layer.Editor, Order = 500 )]
 	public static class Engine
 	{

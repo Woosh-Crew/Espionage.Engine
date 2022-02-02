@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace Espionage.Engine
 {
+	/// <summary>
+	/// The Entry point for your game. Use this as your "GameManager".
+	/// </summary>
 	[Spawnable, Group( "Engine" )]
 	public abstract class Game : ILibrary, ICallbacks, IProject
 	{

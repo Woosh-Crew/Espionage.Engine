@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Espionage.Engine
 {
+	/// <summary>
+	/// A Tripod is a camera controller. It controls the Main Camera in the game.
+	/// </summary>
 	public abstract class Tripod : ICamera
 	{
 		public virtual void Activated() { }
