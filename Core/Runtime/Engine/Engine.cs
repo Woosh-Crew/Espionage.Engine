@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Linq;
+using Espionage.Engine.Services;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -8,7 +10,7 @@ namespace Espionage.Engine
 	/// <summary>
 	/// Espionage.Engine Entry Point. Initializes all its systems, and sets up the Game.
 	/// </summary>
-	[Manager( nameof( Initialize ), Layer = Layer.Runtime | Layer.Editor, Order = 500 )]
+	[Manager( nameof( Initialize ), Layer = Espionage.Engine.Layer.Runtime | Espionage.Engine.Layer.Editor, Order = 500 )]
 	public static class Engine
 	{
 		/// <summary>
@@ -63,18 +65,51 @@ namespace Espionage.Engine
 		}
 
 		//
+		// Services
+		//
+
+		public static IDatabase<IService> Services { get; } = new ServiceDatabase();
+
+		private class ServiceDatabase : IDatabase<IService>
+		{
+			public IEnumerable<IService> All => _services;
+
+			private List<IService> _services;
+
+			public void Add( IService item )
+			{
+				_services.Add( item );
+			}
+
+			public bool Contains( IService item )
+			{
+				return _services.Contains( item );
+			}
+
+			public void Remove( IService item )
+			{
+				_services.Remove( item );
+			}
+
+			public void Clear()
+			{
+				_services.Clear();
+			}
+		}
+
+		//
 		// Layer
 		//
 
 		/// <summary>
 		/// The Engine Layer scene. This should never be unloaded.
 		/// </summary>
-		public static Scene Scene { get; private set; }
+		public static Scene Layer { get; private set; }
 
 		private static void CreateEngineLayer()
 		{
 			// Create engine layer scene
-			Scene = SceneManager.CreateScene( "Engine Layer" );
+			Layer = SceneManager.CreateScene( "Engine" );
 			Callback.Run( "engine.layer_created" );
 		}
 
@@ -84,7 +119,7 @@ namespace Espionage.Engine
 		/// <param name="gameObject">The GameObject to add</param>
 		public static void AddToLayer( GameObject gameObject )
 		{
-			SceneManager.MoveGameObjectToScene( gameObject, Scene );
+			SceneManager.MoveGameObjectToScene( gameObject, Layer );
 		}
 
 		//
@@ -99,33 +134,25 @@ namespace Espionage.Engine
 				return;
 			}
 
+			foreach ( var service in Services.All )
+			{
+				service.OnUpdate();
+			}
+
 			// Setup Camera
 			SetupCamera();
 		}
 
 		private static void OnShutdown()
 		{
+			foreach ( var service in Services.All )
+			{
+				service.OnShutdown();
+			}
+
 			Game?.OnShutdown();
 		}
 
-		//
-		// Camera Building
-		//
 
-		private static Tripod.Setup _lastSetup;
-
-		private static void SetupCamera()
-		{
-			if ( Game == null )
-			{
-				return;
-			}
-
-			// Build the camSetup, from game.
-			_lastSetup = Game.BuildCamera( _lastSetup );
-
-			// Get Camera Component
-			CameraController.Instance.Finalise( _lastSetup );
-		}
 	}
 }
