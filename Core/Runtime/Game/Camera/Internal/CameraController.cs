@@ -3,15 +3,13 @@ using UnityEngine;
 
 namespace Espionage.Engine
 {
-	[RequireComponent( typeof( Camera ), typeof( AudioListener ) )]
-	internal class CameraController : Behaviour
+	[RequireComponent( typeof( Camera ), typeof( AudioListener ), typeof( FlareLayer ) )]
+	internal class CameraController : MonoBehaviour
 	{
 		private Camera _target;
 
-		protected override void Awake()
+		private void Awake()
 		{
-			base.Awake();
-
 			gameObject.tag = "MainCamera";
 			_target = GetComponent<Camera>();
 		}

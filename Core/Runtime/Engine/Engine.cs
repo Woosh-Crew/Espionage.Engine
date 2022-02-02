@@ -50,7 +50,7 @@ namespace Espionage.Engine
 
 			if ( target is null )
 			{
-				Debugging.Log.Warning( "Game couldn't be found." );
+				Debugging.Log.Error( "Game couldn't be found. Make sure to make a class inherited from Game" );
 				Callback.Run( "game.not_found" );
 				return;
 			}
