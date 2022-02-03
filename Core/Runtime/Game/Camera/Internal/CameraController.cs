@@ -14,7 +14,7 @@ namespace Espionage.Engine
 			_target = GetComponent<Camera>();
 		}
 
-		public void Finalise( Tripod.Setup camSetup )
+		public void Finalise( ICamera.Setup camSetup )
 		{
 			var trans = transform;
 			trans.position = camSetup.Position;

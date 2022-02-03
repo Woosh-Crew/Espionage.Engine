@@ -41,9 +41,5 @@ namespace Espionage.Engine.Gamemodes
 		}
 
 		protected virtual void OnFinish() { }
-
-		//
-		// Round
-		//
 	}
 }

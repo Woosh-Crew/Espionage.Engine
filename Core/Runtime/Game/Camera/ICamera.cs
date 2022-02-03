@@ -1,10 +1,23 @@
-﻿namespace Espionage.Engine
+﻿using UnityEngine;
+
+namespace Espionage.Engine
 {
 	public interface ICamera
 	{
-		void Build( ref Tripod.Setup camSetup );
-		
+		void Build( ref Setup camSetup );
+
 		void Activated();
 		void Deactivated();
+
+		public struct Setup
+		{
+			// Camera
+			public float FieldOfView;
+			public GameObject Viewer;
+
+			// Transform
+			public Vector3 Position;
+			public Quaternion Rotation;
+		}
 	}
 }

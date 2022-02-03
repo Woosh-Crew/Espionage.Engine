@@ -51,21 +51,13 @@ namespace Espionage.Engine
 			Database ??= new InternalDatabase();
 			Database.Clear();
 
-			using ( Debugging.Stopwatch( "Library Initialized", 10 ) )
+			using ( Debugging.Stopwatch( "Library Initialized", 0 ) )
 			{
 				// Select all types where ILibrary exists or if it has the correct attribute
 				var types = AppDomain.CurrentDomain.GetAssemblies()
 					.Where( Utility.IgnoreIfNotUserGeneratedAssembly )
 					.SelectMany( e => e.GetTypes()
-						.Where( ( type ) =>
-						{
-							if ( type.IsDefined( typeof( Skip ) ) )
-							{
-								return false;
-							}
-
-							return type.IsDefined( typeof( LibraryAttribute ) ) || type.HasInterface<ILibrary>();
-						} ) );
+						.Where( ( type ) => type.HasInterface<ILibrary>() || type.IsDefined( typeof( LibraryAttribute ) ) ) );
 
 				foreach ( var item in types )
 				{
@@ -78,19 +70,14 @@ namespace Espionage.Engine
 
 		private static Library CreateRecord( Type type )
 		{
-			Library record = null;
-
-			// If we have meta present, use it
-			if ( type.IsDefined( typeof( LibraryAttribute ), false ) )
+			if ( !type.IsDefined( typeof( LibraryAttribute ), false ) )
 			{
-				var attribute = type.GetCustomAttribute<LibraryAttribute>();
-				record = attribute.CreateRecord( type );
+				return new Library( type );
 			}
 
-			// If still null just use type defaults
-			record ??= new Library( type );
-
-			return record;
+			// If we have meta present, use it
+			var attribute = type.GetCustomAttribute<LibraryAttribute>();
+			return attribute.CreateRecord( type );
 		}
 
 		private static Guid GenerateID( string name )

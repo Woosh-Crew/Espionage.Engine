@@ -5,9 +5,9 @@ using UnityEngine;
 namespace Espionage.Engine
 {
 	/// <summary>
-	/// A Tripod is a camera controller. It controls the Main Camera in the game.
+	/// A Tripod is a camera controller behaviour. It controls the Main Camera in the game.
 	/// </summary>
-	public abstract class Tripod : ICamera
+	public abstract class Tripod : Behaviour, ICamera
 	{
 		public virtual void Activated() { }
 		public virtual void Deactivated() { }
@@ -16,7 +16,7 @@ namespace Espionage.Engine
 		// Camera Building
 		//
 
-		private Setup _setup;
+		private ICamera.Setup _setup;
 
 		protected Vector3 Position
 		{
@@ -38,7 +38,7 @@ namespace Espionage.Engine
 
 		protected abstract void Update();
 
-		public void Build( ref Setup camSetup )
+		public void Build( ref ICamera.Setup camSetup )
 		{
 			_setup = camSetup;
 
@@ -48,17 +48,6 @@ namespace Espionage.Engine
 			{
 				camSetup.FieldOfView = 90;
 			}
-		}
-
-		public struct Setup
-		{
-			// Camera
-			public float FieldOfView;
-			public GameObject Viewer;
-
-			// Transform
-			public Vector3 Position;
-			public Quaternion Rotation;
 		}
 	}
 }

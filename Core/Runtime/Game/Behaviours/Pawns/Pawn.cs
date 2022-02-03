@@ -19,6 +19,13 @@ namespace Espionage.Engine
 		}
 
 		//
+		// Pawn
+		//
+
+		public void Posses() { }
+		public void UnPosses() { }
+
+		//
 		// Controller
 		//
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
@@ -32,9 +33,12 @@ namespace Espionage.Engine
 
 			// This is really expensive (6ms)...
 			// Get Components attached to type
-			foreach ( var item in Class.GetCustomAttributes().Where( e => e is IComponent<Library> ) )
+			foreach ( var item in Class.GetCustomAttributes() )
 			{
-				Components.Add( item as IComponent<Library> );
+				if ( item is IComponent<Library> library )
+				{
+					Components.Add( library );
+				}
 			}
 
 			// Properties
@@ -44,14 +48,13 @@ namespace Espionage.Engine
 			const BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static;
 			foreach ( var propertyInfo in Class.GetProperties( flags ) )
 			{
-				if ( propertyInfo.IsDefined( typeof( PropertyAttribute ) ) )
+				if ( !propertyInfo.IsDefined( typeof( PropertyAttribute ) ) )
 				{
-					var attribute = propertyInfo.GetCustomAttribute<PropertyAttribute>();
-					Properties.Add( attribute.CreateRecord( this, propertyInfo ) );
-					return;
+					continue;
 				}
 
-				Properties.Add( new Property( this, propertyInfo ) );
+				var attribute = propertyInfo.GetCustomAttribute<PropertyAttribute>();
+				Properties.Add( attribute.CreateRecord( this, propertyInfo ) );
 			}
 		}
 

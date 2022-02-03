@@ -6,18 +6,20 @@ using Random = UnityEngine.Random;
 
 namespace Espionage.Engine
 {
-	public class Shitgame : Game
-	{
-		public override string SplashScreen { get; }
-		public override string MainMenu { get; }
-	}
-
 	/// <summary>
 	/// The Entry point for your game. Use this as your "GameManager".
 	/// </summary>
 	[Spawnable, Group( "Engine" )]
 	public abstract class Game : ILibrary, ICallbacks
 	{
+		// Mode
+
+		public enum Mode { Offline, Online, Both }
+
+		public virtual Mode Type => Mode.Offline;
+
+		// Register
+
 		public Library ClassInfo { get; }
 
 		protected Game()
@@ -112,7 +114,7 @@ namespace Espionage.Engine
 			return null;
 		}
 
-		public Tripod.Setup BuildCamera( Tripod.Setup camSetup )
+		public ICamera.Setup BuildCamera( ICamera.Setup camSetup )
 		{
 			var cam = FindActiveCamera();
 
@@ -131,6 +133,6 @@ namespace Espionage.Engine
 			return camSetup;
 		}
 
-		protected virtual void PostCameraSetup( ref Tripod.Setup camSetup ) { }
+		protected virtual void PostCameraSetup( ref ICamera.Setup camSetup ) { }
 	}
 }

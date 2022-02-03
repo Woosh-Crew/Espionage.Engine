@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using Espionage.Engine.Components;
+using UnityEngine.LowLevel;
 
 namespace Espionage.Engine
 {
@@ -22,9 +23,12 @@ namespace Espionage.Engine
 
 			// This is really expensive (6ms)...
 			// Get Components attached to type
-			foreach ( var item in Info.GetCustomAttributes().Where( e => e is IComponent<Property> ) )
+			foreach ( var item in Info.GetCustomAttributes() )
 			{
-				Components.Add( item as IComponent<Property> );
+				if ( item is IComponent<Property> property )
+				{
+					Components.Add( property );
+				}
 			}
 		}
 
