@@ -56,15 +56,18 @@ namespace Espionage.Engine
 			using ( Debugging.Stopwatch( "Library Initialized", 0 ) )
 			{
 				// Select all types where ILibrary exists or if it has the correct attribute
-				foreach ( var assembly in AppDomain.CurrentDomain.GetAssemblies() )
+				for ( var assemblyIndex = 0; assemblyIndex < AppDomain.CurrentDomain.GetAssemblies().Length; assemblyIndex++ )
 				{
+					var assembly = AppDomain.CurrentDomain.GetAssemblies()[assemblyIndex];
 					if ( !Utility.IgnoreIfNotUserGeneratedAssembly( assembly ) )
 					{
 						continue;
 					}
 
-					foreach ( var type in assembly.GetTypes() )
+					var types = assembly.GetTypes();
+					for ( var typeIndex = 0; typeIndex < types.Length; typeIndex++ )
 					{
+						var type = types[typeIndex];
 						// If we don't have the interface, or if were not a static class.
 						if ( !(type.IsAbstract && type.IsSealed || type.HasInterface<ILibrary>()) || Utility.IgnoredNamespaces.Any( e => e == type.Namespace ) )
 						{

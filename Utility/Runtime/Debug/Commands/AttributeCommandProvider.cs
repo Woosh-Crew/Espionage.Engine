@@ -29,8 +29,9 @@ namespace Espionage.Engine.Internal.Commands
 			_commands.Clear();
 
 			// Select all types where ILibrary exists or if it has the correct attribute
-			foreach ( var assembly in AppDomain.CurrentDomain.GetAssemblies() )
+			for ( var assemblyIndex = 0; assemblyIndex < AppDomain.CurrentDomain.GetAssemblies().Length; assemblyIndex++ )
 			{
+				var assembly = AppDomain.CurrentDomain.GetAssemblies()[assemblyIndex];
 				if ( !Utility.IgnoreIfNotUserGeneratedAssembly( assembly ) )
 				{
 					continue;

@@ -29,7 +29,7 @@ namespace Espionage.Engine
 				Names = names;
 			}
 
-			public Command[] Create( MemberInfo info )
+			public List<Command> Create( MemberInfo info )
 			{
 				var commands = new List<Command>();
 
@@ -51,7 +51,7 @@ namespace Espionage.Engine
 					commands.Add( command );
 				}
 
-				return commands.ToArray();
+				return commands;
 			}
 
 			protected virtual StringBuilder BuildHelpMessage( MemberInfo info, StringBuilder builder )

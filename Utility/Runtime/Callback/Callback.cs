@@ -22,7 +22,7 @@ namespace Espionage.Engine
 		[Debugging.Var( "callbacks.report" )]
 		private static bool Report { get; } = false;
 
-		internal static async void Initialize()
+		internal static void Initialize()
 		{
 			using ( Debugging.Stopwatch( "Callbacks Initialized" ) )
 			{
