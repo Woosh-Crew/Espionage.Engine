@@ -48,7 +48,7 @@ namespace Espionage.Engine
 		// Manager
 		//
 
-		private static string[] _ignoredNamespaces = new[] { "DiscordAPI" };
+		public static string[] IgnoredNamespaces { get; } = new[] { "DiscordAPI" };
 
 		private static void Cache()
 		{
@@ -67,7 +67,7 @@ namespace Espionage.Engine
 
 					foreach ( var type in assembly.GetTypes() )
 					{
-						if ( _ignoredNamespaces.Any( e => e == type.Namespace ) )
+						if ( IgnoredNamespaces.Any( e => e == type.Namespace ) )
 						{
 							continue;
 						}

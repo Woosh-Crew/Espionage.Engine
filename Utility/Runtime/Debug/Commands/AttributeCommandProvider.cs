@@ -26,28 +26,37 @@ namespace Espionage.Engine.Internal.Commands
 
 		public Task Initialize()
 		{
+			_commands ??= new Dictionary<string, Command>( StringComparer.CurrentCultureIgnoreCase );
+			_commands.Clear();
+
+			// Select all types where ILibrary exists or if it has the correct attribute
+			foreach ( var assembly in AppDomain.CurrentDomain.GetAssemblies() )
 			{
-				_commands ??= new Dictionary<string, Command>( StringComparer.CurrentCultureIgnoreCase );
-				_commands.Clear();
-
-				// Get every CmdAttribute using Linq
-				var types = AppDomain.CurrentDomain.GetAssemblies()
-					.Where( Utility.IgnoreIfNotUserGeneratedAssembly )
-					.SelectMany( e => e.GetTypes()
-						.SelectMany( type => type.GetMembers( BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic ) ) );
-
-				foreach ( var info in types )
+				if ( !Utility.IgnoreIfNotUserGeneratedAssembly( assembly ) )
 				{
-					var attribute = info.GetCustomAttribute<T>();
+					continue;
+				}
 
-					if ( attribute is not ICommandCreator command )
+				foreach ( var type in assembly.GetTypes() )
+				{
+					if ( Library.IgnoredNamespaces.Any( e => e == type.Namespace ) )
 					{
 						continue;
 					}
 
-					foreach ( var item in command.Create( info ) )
+					foreach ( var member in type.GetMembers( BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic ) )
 					{
-						Add( item );
+						var attribute = member.GetCustomAttribute<T>();
+
+						if ( attribute is not ICommandCreator command )
+						{
+							continue;
+						}
+
+						foreach ( var item in command.Create( member ) )
+						{
+							Add( item );
+						}
 					}
 				}
 			}
