@@ -13,12 +13,11 @@ namespace Espionage.Engine.Internal.Callbacks
 
 		public Task Initialize()
 		{
-			return Task.Run( () =>
 			{
 				// Get every Callback using Linq
 				var methods = AppDomain.CurrentDomain.GetAssemblies()
 					.Where( Utility.IgnoreIfNotUserGeneratedAssembly )
-					.SelectMany( e => e.GetTypes().Where( type => type.IsDefined( typeof( LibraryAttribute ) ) || type.HasInterface<ICallbacks>() )
+					.SelectMany( e => e.GetTypes().Where( type => type.IsAbstract && type.IsSealed || type.HasInterface<ICallbacks>() )
 						.SelectMany( type => type.GetMethods( BindingFlags.Instance | BindingFlags.Static |
 						                                      BindingFlags.Public | BindingFlags.NonPublic |
 						                                      BindingFlags.FlattenHierarchy ) ) );
@@ -39,7 +38,9 @@ namespace Espionage.Engine.Internal.Callbacks
 							.WithCallback( Build( info ) ) );
 					}
 				}
-			} );
+			}
+
+			return Task.CompletedTask;
 		}
 
 		public object[] Run( string name, params object[] args )

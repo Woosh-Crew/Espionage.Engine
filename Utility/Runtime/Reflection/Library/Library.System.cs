@@ -67,7 +67,7 @@ namespace Espionage.Engine
 
 					foreach ( var type in assembly.GetTypes() )
 					{
-						if ( IgnoredNamespaces.Any( e => e == type.Namespace ) )
+						if ( !(type.IsAbstract && type.IsSealed || type.HasInterface<ILibrary>()) || IgnoredNamespaces.Any( e => e == type.Namespace ) )
 						{
 							continue;
 						}
