@@ -48,8 +48,6 @@ namespace Espionage.Engine
 		// Manager
 		//
 
-		public static string[] IgnoredNamespaces { get; } = new[] { "DiscordAPI" };
-
 		private static void Cache()
 		{
 			Database ??= new InternalDatabase();
@@ -68,7 +66,7 @@ namespace Espionage.Engine
 					foreach ( var type in assembly.GetTypes() )
 					{
 						// If we don't have the interface, or if were not a static class.
-						if ( !(type.IsAbstract && type.IsSealed || type.HasInterface<ILibrary>()) || IgnoredNamespaces.Any( e => e == type.Namespace ) )
+						if ( !(type.IsAbstract && type.IsSealed || type.HasInterface<ILibrary>()) || Utility.IgnoredNamespaces.Any( e => e == type.Namespace ) )
 						{
 							continue;
 						}

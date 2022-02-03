@@ -31,20 +31,18 @@ namespace Espionage.Engine
 				// AttributeCallbackProvider is the default provider
 				Provider ??= new AttributeCallbackProvider();
 
-				await Provider.Initialize();
-
 				_isInitializing = false;
-			}
 
-			// Dequeue any callbacks called when initializing
-			for ( var i = 0; i < _callbackQueue.Count; i++ )
-			{
-				var item = _callbackQueue.Dequeue();
-				Run( item.Name, item.Args );
-			}
+				// Dequeue any callbacks called when initializing
+				for ( var i = 0; i < _callbackQueue.Count; i++ )
+				{
+					var item = _callbackQueue.Dequeue();
+					Run( item.Name, item.Args );
+				}
 
-			_callbackQueue.Clear();
-			_callbackQueue = null;
+				_callbackQueue.Clear();
+				_callbackQueue = null;
+			}
 		}
 
 		//

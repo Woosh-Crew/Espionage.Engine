@@ -11,36 +11,41 @@ namespace Espionage.Engine.Internal.Callbacks
 		private Dictionary<string, CallbackInfo.Group> _callbacks = new();
 		private Dictionary<Type, List<object>> _registered = new();
 
-		public Task Initialize()
+		public AttributeCallbackProvider()
 		{
+			// Select all types where ILibrary exists or if it has the correct attribute
+			foreach ( var assembly in AppDomain.CurrentDomain.GetAssemblies() )
 			{
-				// Get every Callback using Linq
-				var methods = AppDomain.CurrentDomain.GetAssemblies()
-					.Where( Utility.IgnoreIfNotUserGeneratedAssembly )
-					.SelectMany( e => e.GetTypes().Where( type => type.IsAbstract && type.IsSealed || type.HasInterface<ICallbacks>() )
-						.SelectMany( type => type.GetMethods( BindingFlags.Instance | BindingFlags.Static |
-						                                      BindingFlags.Public | BindingFlags.NonPublic |
-						                                      BindingFlags.FlattenHierarchy ) ) );
-
-				foreach ( var info in methods )
+				if ( !Utility.IgnoreIfNotUserGeneratedAssembly( assembly ) )
 				{
-					var attributes = info.GetCustomAttributes<CallbackAttribute>();
+					continue;
+				}
 
-					foreach ( var attribute in attributes )
+				foreach ( var type in assembly.GetTypes() )
+				{
+					if ( !(type.IsAbstract && type.IsSealed || type.HasInterface<ICallbacks>()) || Utility.IgnoredNamespaces.Any( e => e == type.Namespace ) )
 					{
-						if ( !_callbacks.ContainsKey( attribute.Name ) )
-						{
-							_callbacks.Add( attribute.Name, new CallbackInfo.Group() );
-						}
+						continue;
+					}
 
-						_callbacks.TryGetValue( attribute.Name, out var items );
-						items?.Add( new CallbackInfo { IsStatic = info.IsStatic }.FromType( info.DeclaringType )
-							.WithCallback( Build( info ) ) );
+					foreach ( var method in type.GetMethods( BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy ) )
+					{
+						var attributes = method.GetCustomAttributes<CallbackAttribute>();
+
+						foreach ( var attribute in attributes )
+						{
+							if ( !_callbacks.ContainsKey( attribute.Name ) )
+							{
+								_callbacks.Add( attribute.Name, new CallbackInfo.Group() );
+							}
+
+							_callbacks.TryGetValue( attribute.Name, out var items );
+							items?.Add( new CallbackInfo { IsStatic = method.IsStatic }.FromType( method.DeclaringType )
+								.WithCallback( Build( method ) ) );
+						}
 					}
 				}
 			}
-
-			return Task.CompletedTask;
 		}
 
 		public object[] Run( string name, params object[] args )

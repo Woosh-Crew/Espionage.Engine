@@ -6,7 +6,11 @@ namespace Espionage.Engine.Internal
 {
 	public static class Utility
 	{
-		private static readonly string[] IgnoredAssemblies =
+		//
+		// Helpers
+		//
+
+		public static string[] IgnoredAssemblies { get; } =
 		{
 			"Unity",
 			"System",
@@ -21,6 +25,8 @@ namespace Espionage.Engine.Internal
 			"JetBrains",
 			"Report"
 		};
+
+		public static string[] IgnoredNamespaces { get; } = { "DiscordAPI", "Steamworks", "UnityEngine" };
 
 		public static bool IgnoreIfNotUserGeneratedAssembly( Assembly assembly )
 		{

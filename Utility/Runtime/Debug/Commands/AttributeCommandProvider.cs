@@ -38,7 +38,7 @@ namespace Espionage.Engine.Internal.Commands
 
 				foreach ( var type in assembly.GetTypes() )
 				{
-					if ( Library.IgnoredNamespaces.Any( e => e == type.Namespace ) )
+					if ( Utility.IgnoredNamespaces.Any( e => e == type.Namespace ) )
 					{
 						continue;
 					}
