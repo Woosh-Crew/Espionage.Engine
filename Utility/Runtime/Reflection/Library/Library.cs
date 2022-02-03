@@ -76,7 +76,7 @@ namespace Espionage.Engine
 		public bool Spawnable { get; set; } = true;
 
 		// Owner & Identification
-		public Type Class { get; set; }
+		public Type Class { get; }
 		public Guid Id => GenerateID( $"{Group}/{Name}" );
 
 		//
