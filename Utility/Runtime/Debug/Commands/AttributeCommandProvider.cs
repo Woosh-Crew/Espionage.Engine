@@ -9,13 +9,13 @@ namespace Espionage.Engine.Internal.Commands
 	/// <summary> Attribute Command Provider caches commands based off an attribute </summary>
 	internal class AttributeCommandProvider : ICommandProvider
 	{
-		//
 		// Commands
+
 		private readonly Dictionary<string, Command> _commands = new( StringComparer.CurrentCultureIgnoreCase );
 		public IReadOnlyCollection<Command> All => _commands.Values;
 
-		//
 		// History
+
 		private readonly HashSet<string> _history = new();
 		public IReadOnlyCollection<string> History => _history;
 
