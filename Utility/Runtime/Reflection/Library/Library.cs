@@ -46,7 +46,7 @@ namespace Espionage.Engine
 			Properties = new InternalPropertyDatabase();
 
 			// Get all Properties (Defined by the User)
-			const BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static;
+			const BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;
 			foreach ( var propertyInfo in Class.GetProperties( flags ) )
 			{
 				if ( !propertyInfo.IsDefined( typeof( PropertyAttribute ) ) )
@@ -54,6 +54,7 @@ namespace Espionage.Engine
 					continue;
 				}
 
+				// Only add property if it has the attribute
 				var attribute = propertyInfo.GetCustomAttribute<PropertyAttribute>();
 				Properties.Add( attribute.CreateRecord( this, propertyInfo ) );
 			}
