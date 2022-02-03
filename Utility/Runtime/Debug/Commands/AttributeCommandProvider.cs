@@ -12,7 +12,7 @@ namespace Espionage.Engine.Internal.Commands
 	{
 		//
 		// Commands
-		private Dictionary<string, Command> _commands = new(StringComparer.CurrentCultureIgnoreCase);
+		private Dictionary<string, Command> _commands = new( StringComparer.CurrentCultureIgnoreCase );
 		public IReadOnlyCollection<Command> All => _commands.Values;
 
 		//
@@ -26,7 +26,6 @@ namespace Espionage.Engine.Internal.Commands
 
 		public Task Initialize()
 		{
-			return Task.Run( () =>
 			{
 				_commands ??= new Dictionary<string, Command>( StringComparer.CurrentCultureIgnoreCase );
 				_commands.Clear();
@@ -51,7 +50,9 @@ namespace Espionage.Engine.Internal.Commands
 						Add( item );
 					}
 				}
-			} );
+			}
+
+			return Task.CompletedTask;
 		}
 
 		private void Add( Command command )

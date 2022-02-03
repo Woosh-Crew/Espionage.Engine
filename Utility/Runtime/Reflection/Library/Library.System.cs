@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using Espionage.Engine.Internal;
 using Espionage.Engine.Components;
@@ -56,11 +57,15 @@ namespace Espionage.Engine
 				// Select all types where ILibrary exists or if it has the correct attribute
 				var types = AppDomain.CurrentDomain.GetAssemblies()
 					.Where( Utility.IgnoreIfNotUserGeneratedAssembly )
-					.SelectMany( e => e.GetTypes()
-						.Where( ( type ) => type.HasInterface<ILibrary>() || type.IsDefined( typeof( LibraryAttribute ) ) ) );
+					.SelectMany( e => e.GetTypes() );
 
 				foreach ( var item in types )
 				{
+					if ( item.Namespace == "DiscordAPI" )
+					{
+						continue;
+					}
+
 					Database.Add( CreateRecord( item ) );
 				}
 			}
