@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Espionage.Engine.Internal;
 using Espionage.Engine.Components;
+using Steamworks.Data;
 using UnityEngine;
 using Random = System.Random;
 
@@ -47,6 +48,8 @@ namespace Espionage.Engine
 		// Manager
 		//
 
+		private static string[] _ignoredNamespaces = new[] { "DiscordAPI" };
+
 		private static void Cache()
 		{
 			Database ??= new InternalDatabase();
@@ -55,18 +58,22 @@ namespace Espionage.Engine
 			using ( Debugging.Stopwatch( "Library Initialized", 0 ) )
 			{
 				// Select all types where ILibrary exists or if it has the correct attribute
-				var types = AppDomain.CurrentDomain.GetAssemblies()
-					.Where( Utility.IgnoreIfNotUserGeneratedAssembly )
-					.SelectMany( e => e.GetTypes() );
-
-				foreach ( var item in types )
+				foreach ( var assembly in AppDomain.CurrentDomain.GetAssemblies() )
 				{
-					if ( item.Namespace == "DiscordAPI" )
+					if ( !Utility.IgnoreIfNotUserGeneratedAssembly( assembly ) )
 					{
 						continue;
 					}
 
-					Database.Add( CreateRecord( item ) );
+					foreach ( var type in assembly.GetTypes() )
+					{
+						if ( _ignoredNamespaces.Any( e => e == type.Namespace ) )
+						{
+							continue;
+						}
+
+						Database.Add( CreateRecord( type ) );
+					}
 				}
 			}
 
