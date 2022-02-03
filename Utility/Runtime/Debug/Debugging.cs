@@ -65,20 +65,16 @@ namespace Espionage.Engine
 		// Initialize
 		//
 
-		private static async void Initialize()
+		private static void Initialize()
 		{
-			// We initialize logging without
-			// Async so we can log straight away
-			Log ??= new SimpleLoggingProvider();
-
-			Log.Initialize();
-
 			using ( Stopwatch( "Debugging Initialized" ) )
 			{
-				// Setup Console
-				Console ??= new AttributeCommandProvider<CmdAttribute>();
+				// We initialize logging without
+				// Async so we can log straight away
+				Log ??= new SimpleLoggingProvider();
 
-				await Task.WhenAll( Console.Initialize() );
+				// Setup Console
+				Console ??= new AttributeCommandProvider();
 			}
 		}
 

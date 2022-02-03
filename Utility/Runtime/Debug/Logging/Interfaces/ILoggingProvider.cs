@@ -7,14 +7,11 @@ namespace Espionage.Engine.Internal.Logging
 {
 	public interface ILoggingProvider
 	{
-		void Initialize() { return; }
-
+		IReadOnlyCollection<Entry> All { get; }
 		Action<Entry> OnLogged { get; set; }
 
 		void Add( Entry entry );
 		void Clear();
-
-		IReadOnlyCollection<Entry> All { get; }
 	}
 }
 

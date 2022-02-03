@@ -7,12 +7,11 @@ using System.Threading.Tasks;
 namespace Espionage.Engine.Internal.Commands
 {
 	/// <summary> Attribute Command Provider caches commands based off an attribute </summary>
-	/// <typeparam name="T"> Attribute, should also have interface ICommandCreator </typeparam>
-	internal class AttributeCommandProvider<T> : ICommandProvider where T : Attribute
+	internal class AttributeCommandProvider : ICommandProvider
 	{
 		//
 		// Commands
-		private Dictionary<string, Command> _commands = new( StringComparer.CurrentCultureIgnoreCase );
+		private readonly Dictionary<string, Command> _commands = new( StringComparer.CurrentCultureIgnoreCase );
 		public IReadOnlyCollection<Command> All => _commands.Values;
 
 		//
@@ -24,7 +23,7 @@ namespace Espionage.Engine.Internal.Commands
 		// Provider
 		//
 
-		public Task Initialize()
+		public AttributeCommandProvider()
 		{
 			_commands ??= new Dictionary<string, Command>( StringComparer.CurrentCultureIgnoreCase );
 			_commands.Clear();
@@ -46,22 +45,20 @@ namespace Espionage.Engine.Internal.Commands
 
 					foreach ( var member in type.GetMembers( BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic ) )
 					{
-						var attribute = member.GetCustomAttribute<T>();
+						var attribute = member.GetCustomAttribute<Debugging.CmdAttribute>();
 
-						if ( attribute is not ICommandCreator command )
+						if ( attribute is null )
 						{
 							continue;
 						}
 
-						foreach ( var item in command.Create( member ) )
+						foreach ( var item in attribute.Create( member ) )
 						{
 							Add( item );
 						}
 					}
 				}
 			}
-
-			return Task.CompletedTask;
 		}
 
 		private void Add( Command command )
