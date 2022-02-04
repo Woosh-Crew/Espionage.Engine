@@ -34,6 +34,10 @@ namespace Espionage.Engine
 
 		protected virtual void OnDelete() { }
 
+		// Simulate
+
+		public virtual void Simulate( Client client ) { }
+
 		// Library Constructor
 
 		private static object Constructor( Library library )

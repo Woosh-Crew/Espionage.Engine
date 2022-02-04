@@ -32,6 +32,9 @@ namespace Espionage.Engine
 				Application.quitting -= OnShutdown;
 				Application.quitting += OnShutdown;
 
+				// TODO: THIS IS TEMP
+				Local.Client = Client.Create( "LOCAL" );
+
 				// Tell Services we're ready
 				foreach ( var service in Services.All )
 				{
