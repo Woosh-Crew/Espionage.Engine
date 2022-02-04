@@ -14,7 +14,6 @@ namespace Espionage.Engine
 	[Manager( nameof( Initialize ), Layer = Layer.Runtime, Order = 600 )]
 	public static class Engine
 	{
-		public static Menu Menu { get; private set; }
 		public static Game Game { get; private set; }
 
 		private static void Initialize()
@@ -34,7 +33,6 @@ namespace Espionage.Engine
 				Application.quitting -= OnShutdown;
 				Application.quitting += OnShutdown;
 
-
 				// Tell Services we're ready
 				foreach ( var service in Services.All )
 				{
@@ -51,7 +49,6 @@ namespace Espionage.Engine
 
 		private static bool SetupGame()
 		{
-			// Setup Game
 			var target = Library.Database.Find<Game>();
 
 			if ( target is null )

@@ -1,30 +1,15 @@
-﻿using System;
-using System.Diagnostics;
-using Espionage.Engine.Gamemodes;
-using UnityEngine;
-using Random = UnityEngine.Random;
+﻿using Espionage.Engine.Gamemodes;
 
 namespace Espionage.Engine
 {
-	public class Shit : Game
-	{
-		public override string SplashScreen { get; }
-		public override string MainMenu { get; }
-	}
-
 	/// <summary>
 	/// The Entry point for your game. Use this as your "GameManager".
 	/// </summary>
 	[Spawnable, Group( "Engine" )]
 	public abstract class Game : ILibrary, ICallbacks
 	{
-		// Mode
-
-		public enum Mode { Offline, Online, Both }
-
-		public virtual Mode Type => Mode.Offline;
-
-		// Register
+		public Splash Splash { get; }
+		public Menu Menu { get; }
 
 		public Library ClassInfo { get; }
 
@@ -38,6 +23,7 @@ namespace Espionage.Engine
 		{
 			Callback.Unregister( this );
 		}
+
 
 		/// <summary>
 		/// Called when the Engine & Game finishes initializing.
@@ -103,22 +89,6 @@ namespace Espionage.Engine
 
 			Callback.Run( "gamemodes.switched", true, gamemode );
 		}
-
-		//
-		// Required Scenes
-		//
-
-		/// <summary>
-		/// A Path to the Splash Screen Scene, this will be the first scene
-		/// that is loaded at runtime. Espionage.Engine uses this for
-		/// asset and engine initialization.
-		/// </summary>
-		public abstract string SplashScreen { get; }
-
-		/// <summary>
-		/// A Path to the Main Menu Scene
-		/// </summary>
-		public abstract string MainMenu { get; }
 
 		//
 		// Build Camera

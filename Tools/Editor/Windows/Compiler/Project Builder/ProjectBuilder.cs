@@ -68,15 +68,15 @@ namespace Espionage.Engine.Tools.Editor
 				box.Add( new ObjectField( "Splash Screen" )
 				{
 					objectType = typeof( SceneAsset ),
-					tooltip = "Splash Screen is used for Loading Assets and hiding Initialization",
-					value = AssetDatabase.LoadAssetAtPath<SceneAsset>( Engine.Game?.SplashScreen )
+					tooltip = "Splash Screen is used for Loading Assets and hiding Initialization"
+					// value = AssetDatabase.LoadAssetAtPath<SceneAsset>( Engine.Game?.SplashScreen )
 				} );
 
 				box.Add( new ObjectField( "Main Menu" )
 				{
 					objectType = typeof( SceneAsset ),
-					tooltip = "Main Menu is loaded after the Splash Screen",
-					value = AssetDatabase.LoadAssetAtPath<SceneAsset>( Engine.Game?.MainMenu )
+					tooltip = "Main Menu is loaded after the Splash Screen"
+					// value = AssetDatabase.LoadAssetAtPath<SceneAsset>( Engine.Game?.MainMenu )
 				} );
 			}
 
@@ -112,7 +112,7 @@ namespace Espionage.Engine.Tools.Editor
 					// Setup BuildPipeline
 					var buildSettings = new BuildPlayerOptions()
 					{
-						scenes = new[] { Engine.Game.SplashScreen, Engine.Game.MainMenu },
+						// scenes = new[] { Engine.Game.SplashScreen, Engine.Game.MainMenu },
 						locationPathName = $"Exports/{PlayerSettings.productName} {PlayerSettings.bundleVersion}/{PlayerSettings.productName}.exe",
 						options = options,
 						target = target,
