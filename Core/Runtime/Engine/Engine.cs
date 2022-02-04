@@ -14,6 +14,7 @@ namespace Espionage.Engine
 	[Manager( nameof( Initialize ), Layer = Layer.Runtime, Order = 600 )]
 	public static class Engine
 	{
+		public static Menu Menu { get; private set; }
 		public static Game Game { get; private set; }
 
 		private static void Initialize()
@@ -45,9 +46,6 @@ namespace Espionage.Engine
 				Application.onBeforeRender += OnUpdate;
 
 				Game?.OnReady();
-
-				// TODO: THIS IS TEMP UNTIL WE GET NETWORKING GOING
-				Game?.ClientJoined( Client.Create( "[id=0]Client :: Local" ) );
 			}
 		}
 
