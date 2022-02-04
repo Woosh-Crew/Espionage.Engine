@@ -41,7 +41,7 @@ namespace Espionage.Engine.Services
 
 		public void OnUpdate()
 		{
-			if ( Engine.Game == null )
+			if ( Engine.Game == null || !Application.isPlaying )
 			{
 				return;
 			}

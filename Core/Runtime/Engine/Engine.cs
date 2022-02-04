@@ -81,9 +81,12 @@ namespace Espionage.Engine
 
 			public ServiceDatabase()
 			{
-				foreach ( var service in Library.Database.GetAll<IService>() )
+				using ( Debugging.Stopwatch( "Service Find" ) )
 				{
-					Add( Library.Database.Create<IService>( service.Class ) );
+					foreach ( var service in Library.Database.GetAll<IService>() )
+					{
+						Add( Library.Database.Create<IService>( service.Class ) );
+					}
 				}
 			}
 
