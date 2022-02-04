@@ -17,8 +17,8 @@ namespace Espionage.Engine
 		public void Finalise( ICamera.Setup camSetup )
 		{
 			var trans = transform;
-			trans.position = camSetup.Position;
-			trans.rotation = camSetup.Rotation;
+			trans.localPosition = camSetup.Position;
+			trans.localRotation = camSetup.Rotation;
 
 			_target.fieldOfView = camSetup.FieldOfView;
 		}
