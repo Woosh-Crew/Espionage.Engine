@@ -30,10 +30,8 @@ namespace Espionage.Engine
 			}
 		}
 
-		protected override void Awake()
+		protected override void OnAwake()
 		{
-			base.Awake();
-
 			if ( _instance == null )
 			{
 				_instance = this;
@@ -45,10 +43,8 @@ namespace Espionage.Engine
 			}
 		}
 
-		protected override void OnDestroy()
+		protected override void OnDelete()
 		{
-			base.OnDestroy();
-
 			if ( _instance == this )
 			{
 				_instance = null;

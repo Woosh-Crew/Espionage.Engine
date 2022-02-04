@@ -19,6 +19,10 @@ namespace Espionage.Engine
 			return obj;
 		}
 
+		// Input
+
+		public IInputProcessor Input { get; internal set; }
+
 		// Pawn
 
 		public Pawn Pawn { get; private set; }

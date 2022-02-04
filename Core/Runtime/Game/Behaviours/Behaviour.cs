@@ -12,20 +12,27 @@ namespace Espionage.Engine
 	{
 		public Library ClassInfo { get; private set; }
 
-		protected virtual void Awake()
+		// Creation
+
+		private void Awake()
 		{
 			ClassInfo = Library.Database[GetType()];
 			Callback.Register( this );
+
+			OnAwake();
 		}
 
-		protected virtual void Start() { }
-		protected virtual void OnEnable() { }
-		protected virtual void OnDisable() { }
+		protected virtual void OnAwake() { }
 
-		protected virtual void OnDestroy()
+		// Destroy
+
+		private void OnDestroy()
 		{
 			Callback.Unregister( this );
+			OnDelete();
 		}
+
+		protected virtual void OnDelete() { }
 
 		// Library Constructor
 
