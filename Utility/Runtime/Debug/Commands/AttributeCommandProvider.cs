@@ -12,7 +12,7 @@ namespace Espionage.Engine.Internal.Commands
 		// Commands
 
 		private readonly Dictionary<string, Command> _commands = new( StringComparer.CurrentCultureIgnoreCase );
-		public IReadOnlyCollection<Command> All => _commands.Values;
+		public IEnumerable<Command> All => _commands.Values;
 
 		// History
 

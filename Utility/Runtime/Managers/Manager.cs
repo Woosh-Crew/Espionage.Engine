@@ -44,10 +44,6 @@ namespace Espionage.Engine.Internal
 			}
 		}
 
-		//
-		// Runtime
-		//
-
 		[RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.BeforeSceneLoad )]
 		private static void InvokeRuntime()
 		{
@@ -57,11 +53,8 @@ namespace Espionage.Engine.Internal
 			}
 		}
 
-		//
-		// Editor
-		//
-
 #if UNITY_EDITOR
+
 		[UnityEditor.InitializeOnLoadMethod]
 		private static void InvokeEditor()
 		{
@@ -70,6 +63,7 @@ namespace Espionage.Engine.Internal
 				Invoker( Layer.Editor );
 			}
 		}
+
 #endif
 	}
 }
