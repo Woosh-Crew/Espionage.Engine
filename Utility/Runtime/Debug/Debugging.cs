@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Espionage.Engine.Internal;
 using Espionage.Engine.Internal.Logging;
 using Espionage.Engine.Internal.Commands;
+using UnityEngine;
 
 namespace Espionage.Engine
 {
@@ -80,7 +81,7 @@ namespace Espionage.Engine
 				{
 					Name = "quit",
 					Help = "Quits the application"
-				}.WithAction( _ => UnityEngine.Application.Quit() ) );
+				}.WithAction( _ => Application.Quit() ) );
 
 				// Clear
 				Console.Add( new Command()
@@ -94,6 +95,19 @@ namespace Espionage.Engine
 		//
 		// Commands
 		//
+
+		// App
+
+		[Var( "app.unity_version", IsReadOnly = true )]
+		private static string UnityVersion => Application.unityVersion;
+
+		[Var( "app.sys_language", IsReadOnly = true )]
+		private static string SystemLang => Application.systemLanguage.ToString();
+
+		[Var( "app.target_fps" )]
+		private static int TargetFramerate { get => Application.targetFrameRate; set => Application.targetFrameRate = value; }
+
+		// Debug
 
 		[Var( "debug.overlay" )]
 		private static bool ShowOverlays { get => Overlay.Show; set => Overlay.Show = value; }
