@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Espionage.Engine.Services.Camera
+namespace Espionage.Engine.Services
 {
 	internal class CameraService : IService
 	{

@@ -53,7 +53,16 @@ namespace Espionage.Engine
 		}
 
 		internal void ClientDisconnected( Client client ) { OnClientDisconnect( client ); }
-		internal void ClientReady( Client client ) { OnClientReady( client ); }
+
+		internal void ClientReady( Client client )
+		{
+			if ( Gamemode != null )
+			{
+				Gamemode.OnClientReady( client );
+			}
+
+			OnClientReady( client );
+		}
 
 		protected virtual void OnClientJoined( Client client ) { }
 		protected virtual void OnClientDisconnect( Client client ) { }

@@ -12,7 +12,9 @@ namespace Espionage.Engine.Gamemodes
 	{
 		void IComponent<World>.OnAttached( World item ) { }
 
+		//
 		// Validation
+		//
 
 		public bool Validate()
 		{
@@ -24,7 +26,9 @@ namespace Espionage.Engine.Gamemodes
 			return true;
 		}
 
+		//
 		// States
+		//
 
 		public void Begin()
 		{
@@ -41,5 +45,19 @@ namespace Espionage.Engine.Gamemodes
 		}
 
 		protected virtual void OnFinish() { }
+
+		//
+		// Callbacks
+		//
+
+		// Client
+
+		public void OnClientReady( Client client ) { }
+
+		// Pawn
+
+		public bool OnPawnDamaged() { return true; }
+		public void OnPawnRespawned() { }
+		public void OnPawnKilled() { }
 	}
 }

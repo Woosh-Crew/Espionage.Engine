@@ -1,28 +1,25 @@
-﻿namespace Espionage.Engine
+﻿using UnityEngine.SceneManagement;
+
+namespace Espionage.Engine
 {
 	/// <summary>
 	/// The splash screen hides asset and engine initialization.
 	/// It is only needed on Game start.
 	/// </summary>
 	[Spawnable, Group( "Engine" )]
-	public class Splash : ILibrary, ICallbacks
+	public class Splash : ILibrary
 	{
 		public Library ClassInfo { get; }
 
-		public Splash( string splashScene )
+		public Splash( string splashScene, int time )
 		{
 			ClassInfo = Library.Database.Get( GetType() );
-			Callback.Register( this );
 
+			Delay = time;
 			ScenePath = splashScene;
 		}
 
-		~Splash()
-		{
-			Callback.Unregister( this );
-		}
-
-		// Scene
+		public int Delay { get; }
 		public string ScenePath { get; }
 	}
 }
