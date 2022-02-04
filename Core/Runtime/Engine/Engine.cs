@@ -147,7 +147,9 @@ namespace Espionage.Engine
 				service.OnUpdate();
 			}
 
-			Game?.OnUpdate();
+			// More temp - this should 
+			// Be called at an engine level
+			Game.Simulate( Local.Client );
 		}
 
 		private static void OnShutdown()

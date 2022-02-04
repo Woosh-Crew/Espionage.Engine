@@ -27,17 +27,6 @@ namespace Espionage.Engine
 		public virtual void OnReady() { }
 		public virtual void OnShutdown() { }
 
-		public virtual void OnUpdate()
-		{
-			// More temp - this should 
-			// Be called at an engine level
-			Simulate( Local.Client );
-		}
-
-		//
-		// Simulate
-		//
-
 		public virtual void Simulate( Client client )
 		{
 			// Temp simulator.
