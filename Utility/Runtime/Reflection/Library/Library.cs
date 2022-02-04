@@ -28,7 +28,6 @@ namespace Espionage.Engine
 			Class = type;
 			Name = type.FullName;
 
-
 			// Components
 			Components = new ComponentDatabase<Library>( this );
 

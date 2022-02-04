@@ -90,6 +90,18 @@ public static class LibraryDatabaseExtensions
 	// Get All
 	//
 
+	public static Library Find<T>( this IDatabase<Library> database ) where T : class
+	{
+		var type = typeof( T );
+
+		if ( type.IsInterface )
+		{
+			return database.All.FirstOrDefault( e => e.Class.HasInterface<T>() && !e.Class.IsAbstract );
+		}
+
+		return !database.TryGet<T>( out var item ) ? null : database.All.FirstOrDefault( e => e.Class.IsSubclassOf( item.Class ) && !e.Class.IsAbstract );
+	}
+
 	public static IEnumerable<Library> GetAll<T>( this IDatabase<Library> database ) where T : class
 	{
 		var type = typeof( T );
@@ -98,10 +110,8 @@ public static class LibraryDatabaseExtensions
 		{
 			return database.All.Where( e => e.Class.HasInterface<T>() );
 		}
-		else
-		{
-			return !database.TryGet<T>( out var item ) ? null : database.All.Where( e => e.Class.IsSubclassOf( item.Class ) );
-		}
+
+		return !database.TryGet<T>( out var item ) ? null : database.All.Where( e => e.Class.IsSubclassOf( item.Class ) );
 	}
 
 	public static IEnumerable<Library> GetAll( this IDatabase<Library> database, Type type )

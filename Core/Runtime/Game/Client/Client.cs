@@ -5,44 +5,36 @@ using UnityEngine;
 
 namespace Espionage.Engine
 {
-	public class Client : IDisposable
+	[Group( "Networking" )]
+	public class Client : Behaviour
 	{
-		public static List<Client> All { get; } = new ();
-
-		public Client()
-		{
-			All.Add( this );
-		}
-		
-		public void Dispose()
-		{
-			All.Remove( this );
-		}
-		
-		// Meta
-		
 		public string Name { get; set; }
-		public ulong Id { get; set; }
-		
-		// Pawn
-		
-		private Pawn _pawn;
 
-		public Pawn Pawn
+		// Constructor
+
+		public static Client Create( string name )
 		{
-			get
-			{
-				return _pawn;
-			}
-			set
-			{
-				if ( _pawn != null )
-				{
-					_pawn.UnPosses();
-				}
+			var obj = new GameObject( name ).AddComponent<Client>();
+			Engine.AddToLayer( obj.gameObject );
+			return obj;
+		}
 
-				_pawn = value;
-				_pawn.Posses();
+		// Pawn
+
+		public Pawn Pawn { get; private set; }
+
+		public void AssignPawn( Pawn pawn )
+		{
+			if ( Pawn != null )
+			{
+				Pawn.UnPosses();
+			}
+
+			Pawn = pawn;
+
+			if ( Pawn != null )
+			{
+				Pawn.Posses();
 			}
 		}
 	}

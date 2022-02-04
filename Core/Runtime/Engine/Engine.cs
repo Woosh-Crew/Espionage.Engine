@@ -20,14 +20,13 @@ namespace Espionage.Engine
 		{
 			using ( Debugging.Stopwatch( "Engine / Game Ready", true ) )
 			{
-				CreateEngineLayer();
-
 				if ( !SetupGame() )
 				{
 					Debugging.Log.Error( "Game couldn't be found. Make sure to make a class inherited from Game" );
 					return;
 				}
 
+				CreateEngineLayer();
 				Services = new ServiceDatabase();
 
 				// Setup Callbacks
@@ -46,13 +45,16 @@ namespace Espionage.Engine
 				Application.onBeforeRender += OnUpdate;
 
 				Game?.OnReady();
+
+				// TODO: THIS IS TEMP UNTIL WE GET NETWORKING GOING
+				Game?.ClientJoined( Client.Create( "[id=0]Client :: Local" ) );
 			}
 		}
 
 		private static bool SetupGame()
 		{
 			// Setup Game
-			var target = Library.Database.GetAll<Game>().FirstOrDefault( e => !e.Class.IsAbstract );
+			var target = Library.Database.Find<Game>();
 
 			if ( target is null )
 			{
@@ -85,15 +87,20 @@ namespace Espionage.Engine
 
 			public ServiceDatabase()
 			{
-				// Cache all Services
-				var types = AppDomain.CurrentDomain.GetAssemblies()
-					.Where( Utility.IgnoreIfNotUserGeneratedAssembly )
-					.SelectMany( e => e.GetTypes()
-						.Where( ( type ) => type.HasInterface<IService>() && !type.IsAbstract ) );
-
-				foreach ( var type in types )
+				foreach ( var assembly in AppDomain.CurrentDomain.GetAssemblies() )
 				{
-					Add( (IService)Activator.CreateInstance( type ) );
+					if ( !Utility.IgnoreIfNotUserGeneratedAssembly( assembly ) )
+					{
+						return;
+					}
+
+					foreach ( var type in assembly.GetTypes() )
+					{
+						if ( type.HasInterface<IService>() && !type.IsAbstract )
+						{
+							Add( (IService)Activator.CreateInstance( type ) );
+						}
+					}
 				}
 			}
 

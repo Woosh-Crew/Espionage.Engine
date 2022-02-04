@@ -6,6 +6,12 @@ using Random = UnityEngine.Random;
 
 namespace Espionage.Engine
 {
+	public class Shit : Game
+	{
+		public override string SplashScreen { get; }
+		public override string MainMenu { get; }
+	}
+
 	/// <summary>
 	/// The Entry point for your game. Use this as your "GameManager".
 	/// </summary>
@@ -52,9 +58,20 @@ namespace Espionage.Engine
 		// Networking
 		//
 
-		protected virtual void OnClientJoined() { }
-		protected virtual void OnClientDisconnect() { }
-		protected virtual void OnClientReady() { }
+		internal void ClientJoined( Client client )
+		{
+			OnClientJoined( client );
+
+			// TODO: Temp until we get networking down.
+			OnClientReady( client );
+		}
+
+		internal void ClientDisconnected( Client client ) { OnClientDisconnect( client ); }
+		internal void ClientReady( Client client ) { OnClientReady( client ); }
+
+		protected virtual void OnClientJoined( Client client ) { }
+		protected virtual void OnClientDisconnect( Client client ) { }
+		protected virtual void OnClientReady( Client client ) { }
 
 		//
 		// Gamemode
