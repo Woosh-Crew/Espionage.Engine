@@ -2,6 +2,13 @@
 {
 	internal class MenuService : IService
 	{
+		public Library ClassInfo { get; }
+
+		public MenuService()
+		{
+			ClassInfo = Library.Database[GetType()];
+		}
+
 		private Menu Menu => Engine.Game.Menu;
 
 		public void OnReady() { }

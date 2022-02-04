@@ -4,6 +4,13 @@ namespace Espionage.Engine.Services
 {
 	internal class CameraService : IService
 	{
+		public Library ClassInfo { get; }
+
+		public CameraService()
+		{
+			ClassInfo = Library.Database[GetType()];
+		}
+
 		// Ready
 
 		public void OnReady()

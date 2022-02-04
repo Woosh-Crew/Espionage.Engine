@@ -6,6 +6,17 @@ namespace Espionage.Engine.Resources
 {
 	public class MapService : IService
 	{
+		public Library ClassInfo { get; }
+
+		public MapService()
+		{
+			ClassInfo = Library.Database[GetType()];
+		}
+
+		//
+		// Service
+		//
+
 		public void OnReady()
 		{
 			using var stopwatch = Debugging.Stopwatch( "Caching Maps" );
@@ -20,9 +31,9 @@ namespace Espionage.Engine.Resources
 				Map.Database.Add( new Map( map ) );
 			}
 		}
-		
-		public void OnShutdown() {  }
-		
+
+		public void OnShutdown() { }
+
 		public void OnUpdate() { }
 	}
 }

@@ -77,24 +77,13 @@ namespace Espionage.Engine
 		{
 			public IEnumerable<IService> All => _services;
 
-			private readonly List<IService> _services = new() { };
+			private readonly List<IService> _services = new();
 
 			public ServiceDatabase()
 			{
-				foreach ( var assembly in AppDomain.CurrentDomain.GetAssemblies() )
+				foreach ( var service in Library.Database.GetAll<IService>() )
 				{
-					if ( !Utility.IgnoreIfNotUserGeneratedAssembly( assembly ) )
-					{
-						return;
-					}
-
-					foreach ( var type in assembly.GetTypes() )
-					{
-						if ( type.HasInterface<IService>() && !type.IsAbstract )
-						{
-							Add( (IService)Activator.CreateInstance( type ) );
-						}
-					}
+					Add( Library.Database.Create<IService>( service.Class ) );
 				}
 			}
 
