@@ -8,8 +8,8 @@ namespace Espionage.Engine
 	[Spawnable, Group( "Engine" )]
 	public abstract class Game : ILibrary, ICallbacks
 	{
-		public Splash Splash { get; }
-		public Menu Menu { get; }
+		public Splash Splash { get; protected set; }
+		public Menu Menu { get; protected set; }
 
 		public Library ClassInfo { get; }
 
