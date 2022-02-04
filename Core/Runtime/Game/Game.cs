@@ -72,15 +72,8 @@ namespace Espionage.Engine
 		// Gamemode
 		//
 
-		/// <summary>
-		/// The current gamemode in play.
-		/// </summary>
 		public Gamemode Gamemode { get; private set; }
 
-		/// <summary>
-		/// Switch the gamemode to a new one.
-		/// </summary>
-		/// <param name="gamemode">The new gamemode.</param>
 		public void SwitchGamemode( Gamemode gamemode )
 		{
 			if ( !gamemode.Validate() )
