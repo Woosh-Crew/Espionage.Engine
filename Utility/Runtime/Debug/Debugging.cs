@@ -1,5 +1,7 @@
 using System;
 using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Espionage.Engine.Internal;
 using Espionage.Engine.Internal.Logging;
@@ -35,7 +37,6 @@ namespace Espionage.Engine
 		/// Draw Debug Overlays on the Viewport, such as spheres, cubes, etc.
 		/// Very useful for debugging volumes and collisions.
 		/// </summary>
-		/// <exception cref="NotImplementedException">Hasn't been implemented yet.</exception>
 		public static IDebugOverlayProvider Overlay => throw new NotImplementedException();
 
 		// Stopwatch
@@ -69,25 +70,33 @@ namespace Espionage.Engine
 		{
 			using ( Stopwatch( "Debugging Initialized" ) )
 			{
-				// We initialize logging without
-				// Async so we can log straight away
 				Log ??= new SimpleLoggingProvider();
-
-				// Setup Console
 				Console ??= new AttributeCommandProvider();
+
+				// Setup Default Commands
+
+				// Quit
+				Console.Add( new Command()
+				{
+					Name = "quit",
+					Help = "Quits the application"
+				}.WithAction( _ => UnityEngine.Application.Quit() ) );
+
+				// Clear
+				Console.Add( new Command()
+				{
+					Name = "clear",
+					Help = "Clears everything in the log"
+				}.WithAction( _ => Log.Clear() ) );
 			}
 		}
 
 		//
-		// Overlay
+		// Commands
 		//
 
 		[Var( "debug.overlay" )]
 		private static bool ShowOverlays { get => Overlay.Show; set => Overlay.Show = value; }
-
-		//
-		// Stopwatch
-		//
 
 		[Var( "debug.report_stopwatch" )]
 		private static bool ReportStopwatch { get; set; } = true;

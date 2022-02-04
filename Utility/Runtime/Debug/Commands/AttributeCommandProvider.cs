@@ -62,7 +62,7 @@ namespace Espionage.Engine.Internal.Commands
 			}
 		}
 
-		private void Add( Command command )
+		public void Add( Command command )
 		{
 			_commands.Add( command.Name, command );
 		}

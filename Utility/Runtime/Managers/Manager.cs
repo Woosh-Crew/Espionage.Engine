@@ -11,9 +11,15 @@ namespace Espionage.Engine.Internal
 		{
 			// Get all manager types - this is the most aids shit ever
 			var types = AppDomain.CurrentDomain.GetAssemblies()
+				.Where( Utility.IgnoreIfNotUserGeneratedAssembly )
 				.SelectMany( e => e.GetTypes()
 					.Where( type =>
 					{
+						if ( Utility.IgnoredNamespaces.Any( s => s == type.Namespace ) )
+						{
+							return false;
+						}
+
 						var attribute = type.GetCustomAttribute<ManagerAttribute>();
 
 						if ( attribute is null )
@@ -33,7 +39,7 @@ namespace Espionage.Engine.Internal
 			// Invoke all init methods - or cache if it returns task
 			foreach ( var item in types )
 			{
-				var method = item.GetMethod( item.GetCustomAttribute<ManagerAttribute>().Method, BindingFlags.Static | BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic );
+				var method = item.GetMethod( item.GetCustomAttribute<ManagerAttribute>().Method, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic );
 				method?.Invoke( null, null );
 			}
 		}
@@ -45,7 +51,10 @@ namespace Espionage.Engine.Internal
 		[RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.BeforeSceneLoad )]
 		private static void InvokeRuntime()
 		{
-			Invoker( Layer.Runtime );
+			using ( Debugging.Stopwatch( "Runtime Layer Initialized" ) )
+			{
+				Invoker( Layer.Runtime );
+			}
 		}
 
 		//
@@ -56,7 +65,10 @@ namespace Espionage.Engine.Internal
 		[UnityEditor.InitializeOnLoadMethod]
 		private static void InvokeEditor()
 		{
-			Invoker( Layer.Editor );
+			using ( Debugging.Stopwatch( "Editor Layer Initialized" ) )
+			{
+				Invoker( Layer.Editor );
+			}
 		}
 #endif
 	}

@@ -43,7 +43,6 @@ namespace Espionage.Engine
 					{
 						Name = item,
 						Help = helpBuilder.ToString(),
-						Owner = info.DeclaringType,
 						Info = info
 					};
 

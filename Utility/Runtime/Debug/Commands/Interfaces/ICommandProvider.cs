@@ -7,6 +7,7 @@ namespace Espionage.Engine.Internal.Commands
 {
 	public interface ICommandProvider
 	{
+		void Add( Command command );
 		void Invoke( string command, string[] args );
 
 		IReadOnlyCollection<Command> All { get; }

@@ -24,49 +24,9 @@ namespace Espionage.Engine
 			Callback.Unregister( this );
 		}
 
-
-		/// <summary>
-		/// Called when the Engine & Game finishes initializing.
-		/// </summary>
 		public virtual void OnReady() { }
-
-		/// <summary>
-		/// Called when the Application is being shutdown.
-		/// </summary>
 		public virtual void OnShutdown() { }
-
-		/// <summary>
-		/// Called every application frame.
-		/// </summary>
 		public virtual void OnUpdate() { }
-
-		//
-		// Networking
-		//
-
-		internal void ClientJoined( Client client )
-		{
-			OnClientJoined( client );
-
-			// TODO: Temp until we get networking down.
-			OnClientReady( client );
-		}
-
-		internal void ClientDisconnected( Client client ) { OnClientDisconnect( client ); }
-
-		internal void ClientReady( Client client )
-		{
-			if ( Gamemode != null )
-			{
-				Gamemode.OnClientReady( client );
-			}
-
-			OnClientReady( client );
-		}
-
-		protected virtual void OnClientJoined( Client client ) { }
-		protected virtual void OnClientDisconnect( Client client ) { }
-		protected virtual void OnClientReady( Client client ) { }
 
 		//
 		// Gamemode
@@ -89,7 +49,7 @@ namespace Espionage.Engine
 			Gamemode = gamemode;
 			Gamemode.Begin();
 
-			Callback.Run( "gamemodes.switched", true, gamemode );
+			Callback.Run( "gamemodes.switched", gamemode );
 		}
 
 		//
