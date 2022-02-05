@@ -95,6 +95,8 @@ namespace Espionage.Engine
 			return camSetup;
 		}
 
+		private Vector3 targetPos;
+
 		protected virtual void PreCameraSetup( ref ICamera.Setup camSetup )
 		{
 			var input = Local.Client.Input;
@@ -119,7 +121,9 @@ namespace Espionage.Engine
 				vel *= 0.2f;
 			}
 
-			camSetup.Position += vel * Time.deltaTime;
+			targetPos += vel * Time.deltaTime;
+
+			camSetup.Position = Vector3.Lerp( camSetup.Position, targetPos, 5 * Time.deltaTime );
 		}
 
 		protected virtual void PostCameraSetup( ref ICamera.Setup camSetup ) { }
