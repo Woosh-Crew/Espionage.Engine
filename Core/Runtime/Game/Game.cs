@@ -104,9 +104,14 @@ namespace Espionage.Engine
 
 			var vel = camSetup.Rotation * Vector3.forward * input.Forward + camSetup.Rotation * Vector3.left * input.Horizontal;
 
-			if ( Input.GetKey( KeyCode.Space ) )
+			if ( Input.GetKey( KeyCode.Space ) || Input.GetKey( KeyCode.E ) )
 			{
 				vel += Vector3.up * 1;
+			}
+
+			if ( Input.GetKey( KeyCode.LeftControl ) || Input.GetKey( KeyCode.Q ) )
+			{
+				vel += Vector3.down * 1;
 			}
 
 			vel = vel.normalized * 20;
@@ -116,7 +121,7 @@ namespace Espionage.Engine
 				vel *= 5.0f;
 			}
 
-			if ( Input.GetKey( KeyCode.LeftControl ) )
+			if ( Input.GetKey( KeyCode.LeftAlt ) )
 			{
 				vel *= 0.2f;
 			}
