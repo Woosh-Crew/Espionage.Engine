@@ -19,6 +19,10 @@ namespace Espionage.Engine
 			return obj;
 		}
 
+		// Camera
+
+		public ICamera Camera { get; set; }
+
 		// Input
 
 		public IInputProcessor Input { get; internal set; }

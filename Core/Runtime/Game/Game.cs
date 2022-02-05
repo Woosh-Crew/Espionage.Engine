@@ -1,4 +1,5 @@
-﻿using Espionage.Engine.Gamemodes;
+﻿using Espionage.Engine.Controllers;
+using Espionage.Engine.Gamemodes;
 using UnityEngine;
 
 namespace Espionage.Engine
@@ -71,6 +72,16 @@ namespace Espionage.Engine
 
 		protected virtual ICamera FindActiveCamera()
 		{
+			if ( Local.Client.Pawn != null && Local.Client.Pawn.Tripod != null )
+			{
+				return Local.Client.Pawn.Tripod;
+			}
+
+			if ( Local.Client.Camera != null )
+			{
+				return Local.Client.Camera;
+			}
+
 			return null;
 		}
 
@@ -82,7 +93,7 @@ namespace Espionage.Engine
 			{
 				LastCamera?.Deactivated();
 				LastCamera = cam;
-				LastCamera?.Activated();
+				LastCamera?.Activated( camSetup );
 			}
 
 			PreCameraSetup( ref camSetup );
@@ -95,41 +106,7 @@ namespace Espionage.Engine
 			return camSetup;
 		}
 
-		private Vector3 targetPos;
-
-		protected virtual void PreCameraSetup( ref ICamera.Setup camSetup )
-		{
-			var input = Local.Client.Input;
-			camSetup.Rotation = input.Rotation;
-
-			var vel = camSetup.Rotation * Vector3.forward * input.Forward + camSetup.Rotation * Vector3.left * input.Horizontal;
-
-			if ( Input.GetKey( KeyCode.Space ) || Input.GetKey( KeyCode.E ) )
-			{
-				vel += Vector3.up * 1;
-			}
-
-			if ( Input.GetKey( KeyCode.LeftControl ) || Input.GetKey( KeyCode.Q ) )
-			{
-				vel += Vector3.down * 1;
-			}
-
-			vel = vel.normalized * 20;
-
-			if ( Input.GetKey( KeyCode.LeftShift ) )
-			{
-				vel *= 5.0f;
-			}
-
-			if ( Input.GetKey( KeyCode.LeftAlt ) )
-			{
-				vel *= 0.2f;
-			}
-
-			targetPos += vel * Time.deltaTime;
-
-			camSetup.Position = Vector3.Lerp( camSetup.Position, targetPos, 5 * Time.deltaTime );
-		}
+		protected virtual void PreCameraSetup( ref ICamera.Setup camSetup ) { }
 
 		protected virtual void PostCameraSetup( ref ICamera.Setup camSetup ) { }
 	}

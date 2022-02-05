@@ -14,6 +14,14 @@ namespace Espionage.Engine
 			_target = GetComponent<Camera>();
 		}
 
+		private void Update()
+		{
+			if ( Input.GetKeyDown( KeyCode.F1 ) )
+			{
+				Debugging.Log.Info( "Switch" );
+			}
+		}
+
 		public void Finalise( ICamera.Setup camSetup )
 		{
 			var trans = transform;

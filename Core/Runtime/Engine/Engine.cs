@@ -142,6 +142,11 @@ namespace Espionage.Engine
 
 		private static void OnUpdate()
 		{
+			if ( !Application.isPlaying )
+			{
+				return;
+			}
+			
 			foreach ( var service in Services.All )
 			{
 				service.OnUpdate();
