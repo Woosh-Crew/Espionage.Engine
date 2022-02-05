@@ -10,11 +10,6 @@ namespace Espionage.Engine
 	/// <summary>
 	/// Espionage.Engine Entry Point. Initializes all its services, and sets up the Game.
 	/// </summary>
-	/// <remarks>
-	/// I Hate that this is a MonoBehaviour... But we have to
-	/// because unity has no fucking application callbacks that we can actually use...
-	/// WHY DO WE HAVE TO BE FORCED TO USE MONOBEHAVIOUR UNITY??? ITS ASS!!
-	/// </remarks>
 	[Manager( nameof( Initialize ), Layer = Layer.Runtime, Order = 600 )]
 	public sealed class Engine : MonoBehaviour
 	{
