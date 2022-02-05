@@ -10,8 +10,13 @@ namespace Espionage.Engine
 	/// <summary>
 	/// Espionage.Engine Entry Point. Initializes all its services, and sets up the Game.
 	/// </summary>
+	/// <remarks>
+	/// I Hate that this is a MonoBehaviour... But we have to
+	/// because unity has no fucking application callbacks that we can actually use...
+	/// WHY DO WE HAVE TO BE FORCED TO USE MONOBEHAVIOUR UNITY??? ITS ASS!!
+	/// </remarks>
 	[Manager( nameof( Initialize ), Layer = Layer.Runtime, Order = 600 )]
-	public static class Engine
+	public sealed class Engine : MonoBehaviour
 	{
 		public static Game Game { get; private set; }
 
@@ -19,31 +24,27 @@ namespace Espionage.Engine
 		{
 			using ( Debugging.Stopwatch( "Engine / Game Ready", true ) )
 			{
+				CreateEngineLayer();
+
+				var engineObj = new GameObject( "Engine" ).AddComponent<Engine>();
+				AddToLayer( engineObj.gameObject );
+
 				if ( !SetupGame() )
 				{
 					Debugging.Log.Error( "Game couldn't be found. Make sure to make a class inherited from Game" );
 					return;
 				}
 
-				CreateEngineLayer();
 				Services = new ServiceDatabase();
 
-				// Setup Callbacks
-				Application.quitting -= OnShutdown;
-				Application.quitting += OnShutdown;
-
 				// TODO: THIS IS TEMP
-				Local.Client = Client.Create( "LOCAL" );
+				Local.Client = Client.Create( "Local" );
 
 				// Tell Services we're ready
 				foreach ( var service in Services.All )
 				{
 					service.OnReady();
 				}
-
-				// Frame Update
-				Application.onBeforeRender -= OnUpdate;
-				Application.onBeforeRender += OnUpdate;
 
 				Game?.OnReady();
 			}
@@ -61,11 +62,6 @@ namespace Espionage.Engine
 
 			Game = Library.Database.Create<Game>( target.Class );
 			Callback.Run( "game.ready" );
-
-#if UNITY_EDITOR
-			// Setup PlayerSettings based off of Project
-			UnityEditor.PlayerSettings.productName = Game.ClassInfo.Title;
-#endif
 
 			return true;
 		}
@@ -123,7 +119,7 @@ namespace Espionage.Engine
 		private static void CreateEngineLayer()
 		{
 			// Create engine layer scene
-			Scene = SceneManager.CreateScene( "Engine" );
+			Scene = SceneManager.CreateScene( "Engine Layer" );
 			Callback.Run( "engine.layer_created" );
 		}
 
@@ -140,13 +136,8 @@ namespace Espionage.Engine
 		// Callbacks
 		//
 
-		private static void OnUpdate()
+		private void Update()
 		{
-			if ( !Application.isPlaying )
-			{
-				return;
-			}
-			
 			foreach ( var service in Services.All )
 			{
 				service.OnUpdate();
@@ -157,7 +148,7 @@ namespace Espionage.Engine
 			Game.Simulate( Local.Client );
 		}
 
-		private static void OnShutdown()
+		private void OnApplicationQuit()
 		{
 			foreach ( var service in Services.All )
 			{

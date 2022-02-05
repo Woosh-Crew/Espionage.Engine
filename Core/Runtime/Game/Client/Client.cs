@@ -14,7 +14,7 @@ namespace Espionage.Engine
 
 		public static Client Create( string name )
 		{
-			var obj = new GameObject( $"[id={0}] Client :: {name}" ).AddComponent<Client>();
+			var obj = new GameObject( $"[id={0}]{name}" ).AddComponent<Client>();
 			Engine.AddToLayer( obj.gameObject );
 			return obj;
 		}
