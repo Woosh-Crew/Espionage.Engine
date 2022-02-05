@@ -37,6 +37,9 @@ namespace Espionage.Engine.Services
 			Cursor.visible = false;
 
 			Rotation = Quaternion.AngleAxis( _rawRotation.x, Vector3.up ) * Quaternion.AngleAxis( _rawRotation.y, Vector3.left );
+
+			Forward = Input.GetAxisRaw( "Vertical" );
+			Horizontal = -Input.GetAxisRaw( "Horizontal" );
 		}
 
 		public void OnShutdown() { }
