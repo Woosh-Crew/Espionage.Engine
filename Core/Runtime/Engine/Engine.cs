@@ -1,8 +1,8 @@
-using System;
 using System.Collections.Generic;
-using Espionage.Engine.Internal;
+using System.Text;
 using Espionage.Engine.Services;
 using UnityEngine;
+using UnityEngine.LowLevel;
 using UnityEngine.SceneManagement;
 
 namespace Espionage.Engine
@@ -11,7 +11,7 @@ namespace Espionage.Engine
 	/// Espionage.Engine Entry Point. Initializes all its services, and sets up the Game.
 	/// </summary>
 	[Manager( nameof( Initialize ), Layer = Layer.Runtime, Order = 600 )]
-	public sealed class Engine : MonoBehaviour
+	public static class Engine
 	{
 		public static Game Game { get; private set; }
 
@@ -20,9 +20,6 @@ namespace Espionage.Engine
 			using ( Debugging.Stopwatch( "Engine / Game Ready", true ) )
 			{
 				CreateEngineLayer();
-
-				var engineObj = new GameObject( "Engine" ).AddComponent<Engine>();
-				AddToLayer( engineObj.gameObject );
 
 				if ( !SetupGame() )
 				{
@@ -133,7 +130,7 @@ namespace Espionage.Engine
 		// Callbacks
 		//
 
-		private void Update()
+		private static void Update()
 		{
 			foreach ( var service in Services.All )
 			{
@@ -147,7 +144,7 @@ namespace Espionage.Engine
 			Callback.Run( "application.frame" );
 		}
 
-		private void OnApplicationQuit()
+		private static void OnApplicationQuit()
 		{
 			foreach ( var service in Services.All )
 			{
