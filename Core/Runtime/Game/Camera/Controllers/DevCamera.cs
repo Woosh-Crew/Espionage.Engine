@@ -1,15 +1,17 @@
 ﻿using UnityEngine;
 
-namespace Espionage.Engine.Controllers
+namespace Espionage.Engine.Cameras
 {
 	public class DevCamera : ICamera
 	{
 		private Vector3 _targetPos;
-		
+
 		public void Build( ref ICamera.Setup camSetup )
 		{
 			var input = Local.Client.Input;
 			camSetup.Rotation = input.Rotation;
+
+			// Movement
 
 			var vel = camSetup.Rotation * Vector3.forward * input.Forward + camSetup.Rotation * Vector3.left * input.Horizontal;
 
@@ -38,13 +40,20 @@ namespace Espionage.Engine.Controllers
 			_targetPos += vel * Time.deltaTime;
 
 			camSetup.Position = Vector3.Lerp( camSetup.Position, _targetPos, 5 * Time.deltaTime );
+
+			// FOV
+
+			if ( Input.GetKey( KeyCode.LeftAlt ) && Input.GetMouseButton( 1 ) )
+			{
+				camSetup.FieldOfView += -Input.GetAxisRaw( "Mouse Y" ) * 150 * Time.deltaTime;
+			}
 		}
 
 		public void Activated( ICamera.Setup camSetup )
 		{
 			_targetPos = camSetup.Position;
 		}
-		
-		public void Deactivated() {  }
+
+		public void Deactivated() { }
 	}
 }

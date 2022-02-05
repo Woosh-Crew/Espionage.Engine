@@ -47,6 +47,8 @@ namespace Espionage.Engine
 				}
 
 				Game?.OnReady();
+
+				Callback.Run( "engine.ready" );
 			}
 		}
 
@@ -146,6 +148,8 @@ namespace Espionage.Engine
 			// More temp - this should 
 			// Be called at an engine level
 			Game.Simulate( Local.Client );
+
+			Callback.Run( "application.frame" );
 		}
 
 		private void OnApplicationQuit()
@@ -156,6 +160,8 @@ namespace Espionage.Engine
 			}
 
 			Game?.OnShutdown();
+
+			Callback.Run( "application.quit" );
 		}
 	}
 }

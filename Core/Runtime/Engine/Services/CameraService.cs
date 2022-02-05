@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Espionage.Engine.Cameras;
+using UnityEngine;
 
 namespace Espionage.Engine.Services
 {
@@ -44,6 +45,11 @@ namespace Espionage.Engine.Services
 			if ( Engine.Game == null || !Application.isPlaying )
 			{
 				return;
+			}
+
+			if ( Input.GetKeyDown( KeyCode.F1 ) )
+			{
+				Local.Client.Camera = Local.Client.Camera == null ? new DevCamera() : null;
 			}
 
 			// Build the camSetup, from game.

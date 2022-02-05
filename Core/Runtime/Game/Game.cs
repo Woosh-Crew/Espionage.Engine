@@ -1,5 +1,4 @@
-﻿using Espionage.Engine.Controllers;
-using Espionage.Engine.Gamemodes;
+﻿using Espionage.Engine.Gamemodes;
 using UnityEngine;
 
 namespace Espionage.Engine
@@ -33,11 +32,6 @@ namespace Espionage.Engine
 
 		public virtual void Simulate( Client client )
 		{
-			if ( Input.GetKeyDown( KeyCode.F1 ) )
-			{
-				Local.Client.Camera = Local.Client.Camera == null ? new DevCamera() : null;
-			}
-
 			// Temp simulator.
 			if ( Local.Pawn != null )
 			{
