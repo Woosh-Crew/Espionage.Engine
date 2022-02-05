@@ -25,20 +25,24 @@ namespace Espionage.Engine
 
 		// Pawn
 
-		public Pawn Pawn { get; private set; }
+		private Pawn _pawn;
 
-		public void AssignPawn( Pawn pawn )
+		public Pawn Pawn
 		{
-			if ( Pawn != null )
+			get => _pawn;
+			set
 			{
-				Pawn.UnPosses();
-			}
+				if ( _pawn != null )
+				{
+					_pawn.UnPosses();
+				}
 
-			Pawn = pawn;
+				_pawn = value;
 
-			if ( Pawn != null )
-			{
-				Pawn.Posses();
+				if ( _pawn != null )
+				{
+					_pawn.Posses();
+				}
 			}
 		}
 	}

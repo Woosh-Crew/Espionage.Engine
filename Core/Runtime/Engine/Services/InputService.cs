@@ -10,7 +10,7 @@ namespace Espionage.Engine.Services
 		{
 			ClassInfo = Library.Database[GetType()];
 		}
-		
+
 		//
 		// Service
 		//
@@ -38,17 +38,17 @@ namespace Espionage.Engine.Services
 
 			Rotation = Quaternion.AngleAxis( _rawRotation.x, Vector3.up ) * Quaternion.AngleAxis( _rawRotation.y, Vector3.left );
 		}
-		
+
 		public void OnShutdown() { }
-		
+
 		//
 		// Input Processor
 		//
-		
+
 		private Vector2 _rawRotation = Vector2.zero;
-		
+
 		public Quaternion Rotation { get; set; }
 		public float Forward { get; set; }
-		public float Horizontal { get; set;}
+		public float Horizontal { get; set; }
 	}
 }
