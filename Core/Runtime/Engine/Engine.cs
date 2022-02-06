@@ -3,6 +3,7 @@ using System.Text;
 using Espionage.Engine.Services;
 using UnityEngine;
 using UnityEngine.LowLevel;
+using UnityEngine.PlayerLoop;
 using UnityEngine.SceneManagement;
 
 namespace Espionage.Engine
@@ -112,6 +113,18 @@ namespace Espionage.Engine
 
 		private static void CreateEngineLayer()
 		{
+			// Create Update Loop
+			var loop = PlayerLoop.GetCurrentPlayerLoop();
+			for ( var i = 0; i < loop.subSystemList.Length; ++i )
+			{
+				if ( loop.subSystemList[i].type == typeof( PreUpdate ) )
+				{
+					loop.subSystemList[i].updateDelegate += OnUpdate;
+				}
+			}
+
+			PlayerLoop.SetPlayerLoop( loop );
+
 			// Create engine layer scene
 			Scene = SceneManager.CreateScene( "Engine Layer" );
 			Callback.Run( "engine.layer_created" );
@@ -130,8 +143,13 @@ namespace Espionage.Engine
 		// Callbacks
 		//
 
-		private static void Update()
+		private static void OnUpdate()
 		{
+			if ( !Application.isPlaying )
+			{
+				return;
+			}
+
 			foreach ( var service in Services.All )
 			{
 				service.OnUpdate();
@@ -144,7 +162,7 @@ namespace Espionage.Engine
 			Callback.Run( "application.frame" );
 		}
 
-		private static void OnApplicationQuit()
+		private static void OnShutdown()
 		{
 			foreach ( var service in Services.All )
 			{

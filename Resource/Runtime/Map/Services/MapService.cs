@@ -26,6 +26,11 @@ namespace Espionage.Engine.Resources
 			var path = Application.isEditor ? "Exports/Maps" : Application.dataPath;
 			var extension = Library.Database.Get<Map>().Components.Get<FileAttribute>().Extension;
 
+			if ( !Directory.Exists( path ) )
+			{
+				return;
+			}
+
 			foreach ( var map in Directory.GetFiles( path, $"*.{extension}", SearchOption.AllDirectories ) )
 			{
 				Map.Database.Add( new Map( map ) );
