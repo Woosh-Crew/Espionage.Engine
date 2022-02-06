@@ -11,7 +11,6 @@ namespace Espionage.Engine.Cameras
 			var input = Local.Client.Input;
 			camSetup.Rotation = input.Rotation;
 
-			// Movement
 
 			var vel = camSetup.Rotation * Vector3.forward * input.Forward + camSetup.Rotation * Vector3.left * input.Horizontal;
 
