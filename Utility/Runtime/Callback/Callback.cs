@@ -20,6 +20,20 @@ namespace Espionage.Engine
 		}
 
 		/// <summary> Runs a callback with an array of args. </summary>
+		public static void Run( string name )
+		{
+			if ( Provider is null || string.IsNullOrEmpty( name ) )
+			{
+				return;
+			}
+
+			using ( Debugging.Stopwatch( name, true ) )
+			{
+				Provider.Run( name );
+			}
+		}
+
+		/// <summary> Runs a callback with an array of args. [EXPENSIVE] </summary>
 		public static void Run( string name, params object[] args )
 		{
 			if ( Provider is null || string.IsNullOrEmpty( name ) )
@@ -29,7 +43,10 @@ namespace Espionage.Engine
 
 			try
 			{
-				Provider.Run( name, args );
+				using ( Debugging.Stopwatch( name, true ) )
+				{
+					Provider.Run( name, args );
+				}
 			}
 			catch ( Exception e )
 			{
@@ -37,7 +54,7 @@ namespace Espionage.Engine
 			}
 		}
 
-		/// <summary> Runs a callback that returns a value </summary>
+		/// <summary> Runs a callback that returns a value. [EXPENSIVE] </summary>
 		public static IEnumerable<T> Run<T>( string name, params object[] args )
 		{
 			if ( Provider is null || string.IsNullOrEmpty( name ) )

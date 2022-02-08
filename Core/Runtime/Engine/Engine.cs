@@ -117,9 +117,16 @@ namespace Espionage.Engine
 			var loop = PlayerLoop.GetCurrentPlayerLoop();
 			for ( var i = 0; i < loop.subSystemList.Length; ++i )
 			{
-				if ( loop.subSystemList[i].type == typeof( PreUpdate ) )
+				// Frame Update
+				if ( loop.subSystemList[i].type == typeof( Update ) )
 				{
 					loop.subSystemList[i].updateDelegate += OnUpdate;
+				}
+
+				// Physics Update
+				if ( loop.subSystemList[i].type == typeof( FixedUpdate ) )
+				{
+					loop.subSystemList[i].updateDelegate += OnPhysicsUpdate;
 				}
 			}
 
@@ -143,6 +150,33 @@ namespace Espionage.Engine
 		// Callbacks
 		//
 
+		[Callback( "application.frame" )]
+		private static void Upate2() { }
+
+		[Callback( "application.frame" )]
+		private static void Upate3() { }
+
+		[Callback( "application.frame" )]
+		private static void Upate4() { }
+
+		[Callback( "application.frame" )]
+		private static void Upate5() { }
+
+		[Callback( "application.frame" )]
+		private static void Upate6() { }
+
+		[Callback( "application.frame" )]
+		private static void Upate7() { }
+
+		[Callback( "application.frame" )]
+		private static void Upate8() { }
+
+		[Callback( "application.frame" )]
+		private static void Upate9() { }
+
+		[Callback( "application.frame" )]
+		private static void Upate10() { }
+
 		private static void OnUpdate()
 		{
 			if ( !Application.isPlaying )
@@ -155,11 +189,25 @@ namespace Espionage.Engine
 				service.OnUpdate();
 			}
 
-			// More temp - this should 
-			// Be called at an engine level
-			Game.Simulate( Local.Client );
 
 			Callback.Run( "application.frame" );
+
+			using ( Debugging.Stopwatch( "Update - Normal" ) )
+			{
+				// More temp - this should 
+				// Be called at an engine level
+				Game.Simulate( Local.Client );
+			}
+		}
+
+		private static void OnPhysicsUpdate()
+		{
+			Callback.Run( "physics.frame" );
+		}
+
+		private static void OnLateUpdate()
+		{
+			Callback.Run( "application.late_frame" );
 		}
 
 		private static void OnShutdown()

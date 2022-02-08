@@ -1,47 +1,47 @@
 :root {
-	/* MenuBar Colours */
-	--menu-bar-colors-panel: #3c3c3c;
-	--menu-bar-colors-border: #191919;
+    /* MenuBar Colours */
+    --menu-bar-colors-panel: #3c3c3c;
+    --menu-bar-colors-border: #191919;
 
-	--menu-bar-colors-button-hover: #464646;
-	--menu-bar-colors-button-click: #46607c;
+    --menu-bar-colors-button-hover: #464646;
+    --menu-bar-colors-button-click: #46607c;
 }
 
 .Menu-Bar {
-	background-color: var(--menu-bar-colors-panel);
-	height: 26px;
-	width: 100%;
-	flex-direction: row;
-	border-color: var(--menu-bar-colors-border);
+    background-color: var(--menu-bar-colors-panel);
+    height: 24px;
+    width: 100%;
+    flex-direction: row;
+    border-color: var(--menu-bar-colors-border);
 
-	padding-left: 4px;
-	padding-right: 4px;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 .Top {
-	border-bottom-width: 1px;
+    border-bottom-width: 1px;
 }
 
 .Bottom {
-	border-top-width: 1px;
+    border-top-width: 1px;
 }
 
 .Menu-Bar-Button {
-	background-color: initial;
-	font-size: 12px;
+    background-color: initial;
+    font-size: 12px;
 
-	margin: 0px;
-	padding-left: 10px;
-	padding-right: 10px;
+    margin: 0px;
+    padding-left: 8px;
+    padding-right: 8px;
 
-	border-radius: 0px;
-	border-width: 0px;
+    border-radius: 0px;
+    border-width: 0px;
 }
 
 .Menu-Bar-Button:hover {
-	background-color: var(--menu-bar-colors-button-hover);
+    background-color: var(--menu-bar-colors-button-hover);
 }
 
 .Menu-Bar-Button:active {
-	background-color: var(--menu-bar-colors-button-click);
+    background-color: var(--menu-bar-colors-button-click);
 }

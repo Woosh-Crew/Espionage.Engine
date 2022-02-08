@@ -127,6 +127,9 @@ namespace Espionage.Engine.Resources
 		// Resource 
 		//
 
+		public Action OnLoad { get; }
+		public Action OnUnload { get; }
+
 		public bool IsLoading => Provider.IsLoading;
 
 		/// <summary>
@@ -142,6 +145,10 @@ namespace Espionage.Engine.Resources
 				Debugging.Log.Warning( "Already performing an operation action this map" );
 				return false;
 			}
+
+			// Add Callback
+			onLoad -= OnLoad;
+			onLoad += OnLoad;
 
 			// Unload the current map
 			try
@@ -184,6 +191,10 @@ namespace Espionage.Engine.Resources
 				Debugging.Log.Warning( "Already performing an operation action this map" );
 				return false;
 			}
+
+			// Add Callback
+			onUnload -= OnUnload;
+			onUnload += OnUnload;
 
 			if ( Current == this )
 			{

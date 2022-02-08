@@ -132,13 +132,15 @@ namespace Espionage.Engine
 			{
 				_stopwatch.Stop();
 
-				if ( _stopwatch.ElapsedMilliseconds <= _reportTime )
+				if ( _reportTime != 0 && _stopwatch.ElapsedMilliseconds <= _reportTime )
 				{
 					return;
 				}
 
-				var time = $"{_stopwatch.ElapsedMilliseconds}ms";
+				double ticks = _stopwatch.ElapsedTicks;
+				var nanoseconds = ticks / System.Diagnostics.Stopwatch.Frequency * 1000000000;
 
+				var time = _stopwatch.ElapsedMilliseconds == 0 ? $"{nanoseconds}ns" : $"{_stopwatch.ElapsedMilliseconds}ms";
 				if ( string.IsNullOrEmpty( _message ) )
 				{
 					Log.Info( time );

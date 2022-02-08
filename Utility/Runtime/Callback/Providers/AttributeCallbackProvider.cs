@@ -48,20 +48,51 @@ namespace Espionage.Engine.Internal.Callbacks
 			}
 		}
 
+		public void Run( string name )
+		{
+			if ( !_callbacks.TryGetValue( name, out var callbacks ) )
+			{
+				return;
+			}
+
+			for ( var index = 0; index < callbacks.Count; index++ )
+			{
+				var callback = callbacks[index];
+				if ( callback.IsStatic )
+				{
+					callback.Invoke( null, null );
+					continue;
+				}
+
+				// If the callback is from an instance, get all instances
+				// And invoke them, using the stored object from _registered
+				if ( !_registered.ContainsKey( callback.Class ) )
+				{
+					continue;
+				}
+
+				var targets = _registered[callback.Class];
+				for ( var targetIndex = 0; targetIndex < targets.Count; targetIndex++ )
+				{
+					var item = targets[targetIndex];
+					callback.Invoke( item );
+				}
+			}
+		}
+
 		public object[] Run( string name, params object[] args )
 		{
-			if ( !_callbacks.ContainsKey( name ) )
+			if ( !_callbacks.TryGetValue( name, out var callbacks ) )
 			{
 				return null;
 			}
 
-			var callbacks = _callbacks[name];
-
 			// Build the final object array
 			var builder = new List<object>();
 
-			foreach ( var callback in callbacks )
+			for ( var index = 0; index < callbacks.Count; index++ )
 			{
+				var callback = callbacks[index];
 				// If the callback is a static method
 				// Then just pass in null for the invoke
 
@@ -79,14 +110,13 @@ namespace Espionage.Engine.Internal.Callbacks
 
 				// If the callback is from an instance, get all instances
 				// And invoke them, using the stored object from _registered
-
 				if ( !_registered.ContainsKey( callback.Class ) )
 				{
 					continue;
 				}
 
 				var targets = _registered[callback.Class];
-				builder.AddRange( from item in targets where ((ICallbacks)item).CanCallback( name ) select callback.Invoke( item, args ) );
+				builder.AddRange( targets.Select( item => callback.Invoke( item, args ) ) );
 			}
 
 			return builder.ToArray();
