@@ -148,7 +148,10 @@ namespace Espionage.Engine
 			}
 
 
-			private void SaveValue() { }
+			private void SaveValue()
+			{
+				Log.Error( "Values cant be saved or restored just yet" );
+			}
 		}
 	}
 }
