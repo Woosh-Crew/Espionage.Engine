@@ -27,10 +27,7 @@ namespace Espionage.Engine
 				return;
 			}
 
-			using ( Debugging.Stopwatch( name, true ) )
-			{
-				Provider.Run( name );
-			}
+			Provider.Run( name );
 		}
 
 		/// <summary> Runs a callback with an array of args. [EXPENSIVE] </summary>
@@ -43,10 +40,7 @@ namespace Espionage.Engine
 
 			try
 			{
-				using ( Debugging.Stopwatch( name, true ) )
-				{
-					Provider.Run( name, args );
-				}
+				Provider.Run( name, args );
 			}
 			catch ( Exception e )
 			{
@@ -66,10 +60,6 @@ namespace Espionage.Engine
 			{
 				var values = Provider.Run( name, args );
 				return values?.Cast<T>();
-			}
-			catch ( KeyNotFoundException )
-			{
-				Debugging.Log.Error( $"Key : {name}, somehow couldn't be found or created?" );
 			}
 			catch ( Exception e )
 			{
