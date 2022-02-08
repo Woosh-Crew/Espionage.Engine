@@ -98,13 +98,13 @@ namespace Espionage.Engine
 
 		// App
 
-		[Var( "app.unity_version", IsReadOnly = true )]
+		[Var( "application.unity_version", IsReadOnly = true )]
 		private static string UnityVersion => Application.unityVersion;
 
-		[Var( "app.sys_language", IsReadOnly = true )]
+		[Var( "application.sys_language", IsReadOnly = true )]
 		private static string SystemLang => Application.systemLanguage.ToString();
 
-		[Var( "app.target_fps" )]
+		[Var( "application.target_fps" )]
 		private static int TargetFramerate { get => Application.targetFrameRate; set => Application.targetFrameRate = value; }
 
 		// Debug
@@ -137,10 +137,7 @@ namespace Espionage.Engine
 					return;
 				}
 
-				double ticks = _stopwatch.ElapsedTicks;
-				var nanoseconds = ticks / System.Diagnostics.Stopwatch.Frequency * 1000000000;
-
-				var time = _stopwatch.ElapsedMilliseconds == 0 ? $"{nanoseconds}ns" : $"{_stopwatch.ElapsedMilliseconds}ms";
+				var time = _stopwatch.ElapsedMilliseconds > 0 ? $"{_stopwatch.ElapsedMilliseconds}ms" : $"{_stopwatch.ElapsedTicks / System.Diagnostics.Stopwatch.Frequency * 1000000000}ns";
 				if ( string.IsNullOrEmpty( _message ) )
 				{
 					Log.Info( time );

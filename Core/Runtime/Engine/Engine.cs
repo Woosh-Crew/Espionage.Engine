@@ -150,33 +150,6 @@ namespace Espionage.Engine
 		// Callbacks
 		//
 
-		[Callback( "application.frame" )]
-		private static void Upate2() { }
-
-		[Callback( "application.frame" )]
-		private static void Upate3() { }
-
-		[Callback( "application.frame" )]
-		private static void Upate4() { }
-
-		[Callback( "application.frame" )]
-		private static void Upate5() { }
-
-		[Callback( "application.frame" )]
-		private static void Upate6() { }
-
-		[Callback( "application.frame" )]
-		private static void Upate7() { }
-
-		[Callback( "application.frame" )]
-		private static void Upate8() { }
-
-		[Callback( "application.frame" )]
-		private static void Upate9() { }
-
-		[Callback( "application.frame" )]
-		private static void Upate10() { }
-
 		private static void OnUpdate()
 		{
 			if ( !Application.isPlaying )
@@ -192,12 +165,9 @@ namespace Espionage.Engine
 
 			Callback.Run( "application.frame" );
 
-			using ( Debugging.Stopwatch( "Update - Normal" ) )
-			{
-				// More temp - this should 
-				// Be called at an engine level
-				Game.Simulate( Local.Client );
-			}
+			// More temp - this should 
+			// Be called at an engine level
+			Game.Simulate( Local.Client );
 		}
 
 		private static void OnPhysicsUpdate()
