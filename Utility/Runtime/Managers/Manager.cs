@@ -50,6 +50,7 @@ namespace Espionage.Engine.Internal
 			using ( Debugging.Stopwatch( "Runtime Layer Initialized" ) )
 			{
 				Invoker( Layer.Runtime );
+				Callback.Run( "manager.runtime_ready" );
 			}
 		}
 
@@ -61,6 +62,7 @@ namespace Espionage.Engine.Internal
 			using ( Debugging.Stopwatch( "Editor Layer Initialized" ) )
 			{
 				Invoker( Layer.Editor );
+				Callback.Run( "manager.editor_ready" );
 			}
 		}
 

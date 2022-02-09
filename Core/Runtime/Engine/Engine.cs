@@ -114,6 +114,7 @@ namespace Espionage.Engine
 		private static void CreateEngineLayer()
 		{
 			// Create Update Loop
+			// Jake: I think this is stupid?
 			var loop = PlayerLoop.GetCurrentPlayerLoop();
 			for ( var i = 0; i < loop.subSystemList.Length; ++i )
 			{
@@ -161,7 +162,6 @@ namespace Espionage.Engine
 			{
 				service.OnUpdate();
 			}
-
 
 			Callback.Run( "application.frame" );
 
