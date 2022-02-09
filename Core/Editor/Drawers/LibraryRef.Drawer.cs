@@ -16,7 +16,7 @@ namespace Espionage.Engine.Editor.Drawers
 			position = EditorGUI.PrefixLabel( position, label );
 
 			var idProperty = property.FindPropertyRelative( "identifier" );
-			var style = new GUIStyle( EditorStyles.popup ) { fixedHeight = 0 };
+			var style = new GUIStyle( EditorStyles.popup );
 			if ( GUI.Button( position, new GUIContent( idProperty.stringValue ), style ) )
 			{
 				var dropdown = new Dropdown( new AdvancedDropdownState(), idProperty );
@@ -46,7 +46,7 @@ namespace Espionage.Engine.Editor.Drawers
 			{
 				var root = new AdvancedDropdownItem( "Library Database" );
 
-				var groups = Library.Database.All.Where( e => e.Name != e.Class.FullName ).GroupBy( e => e.Group );
+				var groups = Library.Database.All.Where( e => e.Name != e.Class.FullName ).OrderBy( e => e.Name ).GroupBy( e => e.Group );
 
 				foreach ( var item in groups )
 				{

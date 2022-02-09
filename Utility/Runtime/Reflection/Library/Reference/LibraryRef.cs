@@ -9,7 +9,9 @@ namespace Espionage.Engine
 		[SerializeField]
 		private string identifier;
 
-		public static implicit operator Library( LibraryRef  libraryRef )
+		protected LibraryRef() { }
+
+		public static implicit operator Library( LibraryRef libraryRef )
 		{
 			return Library.Database[libraryRef.identifier];
 		}
