@@ -15,10 +15,11 @@ namespace Espionage.Engine.Editor.Drawers
 			// Actual GUI
 			position = EditorGUI.PrefixLabel( position, label );
 
+			var idProperty = property.FindPropertyRelative( "identifier" );
 			var style = new GUIStyle( EditorStyles.popup ) { fixedHeight = 0 };
-			if ( GUI.Button( position, new GUIContent( property.FindPropertyRelative("identifier").stringValue ), style ) )
+			if ( GUI.Button( position, new GUIContent( idProperty.stringValue ), style ) )
 			{
-				var dropdown = new Dropdown( new AdvancedDropdownState(), this );
+				var dropdown = new Dropdown( new AdvancedDropdownState(), idProperty );
 				dropdown.Show( position );
 			}
 
@@ -27,25 +28,37 @@ namespace Espionage.Engine.Editor.Drawers
 
 		public sealed class Dropdown : AdvancedDropdown
 		{
-			private LibraryRefDrawer _drawer;
+			private readonly SerializedProperty _property;
 
-			public Dropdown( AdvancedDropdownState state, LibraryRefDrawer drawer ) : base( state )
+			public Dropdown( AdvancedDropdownState state, SerializedProperty property ) : base( state )
 			{
-				_drawer = drawer;
-				this.minimumSize = new Vector2( 500, 0 );
+				_property = property;
+				minimumSize = new Vector2( 0, 250 );
 			}
 
-			protected override void ItemSelected( AdvancedDropdownItem item ) { }
+			protected override void ItemSelected( AdvancedDropdownItem item )
+			{
+				_property.stringValue = item.name;
+				_property.serializedObject.ApplyModifiedProperties();
+			}
 
 			protected override AdvancedDropdownItem BuildRoot()
 			{
 				var root = new AdvancedDropdownItem( "Library Database" );
 
-				foreach ( var library in Library.Database.All.Where( e=>e.Name != e.Class.FullName ) )
+				var groups = Library.Database.All.Where( e => e.Name != e.Class.FullName ).GroupBy( e => e.Group );
+
+				foreach ( var item in groups )
 				{
-					root.AddChild( new AdvancedDropdownItem( library.Name ) );
+					var itemRoot = new AdvancedDropdownItem( item.Key );
+					root.AddChild( itemRoot );
+
+					foreach ( var library in item )
+					{
+						itemRoot.AddChild( new AdvancedDropdownItem( library.Name ) );
+					}
 				}
-	
+
 				return root;
 			}
 		}
