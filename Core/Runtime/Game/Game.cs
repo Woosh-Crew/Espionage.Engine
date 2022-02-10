@@ -3,14 +3,13 @@ using UnityEngine;
 
 namespace Espionage.Engine
 {
-	public class TestGame : Game { }
-
 	/// <summary>
 	/// The Entry point for your game. Use this as your "GameManager".
 	/// </summary>
 	[Spawnable, Group( "Engine" )]
 	public abstract class Game : ILibrary, ICallbacks
 	{
+		public Loader Loader { get; protected set; }
 		public Splash Splash { get; protected set; }
 		public Menu Menu { get; protected set; }
 
@@ -27,8 +26,8 @@ namespace Espionage.Engine
 			Callback.Unregister( this );
 		}
 
-		public virtual void OnReady() { }
-		public virtual void OnShutdown() { }
+		public abstract void OnReady();
+		public abstract void OnShutdown();
 
 		public virtual void Simulate( Client client )
 		{

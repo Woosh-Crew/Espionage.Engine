@@ -1,4 +1,4 @@
-﻿namespace Espionage.Engine.Loader
+﻿namespace Espionage.Engine
 {
 	/// <summary>
 	/// This is a class for managing the loading of Maps
