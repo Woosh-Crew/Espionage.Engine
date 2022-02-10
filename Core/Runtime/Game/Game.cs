@@ -3,6 +3,12 @@ using UnityEngine;
 
 namespace Espionage.Engine
 {
+	public class TestGame : Game
+	{
+		public override void OnReady() { }
+		public override void OnShutdown() { }
+	}
+
 	/// <summary>
 	/// The Entry point for your game. Use this as your "GameManager".
 	/// </summary>

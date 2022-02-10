@@ -19,14 +19,13 @@ namespace Espionage.Engine
 		{
 			using ( Debugging.Stopwatch( "Engine / Game Ready", true ) )
 			{
-				CreateEngineLayer();
-
 				if ( !SetupGame() )
 				{
 					Debugging.Log.Error( "Game couldn't be found. Make sure to make a class inherited from Game" );
 					return;
 				}
 
+				CreateEngineLayer();
 				Services = new ServiceDatabase();
 
 				// TODO: THIS IS TEMP
