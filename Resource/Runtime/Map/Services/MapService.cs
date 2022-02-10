@@ -17,25 +17,7 @@ namespace Espionage.Engine.Resources
 		// Service
 		//
 
-		public void OnReady()
-		{
-			using var stopwatch = Debugging.Stopwatch( "Caching Maps" );
-
-			// Cache Asset Bundle Maps
-
-			var path = Application.isEditor ? "Exports/Maps" : Application.dataPath;
-			var extension = Library.Database.Get<Map>().Components.Get<FileAttribute>().Extension;
-
-			if ( !Directory.Exists( path ) )
-			{
-				return;
-			}
-
-			foreach ( var map in Directory.GetFiles( path, $"*.{extension}", SearchOption.AllDirectories ) )
-			{
-				Map.Database.Add( new Map( map ) );
-			}
-		}
+		public void OnReady() { }
 
 		public void OnShutdown() { }
 
