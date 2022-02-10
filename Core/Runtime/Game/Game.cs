@@ -19,6 +19,8 @@ namespace Espionage.Engine
 		public Splash Splash { get; protected set; }
 		public Menu Menu { get; protected set; }
 
+		// Class
+
 		public Library ClassInfo { get; }
 
 		protected Game()
@@ -32,8 +34,12 @@ namespace Espionage.Engine
 			Callback.Unregister( this );
 		}
 
+		// Required
+
 		public abstract void OnReady();
 		public abstract void OnShutdown();
+
+		// Networking
 
 		public virtual void Simulate( Client client )
 		{
@@ -48,24 +54,34 @@ namespace Espionage.Engine
 		// Gamemode
 		//
 
-		public Gamemode Gamemode { get; private set; }
+		private Gamemode _gamemode;
 
-		public void SwitchGamemode( Gamemode gamemode )
+		public Gamemode Gamemode
 		{
-			if ( !gamemode.Validate() )
+			get => _gamemode;
+			set
 			{
-				Debugging.Log.Warning( $"Gamemode {gamemode.ClassInfo.Name} is not valid for map" );
-				return;
+				if ( value != null && !value.Validate() )
+				{
+					Debugging.Log.Warning( $"Gamemode {value.ClassInfo.Name} is not valid for map" );
+					return;
+				}
+
+				// Finish and do Cleanup
+				if ( _gamemode != null )
+				{
+					_gamemode.Finish();
+				}
+
+				_gamemode = value;
+
+				if ( _gamemode != null )
+				{
+					_gamemode.Begin();
+				}
+
+				Callback.Run( "gamemodes.switched" );
 			}
-
-			// Finish and do Cleanup
-			Gamemode.Finish();
-
-			// Start new Gamemode
-			Gamemode = gamemode;
-			Gamemode.Begin();
-
-			Callback.Run( "gamemodes.switched", gamemode );
 		}
 
 		//
