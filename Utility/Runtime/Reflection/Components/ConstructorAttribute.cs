@@ -9,7 +9,7 @@ namespace Espionage.Engine
 	/// Must return an ILibrary and Must have one parameter that takes in a Library.
 	/// </summary>
 	[AttributeUsage( AttributeTargets.Class, Inherited = true )]
-	public sealed class ConstructorAttribute : Attribute, IComponent<Library>
+	public sealed class ConstructorAttribute : Attribute, IConstructor
 	{
 		// Attribute
 

@@ -30,7 +30,7 @@ namespace Espionage.Engine
 				return null;
 			}
 
-			if ( library.Components.TryGet<ConstructorAttribute>( out var constructor ) )
+			if ( library.Components.TryGet<IConstructor>( out var constructor ) )
 			{
 				return constructor.Invoke();
 			}
