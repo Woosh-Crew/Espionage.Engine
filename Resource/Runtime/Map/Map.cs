@@ -109,8 +109,8 @@ namespace Espionage.Engine.Resources
 		// Resource 
 		//
 
-		public Action OnLoad { get; }
-		public Action OnUnload { get; }
+		public Action OnLoad { get; set; }
+		public Action OnUnload { get; set; }
 
 		public bool IsLoading => Provider.IsLoading;
 
