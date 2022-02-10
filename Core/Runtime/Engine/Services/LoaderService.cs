@@ -22,14 +22,15 @@ namespace Espionage.Engine.Services
 
 		public void OnReady()
 		{
+			if ( Loader == null )
+			{
+				Debugging.Log.Warning( "No Loader found on Game" );
+				return;
+			}
+
 			SceneManager.LoadScene( Loader.ScenePath, LoadSceneMode.Additive );
 			_scene = SceneManager.GetSceneByPath( Loader.ScenePath );
 		}
-
-		// Callbacks
-
-		[Callback( "map.loading" )]
-		private void MapLoad() { }
 
 		// Not Needed
 
