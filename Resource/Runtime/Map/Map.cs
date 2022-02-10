@@ -106,22 +106,6 @@ namespace Espionage.Engine.Resources
 		}
 
 		//
-		// Utility
-		//
-
-		/// <summary>
-		/// Add a GameObject to this map through code.
-		/// </summary>
-		/// <param name="gameObject">The GameObject to add</param>
-		public void Add( GameObject gameObject )
-		{
-			if ( Provider.Scene != null )
-			{
-				SceneManager.MoveGameObjectToScene( gameObject, Provider.Scene.Value );
-			}
-		}
-
-		//
 		// Resource 
 		//
 
@@ -144,36 +128,23 @@ namespace Espionage.Engine.Resources
 				return false;
 			}
 
-			// Add Callback
-			onLoad -= OnLoad;
+			var lastMap = Current;
+			if ( !lastMap?.Unload() ?? false )
+			{
+				return false;
+			}
+
 			onLoad += OnLoad;
-
-			// Unload the current map
-			try
-			{
-				if ( Current != null )
-				{
-					return Current.Unload( () => Internal_LoadRequest( onLoad ) );
-				}
-
-				Internal_LoadRequest( onLoad );
-			}
-			finally
-			{
-				Current = this;
-			}
-
-			return true;
-		}
-
-		private void Internal_LoadRequest( Action onLoad = null )
-		{
 			onLoad += () =>
 			{
 				Callback.Run( "map.loaded" );
 			};
 
+			Current = this;
+			Callback.Run( "map.loading" );
 			Provider.Load( onLoad );
+
+			return true;
 		}
 
 		/// <summary>
@@ -191,27 +162,19 @@ namespace Espionage.Engine.Resources
 			}
 
 			// Add Callback
-			onUnload -= OnUnload;
 			onUnload += OnUnload;
+			onUnload += () =>
+			{
+				Callback.Run( "map.unloaded" );
+			};
 
 			if ( Current == this )
 			{
 				Current = null;
 			}
 
-			Internal_UnloadRequest( onUnload );
-
-			return true;
-		}
-
-		private void Internal_UnloadRequest( Action onUnload = null )
-		{
-			onUnload += () =>
-			{
-				Callback.Run( "map.unloaded" );
-			};
-
 			Provider.Unload( onUnload );
+			return true;
 		}
 
 		/// <summary>
