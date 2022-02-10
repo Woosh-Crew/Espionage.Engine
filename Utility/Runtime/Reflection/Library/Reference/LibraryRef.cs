@@ -11,6 +11,11 @@ namespace Espionage.Engine
 
 		protected LibraryRef() { }
 
+		public static implicit operator LibraryRef( string value )
+		{
+			return new LibraryRef() { identifier = value };
+		}
+
 		public static implicit operator Library( LibraryRef libraryRef )
 		{
 			return Library.Database[libraryRef.identifier];

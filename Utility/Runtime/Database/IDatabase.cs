@@ -12,6 +12,16 @@ namespace Espionage.Engine
 		bool Contains( T item );
 		void Remove( T item );
 		void Clear();
+
+		// Utility
+
+		void Merge( IEnumerable<T> original )
+		{
+			foreach ( var item in original )
+			{
+				Add( item );
+			}
+		}
 	}
 
 	/// <summary>Generic Database, Useful for Extension Methods</summary>
