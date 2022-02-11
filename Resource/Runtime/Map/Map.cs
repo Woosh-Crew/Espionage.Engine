@@ -144,6 +144,8 @@ namespace Espionage.Engine.Resources
 			Callback.Run( "map.loading" );
 			Provider.Load( onLoad );
 
+			SceneManager.SetActiveScene( Provider.Scene.Value );
+
 			return true;
 		}
 
