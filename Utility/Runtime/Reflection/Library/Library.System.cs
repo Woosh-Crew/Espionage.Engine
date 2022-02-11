@@ -59,7 +59,9 @@ namespace Espionage.Engine
 				for ( var assemblyIndex = 0; assemblyIndex < AppDomain.CurrentDomain.GetAssemblies().Length; assemblyIndex++ )
 				{
 					var assembly = AppDomain.CurrentDomain.GetAssemblies()[assemblyIndex];
-					if ( !Utility.IgnoreIfNotUserGeneratedAssembly( assembly ) )
+
+					// Some fully awesome code  - maybe stupid? i dont care its awesome
+					if ( assembly.GetReferencedAssemblies().All( e => e.Name != typeof( Library ).Assembly.GetName().Name ) )
 					{
 						continue;
 					}
