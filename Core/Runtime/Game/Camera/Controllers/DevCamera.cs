@@ -6,6 +6,7 @@ namespace Espionage.Engine.Cameras
 	{
 		private Vector3 _targetPos;
 		private Vector2 _targetRot;
+		private bool _interpolate;
 
 		public void Build( ref ICamera.Setup camSetup )
 		{
@@ -19,10 +20,16 @@ namespace Espionage.Engine.Cameras
 				return;
 			}
 
+			if ( Input.GetMouseButtonDown( 2 ) )
+			{
+				_interpolate = !_interpolate;
+			}
+
 			_targetRot += input.ViewAngles * (camSetup.FieldOfView / 120);
 			_targetRot.y = Mathf.Clamp( _targetRot.y, -88, 88 );
 
-			camSetup.Rotation = Quaternion.AngleAxis( _targetRot.x, Vector3.up ) * Quaternion.AngleAxis( _targetRot.y, Vector3.left );
+			var finalRot = Quaternion.AngleAxis( _targetRot.x, Vector3.up ) * Quaternion.AngleAxis( _targetRot.y, Vector3.left );
+			camSetup.Rotation = _interpolate ? Quaternion.Slerp( camSetup.Rotation, finalRot, 4 * Time.deltaTime ) : finalRot;
 
 			var vel = camSetup.Rotation * Vector3.forward * input.Forward + camSetup.Rotation * Vector3.left * input.Horizontal;
 
@@ -50,7 +57,7 @@ namespace Espionage.Engine.Cameras
 
 			_targetPos += vel * Time.deltaTime;
 
-			camSetup.Position = Vector3.Lerp( camSetup.Position, _targetPos, 5 * Time.deltaTime );
+			camSetup.Position = _interpolate ? Vector3.Slerp( camSetup.Position, _targetPos, 2 * Time.deltaTime ) : Vector3.Lerp( camSetup.Position, _targetPos, 5 * Time.deltaTime );
 		}
 
 		public void Activated( ICamera.Setup camSetup )
