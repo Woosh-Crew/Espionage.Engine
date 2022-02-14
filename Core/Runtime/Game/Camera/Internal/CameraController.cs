@@ -26,6 +26,9 @@ namespace Espionage.Engine
 		private void OnDrawGizmos()
 		{
 			Gizmos.DrawWireSphere( transform.position, 0.8f );
+
+			// This is hacky.. But who cares
+			Callback.Run( "debug.gizmos" );
 		}
 	}
 }

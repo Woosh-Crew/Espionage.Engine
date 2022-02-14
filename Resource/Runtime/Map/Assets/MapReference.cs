@@ -25,7 +25,7 @@ namespace Espionage.Engine.Resources
 		// Editor Only
 		//
 
-#if UNITY_EDITOR
+	#if UNITY_EDITOR
 
 		public SceneAsset sceneAsset;
 		public BuildAssetBundleOptions buildOptions = BuildAssetBundleOptions.ChunkBasedCompression;
@@ -100,6 +100,9 @@ namespace Espionage.Engine.Resources
 							return;
 						}
 					}
+
+					// Shove Meta Data In
+					
 				}
 				catch ( Exception e )
 				{
@@ -120,6 +123,6 @@ namespace Espionage.Engine.Resources
 			}
 		}
 
-#endif
+	#endif
 	}
 }
