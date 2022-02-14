@@ -17,7 +17,7 @@ namespace Espionage.Engine.Editor.Drawers
 
 			var idProperty = property.FindPropertyRelative( "identifier" );
 			var style = new GUIStyle( EditorStyles.popup );
-			if ( GUI.Button( position, new GUIContent( idProperty.stringValue ), style ) )
+			if ( GUI.Button( position, new GUIContent( string.IsNullOrEmpty( idProperty.stringValue ) ? "None" : idProperty.stringValue ), style ) )
 			{
 				var dropdown = new Dropdown( new AdvancedDropdownState(), idProperty );
 				dropdown.Show( position );

@@ -22,18 +22,26 @@ namespace Espionage.Engine.Services
 			}
 
 			var obj = new GameObject( "Main Camera" );
+			Engine.AddToLayer( obj );
+
+			// Setup Camera
 			_camera = obj.AddComponent<CameraController>();
 
-			var cam = _camera.GetComponent<Camera>();
-			cam.depth = 2;
-
-			Engine.AddToLayer( obj );
+			// Viewmodel
+			var viewmodelObj = new GameObject( "Viewmodel Camera" );
+			viewmodelObj.transform.parent = obj.transform;
+			_viewmodelCam = viewmodelObj.AddComponent<Camera>();
+			_viewmodelCam.clearFlags = CameraClearFlags.Depth;
+			_viewmodelCam.cullingMask = LayerMask.GetMask( "Viewmodel", "TransparentFX" );
+			_viewmodelCam.depth = 4;
+			_viewmodelCam.farClipPlane = 10;
 		}
 
 		public void OnShutdown() { }
 
 		// Frame
 
+		private Camera _viewmodelCam;
 		private CameraController _camera;
 
 		private ICamera.Setup _lastSetup = new()
@@ -58,7 +66,8 @@ namespace Espionage.Engine.Services
 			// Build the camSetup, from game.
 			_lastSetup = Engine.Game.BuildCamera( _lastSetup );
 
-			// Get Camera Component
+			// Finalise
+			_viewmodelCam.fieldOfView = _lastSetup.FieldOfView;
 			_camera.Finalise( _lastSetup );
 		}
 	}

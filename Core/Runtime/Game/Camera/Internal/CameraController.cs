@@ -12,6 +12,7 @@ namespace Espionage.Engine
 		{
 			gameObject.tag = "MainCamera";
 			_target = GetComponent<Camera>();
+			_target.depth = 2;
 		}
 
 		public void Finalise( ICamera.Setup camSetup )
