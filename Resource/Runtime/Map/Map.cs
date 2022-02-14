@@ -13,7 +13,7 @@ namespace Espionage.Engine.Resources
 	/// <remarks>
 	/// You should be using this instead of UnityEngine.SceneManager.
 	/// </remarks>
-	[Title( "Map" ), Group( "Maps" ), File( Extension = "map" )]
+	[Group( "Maps" )]
 	public sealed partial class Map : IResource, IDisposable, ILibrary
 	{
 		/// <summary>
@@ -87,25 +87,6 @@ namespace Espionage.Engine.Resources
 		}
 
 		//
-		// Operators
-		//
-
-		public static implicit operator Scene( Map map )
-		{
-			return map.Provider.Scene ?? default;
-		}
-
-		public static implicit operator Map( string path )
-		{
-			return Find( path );
-		}
-
-		public static implicit operator Map( int index )
-		{
-			return Find( index );
-		}
-
-		//
 		// Resource 
 		//
 
@@ -120,19 +101,15 @@ namespace Espionage.Engine.Resources
 		/// <param name="onLoad">
 		/// What to do when we finish loading both the scene and asset bundle
 		/// </param>
-		public bool Load( Action onLoad = null )
+		public void Load( Action onLoad = null )
 		{
 			if ( IsLoading )
 			{
-				Debugging.Log.Warning( "Already performing an operation action this map" );
-				return false;
+				throw new Exception( "Already performing an operation action this map" );
 			}
 
 			var lastMap = Current;
-			if ( !lastMap?.Unload() ?? false )
-			{
-				return false;
-			}
+			lastMap?.Unload();
 
 			onLoad += OnLoad;
 			onLoad += () =>
@@ -143,8 +120,6 @@ namespace Espionage.Engine.Resources
 			Current = this;
 			Callback.Run( "map.loading" );
 			Provider.Load( onLoad );
-
-			return true;
 		}
 
 		/// <summary>
@@ -153,12 +128,11 @@ namespace Espionage.Engine.Resources
 		/// <param name="onUnload">
 		/// What to do when we finish unloading
 		/// </param>
-		public bool Unload( Action onUnload = null )
+		public void Unload( Action onUnload = null )
 		{
 			if ( IsLoading )
 			{
-				Debugging.Log.Warning( "Already performing an operation action this map" );
-				return false;
+				throw new Exception( "Already performing an operation action this map" );
 			}
 
 			// Add Callback
@@ -174,7 +148,6 @@ namespace Espionage.Engine.Resources
 			}
 
 			Provider.Unload( onUnload );
-			return true;
 		}
 
 		/// <summary>

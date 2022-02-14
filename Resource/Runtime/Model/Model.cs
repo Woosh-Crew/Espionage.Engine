@@ -3,8 +3,8 @@ using Espionage.Engine.Components;
 
 namespace Espionage.Engine.Resources
 {
-	[Title( "Model" ), Group( "Models" ), File( Extension = "mdl" )]
-	public sealed partial class Model : IResource, IDisposable, IAsset, ILibrary
+	[Group( "Models" )]
+	public sealed partial class Model : IResource, IDisposable, ILibrary
 	{
 		public Library ClassInfo { get; }
 		public ComponentDatabase<Model> Components { get; }
@@ -42,12 +42,7 @@ namespace Espionage.Engine.Resources
 
 		public bool IsLoading => Provider.IsLoading;
 
-		public bool Load( Action onLoad = null )
-		{
-			throw new NotImplementedException();
-		}
-
-		private void Internal_LoadRequest( Action onLoad = null )
+		public void Load( Action onLoad = null )
 		{
 			onLoad += () =>
 			{
@@ -57,14 +52,17 @@ namespace Espionage.Engine.Resources
 			Provider.Load( onLoad );
 		}
 
-		public bool Unload( Action onUnload = null )
+
+		public void Unload( Action onUnload = null )
 		{
-			throw new NotImplementedException();
+			onUnload += () =>
+			{
+				Callback.Run( "map.loaded" );
+			};
+
+			Provider.Unload( onUnload );
 		}
 
-		public void Dispose()
-		{
-			throw new NotImplementedException();
-		}
+		public void Dispose() { }
 	}
 }

@@ -20,16 +20,22 @@ namespace Espionage.Engine.Cameras
 				return;
 			}
 
+			// Interpolate
+
 			if ( Input.GetMouseButtonDown( 2 ) )
 			{
 				_interpolate = !_interpolate;
 			}
+
+			// Rotation
 
 			_targetRot += input.ViewAngles * (camSetup.FieldOfView / 120);
 			_targetRot.y = Mathf.Clamp( _targetRot.y, -88, 88 );
 
 			var finalRot = Quaternion.AngleAxis( _targetRot.x, Vector3.up ) * Quaternion.AngleAxis( _targetRot.y, Vector3.left );
 			camSetup.Rotation = _interpolate ? Quaternion.Slerp( camSetup.Rotation, finalRot, 4 * Time.deltaTime ) : finalRot;
+
+			// Movement
 
 			var vel = camSetup.Rotation * Vector3.forward * input.Forward + camSetup.Rotation * Vector3.left * input.Horizontal;
 

@@ -11,7 +11,7 @@ namespace Espionage.Engine.Resources
 		string Identifier { get; }
 		bool IsLoading { get; }
 
-		bool Load( Action onLoad = null );
-		bool Unload( Action onUnload = null );
+		void Load( Action onLoad = null );
+		void Unload( Action onUnload = null );
 	}
 }
