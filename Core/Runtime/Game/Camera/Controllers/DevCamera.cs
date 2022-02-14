@@ -4,13 +4,25 @@ namespace Espionage.Engine.Cameras
 {
 	public class DevCamera : ICamera
 	{
-		private Vector3 _targetPos;
+		private static Vector3 _targetPos;
+		private static Vector2 _targetRot;
 
 		public void Build( ref ICamera.Setup camSetup )
 		{
 			var input = Local.Client.Input;
-			camSetup.Rotation = input.Rotation;
 
+			// FOV
+
+			if ( Input.GetMouseButton( 1 ) )
+			{
+				camSetup.FieldOfView += -Input.GetAxisRaw( "Mouse Y" ) * 150 * Time.deltaTime;
+				return;
+			}
+
+			_targetRot += input.ViewAngles * (camSetup.FieldOfView / 120);
+			_targetRot.y = Mathf.Clamp( _targetRot.y, -88, 88 );
+
+			camSetup.Rotation = Quaternion.AngleAxis( _targetRot.x, Vector3.up ) * Quaternion.AngleAxis( _targetRot.y, Vector3.left );
 
 			var vel = camSetup.Rotation * Vector3.forward * input.Forward + camSetup.Rotation * Vector3.left * input.Horizontal;
 
@@ -39,13 +51,6 @@ namespace Espionage.Engine.Cameras
 			_targetPos += vel * Time.deltaTime;
 
 			camSetup.Position = Vector3.Lerp( camSetup.Position, _targetPos, 5 * Time.deltaTime );
-
-			// FOV
-
-			if ( Input.GetKey( KeyCode.LeftAlt ) && Input.GetMouseButton( 1 ) )
-			{
-				camSetup.FieldOfView += -Input.GetAxisRaw( "Mouse Y" ) * 150 * Time.deltaTime;
-			}
 		}
 
 		public void Activated( ICamera.Setup camSetup )

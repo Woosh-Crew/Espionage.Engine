@@ -28,15 +28,18 @@ namespace Espionage.Engine.Services
 			const string xAxis = "Mouse X";
 			const string yAxis = "Mouse Y";
 
+			var newAngles = new Vector2();
+
 			// We should put this in the input processor...
-			_rawRotation.x += Input.GetAxis( xAxis ) * 2;
-			_rawRotation.y += Input.GetAxis( yAxis ) * 2;
-			_rawRotation.y = Mathf.Clamp( _rawRotation.y, -88, 88 );
+			newAngles.x = Input.GetAxis( xAxis ) * 2;
+			newAngles.y = Input.GetAxis( yAxis ) * 2;
+			// newAngles.y = 
+
+			ViewAngles = newAngles;
 
 			Cursor.lockState = CursorLockMode.Locked;
 			Cursor.visible = false;
 
-			Rotation = Quaternion.AngleAxis( _rawRotation.x, Vector3.up ) * Quaternion.AngleAxis( _rawRotation.y, Vector3.left );
 
 			Forward = Input.GetAxisRaw( "Vertical" );
 			Horizontal = -Input.GetAxisRaw( "Horizontal" );
@@ -49,9 +52,7 @@ namespace Espionage.Engine.Services
 		// Input Processor
 		//
 
-		private Vector2 _rawRotation = Vector2.zero;
-
-		public Quaternion Rotation { get; set; }
+		public Vector2 ViewAngles { get; set; }
 		public float Forward { get; set; }
 		public float Horizontal { get; set; }
 	}

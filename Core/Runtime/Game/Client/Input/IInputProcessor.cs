@@ -4,8 +4,8 @@ namespace Espionage.Engine
 {
 	public interface IInputProcessor
 	{
-		Quaternion Rotation { get; }
-		
+		Vector2 ViewAngles { get; }
+
 		float Forward { get; }
 		float Horizontal { get; }
 	}
