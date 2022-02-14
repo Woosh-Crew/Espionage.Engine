@@ -35,7 +35,7 @@ namespace Espionage.Engine.Services
 		// Not Needed
 
 		public void OnShutdown() { }
-
 		public void OnUpdate() { }
+		public void Dispose() { }
 	}
 }

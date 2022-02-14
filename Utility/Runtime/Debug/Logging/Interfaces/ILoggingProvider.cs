@@ -31,7 +31,7 @@ public static class LoggingProviderExtensions
 		} );
 	}
 
-	public static void Info( this ILoggingProvider provider, object message )
+	public static void Info<T>( this ILoggingProvider provider, T message )
 	{
 		provider?.Add( new Entry()
 		{
@@ -41,7 +41,7 @@ public static class LoggingProviderExtensions
 		} );
 	}
 
-	public static void Warning( this ILoggingProvider provider, object message )
+	public static void Warning<T>( this ILoggingProvider provider, T message )
 	{
 		provider?.Add( new Entry()
 		{
@@ -51,7 +51,7 @@ public static class LoggingProviderExtensions
 		} );
 	}
 
-	public static void Error( this ILoggingProvider provider, object message )
+	public static void Error<T>( this ILoggingProvider provider, T message )
 	{
 		provider?.Add( new Entry()
 		{

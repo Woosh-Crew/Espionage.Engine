@@ -43,6 +43,7 @@ namespace Espionage.Engine.Services
 		}
 
 		public void OnShutdown() { }
+		public void Dispose() { }
 
 		//
 		// Input Processor

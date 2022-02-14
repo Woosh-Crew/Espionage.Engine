@@ -3,6 +3,7 @@
 	internal class SplashService : IService
 	{
 		public Library ClassInfo { get; }
+		private Splash Splash => Engine.Game.Splash;
 
 		public SplashService()
 		{
@@ -10,18 +11,21 @@
 		}
 
 		private TimeSince _splashTime;
-		private Splash Splash => Engine.Game.Splash;
-
-		public void OnReady() { }
-		public void OnShutdown() { }
+		private bool _finished;
 
 		public void OnUpdate()
 		{
-			// if ( _splashTime >= (Splash?.Delay ?? 2) )
+			if ( _splashTime >= (Splash?.Delay ?? 2) && !_finished )
 			{
-				// Debugging.Log.Info( "Splash Loaded" );
-				// Engine.Services.Remove( this );
+				_finished = true;
+				Debugging.Log.Info( "Splash Loaded" );
 			}
 		}
+
+		// Not Needed
+
+		public void OnReady() { }
+		public void OnShutdown() { }
+		public void Dispose() { }
 	}
 }

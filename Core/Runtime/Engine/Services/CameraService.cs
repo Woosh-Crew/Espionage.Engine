@@ -70,5 +70,7 @@ namespace Espionage.Engine.Services
 			_viewmodelCam.fieldOfView = _lastSetup.FieldOfView;
 			_camera.Finalise( _lastSetup );
 		}
+
+		public void Dispose() { }
 	}
 }

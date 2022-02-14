@@ -14,5 +14,6 @@
 		public void OnReady() { }
 		public void OnShutdown() { }
 		public void OnUpdate() { }
+		public void Dispose() { }
 	}
 }
