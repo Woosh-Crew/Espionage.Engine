@@ -4,8 +4,8 @@ namespace Espionage.Engine.Cameras
 {
 	public class DevCamera : ICamera
 	{
-		private static Vector3 _targetPos;
-		private static Vector2 _targetRot;
+		private Vector3 _targetPos;
+		private Vector2 _targetRot;
 
 		public void Build( ref ICamera.Setup camSetup )
 		{
@@ -56,6 +56,10 @@ namespace Espionage.Engine.Cameras
 		public void Activated( ICamera.Setup camSetup )
 		{
 			_targetPos = camSetup.Position;
+
+			// WTF? This makes no sense
+			var rot = camSetup.Rotation.eulerAngles;
+			_targetRot = new Vector2( rot.y, -rot.x );
 		}
 
 		public void Deactivated() { }
