@@ -18,9 +18,9 @@ namespace Espionage.Engine
 
 		// Class
 
-		public Library ClassInfo { get; }
+		public Library ClassInfo { get; private set; }
 
-		private Blueprint()
+		private void OnEnable()
 		{
 			ClassInfo = Library.Database[GetType()];
 		}
