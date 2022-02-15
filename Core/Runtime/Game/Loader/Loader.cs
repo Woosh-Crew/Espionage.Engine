@@ -29,9 +29,9 @@ namespace Espionage.Engine
 		public bool IsLoading => Queue != null;
 		public Queue<ILoadable> Queue { get; private set; }
 
-		public void Start( Queue<ILoadable> queue, Action onFinish = null )
+		public virtual void Start( Queue<ILoadable> queue, Action onFinish = null )
 		{
-			if ( Queue != null )
+			if ( IsLoading )
 			{
 				throw new ApplicationException( "Already loading something" );
 			}
@@ -43,7 +43,7 @@ namespace Espionage.Engine
 			Finished += onFinish;
 		}
 
-		private void Finish()
+		protected virtual void Finish()
 		{
 			Finished?.Invoke();
 
