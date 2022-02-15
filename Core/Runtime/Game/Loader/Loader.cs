@@ -37,7 +37,7 @@ namespace Espionage.Engine
 			}
 
 			Queue = queue;
-			Load( Queue.Peek() );
+			Load( Queue.Dequeue() );
 
 			Started?.Invoke();
 			Finished += onFinish;

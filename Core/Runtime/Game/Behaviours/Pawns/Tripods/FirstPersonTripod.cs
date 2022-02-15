@@ -1,4 +1,4 @@
-﻿namespace Espionage.Engine.Tripods
+﻿namespace Espionage.Engine
 {
 	public class FirstPersonTripod : Tripod
 	{

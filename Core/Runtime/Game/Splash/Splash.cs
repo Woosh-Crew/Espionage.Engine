@@ -18,10 +18,10 @@ namespace Espionage.Engine
 			ClassInfo = Library.Database.Get( GetType() );
 
 			Delay = time;
-			ScenePath = splashScene;
+			Scene = splashScene;
 		}
 
 		public int Delay { get; }
-		public string ScenePath { get; }
+		public string Scene { get; }
 	}
 }

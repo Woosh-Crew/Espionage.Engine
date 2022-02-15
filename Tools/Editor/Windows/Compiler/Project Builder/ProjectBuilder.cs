@@ -4,6 +4,7 @@ using Espionage.Engine.Editor;
 using Espionage.Engine.Resources;
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.Experimental;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
 
@@ -99,7 +100,6 @@ namespace Espionage.Engine.Tools.Editor
 				rootVisualElement.Add( box );
 
 				box.Add( new Button( () => Build( BuildTarget.StandaloneWindows, BuildOptions.None ) ) { text = "Build Game" } );
-				box.Add( new Button( () => Build( BuildTarget.StandaloneWindows, BuildOptions.None ) ) { text = "Build Server" } );
 			}
 		}
 
@@ -109,6 +109,12 @@ namespace Espionage.Engine.Tools.Editor
 			{
 				try
 				{
+					var blueprintBuild = new AssetBundleBuild
+					{
+						assetNames = AssetDatabase.FindAssets( "t: Blueprint" ),
+						assetBundleName = $"{Library.Database.Get<Blueprint>().Title}.pak"
+					};
+
 					// Setup BuildPipeline
 					var buildSettings = new BuildPlayerOptions()
 					{
@@ -126,16 +132,6 @@ namespace Espionage.Engine.Tools.Editor
 				{
 					AssetDatabase.Refresh();
 				}
-
-				//
-				// Build Blueprints
-				//
-
-				var blueprintBuild = new AssetBundleBuild
-				{
-					assetNames = AssetDatabase.FindAssets( "t: Blueprint" ),
-					assetBundleName = $"{Library.Database.Get<Blueprint>().Title}.pak"
-				};
 
 				//
 				// Move Content to Game

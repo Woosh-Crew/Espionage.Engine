@@ -13,10 +13,10 @@ namespace Espionage.Engine
 		public Menu( string menuScene )
 		{
 			ClassInfo = Library.Database[GetType()];
-			ScenePath = menuScene;
+			Scene = menuScene;
 		}
 
 		// Scene
-		public string ScenePath { get; }
+		public string Scene { get; }
 	}
 }
