@@ -22,6 +22,9 @@ namespace Espionage.Engine
 		// Pawn
 		//
 
+		public Vector3 EyePos { get; set; }
+		public Quaternion EyeRot { get; set; }
+
 		public void Posses( Client client ) { }
 		public void UnPosses() { }
 

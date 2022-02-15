@@ -36,6 +36,13 @@ namespace Espionage.Engine
 			set => _setup.FieldOfView = value;
 		}
 
+		protected GameObject Viewer
+		{
+			get => _setup.Viewer;
+			set => _setup.Viewer = value;
+		}
+
+
 		protected abstract void Frame();
 
 		public void Build( ref ICamera.Setup camSetup )

@@ -5,9 +5,12 @@ namespace Espionage.Engine
 {
 	public abstract class PawnController : Behaviour, IComponent<Pawn>
 	{
-		void IComponent<Pawn>.OnAttached( Pawn item ) { }
+		void IComponent<Pawn>.OnAttached( Pawn item )
+		{
+			Pawn = item;
+		}
 
-		private Vector2 _targetRot;
+		protected Pawn Pawn { get; private set; }
 
 		public override void Simulate( Client client )
 		{
@@ -16,12 +19,10 @@ namespace Espionage.Engine
 			_targetRot += input.ViewAngles;
 			_targetRot.y = Mathf.Clamp( _targetRot.y, -88, 88 );
 
-			EyeRot = Quaternion.AngleAxis( _targetRot.x, Vector3.up ) * Quaternion.AngleAxis( _targetRot.y, Vector3.left );
-			EyePos = Vector3.up * 1.65f;
+			Pawn.EyeRot = Quaternion.AngleAxis( _targetRot.x, Vector3.up ) * Quaternion.AngleAxis( _targetRot.y, Vector3.left );
+			Pawn.EyePos = Vector3.up * 1.65f;
 		}
 
-
-		public Vector3 EyePos { get; protected set; }
-		public Quaternion EyeRot { get; protected set; }
+		private Vector2 _targetRot;
 	}
 }
