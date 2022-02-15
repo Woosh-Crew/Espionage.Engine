@@ -128,6 +128,16 @@ namespace Espionage.Engine.Tools.Editor
 				}
 
 				//
+				// Build Blueprints
+				//
+
+				var blueprintBuild = new AssetBundleBuild
+				{
+					assetNames = AssetDatabase.FindAssets( "t: Blueprint" ),
+					assetBundleName = $"{Library.Database.Get<Blueprint>().Title}.pak"
+				};
+
+				//
 				// Move Content to Game
 				//
 
