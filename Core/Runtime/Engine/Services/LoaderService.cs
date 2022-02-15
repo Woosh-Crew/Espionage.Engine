@@ -28,8 +28,8 @@ namespace Espionage.Engine.Services
 				return;
 			}
 
-			SceneManager.LoadScene( Loader.ScenePath, LoadSceneMode.Additive );
-			_scene = SceneManager.GetSceneByPath( Loader.ScenePath );
+			SceneManager.LoadScene( Loader.Scene, LoadSceneMode.Additive );
+			_scene = SceneManager.GetSceneByPath( Loader.Scene );
 		}
 
 		// Not Needed

@@ -1,4 +1,7 @@
-﻿namespace Espionage.Engine
+﻿using System;
+using System.Collections.Generic;
+
+namespace Espionage.Engine
 {
 	/// <summary>
 	/// This is a class for managing the loading of Maps
@@ -11,13 +14,48 @@
 	{
 		public Library ClassInfo { get; }
 
-		public Loader( string menuScene )
+		public Loader( string scene )
 		{
 			ClassInfo = Library.Database[GetType()];
-			ScenePath = menuScene;
+			Scene = scene;
 		}
 
-		// Scene
-		public string ScenePath { get; }
+		public Action Started { get; set; }
+		public Action Finished { get; set; }
+		public string Scene { get; }
+
+		// Queue
+
+		public bool IsLoading => Queue != null;
+		public Queue<ILoadable> Queue { get; private set; }
+
+		public void Start( Queue<ILoadable> queue, Action onFinish = null )
+		{
+			if ( Queue != null )
+			{
+				throw new ApplicationException( "Already loading something" );
+			}
+
+			Queue = queue;
+			Load( Queue.Peek() );
+
+			Started?.Invoke();
+			Finished += onFinish;
+		}
+
+		private void Finish()
+		{
+			Finished?.Invoke();
+
+			Finished = null;
+			Started = null;
+
+			Queue = null;
+		}
+
+		private void Load( ILoadable loadable )
+		{
+			loadable?.Load( () => { Load( Queue.Dequeue() ); } );
+		}
 	}
 }

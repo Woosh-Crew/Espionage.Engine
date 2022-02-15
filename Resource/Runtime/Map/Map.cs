@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Espionage.Engine.Components;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -14,35 +15,28 @@ namespace Espionage.Engine.Resources
 	/// You should be using this instead of UnityEngine.SceneManager.
 	/// </remarks>
 	[Group( "Maps" )]
-	public sealed partial class Map : IResource, IDisposable, ILibrary
+	public sealed partial class Map : IResource, IDisposable, ILibrary, ILoadable
 	{
-		/// <summary>
-		/// The Current map that is loaded and running.
-		/// </summary>
 		public static Map Current { get; internal set; }
 
-		/// <summary><inheritdoc cref="ILibrary.ClassInfo"/></summary>
-		public Library ClassInfo { get; }
-
-		/// <summary>
-		/// Any other meta data that is attached to this class.
-		/// Such as a SteamUGC reference, Icon, etc.
-		/// </summary>
+		// Provider
+		private IMapProvider Provider { get; }
 		public ComponentDatabase<Map> Components { get; }
 
-		//
 		// Meta Data
-		//
-
-		private IMapProvider Provider { get; }
-
 		public string Identifier => Provider.Identifier;
 		public string Title { get; set; }
 		public string Description { get; set; }
 
+		// Loadable 
+		float ILoadable.Progress => Provider.Progress;
+		string ILoadable.Text => $"Loading {Title}";
+
 		//
 		// Constructors
 		//
+
+		public Library ClassInfo { get; }
 
 		/// <summary>Make a reference to a map, using a provider.</summary>
 		/// <param name="provider">What provider should we use for loading and unloading maps?</param>
@@ -55,35 +49,14 @@ namespace Espionage.Engine.Resources
 			Database.Add( this );
 		}
 
-		/// <summary>Make a map reference from a path.</summary>
-		/// <param name="path">Where is the map located?</param>
-		public Map( string path ) : this( new AssetBundleMapProvider( path ) ) { }
-
-		/// <summary>
-		/// Make a map reference from a build index.
-		/// This shouldn't be used but it is there if you need it.
-		/// </summary>
-		/// <param name="buildIndex">Build Index of the scene in Build Scenes list</param>
-		public Map( int buildIndex ) : this( new BuildIndexMapProvider( buildIndex ) ) { }
-
-		/// <summary>
-		/// Gets the map at a build index.
-		/// </summary>
-		/// <param name="index">The build index.</param>
-		/// <returns>The found map, if applicable.</returns>
-		public static Map Find( int index )
-		{
-			return Database[$"index:{index}"] ?? new Map( index );
-		}
-
 		/// <summary>
 		/// Gets the map at a path.
 		/// </summary>
 		/// <param name="path">The path to this map.</param>
-		/// <returns><inheritdoc cref="Find(int)"/></returns>
-		public static Map Find( string path )
+		/// <param name="noneFound">If there is no map found, what do we do?</param>
+		public static Map Find( string path, Func<Map> noneFound = null )
 		{
-			return Database[path] ?? new Map( path );
+			return Database[path] ?? noneFound?.Invoke();
 		}
 
 		//
@@ -174,16 +147,10 @@ namespace Espionage.Engine.Resources
 			Debugging.Log.Info( $"Map: [{Current.Title}] - [{Current.Identifier}]" );
 		}
 
-		[Debugging.Cmd( "map.load_index" )]
-		private static void CmdLoadFromPath( int index )
-		{
-			Find( index )?.Load();
-		}
-
 		[Debugging.Cmd( "map.load_path" )]
 		private static void CmdLoadFromPath( string path )
 		{
-			Find( path )?.Load();
+			Find( path, () => new Map( new AssetBundleMapProvider( new FileInfo( path ) ) ) )?.Load();
 		}
 	}
 }

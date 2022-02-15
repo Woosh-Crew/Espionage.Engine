@@ -7,8 +7,8 @@ namespace Espionage.Engine.Resources
 {
 	public class AssetBundleMapProvider : IMapProvider
 	{
-		// Id
-		public string Identifier => _path;
+		public string Identifier => File.FullName;
+		private FileInfo File { get; }
 
 		// Outcome
 		public Scene? Scene { get; private set; }
@@ -17,14 +17,9 @@ namespace Espionage.Engine.Resources
 		public float Progress => _bundleRequestOperation.progress / 2 + _sceneLoadOperation.progress / 2;
 		public bool IsLoading { get; private set; }
 
-		public AssetBundleMapProvider( string path )
+		public AssetBundleMapProvider( FileInfo file )
 		{
-			if ( !File.Exists( path ) )
-			{
-				throw new DirectoryNotFoundException( "Invalid Map Path" );
-			}
-
-			_path = path;
+			File = file;
 		}
 
 		//
@@ -34,7 +29,6 @@ namespace Espionage.Engine.Resources
 		private AssetBundleCreateRequest _bundleRequestOperation;
 		private AsyncOperation _sceneLoadOperation;
 
-		private readonly string _path;
 		private AssetBundle _bundle;
 
 		public void Load( Action finished )
@@ -42,7 +36,7 @@ namespace Espionage.Engine.Resources
 			IsLoading = true;
 
 			// Load Bundle
-			_bundleRequestOperation = AssetBundle.LoadFromFileAsync( _path );
+			_bundleRequestOperation = AssetBundle.LoadFromFileAsync( File.FullName );
 			_bundleRequestOperation.completed += ( _ ) =>
 			{
 				// When we've finished loading the asset
