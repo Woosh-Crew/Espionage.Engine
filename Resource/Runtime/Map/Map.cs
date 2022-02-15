@@ -1,8 +1,6 @@
 using System;
 using System.IO;
 using Espionage.Engine.Components;
-using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Espionage.Engine.Resources
 {

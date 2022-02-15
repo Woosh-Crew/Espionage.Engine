@@ -45,7 +45,7 @@ namespace Espionage.Engine
 
 				if ( _pawn != null )
 				{
-					_pawn.Posses();
+					_pawn.Posses( this );
 				}
 			}
 		}

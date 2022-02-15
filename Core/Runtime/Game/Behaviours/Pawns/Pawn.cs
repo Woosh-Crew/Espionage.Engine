@@ -13,16 +13,16 @@ namespace Espionage.Engine
 	{
 		public Tripod Tripod { get; set; }
 
-		private void Update()
+		public override void Simulate( Client client )
 		{
-			GetActiveController()?.Simulate();
+			GetActiveController()?.Simulate( client );
 		}
 
 		//
 		// Pawn
 		//
 
-		public void Posses() { }
+		public void Posses( Client client ) { }
 		public void UnPosses() { }
 
 		//
