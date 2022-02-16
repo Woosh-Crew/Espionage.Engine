@@ -21,6 +21,8 @@ namespace Espionage.Engine
 
 			Pawn.EyeRot = Quaternion.AngleAxis( _targetRot.x, Vector3.up ) * Quaternion.AngleAxis( _targetRot.y, Vector3.left );
 			Pawn.EyePos = Vector3.up * 1.65f;
+
+			transform.localRotation = Quaternion.AngleAxis( _targetRot.y, Vector3.left );
 		}
 
 		private Vector2 _targetRot;
