@@ -2,18 +2,16 @@
 {
 	public class FirstPersonTripod : Tripod
 	{
-		protected override void Frame()
+		public override void Build( ref ICamera.Setup camSetup )
 		{
-			Debugging.Log.Info( "FUCKING WORK" );
-
 			if ( Local.Pawn == null )
 			{
 				return;
 			}
 
-			Position = Local.Pawn.EyePos;
-			Rotation = Local.Pawn.EyeRot;
-			Viewer = Local.Pawn.gameObject;
+			camSetup.Position = Local.Pawn.EyePos;
+			camSetup.Rotation = Local.Pawn.EyeRot;
+			camSetup.Viewer = Local.Pawn.gameObject;
 		}
 	}
 }
