@@ -28,11 +28,18 @@ namespace Espionage.Engine
 
 		public string Path { get; }
 
+		public T Spawn<T>()
+		{
+			return Spawn().GetComponent<T>();
+		}
+
 		public GameObject Spawn()
 		{
 		#if UNITY_EDITOR
 			var asset = AssetDatabase.LoadAssetAtPath<GameObject>( Path );
 			var newObject = Object.Instantiate( asset );
+
+			// Give the OBJ a reference to the ClassInfo
 			newObject.AddComponent<Identity>().Library = ClassInfo;
 			return newObject;
 
