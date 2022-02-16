@@ -47,6 +47,8 @@ namespace Espionage.Engine.Resources
 			Database.Add( this );
 		}
 
+		public Map( string path ) : this( new AssetBundleMapProvider( new FileInfo( path ) ) ) { }
+
 		/// <summary>
 		/// Gets the map at a path.
 		/// </summary>
