@@ -38,7 +38,7 @@ namespace Espionage.Engine
 
 		public virtual void Simulate( Client client ) { }
 
-		// Library Constructor
+		// Constructor
 
 		private static object Constructor( Library library )
 		{

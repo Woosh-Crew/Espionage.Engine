@@ -2,12 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
+using Espionage.Engine.Components;
 using Espionage.Engine.Internal.Commands;
+using UnityEngine;
 
 namespace Espionage.Engine
 {
 	public static partial class Debugging
 	{
+		//
+		// Terminal
+		//
+
 		/// <summary>
 		/// Add this attribute to a method for it be added to the command database. Then later 
 		/// invoked using its name / identifier. Attribute must be attached to a static method.
