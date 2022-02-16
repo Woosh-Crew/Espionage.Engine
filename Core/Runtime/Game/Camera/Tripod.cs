@@ -50,11 +50,6 @@ namespace Espionage.Engine
 			_setup = camSetup;
 
 			Frame();
-
-			if ( camSetup.FieldOfView == 0 )
-			{
-				camSetup.FieldOfView = 90;
-			}
 		}
 	}
 }

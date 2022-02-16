@@ -86,14 +86,14 @@ namespace Espionage.Engine
 
 		protected virtual ICamera FindActiveCamera()
 		{
-			if ( Local.Client.Pawn != null && Local.Client.Pawn.Tripod != null )
-			{
-				return Local.Client.Pawn.Tripod;
-			}
-
 			if ( Local.Client.Camera != null )
 			{
 				return Local.Client.Camera;
+			}
+
+			if ( Local.Client.Pawn != null && Local.Client.Pawn.Tripod != null )
+			{
+				return Local.Client.Pawn.Tripod;
 			}
 
 			return null;
@@ -112,9 +112,8 @@ namespace Espionage.Engine
 
 			PreCameraSetup( ref camSetup );
 
-			cam?.Build( ref camSetup );
+			LastCamera?.Build( ref camSetup );
 
-			// if we have no cam, lets use the pawn's eyes directly
 			PostCameraSetup( ref camSetup );
 
 			return camSetup;
