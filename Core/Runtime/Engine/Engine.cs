@@ -25,6 +25,7 @@ namespace Espionage.Engine
 					return;
 				}
 
+				Debugging.Log.Info( $"Using {Game.ClassInfo.Title} as the Game" );
 				CreateEngineLayer();
 				Services = new ServiceDatabase();
 
