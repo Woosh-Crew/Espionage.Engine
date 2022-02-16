@@ -12,6 +12,7 @@ namespace Espionage.Engine
 	public abstract class Blueprint : ILibrary
 	{
 		public Library ClassInfo { get; private set; }
+		public string Path { get; }
 
 		public Blueprint()
 		{
@@ -26,21 +27,30 @@ namespace Espionage.Engine
 			Path = fileAttribute.Path;
 		}
 
-		public string Path { get; }
+		//
+		// Spawners
+		//
 
-		public T Spawn<T>()
+		/// <summary>
+		/// <inheritdoc cref="Spawn"/>, and returns
+		/// a component from it.
+		/// </summary>
+		/// <typeparam name="T">Component</typeparam>
+		/// <returns>Component of type T</returns>
+		public T Spawn<T>() where T : MonoBehaviour
 		{
 			return Spawn().GetComponent<T>();
 		}
 
+		/// <summary>
+		/// Spawns the GameObject
+		/// </summary>
 		public GameObject Spawn()
 		{
 		#if UNITY_EDITOR
 			var asset = AssetDatabase.LoadAssetAtPath<GameObject>( Path );
 			var newObject = Object.Instantiate( asset );
-
-			// Give the OBJ a reference to the ClassInfo
-			newObject.AddComponent<Identity>().Library = ClassInfo;
+			OnSpawn( newObject );
 			return newObject;
 
 		#elif UNITY_STANDALONE
@@ -50,6 +60,16 @@ namespace Espionage.Engine
 			return null;
 
 		#endif
+		}
+
+		/// <summary>
+		/// Called when the object has just spawned.
+		/// Use this for setting up predefined values.
+		/// </summary>
+		/// <param name="gameObject"> The Object that's being spawned </param>
+		protected virtual void OnSpawn( GameObject gameObject )
+		{
+			gameObject.AddComponent<Identity>().Library = ClassInfo;
 		}
 	}
 }
