@@ -9,7 +9,7 @@ namespace Espionage.Engine
 	/// </summary>
 	public abstract class Tripod : Behaviour, ICamera
 	{
-		public virtual void Activated( ICamera.Setup camSetup ) { }
+		public virtual void Activated( ref ICamera.Setup camSetup ) { }
 		public virtual void Deactivated() { }
 
 		//

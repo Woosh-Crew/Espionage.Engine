@@ -6,7 +6,7 @@ namespace Espionage.Engine
 	{
 		void Build( ref Setup camSetup );
 
-		void Activated( Setup camSetup );
+		void Activated( ref Setup camSetup );
 		void Deactivated();
 
 		public struct Setup

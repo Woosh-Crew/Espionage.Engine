@@ -107,7 +107,7 @@ namespace Espionage.Engine
 			{
 				LastCamera?.Deactivated();
 				LastCamera = cam;
-				LastCamera?.Activated( camSetup );
+				LastCamera?.Activated( ref camSetup );
 			}
 
 			PreCameraSetup( ref camSetup );

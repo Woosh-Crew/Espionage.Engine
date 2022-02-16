@@ -4,6 +4,8 @@
 	{
 		protected override void Frame()
 		{
+			Debugging.Log.Info( "FUCKING WORK" );
+
 			if ( Local.Pawn == null )
 			{
 				return;

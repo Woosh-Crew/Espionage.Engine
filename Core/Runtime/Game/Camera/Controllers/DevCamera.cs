@@ -66,7 +66,7 @@ namespace Espionage.Engine.Cameras
 			camSetup.Position = _interpolate ? Vector3.Lerp( camSetup.Position, _targetPos, 2 * Time.deltaTime ) : Vector3.Lerp( camSetup.Position, _targetPos, 5 * Time.deltaTime );
 		}
 
-		public void Activated( ICamera.Setup camSetup )
+		public void Activated( ref ICamera.Setup camSetup )
 		{
 			_targetPos = camSetup.Position;
 
