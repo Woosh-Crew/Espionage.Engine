@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Espionage.Engine
 {
@@ -8,17 +9,17 @@ namespace Espionage.Engine
 	/// </summary>
 	public class Health : Behaviour, IDamageable, IHealable
 	{
-		public int Current => current;
+		public int Current { get; private set; }
 		public int Max => max;
 
-		[SerializeField]
-		private int current;
+		public void Damage() { }
+		public void Heal() { }
+
+		public Action OnKilled { get; set; }
+
+		// Fields
 
 		[SerializeField]
 		private int max;
-
-		public void Damage() { }
-
-		public void Heal() { }
 	}
 }
