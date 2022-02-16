@@ -4,6 +4,9 @@ namespace Espionage.Engine
 {
 	public class FirstPersonController : PawnController
 	{
+		[SerializeField]
+		private float speed = 15;
+
 		protected override void OnAwake()
 		{
 			Controller = GetComponent<CharacterController>();
@@ -17,15 +20,15 @@ namespace Espionage.Engine
 
 			var input = client.Input;
 
-			var wishDir = Pawn.EyeRot * Vector3.forward * input.Forward + Pawn.EyeRot * Vector3.left * input.Horizontal;
+			var localRotation = transform.localRotation;
+			var wishDir = localRotation * Vector3.forward * input.Forward + localRotation * Vector3.left * input.Horizontal;
 
 			if ( !Controller.isGrounded )
 			{
 				wishDir += Vector3.down;
 			}
 
-			wishDir.Normalize();
-			wishDir *= Time.deltaTime;
+			wishDir = wishDir.normalized * speed * Time.deltaTime;
 
 			Controller.Move( wishDir );
 		}
