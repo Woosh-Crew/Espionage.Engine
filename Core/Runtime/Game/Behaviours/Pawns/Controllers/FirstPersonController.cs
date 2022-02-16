@@ -13,6 +13,8 @@ namespace Espionage.Engine
 
 		public override void Simulate( Client client )
 		{
+			base.Simulate( client );
+
 			var input = client.Input;
 
 			var wishDir = Pawn.EyeRot * Vector3.forward * input.Forward + Pawn.EyeRot * Vector3.left * input.Horizontal;
@@ -21,6 +23,9 @@ namespace Espionage.Engine
 			{
 				wishDir += Vector3.down;
 			}
+
+			wishDir.Normalize();
+			wishDir *= Time.deltaTime;
 
 			Controller.Move( wishDir );
 		}
