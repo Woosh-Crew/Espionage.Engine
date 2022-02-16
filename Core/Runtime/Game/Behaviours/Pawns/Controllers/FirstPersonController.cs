@@ -17,7 +17,12 @@ namespace Espionage.Engine
 
 			var wishDir = Pawn.EyeRot * Vector3.forward * input.Forward + Pawn.EyeRot * Vector3.left * input.Horizontal;
 
-			Controller.Move( wishDir + Vector3.down * 20 );
+			if ( !Controller.isGrounded )
+			{
+				wishDir += Vector3.down;
+			}
+
+			Controller.Move( wishDir );
 		}
 	}
 }
