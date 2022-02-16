@@ -12,7 +12,7 @@ namespace Espionage.Engine
 		/// <summary>
 		/// The Default name of this file.
 		/// </summary>
-		public string Name { get; set; }
+		public string Path { get; set; }
 
 		/// <summary>
 		/// The default extension for this file.

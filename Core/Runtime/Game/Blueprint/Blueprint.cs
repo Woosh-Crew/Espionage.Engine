@@ -7,27 +7,31 @@ namespace Espionage.Engine
 	/// <summary>
 	/// Blueprints are used for spawning prefabs at runtime using C#
 	/// </summary>
-	[CreateAssetMenu, Group( "Blueprints" ), Spawnable( false )]
-	public sealed class Blueprint : ScriptableObject, ILibrary
+	[Group( "Blueprints" ), Spawnable( false )]
+	public abstract class Blueprint : ILibrary
 	{
-		[SerializeField]
-		private string identifier;
-
-		[SerializeField]
-		private GameObject prefab;
-
-		// Class
-
 		public Library ClassInfo { get; private set; }
 
-		private void OnEnable()
+		public Blueprint()
 		{
 			ClassInfo = Library.Database[GetType()];
+
+			if ( !ClassInfo.Components.TryGet<FileAttribute>( out var fileAttribute ) )
+			{
+				Debugging.Log.Error( $"{ClassInfo.Name} doesn't have, FileAttribute" );
+				return;
+			}
+
+			Path = fileAttribute.Path;
 		}
+
+		public string Path { get; }
 
 		public GameObject Spawn()
 		{
-			return Instantiate( prefab );
+			return null;
 		}
+
+		public void Kill() { }
 	}
 }
