@@ -20,7 +20,7 @@ namespace Espionage.Engine
 			_targetRot.y = Mathf.Clamp( _targetRot.y, -88, 88 );
 
 			Pawn.EyeRot = Quaternion.AngleAxis( _targetRot.x, Vector3.up ) * Quaternion.AngleAxis( _targetRot.y, Vector3.left );
-			Pawn.EyePos = Vector3.up * 1.65f;
+			Pawn.EyePos = transform.position + Vector3.up * 1.65f;
 
 			transform.localRotation = Quaternion.AngleAxis( _targetRot.x, Vector3.up );
 		}
