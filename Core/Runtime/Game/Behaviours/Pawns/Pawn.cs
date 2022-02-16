@@ -58,6 +58,7 @@ namespace Espionage.Engine
 				}
 
 				_controller = comp;
+				((IComponent<Pawn>)comp)?.OnAttached( this );
 				return _controller;
 			}
 			set
