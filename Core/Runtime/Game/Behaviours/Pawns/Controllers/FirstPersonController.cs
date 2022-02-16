@@ -1,7 +1,4 @@
 ﻿namespace Espionage.Engine
 {
-	public class FirstPersonController : PawnController
-	{
-		
-	}
+	public class FirstPersonController : PawnController { }
 }
