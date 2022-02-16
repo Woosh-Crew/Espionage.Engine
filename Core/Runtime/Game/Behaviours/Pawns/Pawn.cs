@@ -11,8 +11,6 @@ namespace Espionage.Engine
 	/// </summary>
 	public sealed class Pawn : Behaviour
 	{
-		public Tripod Tripod { get; set; }
-
 		public override void Simulate( Client client )
 		{
 			GetActiveController()?.Simulate( client );
@@ -84,5 +82,41 @@ namespace Espionage.Engine
 		/// Is used for dev shit like no clip.
 		/// </summary>
 		public PawnController DevController { get; set; }
+
+		//
+		// Tripod
+		//
+
+		private Tripod _tripod;
+
+		public Tripod Tripod
+		{
+			get
+			{
+				if ( _tripod != null )
+				{
+					return _tripod;
+				}
+
+				var comp = GetComponent<Tripod>();
+				if ( comp == null )
+				{
+					return null;
+				}
+
+				_tripod = comp;
+				return _tripod;
+			}
+			set
+			{
+				if ( value.gameObject != gameObject )
+				{
+					Debugging.Log.Error( "New Tripod GameObject isn't on Pawn GameObject" );
+					return;
+				}
+
+				_tripod = value;
+			}
+		}
 	}
 }
