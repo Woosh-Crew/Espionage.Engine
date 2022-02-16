@@ -10,7 +10,7 @@ namespace Espionage.Engine
 			Pawn = item;
 		}
 
-		protected Pawn Pawn { get; private set; }
+		public Pawn Pawn { get; private set; }
 
 		public override void Simulate( Client client )
 		{
