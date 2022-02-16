@@ -25,7 +25,8 @@ namespace Espionage.Engine.Tools.Editor
 
 			// Map testing
 
-			var button = new Button( () => Map.Find( EditorUtility.OpenFilePanel( "Load .map File", "Exports/Maps", "map" ) ).Load() ) { text = "Test Map" };
+			var path = EditorUtility.OpenFilePanel( "Load .map File", "Exports/Maps", "map" );
+			var button = new Button( () => Map.Find( path, () => new Map( path ) ).Load() ) { text = "Test Map" };
 			rootVisualElement.Add( button );
 		}
 	}
