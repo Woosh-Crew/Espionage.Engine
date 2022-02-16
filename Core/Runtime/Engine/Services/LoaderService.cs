@@ -27,9 +27,6 @@ namespace Espionage.Engine.Services
 				Debugging.Log.Warning( "No Loader found on Game" );
 				return;
 			}
-
-			SceneManager.LoadScene( Loader.Scene, LoadSceneMode.Additive );
-			_scene = SceneManager.GetSceneByPath( Loader.Scene );
 		}
 
 		// Not Needed
