@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace Espionage.Engine
@@ -29,7 +30,14 @@ namespace Espionage.Engine
 
 		public GameObject Spawn()
 		{
+		#if UNITY_EDITOR
+			var asset = AssetDatabase.LoadAssetAtPath<GameObject>( Path );
+			return Object.Instantiate( asset );
+		#elif UNITY_STANDALONE 
+			// Get Object from AssetBundle and Spawn
+		#else
 			return null;
+		#endif
 		}
 
 		public void Kill() { }

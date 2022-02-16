@@ -111,7 +111,7 @@ namespace Espionage.Engine.Tools.Editor
 				{
 					var blueprintBuild = new AssetBundleBuild
 					{
-						assetNames = AssetDatabase.FindAssets( "t: Blueprint" ),
+						assetNames = Library.Database.GetAll<Blueprint>().Select( e => e.Components.Get<FileAttribute>()?.Path ).ToArray(),
 						assetBundleName = $"{Library.Database.Get<Blueprint>().Title}.pak"
 					};
 
