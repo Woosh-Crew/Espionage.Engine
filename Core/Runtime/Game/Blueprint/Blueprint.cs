@@ -32,14 +32,17 @@ namespace Espionage.Engine
 		{
 		#if UNITY_EDITOR
 			var asset = AssetDatabase.LoadAssetAtPath<GameObject>( Path );
-			return Object.Instantiate( asset );
-		#elif UNITY_STANDALONE 
+			var newObject = Object.Instantiate( asset );
+			newObject.AddComponent<Identity>().Library = ClassInfo;
+			return newObject;
+
+		#elif UNITY_STANDALONE
 			// Get Object from AssetBundle and Spawn
+
 		#else
 			return null;
+
 		#endif
 		}
-
-		public void Kill() { }
 	}
 }
