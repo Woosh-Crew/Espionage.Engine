@@ -99,7 +99,7 @@ namespace Espionage.Engine
 			return null;
 		}
 
-		public ICamera.Setup BuildCamera( ICamera.Setup camSetup )
+		internal ICamera.Setup BuildCamera( ICamera.Setup camSetup )
 		{
 			var cam = FindActiveCamera();
 
@@ -110,17 +110,15 @@ namespace Espionage.Engine
 				LastCamera?.Activated( ref camSetup );
 			}
 
-			PreCameraSetup( ref camSetup );
-
 			LastCamera?.Build( ref camSetup );
-
 			PostCameraSetup( ref camSetup );
 
 			return camSetup;
 		}
 
-		protected virtual void PreCameraSetup( ref ICamera.Setup camSetup ) { }
-
-		protected virtual void PostCameraSetup( ref ICamera.Setup camSetup ) { }
+		protected virtual void PostCameraSetup( ref ICamera.Setup camSetup )
+		{
+			ICamera.Modifier.Apply( ref camSetup );
+		}
 	}
 }

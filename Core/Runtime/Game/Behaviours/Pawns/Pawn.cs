@@ -9,7 +9,7 @@ namespace Espionage.Engine
 	/// <summary>
 	/// Pawns can be possessed by clients, and allows the game to flow. 
 	/// </summary>
-	public sealed class Pawn : Behaviour
+	public class Pawn : Behaviour
 	{
 		public override void Simulate( Client client )
 		{
@@ -84,7 +84,7 @@ namespace Espionage.Engine
 		public PawnController DevController { get; set; }
 
 		//
-		// Tripod
+		// Camera
 		//
 
 		private Tripod _tripod;
@@ -118,5 +118,7 @@ namespace Espionage.Engine
 				_tripod = value;
 			}
 		}
+
+		public void PostCameraSetup( ref ICamera.Setup setup ) { }
 	}
 }
