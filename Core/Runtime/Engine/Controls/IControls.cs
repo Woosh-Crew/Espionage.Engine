@@ -25,7 +25,6 @@ namespace Espionage.Engine
 			public void Clear()
 			{
 				MouseDelta = Vector2.zero;
-				ViewAngles = Vector3.zero;
 
 				Forward = 0;
 				Horizontal = 0;
