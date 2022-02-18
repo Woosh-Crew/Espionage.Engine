@@ -21,7 +21,6 @@ namespace Espionage.Engine.Cameras
 			if ( _changeFov )
 			{
 				camSetup.FieldOfView += _fovChangeDelta * 150 * Time.deltaTime;
-				return;
 			}
 
 			// Rotation
@@ -63,7 +62,10 @@ namespace Espionage.Engine.Cameras
 		public void Activated( ref ITripod.Setup camSetup )
 		{
 			_targetPos = camSetup.Position;
-			_targetRot = camSetup.Rotation.eulerAngles;
+
+			var euler = camSetup.Rotation.eulerAngles;
+			euler.z = 0;
+			_targetRot = euler;
 		}
 
 		public void Deactivated() { }
@@ -72,7 +74,15 @@ namespace Espionage.Engine.Cameras
 
 		void IControls.Build( ref IControls.Setup setup )
 		{
-			_direction = new Vector2( setup.Forward, setup.Horizontal );
+			_changeFov = Input.GetMouseButton( 1 );
+
+			_direction = new Vector2( setup.Forward, setup.Horizontal ) / (_changeFov ? 2 : 1);
+
+			if ( _changeFov )
+			{
+				_fovChangeDelta = -Input.GetAxisRaw( "Mouse Y" );
+				return;
+			}
 
 			// We don't use ViewAngles here, as they are not our eyes.
 			_targetRot += new Vector3( -setup.MouseDelta.y, setup.MouseDelta.x, 0 );
@@ -81,12 +91,6 @@ namespace Espionage.Engine.Cameras
 			if ( Input.GetMouseButtonDown( 2 ) )
 			{
 				_interpolate = !_interpolate;
-			}
-
-			_changeFov = Input.GetMouseButton( 3 );
-			if ( _changeFov )
-			{
-				_fovChangeDelta = -Input.GetAxisRaw( "Mouse Y" );
 			}
 
 			setup.Clear();

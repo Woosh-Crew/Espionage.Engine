@@ -81,11 +81,6 @@ namespace Espionage.Engine
 				}
 
 				_services = _services.OrderBy( e => e.ClassInfo.Components.Get<OrderAttribute>()?.Order ?? 10 ).ToList();
-
-				for ( var i = 0; i < _services.Count; i++ )
-				{
-					Debugging.Log.Info( $"{i} - {_services[i].ClassInfo.Name}" );
-				}
 			}
 
 			public void Add( IService item )
