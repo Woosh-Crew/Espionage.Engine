@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace Espionage.Engine
 {
@@ -41,16 +42,24 @@ namespace Espionage.Engine
 
 			if ( _lastViewer != camSetup.Viewer )
 			{
+				Debugging.Log.Info( "New Viewer" );
+
 				if ( _lastViewer != null )
 				{
-					_lastViewer.gameObject.SetActive( true );
+					foreach ( var renderer in _lastViewer.GetComponentsInChildren<Renderer>() )
+					{
+						renderer.shadowCastingMode = ShadowCastingMode.On;
+					}
 				}
 
 				_lastViewer = camSetup.Viewer;
 
 				if ( _lastViewer != null )
 				{
-					_lastViewer.gameObject.SetActive( false );
+					foreach ( var renderer in _lastViewer.GetComponentsInChildren<Renderer>() )
+					{
+						renderer.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+					}
 				}
 			}
 		}
