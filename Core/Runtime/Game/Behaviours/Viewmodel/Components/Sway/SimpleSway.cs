@@ -19,7 +19,7 @@ namespace Espionage.Engine.Viewmodels
 			// For some reason local rotation..
 			// makes it stutter hard? Makes no sense
 			trans.rotation *= _lastSwayRot;
-			trans.position += _lastSwayPos.normalized * offsetMultiplier;
+			trans.position += _lastSwayPos * offsetMultiplier;
 		}
 
 		// Fields
