@@ -5,8 +5,12 @@ namespace Espionage.Engine.Cameras
 	public class DevTripod : ITripod, IControls
 	{
 		private Vector3 _targetPos;
-		private Vector2 _targetRot;
+		private Vector3 _targetRot;
+
 		private bool _interpolate;
+
+		private bool _changeFov;
+		private float _fovChangeDelta;
 
 		void ITripod.Build( ref ITripod.Setup camSetup )
 		{
@@ -15,27 +19,16 @@ namespace Espionage.Engine.Cameras
 
 			// FOV
 
-			if ( Input.GetMouseButton( 1 ) )
+			if ( _changeFov )
 			{
-				camSetup.FieldOfView += -Input.GetAxisRaw( "Mouse Y" ) * 150 * Time.deltaTime;
+				camSetup.FieldOfView += _fovChangeDelta * 150 * Time.deltaTime;
 				return;
-			}
-
-			// Interpolate
-
-			if ( Input.GetMouseButtonDown( 2 ) )
-			{
-				_interpolate = !_interpolate;
 			}
 
 			// Rotation
 
-			_targetRot = input.MouseDelta * (camSetup.FieldOfView / 120);
-			_targetRot.y = Mathf.Clamp( _targetRot.y, -88, 88 );
-
-			camSetup.Rotation = Quaternion.Euler( input.ViewAngles );
-			// camSetup.Rotation =  Quaternion.AngleAxis( _targetRot.x, Vector3.up ) * Quaternion.AngleAxis( _targetRot.y, Vector3.left );
-			// camSetup.Rotation = _interpolate ? Quaternion.Slerp( camSetup.Rotation, finalRot, 4 * Time.deltaTime ) : finalRot;
+			var finalRot = Quaternion.Euler( _targetRot );
+			camSetup.Rotation = _interpolate ? Quaternion.Slerp( camSetup.Rotation, finalRot, 4 * Time.deltaTime ) : finalRot;
 
 			// Movement
 
@@ -71,10 +64,7 @@ namespace Espionage.Engine.Cameras
 		public void Activated( ref ITripod.Setup camSetup )
 		{
 			_targetPos = camSetup.Position;
-
-			// WTF? This makes no sense
-			var rot = camSetup.Rotation.eulerAngles;
-			_targetRot = new Vector2( rot.y, -rot.x );
+			_targetRot = camSetup.Rotation.eulerAngles;
 		}
 
 		public void Deactivated() { }
@@ -83,7 +73,20 @@ namespace Espionage.Engine.Cameras
 
 		void IControls.Build( ref IControls.Setup setup )
 		{
-			setup.ViewAngles += new Vector3( -setup.MouseDelta.y, setup.MouseDelta.x, 0 );
+			// We don't use ViewAngles here, as they are not our eyes.
+			_targetRot += new Vector3( -setup.MouseDelta.y, setup.MouseDelta.x, 0 );
+			_targetRot.x = Mathf.Clamp( _targetRot.x, -88, 88 );
+
+			if ( Input.GetMouseButtonDown( 2 ) )
+			{
+				_interpolate = !_interpolate;
+			}
+
+			_changeFov = Input.GetMouseButton( 3 );
+			if ( _changeFov )
+			{
+				_fovChangeDelta = -Input.GetAxisRaw( "Mouse Y" );
+			}
 		}
 	}
 }
