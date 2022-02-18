@@ -66,9 +66,18 @@ namespace Espionage.Engine
 
 		private void OnDrawGizmos()
 		{
-			Gizmos.DrawWireSphere( transform.position, 0.8f );
-			Gizmos.DrawLine( transform.position, transform.rotation * Vector3.forward + transform.position );
-			Gizmos.DrawFrustum( transform.position, _cam.fieldOfView, 15, 0.5f, _cam.aspect );
+			var position = transform.position;
+			var rotation = transform.rotation;
+
+			Gizmos.DrawWireSphere( position, 0.2f );
+
+			Gizmos.color = Color.red;
+			Gizmos.DrawLine( position, rotation * Vector3.forward + position );
+			Gizmos.DrawLine( position, rotation * Vector3.forward + position + rotation * Vector3.left );
+			Gizmos.DrawLine( position, rotation * Vector3.forward + position + rotation * Vector3.right );
+			Gizmos.DrawLine( position, rotation * Vector3.forward + position + rotation * Vector3.up );
+			Gizmos.DrawLine( position, rotation * Vector3.forward + position + rotation * Vector3.down );
+			Gizmos.color = Color.white;
 
 			// This is hacky.. But who cares
 			Callback.Run( "debug.gizmos" );
