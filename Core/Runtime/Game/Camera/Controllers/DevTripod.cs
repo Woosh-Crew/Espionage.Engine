@@ -4,6 +4,7 @@ namespace Espionage.Engine.Cameras
 {
 	public class DevTripod : ITripod, IControls
 	{
+		private Vector2 _direction;
 		private Vector3 _targetPos;
 		private Vector3 _targetRot;
 
@@ -14,10 +15,8 @@ namespace Espionage.Engine.Cameras
 
 		void ITripod.Build( ref ITripod.Setup camSetup )
 		{
-			var input = Local.Client.Input;
-			camSetup.Damping = 15;
-
 			// FOV
+			camSetup.Damping = 15;
 
 			if ( _changeFov )
 			{
@@ -32,7 +31,7 @@ namespace Espionage.Engine.Cameras
 
 			// Movement
 
-			var vel = camSetup.Rotation * Vector3.forward * input.Forward + camSetup.Rotation * Vector3.right * input.Horizontal;
+			var vel = camSetup.Rotation * Vector3.forward * _direction.x + camSetup.Rotation * Vector3.right * _direction.y;
 
 			if ( Input.GetKey( KeyCode.Space ) || Input.GetKey( KeyCode.E ) )
 			{
@@ -73,6 +72,8 @@ namespace Espionage.Engine.Cameras
 
 		void IControls.Build( ref IControls.Setup setup )
 		{
+			_direction = new Vector2( setup.Forward, setup.Horizontal );
+
 			// We don't use ViewAngles here, as they are not our eyes.
 			_targetRot += new Vector3( -setup.MouseDelta.y, setup.MouseDelta.x, 0 );
 			_targetRot.x = Mathf.Clamp( _targetRot.x, -88, 88 );
@@ -87,6 +88,8 @@ namespace Espionage.Engine.Cameras
 			{
 				_fovChangeDelta = -Input.GetAxisRaw( "Mouse Y" );
 			}
+
+			setup.Clear();
 		}
 	}
 }
