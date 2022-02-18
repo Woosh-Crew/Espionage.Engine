@@ -30,7 +30,7 @@ namespace Espionage.Engine.Cameras
 
 			// Rotation
 
-			_targetRot += input.ViewAngles * (camSetup.FieldOfView / 120);
+			_targetRot += input.MouseDelta * (camSetup.FieldOfView / 120);
 			_targetRot.y = Mathf.Clamp( _targetRot.y, -88, 88 );
 
 			var finalRot = Quaternion.AngleAxis( _targetRot.x, Vector3.up ) * Quaternion.AngleAxis( _targetRot.y, Vector3.left );

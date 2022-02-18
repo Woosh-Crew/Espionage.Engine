@@ -28,7 +28,7 @@ namespace Espionage.Engine.Services
 			var setup = new IControls.Setup
 			{
 				// Setup ViewAngles
-				ViewAngles = new Vector2
+				MouseDelta = new Vector2
 				{
 					x = Input.GetAxis( "Mouse X" ) * 2,
 					y = Input.GetAxis( "Mouse Y" ) * 2

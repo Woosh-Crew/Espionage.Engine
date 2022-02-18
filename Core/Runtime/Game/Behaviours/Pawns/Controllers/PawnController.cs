@@ -16,15 +16,10 @@ namespace Espionage.Engine
 		{
 			var input = client.Input;
 
-			_targetRot += input.ViewAngles;
-			_targetRot.y = Mathf.Clamp( _targetRot.y, -88, 88 );
-
-			Pawn.EyeRot = Quaternion.AngleAxis( _targetRot.x, Vector3.up ) * Quaternion.AngleAxis( _targetRot.y, Vector3.left );
+			Pawn.EyeRot = input.ViewAngles;
 			Pawn.EyePos = transform.position + Vector3.up * 1.65f;
 
-			transform.localRotation = Quaternion.AngleAxis( _targetRot.x, Vector3.up );
+			transform.localRotation = Quaternion.AngleAxis( Pawn.EyeRot.eulerAngles.y, Vector3.up );
 		}
-
-		private Vector2 _targetRot;
 	}
 }
