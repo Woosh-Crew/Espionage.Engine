@@ -10,16 +10,16 @@ namespace Espionage.Engine
 		public struct Setup
 		{
 			/// <summary> The Current Mouse Delta </summary>
-			public Vector2 MouseDelta { get; set; }
+			public Vector2 MouseDelta;
 
 			/// <summary> Where a pawns Eyes should be facing (Angles) </summary>
-			public Vector3 ViewAngles { get; set; }
+			public Vector3 ViewAngles;
 
 			/// <summary> Forward Direction </summary>
-			public float Forward { get; set; }
+			public float Forward;
 
 			/// <summary> Horizontal Direction </summary>
-			public float Horizontal { get; set; }
+			public float Horizontal;
 
 			/// <summary> Clears the Input Setup </summary>
 			public void Clear()
