@@ -90,6 +90,7 @@ namespace Espionage.Engine.Resources
 			if ( Current == this )
 			{
 				onLoad?.Invoke();
+				return;
 			}
 
 			var lastMap = Current;
