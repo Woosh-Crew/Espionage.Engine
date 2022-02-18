@@ -27,6 +27,12 @@ namespace Espionage.Engine.Cameras
 		void IControls.Build( ref IControls.Setup setup )
 		{
 			setup.ViewAngles += new Vector3( -setup.MouseDelta.y, setup.MouseDelta.x, 0 );
+			setup.ViewAngles.x = Mathf.Clamp( setup.ViewAngles.x, -pitchClamp, pitchClamp );
 		}
+
+		// Fields
+
+		[SerializeField]
+		private float pitchClamp = 88;
 	}
 }

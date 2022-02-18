@@ -27,7 +27,9 @@ namespace Espionage.Engine.Services
 				return;
 			}
 
-			// Setup ViewAngles
+			// Setup ViewAngles,
+			// We should be multiplying the 
+			// mouse sensitivity here.
 			_setup.MouseDelta = new Vector2
 			{
 				x = Input.GetAxis( "Mouse X" ) * 2,
