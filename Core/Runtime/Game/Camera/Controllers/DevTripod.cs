@@ -27,7 +27,7 @@ namespace Espionage.Engine.Cameras
 			// Rotation
 
 			var finalRot = Quaternion.Euler( _targetRot );
-			camSetup.Rotation = _interpolate ? Quaternion.Slerp( camSetup.Rotation, finalRot, 4 * Time.deltaTime ) : finalRot;
+			camSetup.Rotation = _interpolate ? Quaternion.Slerp( camSetup.Rotation, finalRot * Quaternion.AngleAxis( _direction.y * 3, Vector3.back ), 4 * Time.deltaTime ) : finalRot;
 
 			// Movement
 
