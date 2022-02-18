@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Espionage.Engine.Components;
 using UnityEngine;
 
@@ -9,6 +6,7 @@ namespace Espionage.Engine
 	/// <summary>
 	/// Pawns can be possessed by clients, and allows the game to flow. 
 	/// </summary>
+	[Group( "Pawns" )]
 	public class Pawn : Behaviour
 	{
 		public override void Simulate( Client client )
@@ -23,8 +21,8 @@ namespace Espionage.Engine
 		public Vector3 EyePos { get; set; }
 		public Quaternion EyeRot { get; set; }
 
-		public void Posses( Client client ) { }
-		public void UnPosses() { }
+		public virtual void Posses( Client client ) { }
+		public virtual void UnPosses() { }
 
 		//
 		// Controller

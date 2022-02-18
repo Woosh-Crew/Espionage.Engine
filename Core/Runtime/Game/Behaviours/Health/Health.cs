@@ -13,7 +13,12 @@ namespace Espionage.Engine
 		public int Max => max;
 
 		public void Damage() { }
-		public void Heal() { }
+
+		public void Heal( int amount )
+		{
+			Current += amount;
+			Current = Mathf.Clamp( Current, 0, 100 );
+		}
 
 		public Action OnKilled { get; set; }
 

@@ -118,6 +118,11 @@ namespace Espionage.Engine
 
 		protected virtual void PostCameraSetup( ref ICamera.Setup camSetup )
 		{
+			if ( Local.Pawn != null )
+			{
+				Local.Pawn.PostCameraSetup( ref camSetup );
+			}
+
 			ICamera.Modifier.Apply( ref camSetup );
 		}
 	}
