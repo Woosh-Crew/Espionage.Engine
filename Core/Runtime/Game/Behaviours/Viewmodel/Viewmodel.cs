@@ -14,6 +14,7 @@ namespace Espionage.Engine
 
 			foreach ( var render in GetComponentsInChildren<Renderer>() )
 			{
+				Debugging.Log.Info( "Found Renderer" );
 				render.gameObject.layer = LayerMask.GetMask( "Viewmodel" );
 			}
 		}
