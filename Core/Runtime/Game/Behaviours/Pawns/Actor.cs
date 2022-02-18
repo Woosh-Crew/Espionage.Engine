@@ -10,6 +10,8 @@ namespace Espionage.Engine
 
 		protected override void OnAwake()
 		{
+			base.OnAwake();
+
 			// Health
 			Health = GetComponent<Health>();
 		}
