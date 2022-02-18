@@ -67,6 +67,8 @@ namespace Espionage.Engine
 		private void OnDrawGizmos()
 		{
 			Gizmos.DrawWireSphere( transform.position, 0.8f );
+			Gizmos.DrawLine( transform.position, transform.rotation * Vector3.forward + transform.position );
+			Gizmos.DrawFrustum( transform.position, _cam.fieldOfView, 15, 0.5f, _cam.aspect );
 
 			// This is hacky.. But who cares
 			Callback.Run( "debug.gizmos" );
