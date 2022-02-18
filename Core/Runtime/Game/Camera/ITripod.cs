@@ -16,7 +16,7 @@ namespace Espionage.Engine
 			public float FieldOfView;
 			public float Damping;
 
-			public GameObject Viewer;
+			public Transform Viewer;
 
 			// Transform
 			public Vector3 Position;

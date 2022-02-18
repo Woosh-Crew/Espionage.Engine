@@ -28,6 +28,8 @@ namespace Espionage.Engine
 			_viewmodelCam.farClipPlane = 10;
 		}
 
+		private Transform _lastViewer;
+
 		public void Finalise( ITripod.Setup camSetup )
 		{
 			var trans = transform;
@@ -36,6 +38,21 @@ namespace Espionage.Engine
 
 			_cam.fieldOfView = camSetup.Damping > 0 ? Mathf.Lerp( _cam.fieldOfView, camSetup.FieldOfView, camSetup.Damping * Time.deltaTime ) : camSetup.FieldOfView;
 			_viewmodelCam.fieldOfView = _cam.fieldOfView;
+
+			if ( _lastViewer != camSetup.Viewer )
+			{
+				if ( _lastViewer != null )
+				{
+					_lastViewer.gameObject.SetActive( true );
+				}
+
+				_lastViewer = camSetup.Viewer;
+
+				if ( _lastViewer != null )
+				{
+					_lastViewer.gameObject.SetActive( false );
+				}
+			}
 		}
 
 		private void OnDrawGizmos()

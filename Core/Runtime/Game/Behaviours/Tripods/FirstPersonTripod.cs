@@ -21,7 +21,7 @@ namespace Espionage.Engine.Cameras
 
 			camSetup.Position = Local.Pawn.EyePos;
 			camSetup.Rotation = Local.Pawn.EyeRot;
-			camSetup.Viewer = Local.Pawn.gameObject;
+			camSetup.Viewer = visuals;
 		}
 
 		void IControls.Build( ref IControls.Setup setup )
@@ -34,5 +34,8 @@ namespace Espionage.Engine.Cameras
 
 		[SerializeField]
 		private float pitchClamp = 88;
+
+		[SerializeField]
+		private Transform visuals;
 	}
 }
