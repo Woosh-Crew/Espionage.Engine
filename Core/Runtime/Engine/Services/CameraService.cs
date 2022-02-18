@@ -59,6 +59,9 @@ namespace Espionage.Engine.Services
 
 			// Finalise
 			_camera.Finalise( _lastSetup );
+
+			// Set the viewer to null, so its cleared every frame.
+			_lastSetup.Viewer = null;
 		}
 
 		public void Dispose() { }
