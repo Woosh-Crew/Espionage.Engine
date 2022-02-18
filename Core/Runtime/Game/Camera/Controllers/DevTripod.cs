@@ -30,11 +30,12 @@ namespace Espionage.Engine.Cameras
 
 			// Rotation
 
-			_targetRot += input.MouseDelta * (camSetup.FieldOfView / 120);
+			_targetRot = input.MouseDelta * (camSetup.FieldOfView / 120);
 			_targetRot.y = Mathf.Clamp( _targetRot.y, -88, 88 );
 
-			var finalRot = Quaternion.AngleAxis( _targetRot.x, Vector3.up ) * Quaternion.AngleAxis( _targetRot.y, Vector3.left );
-			camSetup.Rotation = _interpolate ? Quaternion.Slerp( camSetup.Rotation, finalRot, 4 * Time.deltaTime ) : finalRot;
+			camSetup.Rotation = Quaternion.Euler( input.ViewAngles );
+			// camSetup.Rotation =  Quaternion.AngleAxis( _targetRot.x, Vector3.up ) * Quaternion.AngleAxis( _targetRot.y, Vector3.left );
+			// camSetup.Rotation = _interpolate ? Quaternion.Slerp( camSetup.Rotation, finalRot, 4 * Time.deltaTime ) : finalRot;
 
 			// Movement
 
@@ -82,8 +83,7 @@ namespace Espionage.Engine.Cameras
 
 		void IControls.Build( ref IControls.Setup setup )
 		{
-			setup.Forward = 0;
-			setup.Horizontal = 0;
+			setup.ViewAngles += new Vector3( -setup.MouseDelta.y, setup.MouseDelta.x, 0 );
 		}
 	}
 }

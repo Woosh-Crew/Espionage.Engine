@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Espionage.Engine.Services
 {
-	[Order( -10 )]
+	[Order( -5 )]
 	internal class CameraService : IService
 	{
 		public Library ClassInfo { get; }

@@ -26,7 +26,7 @@ namespace Espionage.Engine
 
 		void IControls.Build( ref IControls.Setup setup )
 		{
-			setup.ViewAngles *= Quaternion.AngleAxis( setup.MouseDelta.x, Vector3.up ) * Quaternion.AngleAxis( setup.MouseDelta.y, Vector3.left );
+			setup.ViewAngles += new Vector3( -setup.MouseDelta.y, setup.MouseDelta.x, 0 );
 		}
 	}
 }

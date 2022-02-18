@@ -16,7 +16,7 @@ namespace Espionage.Engine
 		{
 			var input = client.Input;
 
-			Pawn.EyeRot = input.ViewAngles;
+			Pawn.EyeRot = Quaternion.Euler( input.ViewAngles );
 			Pawn.EyePos = transform.position + Vector3.up * 1.65f;
 
 			transform.localRotation = Quaternion.AngleAxis( Pawn.EyeRot.eulerAngles.y, Vector3.up );

@@ -2,7 +2,7 @@
 
 namespace Espionage.Engine.Services
 {
-	[Order( -5 )]
+	[Order( -10 )]
 	internal class ControlsService : IService
 	{
 		public Library ClassInfo { get; }
@@ -16,6 +16,8 @@ namespace Espionage.Engine.Services
 		// Service
 		//
 
+		private IControls.Setup _setup = new();
+
 		public void OnReady() { }
 
 		public void OnUpdate()
@@ -25,29 +27,25 @@ namespace Espionage.Engine.Services
 				return;
 			}
 
-			var setup = new IControls.Setup
+			// Setup ViewAngles
+			_setup.MouseDelta = new Vector2
 			{
-				// Setup ViewAngles
-				MouseDelta = new Vector2
-				{
-					x = Input.GetAxis( "Mouse X" ) * 2,
-					y = Input.GetAxis( "Mouse Y" ) * 2
-				},
-
-				// Setup Directional Input
-				Forward = Input.GetAxisRaw( "Vertical" ),
-				Horizontal = Input.GetAxisRaw( "Horizontal" )
+				x = Input.GetAxis( "Mouse X" ) * 2,
+				y = Input.GetAxis( "Mouse Y" ) * 2
 			};
+
+			_setup.Forward = Input.GetAxisRaw( "Vertical" );
+			_setup.Horizontal = Input.GetAxisRaw( "Horizontal" );
 
 			Cursor.lockState = CursorLockMode.Locked;
 			Cursor.visible = false;
 
-			setup = Engine.Game.BuildControls( setup );
+			_setup = Engine.Game.BuildControls( _setup );
 
 			// This is really fucking stupid..
 			// But is temp until we get networking
 			// Going after netscape cyber mind
-			Local.Client.Input = setup;
+			Local.Client.Input = _setup;
 		}
 
 		public void OnShutdown() { }
