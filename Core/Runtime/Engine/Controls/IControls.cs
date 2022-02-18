@@ -28,8 +28,6 @@ namespace Espionage.Engine
 
 				Forward = 0;
 				Horizontal = 0;
-
-				Input.ResetInputAxes();
 			}
 		}
 	}
