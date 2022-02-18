@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Espionage.Engine
@@ -16,6 +17,8 @@ namespace Espionage.Engine
 			{
 				render.gameObject.layer = LayerMask.NameToLayer( "Viewmodel" );
 			}
+
+			Effects = GetComponents<IEffect>().ToList();
 		}
 
 		protected override void OnDelete()
@@ -23,11 +26,23 @@ namespace Espionage.Engine
 			All.Remove( this );
 		}
 
+		public List<IEffect> Effects { get; private set; }
+
 		public void PostCameraSetup( ref ITripod.Setup setup )
 		{
 			var trans = transform;
 			trans.localPosition = setup.Position;
 			trans.localRotation = setup.Rotation;
+
+			foreach ( var effect in Effects )
+			{
+				effect.PostCameraSetup( ref setup );
+			}
+		}
+
+		public interface IEffect
+		{
+			void PostCameraSetup( ref ITripod.Setup setup );
 		}
 	}
 }
