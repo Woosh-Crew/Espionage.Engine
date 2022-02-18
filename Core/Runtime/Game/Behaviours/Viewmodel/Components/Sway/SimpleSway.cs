@@ -17,8 +17,8 @@ namespace Espionage.Engine.Viewmodels
 			mouse *= multiplier;
 
 			var trans = transform;
-			_lastSwayRot = Quaternion.Slerp( _lastSwayRot, Quaternion.Euler( mouse.y, -mouse.x * 2, mouse.x ), 6 * Time.deltaTime );
-			_lastSwayPos = Vector3.Lerp( _lastSwayPos, transform.localRotation * Vector3.up * mouse.y / 2 + trans.localRotation * Vector3.left * mouse.x / 2, 6 * Time.deltaTime );
+			_lastSwayRot = Quaternion.Slerp( _lastSwayRot, Quaternion.Euler( mouse.y, -mouse.x, mouse.x ), 6 * Time.deltaTime );
+			_lastSwayPos = Vector3.Lerp( _lastSwayPos, transform.localRotation * Vector3.up * mouse.y + trans.localRotation * Vector3.left * mouse.x, 6 * Time.deltaTime );
 
 			trans.localRotation *= _lastSwayRot;
 			// trans.localPosition += _lastSwayPos;
