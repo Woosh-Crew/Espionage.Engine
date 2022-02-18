@@ -21,7 +21,7 @@ namespace Espionage.Engine
 			var input = client.Input;
 
 			var localRotation = transform.localRotation;
-			var wishDir = localRotation * Vector3.forward * input.Forward + localRotation * Vector3.left * input.Horizontal;
+			var wishDir = localRotation * Vector3.forward * input.Forward + localRotation * Vector3.right * input.Horizontal;
 
 			if ( !Controller.isGrounded )
 			{
