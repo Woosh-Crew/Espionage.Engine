@@ -10,10 +10,9 @@ namespace Espionage.Engine.Viewmodels
 		public void PostCameraSetup( ref ITripod.Setup setup )
 		{
 			var mouse = new Vector2( Input.GetAxisRaw( "Mouse X" ), Input.GetAxisRaw( "Mouse Y" ) );
-			mouse *= multiplier;
 
 			var trans = transform;
-			_lastSwayRot = Quaternion.Slerp( _lastSwayRot, Quaternion.Euler( mouse.y, mouse.x, mouse.x ), 6 * Time.deltaTime );
+			_lastSwayRot = Quaternion.Slerp( _lastSwayRot, Quaternion.Euler( new Vector3( mouse.y, mouse.x, mouse.x ) * multiplier ), 6 * Time.deltaTime );
 			_lastSwayPos = Vector3.Lerp( _lastSwayPos, transform.localRotation * Vector3.up * mouse.y + trans.localRotation * Vector3.left * mouse.x, 6 * Time.deltaTime );
 
 			trans.localRotation *= _lastSwayRot;
