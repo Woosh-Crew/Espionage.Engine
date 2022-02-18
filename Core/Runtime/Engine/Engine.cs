@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Espionage.Engine.Services;
 using UnityEngine;
 using UnityEngine.LowLevel;
@@ -77,6 +78,13 @@ namespace Espionage.Engine
 				foreach ( var service in Library.Database.GetAll<IService>() )
 				{
 					Add( Library.Database.Create<IService>( service.Class ) );
+				}
+
+				_services = _services.OrderBy( e => e.ClassInfo.Components.Get<OrderAttribute>()?.Order ?? 10 ).ToList();
+
+				for ( var i = 0; i < _services.Count; i++ )
+				{
+					Debugging.Log.Info( $"{i} - {_services[i].ClassInfo.Name}" );
 				}
 			}
 

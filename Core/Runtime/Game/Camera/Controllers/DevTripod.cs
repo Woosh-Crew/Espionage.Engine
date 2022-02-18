@@ -11,6 +11,7 @@ namespace Espionage.Engine.Cameras
 		void ITripod.Build( ref ITripod.Setup camSetup )
 		{
 			var input = Local.Client.Input;
+			camSetup.Damping = 15;
 
 			// FOV
 
@@ -37,7 +38,7 @@ namespace Espionage.Engine.Cameras
 
 			// Movement
 
-			var vel = camSetup.Rotation * Vector3.forward * input.Forward + camSetup.Rotation * Vector3.left * input.Horizontal;
+			var vel = camSetup.Rotation * Vector3.forward * input.Forward + camSetup.Rotation * Vector3.right * input.Horizontal;
 
 			if ( Input.GetKey( KeyCode.Space ) || Input.GetKey( KeyCode.E ) )
 			{

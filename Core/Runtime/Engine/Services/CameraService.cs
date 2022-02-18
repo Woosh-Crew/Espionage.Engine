@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Espionage.Engine.Services
 {
+	[Order( -10 )]
 	internal class CameraService : IService
 	{
 		public Library ClassInfo { get; }
@@ -26,22 +27,12 @@ namespace Espionage.Engine.Services
 
 			// Setup Camera
 			_camera = obj.AddComponent<CameraController>();
-
-			// Viewmodel
-			var viewmodelObj = new GameObject( "Viewmodel Camera" );
-			viewmodelObj.transform.parent = obj.transform;
-			_viewmodelCam = viewmodelObj.AddComponent<Camera>();
-			_viewmodelCam.clearFlags = CameraClearFlags.Depth;
-			_viewmodelCam.cullingMask = LayerMask.GetMask( "Viewmodel", "TransparentFX" );
-			_viewmodelCam.depth = 4;
-			_viewmodelCam.farClipPlane = 10;
 		}
 
 		public void OnShutdown() { }
 
 		// Frame
 
-		private Camera _viewmodelCam;
 		private CameraController _camera;
 
 		private ITripod.Setup _lastSetup = new()
@@ -67,7 +58,6 @@ namespace Espionage.Engine.Services
 			_lastSetup = Engine.Game.BuildCamera( _lastSetup );
 
 			// Finalise
-			_viewmodelCam.fieldOfView = _lastSetup.FieldOfView;
 			_camera.Finalise( _lastSetup );
 		}
 

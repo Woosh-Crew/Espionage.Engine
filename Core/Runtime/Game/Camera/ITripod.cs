@@ -14,6 +14,8 @@ namespace Espionage.Engine
 		{
 			// Camera
 			public float FieldOfView;
+			public float Damping;
+
 			public GameObject Viewer;
 
 			// Transform
