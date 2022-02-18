@@ -13,25 +13,27 @@ namespace Espionage.Engine.Viewmodels
 			mouse.Normalize();
 
 			var trans = transform;
-			_lastSwayRot = Quaternion.Slerp( _lastSwayRot, Quaternion.Euler( new Vector3( mouse.y, mouse.x, mouse.x ) * rotationMultiplier ), rotationDamping * Time.deltaTime );
-			_lastSwayPos = Vector3.Lerp( _lastSwayPos, transform.localRotation * Vector3.up * mouse.y + trans.localRotation * Vector3.left * mouse.x, offsetDamping * Time.deltaTime );
+			_lastSwayRot = Quaternion.Slerp( _lastSwayRot, Quaternion.Euler( new Vector3( mouse.y * rotationMultiplier.x, mouse.x * rotationMultiplier.y, mouse.x * rotationMultiplier.z ) ), rotationDamping * Time.deltaTime );
+
+			_lastSwayPos = Vector3.Lerp( _lastSwayPos, transform.localRotation * Vector3.up * mouse.y * offsetMultiplier.y +
+			                                           trans.localRotation * Vector3.left * mouse.x * offsetMultiplier.x, offsetDamping * Time.deltaTime );
 
 			// For some reason local rotation..
 			// makes it stutter hard? Makes no sense
 			trans.rotation *= _lastSwayRot;
-			trans.position += _lastSwayPos * offsetMultiplier;
+			trans.position += _lastSwayPos;
 		}
 
 		// Fields
 
 		[Header( "Rotation" ), SerializeField]
-		private float rotationMultiplier = 1;
+		private Vector3 rotationMultiplier = Vector3.one;
 
 		[SerializeField]
 		private float rotationDamping = 4;
 
 		[Header( "Offset" ), SerializeField]
-		private float offsetMultiplier = 1;
+		private Vector2 offsetMultiplier = Vector2.one;
 
 		[SerializeField]
 		private float offsetDamping = 4;
