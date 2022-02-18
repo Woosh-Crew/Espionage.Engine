@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Espionage.Engine
 {
-	public interface ICamera
+	public interface ITripod
 	{
 		void Build( ref Setup camSetup );
 

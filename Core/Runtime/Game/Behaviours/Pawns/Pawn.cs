@@ -85,38 +85,8 @@ namespace Espionage.Engine
 		// Camera
 		//
 
-		private Tripod _tripod;
+		public ITripod Tripod { get; set; }
 
-		public Tripod Tripod
-		{
-			get
-			{
-				if ( _tripod != null )
-				{
-					return _tripod;
-				}
-
-				var comp = GetComponent<Tripod>();
-				if ( comp == null )
-				{
-					return null;
-				}
-
-				_tripod = comp;
-				return _tripod;
-			}
-			set
-			{
-				if ( value.gameObject != gameObject )
-				{
-					Debugging.Log.Error( "New Tripod GameObject isn't on Pawn GameObject" );
-					return;
-				}
-
-				_tripod = value;
-			}
-		}
-
-		public void PostCameraSetup( ref ICamera.Setup setup ) { }
+		public void PostCameraSetup( ref ITripod.Setup setup ) { }
 	}
 }

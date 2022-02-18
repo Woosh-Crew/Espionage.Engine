@@ -1,14 +1,16 @@
 ﻿namespace Espionage.Engine
 {
-	public class FirstPersonTripod : Tripod
+	public class FirstPersonTripod : Behaviour, ITripod
 	{
-		public override void Activated( ref ICamera.Setup camSetup )
+		public void Activated( ref ITripod.Setup camSetup )
 		{
 			camSetup.Position = Local.Pawn.EyePos;
 			camSetup.Rotation = Local.Pawn.EyeRot;
 		}
 
-		public override void Build( ref ICamera.Setup camSetup )
+		public void Deactivated() { }
+
+		public void Build( ref ITripod.Setup camSetup )
 		{
 			if ( Local.Pawn == null )
 			{

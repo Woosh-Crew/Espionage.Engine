@@ -15,7 +15,7 @@ namespace Espionage.Engine
 			_target.depth = 2;
 		}
 
-		public void Finalise( ICamera.Setup camSetup )
+		public void Finalise( ITripod.Setup camSetup )
 		{
 			var trans = transform;
 			trans.localPosition = camSetup.Position;

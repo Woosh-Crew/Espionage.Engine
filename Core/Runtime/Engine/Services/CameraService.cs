@@ -44,7 +44,7 @@ namespace Espionage.Engine.Services
 		private Camera _viewmodelCam;
 		private CameraController _camera;
 
-		private ICamera.Setup _lastSetup = new()
+		private ITripod.Setup _lastSetup = new()
 		{
 			Rotation = Quaternion.identity,
 			FieldOfView = 74,
@@ -60,7 +60,7 @@ namespace Espionage.Engine.Services
 
 			if ( Input.GetKeyDown( KeyCode.F1 ) )
 			{
-				Local.Client.Camera = Local.Client.Camera == null ? new DevCamera() : null;
+				Local.Client.Tripod = Local.Client.Tripod == null ? new DevTripod() : null;
 			}
 
 			// Build the camSetup, from game.

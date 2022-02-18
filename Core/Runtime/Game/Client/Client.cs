@@ -21,11 +21,11 @@ namespace Espionage.Engine
 
 		// Camera
 
-		public ICamera Camera { get; set; }
+		public ITripod Tripod { get; set; }
 
 		// Input
 
-		public IInputProcessor Input { get; internal set; }
+		public IControls.Setup Input { get; internal set; }
 
 		// Pawn
 

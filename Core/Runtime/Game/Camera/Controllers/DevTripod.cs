@@ -2,13 +2,13 @@
 
 namespace Espionage.Engine.Cameras
 {
-	public class DevCamera : ICamera
+	public class DevTripod : ITripod, IControls
 	{
 		private Vector3 _targetPos;
 		private Vector2 _targetRot;
 		private bool _interpolate;
 
-		public void Build( ref ICamera.Setup camSetup )
+		void ITripod.Build( ref ITripod.Setup camSetup )
 		{
 			var input = Local.Client.Input;
 
@@ -66,7 +66,7 @@ namespace Espionage.Engine.Cameras
 			camSetup.Position = _interpolate ? Vector3.Lerp( camSetup.Position, _targetPos, 2 * Time.deltaTime ) : Vector3.Lerp( camSetup.Position, _targetPos, 5 * Time.deltaTime );
 		}
 
-		public void Activated( ref ICamera.Setup camSetup )
+		public void Activated( ref ITripod.Setup camSetup )
 		{
 			_targetPos = camSetup.Position;
 
@@ -76,5 +76,13 @@ namespace Espionage.Engine.Cameras
 		}
 
 		public void Deactivated() { }
+
+		// Input
+
+		void IControls.Build( ref IControls.Setup setup )
+		{
+			setup.Forward = 0;
+			setup.Horizontal = 0;
+		}
 	}
 }

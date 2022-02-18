@@ -4,10 +4,10 @@ using UnityEngine;
 namespace Espionage.Engine
 {
 	[RequireComponent( typeof( Health ) )]
-	public class Actor : Pawn
+	public class Actor : Pawn, IControls
 	{
 		public Health Health { get; private set; }
-		
+
 		protected override void OnAwake()
 		{
 			// Health
@@ -24,5 +24,7 @@ namespace Espionage.Engine
 				Engine.Game.Gamemode.OnPawnRespawned( this );
 			}
 		}
+
+		void IControls.Build( ref IControls.Setup setup ) { }
 	}
 }

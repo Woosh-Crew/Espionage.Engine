@@ -82,13 +82,13 @@ namespace Espionage.Engine
 		// Build Camera
 		//
 
-		private ICamera LastCamera { get; set; }
+		private ITripod LastTripod { get; set; }
 
-		protected virtual ICamera FindActiveCamera()
+		protected virtual ITripod FindActiveCamera()
 		{
-			if ( Local.Client.Camera != null )
+			if ( Local.Client.Tripod != null )
 			{
-				return Local.Client.Camera;
+				return Local.Client.Tripod;
 			}
 
 			if ( Local.Client.Pawn != null && Local.Client.Pawn.Tripod != null )
@@ -99,31 +99,49 @@ namespace Espionage.Engine
 			return null;
 		}
 
-		internal ICamera.Setup BuildCamera( ICamera.Setup camSetup )
+		public virtual ITripod.Setup BuildCamera( ITripod.Setup camSetup )
 		{
 			var cam = FindActiveCamera();
 
-			if ( LastCamera != cam )
+			if ( LastTripod != cam )
 			{
-				LastCamera?.Deactivated();
-				LastCamera = cam;
-				LastCamera?.Activated( ref camSetup );
+				LastTripod?.Deactivated();
+				LastTripod = cam;
+				LastTripod?.Activated( ref camSetup );
 			}
 
-			LastCamera?.Build( ref camSetup );
+			LastTripod?.Build( ref camSetup );
 			PostCameraSetup( ref camSetup );
 
 			return camSetup;
 		}
 
-		protected virtual void PostCameraSetup( ref ICamera.Setup camSetup )
+		protected virtual void PostCameraSetup( ref ITripod.Setup camSetup )
 		{
 			if ( Local.Pawn != null )
 			{
 				Local.Pawn.PostCameraSetup( ref camSetup );
 			}
 
-			ICamera.Modifier.Apply( ref camSetup );
+			ITripod.Modifier.Apply( ref camSetup );
+		}
+
+		//
+		// Build Input
+		//
+
+		public virtual IControls.Setup BuildControls( IControls.Setup builder )
+		{
+			// If the Current Tripod can BuildInput, let it
+			(LastTripod as IControls)?.Build( ref builder );
+
+			// Now if the pawn can change input, let it.
+			if ( Local.Pawn != null && Local.Pawn is IControls controls )
+			{
+				controls.Build( ref builder );
+			}
+
+			return builder;
 		}
 	}
 }
