@@ -11,7 +11,7 @@ namespace Espionage.Engine.Viewmodels
 		public void PostCameraSetup( ref ITripod.Setup setup )
 		{
 			// I have no clue wtf this does, but apparently me from the past did
-			_lastDelta = Vector2.Lerp( _lastDelta, (new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y")) / Time.deltaTime) / 3.5f, 45 * Time.deltaTime );
+			_lastDelta = new Vector2( Input.GetAxisRaw( "Mouse X" ), Input.GetAxisRaw( "Mouse Y" ) );
 
 			var mouse = _lastDelta;
 			mouse *= multiplier;
@@ -21,11 +21,11 @@ namespace Espionage.Engine.Viewmodels
 			_lastSwayPos = Vector3.Lerp( _lastSwayPos, transform.localRotation * Vector3.up * mouse.y / 2 + trans.localRotation * Vector3.left * mouse.x / 2, 6 * Time.deltaTime );
 
 			trans.localRotation *= _lastSwayRot;
-			trans.localPosition += _lastSwayPos;
+			// trans.localPosition += _lastSwayPos;
 		}
-		
+
 		// Fields
-		
+
 		[SerializeField]
 		private float multiplier;
 	}
