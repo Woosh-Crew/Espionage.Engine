@@ -81,14 +81,19 @@ namespace Espionage.Engine.Resources
 				throw new Exception( "Already performing an operation action this map" );
 			}
 
-			var lastMap = Current;
-			lastMap?.Unload();
-
 			onLoad += OnLoad;
 			onLoad += () =>
 			{
 				Callback.Run( "map.loaded" );
 			};
+
+			if ( Current == this )
+			{
+				onLoad?.Invoke();
+			}
+
+			var lastMap = Current;
+			lastMap?.Unload();
 
 			Current = this;
 			Callback.Run( "map.loading" );
