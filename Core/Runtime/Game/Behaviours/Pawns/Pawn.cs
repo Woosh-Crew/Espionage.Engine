@@ -9,6 +9,14 @@ namespace Espionage.Engine
 	[Group( "Pawns" )]
 	public class Pawn : Behaviour
 	{
+		protected override void OnAwake()
+		{
+			base.OnAwake();
+
+			// Lets find a tripod on the object
+			Tripod = GetComponent<ITripod>();
+		}
+
 		public override void Simulate( Client client )
 		{
 			GetActiveController()?.Simulate( client );
