@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Espionage.Engine
+namespace Espionage.Engine.Cameras
 {
 	public class FirstPersonTripod : Behaviour, ITripod, IControls
 	{
