@@ -10,9 +10,6 @@ namespace Espionage.Engine.Viewmodels
 
 		public void PostCameraSetup( ref ITripod.Setup setup )
 		{
-			const float breatheSpeed = 0.6f;
-			const float breatheIntensity = 0.25f;
-
 			_breatheBobDelta += Time.deltaTime * breatheSpeed;
 
 			var breatheUp = MathF.Cos( _breatheBobDelta * 1f ) * 1.3f * breatheIntensity;
@@ -23,5 +20,13 @@ namespace Espionage.Engine.Viewmodels
 			trans.position += trans.rotation * Vector3.left * breatheLeft + trans.rotation * Vector3.up * breatheUp;
 			transform.rotation *= Quaternion.Euler( breatheUp * _lastEnergyBreatheScale.x, breatheLeft * _lastEnergyBreatheScale.y, breatheForward * _lastEnergyBreatheScale.z );
 		}
+
+		// Fields
+
+		[SerializeField]
+		private float breatheSpeed = 0.6f;
+
+		[SerializeField]
+		private float breatheIntensity = 0.25f;
 	}
 }

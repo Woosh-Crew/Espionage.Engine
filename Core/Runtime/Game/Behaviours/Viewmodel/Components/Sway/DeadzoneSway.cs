@@ -40,7 +40,6 @@ namespace Espionage.Engine.Viewmodels
 
 		// Fields
 
-
 		[SerializeField]
 		private bool autoCenter = true;
 

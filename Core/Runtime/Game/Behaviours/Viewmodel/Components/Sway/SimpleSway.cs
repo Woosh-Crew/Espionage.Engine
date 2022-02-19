@@ -25,6 +25,7 @@ namespace Espionage.Engine.Viewmodels
 		}
 
 		// Fields
+
 		[Header( "Rotation" ), SerializeField]
 		private Vector3 rotationMultiplier = new( 6, 1, 4 );
 
