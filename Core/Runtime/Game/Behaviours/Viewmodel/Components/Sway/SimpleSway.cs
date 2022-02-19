@@ -9,18 +9,20 @@ namespace Espionage.Engine.Viewmodels
 
 		public void PostCameraSetup( ref ITripod.Setup setup )
 		{
-			var mouse = new Vector2( Input.GetAxis( "Mouse X" ), Input.GetAxis( "Mouse Y" ) );
+			var mouse = new Vector2(
+				Input.GetAxisRaw( "Mouse X" ) * rotationMultiplier.x,
+				Input.GetAxisRaw( "Mouse Y" ) * rotationMultiplier.y
+			);
 
 			var trans = transform;
-			_lastSwayRot = Quaternion.Slerp( _lastSwayRot, Quaternion.Euler( new Vector3( mouse.y * rotationMultiplier.x, mouse.x * rotationMultiplier.y, mouse.x * rotationMultiplier.z ) ), rotationDamping * Time.deltaTime );
 
-			_lastSwayPos = Easing.Linear( _lastSwayPos, transform.localRotation * Vector3.up * mouse.y * offsetMultiplier.y +
-			                                            trans.localRotation * Vector3.left * mouse.x * offsetMultiplier.x, offsetDamping * Time.deltaTime );
+			_lastSwayRot = Quaternion.Slerp( _lastSwayRot, Quaternion.Euler( mouse.y, mouse.x, 0 ), rotationDamping * Time.deltaTime );
+			// _lastSwayPos = Easing.Linear( _lastSwayPos, transform.localRotation * Vector3.up * mouse.y * offsetMultiplier.y + trans.localRotation * Vector3.left * mouse.x * offsetMultiplier.x, offsetDamping * Time.deltaTime );
 
 			// For some reason local rotation..
 			// makes it stutter hard? Makes no sense
 			trans.rotation *= _lastSwayRot;
-			trans.position += _lastSwayPos;
+			// trans.position += _lastSwayPos;
 		}
 
 		// Fields

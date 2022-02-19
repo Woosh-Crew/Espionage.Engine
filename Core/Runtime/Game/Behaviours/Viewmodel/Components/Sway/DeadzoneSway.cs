@@ -9,9 +9,7 @@ namespace Espionage.Engine.Viewmodels
 
 		public void PostCameraSetup( ref ITripod.Setup setup )
 		{
-			var deadzoneBox = deadzone;
-
-			DeadzoneAxis( deadzoneBox );
+			DeadzoneAxis();
 
 			if ( autoCenter )
 			{
@@ -26,15 +24,15 @@ namespace Espionage.Engine.Viewmodels
 			trans.position += trans.rotation * Vector3.up * _lastDeadzoneRotation.x + trans.rotation * Vector3.right * _lastDeadzoneRotation.y * 1;
 		}
 
-		protected void DeadzoneAxis( Vector2 deadZoneBox )
+		protected void DeadzoneAxis()
 		{
 			var mouse = new Vector2( Input.GetAxisRaw( "Mouse X" ), Input.GetAxisRaw( "Mouse Y" ) );
 
 			_savedDeadzoneAxis.x += mouse.y * 20 * multiplier * Time.deltaTime;
-			_savedDeadzoneAxis.x = Mathf.Clamp( _savedDeadzoneAxis.x, -deadZoneBox.x, deadZoneBox.x );
+			_savedDeadzoneAxis.x = Mathf.Clamp( _savedDeadzoneAxis.x, -deadzone.x, deadzone.x );
 
 			_savedDeadzoneAxis.y += mouse.x * 20 * multiplier * Time.deltaTime;
-			_savedDeadzoneAxis.y = Mathf.Clamp( _savedDeadzoneAxis.y, -deadZoneBox.y, deadZoneBox.y );
+			_savedDeadzoneAxis.y = Mathf.Clamp( _savedDeadzoneAxis.y, -deadzone.y, deadzone.y );
 		}
 
 		// Fields
