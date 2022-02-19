@@ -69,9 +69,20 @@ namespace Espionage.Engine
 		// Easing functions
 		//
 
+		// LINEAR
+
 		public static float Linear( float start, float end, float value )
 		{
 			return Mathf.Lerp( start, end, value );
+		}
+
+		public static Vector3 Linear( Vector3 start, Vector3 end, float value )
+		{
+			return new Vector3(
+				Linear( start.x, end.x, value ),
+				Linear( start.y, end.y, value ),
+				Linear( start.z, end.z, value )
+			);
 		}
 
 		public static float Spring( float start, float end, float value )
