@@ -4,7 +4,9 @@ namespace Espionage.Engine.Viewmodels
 {
 	public sealed class SimpleSway : Behaviour, Viewmodel.IEffect
 	{
+		private Quaternion _targetSwayRot;
 		private Quaternion _lastSwayRot;
+
 		private Vector3 _lastSwayPos;
 
 		public void PostCameraSetup( ref ITripod.Setup setup )
@@ -19,10 +21,9 @@ namespace Espionage.Engine.Viewmodels
 			// calculate target rotation
 			var rotationX = Quaternion.AngleAxis( -mouse.y, Vector3.right );
 			var rotationY = Quaternion.AngleAxis( mouse.x, Vector3.up );
-			var targetRotation = rotationX * rotationY;
 
-
-			_lastSwayRot = Quaternion.Slerp( transform.localRotation, targetRotation, rotationDamping * Time.deltaTime );
+			_targetSwayRot = Quaternion.Slerp( transform.localRotation, rotationX * rotationY, rotationDamping * Time.deltaTime );
+			_lastSwayRot = Quaternion.Lerp( _targetSwayRot, Quaternion.identity, rotationDamping * Time.deltaTime );
 
 			trans.rotation *= _lastSwayRot;
 		}
