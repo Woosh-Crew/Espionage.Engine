@@ -22,8 +22,11 @@ namespace Espionage.Engine.Cameras
 			}
 
 			_smoothedPosition = Vector3.Lerp( _smoothedPosition, Local.Pawn.EyePos + camSetup.Rotation * Vector3.back * distance, smoothing * Time.deltaTime );
-
 			camSetup.Position = _smoothedPosition;
+
+			// Offset
+			camSetup.Position += camSetup.Rotation * Vector3.left * offset.x + camSetup.Rotation * Vector3.up * offset.y + camSetup.Rotation * Vector3.forward * offset.z;
+
 			camSetup.Rotation = Local.Pawn.EyeRot;
 		}
 
@@ -45,6 +48,6 @@ namespace Espionage.Engine.Cameras
 		private float pitchClamp = 88;
 
 		[SerializeField]
-		private Transform visuals;
+		private Vector3 offset;
 	}
 }
