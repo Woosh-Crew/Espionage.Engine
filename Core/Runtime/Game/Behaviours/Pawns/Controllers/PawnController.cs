@@ -17,9 +17,14 @@ namespace Espionage.Engine
 			var input = client.Input;
 
 			Pawn.EyeRot = Quaternion.Euler( input.ViewAngles );
-			Pawn.EyePos = transform.position + Vector3.up * 1.65f;
+			Pawn.EyePos = transform.position + Vector3.up * eyeHeight;
 
 			transform.localRotation = Quaternion.AngleAxis( Pawn.EyeRot.eulerAngles.y, Vector3.up );
 		}
+
+		// Fields
+
+		[SerializeField]
+		private float eyeHeight = 1.65f;
 	}
 }
