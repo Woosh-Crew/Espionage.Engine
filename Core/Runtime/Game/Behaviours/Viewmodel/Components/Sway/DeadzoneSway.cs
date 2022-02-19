@@ -13,7 +13,7 @@ namespace Espionage.Engine.Viewmodels
 
 			DeadzoneAxis( deadzoneBox );
 
-			if ( autoCenter)
+			if ( autoCenter )
 			{
 				_savedDeadzoneAxis.x = Easing.Linear( _savedDeadzoneAxis.x, 0, 2 * Time.deltaTime );
 				_savedDeadzoneAxis.y = Easing.Linear( _savedDeadzoneAxis.y, 0, 2 * Time.deltaTime );
@@ -34,9 +34,8 @@ namespace Espionage.Engine.Viewmodels
 			_savedDeadzoneAxis.x += mouse.y * 20 * multiplier * Time.deltaTime;
 			_savedDeadzoneAxis.x = Mathf.Clamp( _savedDeadzoneAxis.x, -deadZoneBox.x, deadZoneBox.x );
 
-			_savedDeadzoneAxis.y += -mouse.x * 20 * multiplier * Time.deltaTime;
+			_savedDeadzoneAxis.y += mouse.x * 20 * multiplier * Time.deltaTime;
 			_savedDeadzoneAxis.y = Mathf.Clamp( _savedDeadzoneAxis.y, -deadZoneBox.y, deadZoneBox.y );
-
 		}
 
 		// Fields
