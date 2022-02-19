@@ -5,7 +5,9 @@ namespace Espionage.Engine.Pickups.Viewmodels
 {
 	public class BobAnimation : Behaviour, Viewmodel.IEffect
 	{
-		private Vector3 _velocity;
+		private Vector3 Velocity { get; set; }
+		private Vector3 _lastPosition;
+
 		private float _walkBobDelta;
 		private float _walkBobScale;
 		private float _dampedSpeed;
@@ -13,9 +15,13 @@ namespace Espionage.Engine.Pickups.Viewmodels
 
 		public void PostCameraSetup( ref ITripod.Setup camSetup )
 		{
-			_velocity -= transform.position;
+			//Set our velocity to the vector between our last position and this position
+			var position = transform.position;
 
-			var speed = Mathf.InverseLerp( 0, 240, _velocity.magnitude );
+			Velocity = (position - _lastPosition) / Time.deltaTime;
+			_lastPosition = position;
+
+			var speed = Mathf.InverseLerp( 0, 240, Velocity.magnitude );
 
 			_dampedSpeed = Mathf.Lerp( _dampedSpeed, speed, 2 * Time.deltaTime );
 			_walkBobScale = Mathf.Lerp( _walkBobScale, speed, 10 * Time.deltaTime );
