@@ -16,13 +16,15 @@ namespace Espionage.Engine.Viewmodels
 
 			var trans = transform;
 
-			_lastSwayRot = Quaternion.Slerp( _lastSwayRot, Quaternion.Euler( mouse.y, mouse.x, 0 ), rotationDamping * Time.deltaTime );
-			// _lastSwayPos = Easing.Linear( _lastSwayPos, transform.localRotation * Vector3.up * mouse.y * offsetMultiplier.y + trans.localRotation * Vector3.left * mouse.x * offsetMultiplier.x, offsetDamping * Time.deltaTime );
+			// calculate target rotation
+			var rotationX = Quaternion.AngleAxis( -mouse.y, Vector3.right );
+			var rotationY = Quaternion.AngleAxis( mouse.x, Vector3.up );
+			var targetRotation = rotationX * rotationY;
 
-			// For some reason local rotation..
-			// makes it stutter hard? Makes no sense
+
+			_lastSwayRot = Quaternion.Slerp( transform.localRotation, targetRotation, rotationDamping * Time.deltaTime );
+
 			trans.rotation *= _lastSwayRot;
-			// trans.position += _lastSwayPos;
 		}
 
 		// Fields
