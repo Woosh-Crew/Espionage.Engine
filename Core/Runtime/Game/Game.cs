@@ -126,7 +126,10 @@ namespace Espionage.Engine
 			// Build Viewmodels...
 			foreach ( var viewmodel in Viewmodel.All )
 			{
-				viewmodel.PostCameraSetup( ref camSetup );
+				if ( viewmodel.gameObject.activeInHierarchy )
+				{
+					viewmodel.PostCameraSetup( ref camSetup );
+				}
 			}
 
 			ITripod.Modifier.Apply( ref camSetup );

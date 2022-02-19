@@ -31,6 +31,8 @@ namespace Espionage.Engine
 
 		public void PostCameraSetup( ref ITripod.Setup setup )
 		{
+			// Basically if the current tripod is not the 
+			// Pawns one, don't move...
 			if ( Local.Client.Tripod != null )
 			{
 				return;
