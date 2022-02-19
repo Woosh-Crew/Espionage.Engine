@@ -27,15 +27,15 @@ namespace Espionage.Engine.Viewmodels
 		// Fields
 
 		[Header( "Rotation" ), SerializeField]
-		private Vector3 rotationMultiplier = Vector3.one;
+		private Vector3 rotationMultiplier = new( 6, 1, 4 );
 
 		[SerializeField]
-		private float rotationDamping = 4;
+		private float rotationDamping = 6;
 
 		[Header( "Offset" ), SerializeField]
-		private Vector2 offsetMultiplier = Vector2.one;
+		private Vector2 offsetMultiplier = new( 0.1f, 0.05f );
 
 		[SerializeField]
-		private float offsetDamping = 4;
+		private float offsetDamping = 3;
 	}
 }
