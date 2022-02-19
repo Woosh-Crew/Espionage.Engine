@@ -85,11 +85,22 @@ namespace Espionage.Engine
 			);
 		}
 
+		// SPRING
+
 		public static float Spring( float start, float end, float value )
 		{
 			value = Mathf.Clamp01( value );
 			value = (Mathf.Sin( value * Mathf.PI * (0.2f + 2.5f * value * value * value) ) * Mathf.Pow( 1f - value, 2.2f ) + value) * (1f + 1.2f * (1f - value));
 			return start + (end - start) * value;
+		}
+
+		public static Vector3 Spring( Vector3 start, Vector3 end, float value )
+		{
+			return new Vector3(
+				Spring( start.x, end.x, value ),
+				Spring( start.y, end.y, value ),
+				Spring( start.z, end.z, value )
+			);
 		}
 
 		public static float EaseInQuad( float start, float end, float value )
