@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using UnityEngine;
 
 namespace Espionage.Engine.Viewmodels
@@ -14,12 +13,14 @@ namespace Espionage.Engine.Viewmodels
 
 			// Start Guntuck
 			var start = muzzle.position + muzzle.rotation * Vector3.back * Vector3.Distance( transform.position - muzzle.rotation * Vector3.back / 4, muzzle.position ) - muzzle.rotation * Vector3.back * girth / 2.25f;
-			var end = muzzle.position + muzzle.rotation * Vector3.forward * 4;
+			var end = muzzle.position + muzzle.rotation * Vector3.forward;
 
 			Physics.Raycast( start, end, out var tr, 2 );
 
 			var offset = tr.distance - Vector3.Distance( start, end );
 			_lastGuntuckOffset = Mathf.Lerp( _lastGuntuckOffset, offset, 8 * Time.deltaTime );
+
+			Debug.DrawLine( start, end, Color.blue );
 
 			// Finish Guntuck
 			transform.position += transform.rotation * Vector3.back * -_lastGuntuckOffset;
