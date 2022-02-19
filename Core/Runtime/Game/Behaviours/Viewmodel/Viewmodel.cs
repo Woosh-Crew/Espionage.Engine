@@ -31,6 +31,11 @@ namespace Espionage.Engine
 
 		public void PostCameraSetup( ref ITripod.Setup setup )
 		{
+			if ( Local.Client.Tripod != null )
+			{
+				return;
+			}
+
 			var trans = transform;
 			trans.localPosition = setup.Position;
 			trans.localRotation = setup.Rotation;
