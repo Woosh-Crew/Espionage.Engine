@@ -3,36 +3,32 @@ using UnityEngine;
 
 namespace Espionage.Engine.Viewmodels
 {
-    public sealed class Guntuck : Behaviour, Viewmodel.IEffect
-    {
-	    private float _lastGuntuckOffset;
-	    
-	    public void PostCameraSetup( ref ITripod.Setup setup )
-	    {
-		    // Get girth
-		    float girth = 1;
+	public sealed class Guntuck : Behaviour, Viewmodel.IEffect
+	{
+		private float _lastGuntuckOffset;
 
-		    // Start Guntuck
-		    var start = muzzle.Position + muzzle.Rotation.Backward * Vector3.DistanceBetween( Position - muzzle.Rotation.Backward / 4, muzzle.Position ) - (Rotation.Backward * girth / 2.25f);
-		    var end = muzzle.Position + (muzzle.Rotation.Forward * 4);
+		public void PostCameraSetup( ref ITripod.Setup setup )
+		{
+			// Get girth
+			float girth = 1;
 
-		    var tr = Trace.Ray( start, end )
-			    .Ignore( Local.Pawn )
-			    .Ignore( Entity )
-			    .Size( 1 )
-			    .Run();
+			// Start Guntuck
+			var start = muzzle.position + muzzle.rotation * Vector3.back * Vector3.Distance( transform.position - muzzle.rotation * Vector3.back / 4, muzzle.position ) - muzzle.rotation * Vector3.back * girth / 2.25f;
+			var end = muzzle.position + muzzle.rotation * Vector3.forward * 4;
 
-		    var offset = tr.Distance - Vector3.DistanceBetween( start, end );
-		    _lastGuntuckOffset = _lastGuntuckOffset.LerpTo( offset, 8 * Time.Delta );
+			Physics.Raycast( start, end, out var tr, 2 );
 
-		    // Finish Guntuck
-		    Position += Rotation.Backward * -_lastGuntuckOffset;
-		    Position += Rotation.Down * -_lastGuntuckOffset / 4;
-	    }
-	    
-	    // Fields
+			var offset = tr.distance - Vector3.Distance( start, end );
+			_lastGuntuckOffset = Mathf.Lerp( _lastGuntuckOffset, offset, 8 * Time.deltaTime );
 
-	    [SerializeField]
-	    private Transform muzzle;
-    }
+			// Finish Guntuck
+			transform.position += transform.rotation * Vector3.back * -_lastGuntuckOffset;
+			transform.position += transform.rotation * Vector3.down * -_lastGuntuckOffset / 4;
+		}
+
+		// Fields
+
+		[SerializeField]
+		private Transform muzzle;
+	}
 }
