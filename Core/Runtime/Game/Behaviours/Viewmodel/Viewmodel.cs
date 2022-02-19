@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace Espionage.Engine
 {
@@ -13,6 +14,12 @@ namespace Espionage.Engine
 		{
 			All.Add( this );
 			Effects = GetComponents<IEffect>().ToList();
+
+			foreach ( var render in GetComponentsInChildren<Renderer>() )
+			{
+				render.shadowCastingMode = ShadowCastingMode.Off;
+				render.gameObject.layer = LayerMask.NameToLayer( "Viewmodel" );
+			}
 		}
 
 		protected override void OnDelete()
