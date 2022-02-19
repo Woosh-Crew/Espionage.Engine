@@ -21,7 +21,7 @@ namespace Espionage.Engine.Cameras
 				return;
 			}
 
-			_smoothedPosition = Vector3.Lerp( _smoothedPosition, Local.Pawn.EyePos + camSetup.Rotation * Vector3.back * distance, smoothing * Time.deltaTime );
+			_smoothedPosition = Vector3.Slerp( _smoothedPosition, Local.Pawn.EyePos + camSetup.Rotation * Vector3.back * distance, smoothing * Time.deltaTime );
 			camSetup.Position = _smoothedPosition;
 
 			// Offset
@@ -33,7 +33,7 @@ namespace Espionage.Engine.Cameras
 		void IControls.Build( ref IControls.Setup setup )
 		{
 			setup.ViewAngles += new Vector3( -setup.MouseDelta.y, setup.MouseDelta.x, 0 );
-			setup.ViewAngles.x = Mathf.Clamp( setup.ViewAngles.x, -pitchClamp, pitchClamp );
+			setup.ViewAngles.x = Mathf.Clamp( setup.ViewAngles.x, -pitchClamp.x, pitchClamp.y );
 		}
 
 		// Fields
@@ -45,7 +45,7 @@ namespace Espionage.Engine.Cameras
 		private float distance = 5;
 
 		[SerializeField]
-		private float pitchClamp = 88;
+		private Vector2 pitchClamp = new( 20, 88 );
 
 		[SerializeField]
 		private Vector3 offset;
