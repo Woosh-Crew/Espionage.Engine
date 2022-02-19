@@ -5,6 +5,7 @@ namespace Espionage.Engine.Pickups.Viewmodels
 {
 	public class BobAnimation : Behaviour, Viewmodel.IEffect
 	{
+		private Vector3 _velocity;
 		private float _walkBobDelta;
 		private float _walkBobScale;
 		private float _dampedSpeed;
@@ -12,10 +13,12 @@ namespace Espionage.Engine.Pickups.Viewmodels
 
 		public void PostCameraSetup( ref ITripod.Setup camSetup )
 		{
-			var speed = Owner.Velocity.Length.LerpInverse( 0, 240 );
-			
-			_dampedSpeed = _dampedSpeed.LerpTo( speed, 2 * Time.Delta );
-			_walkBobScale = _walkBobScale.LerpTo( Local.Pawn.GroundEntity != null ? speed : 0, 10 * Time.Delta );
+			_velocity -= transform.position;
+
+			var speed = Mathf.InverseLerp( 0, 240, _velocity.magnitude );
+
+			_dampedSpeed = Mathf.Lerp( _dampedSpeed, speed, 2 * Time.deltaTime );
+			_walkBobScale = Mathf.Lerp( _walkBobScale, speed, 10 * Time.deltaTime );
 			_walkBobDelta += Time.deltaTime * 15.0f * _walkBobScale;
 
 			// Waves
@@ -26,8 +29,9 @@ namespace Espionage.Engine.Pickups.Viewmodels
 			// Scale walk bob off property
 			_lastWalkBob *= _dampedSpeed;
 
-			Position += Rotation.Up * _lastWalkBob.z+ Rotation.Left * _lastWalkBob.y * 1.25f;
-			Rotation *= Rotation.From( _lastWalkBob.z * 2, _lastWalkBob.y * 4, _lastWalkBob.x * 4 );
+			var trans = transform;
+			trans.position += trans.rotation * Vector3.up * _lastWalkBob.z + trans.rotation * Vector3.left * _lastWalkBob.y * 1.25f;
+			transform.rotation *= Quaternion.Euler( _lastWalkBob.z * 2, _lastWalkBob.y * 4, _lastWalkBob.x * 4 );
 		}
 	}
 }
