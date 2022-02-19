@@ -134,7 +134,7 @@ namespace Espionage.Engine
 
 		/// <summary> Override this if your camera needs custom components </summary>
 		/// <param name="camera"> The Main Camera </param>
-		public void OnCameraCreated( Camera camera ) { }
+		public virtual void OnCameraCreated( Camera camera ) { }
 
 		//
 		// Build Input
