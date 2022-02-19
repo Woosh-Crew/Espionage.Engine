@@ -21,7 +21,7 @@ namespace Espionage.Engine.Pickups.Viewmodels
 			Velocity = (position - _lastPosition) / Time.deltaTime;
 			_lastPosition = position;
 
-			var speed = Mathf.InverseLerp( 0, speedInverse, Velocity.magnitude );
+			var speed = Velocity.magnitude;
 
 			_dampedSpeed = Mathf.Lerp( _dampedSpeed, speed, 2 * Time.deltaTime );
 			_walkBobScale = Mathf.Lerp( _walkBobScale, speed, 10 * Time.deltaTime );
@@ -33,7 +33,7 @@ namespace Espionage.Engine.Pickups.Viewmodels
 			_lastWalkBob.z = MathF.Cos( _walkBobDelta * 1.3f ) * 0.8f;
 
 			// Scale walk bob off property
-			_lastWalkBob *= _dampedSpeed;
+			_lastWalkBob *= _dampedSpeed * bobBounceScale;
 
 			var trans = transform;
 			trans.position += trans.rotation * Vector3.up * _lastWalkBob.z + trans.rotation * Vector3.left * _lastWalkBob.y * 1.25f;
@@ -43,7 +43,7 @@ namespace Espionage.Engine.Pickups.Viewmodels
 		// Fields
 
 		[SerializeField]
-		private float speedInverse = 0.5f;
+		private float bobBounceScale = 0.5f;
 
 		[SerializeField]
 		private float bobSpeedScale = 15f;
