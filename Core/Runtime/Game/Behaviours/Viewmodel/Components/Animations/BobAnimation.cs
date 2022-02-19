@@ -21,7 +21,7 @@ namespace Espionage.Engine.Pickups.Viewmodels
 			Velocity = (position - _lastPosition) / Time.deltaTime;
 			_lastPosition = position;
 
-			var speed = Mathf.InverseLerp( 0, 240, Velocity.magnitude );
+			var speed = Mathf.InverseLerp( 0, 1, Velocity.magnitude );
 
 			_dampedSpeed = Mathf.Lerp( _dampedSpeed, speed, 2 * Time.deltaTime );
 			_walkBobScale = Mathf.Lerp( _walkBobScale, speed, 10 * Time.deltaTime );
