@@ -22,10 +22,7 @@ namespace Espionage.Engine.Viewmodels
 			var rotationX = Quaternion.AngleAxis( -mouse.y, Vector3.right );
 			var rotationY = Quaternion.AngleAxis( mouse.x, Vector3.up );
 
-			_targetSwayRot = Quaternion.Slerp( transform.localRotation, rotationX * rotationY, rotationDamping * Time.deltaTime );
-			_lastSwayRot = Quaternion.Lerp( _targetSwayRot, Quaternion.identity, rotationDamping * Time.deltaTime );
-
-			trans.rotation *= _lastSwayRot;
+			trans.rotation *= rotationX * rotationY;
 		}
 
 		// Fields
