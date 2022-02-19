@@ -4,39 +4,30 @@ namespace Espionage.Engine.Viewmodels
 {
 	public sealed class SimpleSway : Behaviour, Viewmodel.IEffect
 	{
-		private Quaternion _targetSwayRot;
-		private Quaternion _lastSwayRot;
-
+		private Vector2 _lastMouseDelta;
 		private Vector3 _lastSwayPos;
 
 		public void PostCameraSetup( ref ITripod.Setup setup )
 		{
 			var mouse = new Vector2(
-				Input.GetAxisRaw( "Mouse X" ) * rotationMultiplier.x,
-				Input.GetAxisRaw( "Mouse Y" ) * rotationMultiplier.y
+				Input.GetAxisRaw( "Mouse X" ),
+				Input.GetAxisRaw( "Mouse Y" )
 			);
+
+			_lastMouseDelta = Vector2.Lerp( _lastMouseDelta, mouse, 10 * Time.deltaTime );
 
 			var trans = transform;
 
 			// calculate target rotation
-			var rotationX = Quaternion.AngleAxis( -mouse.y, Vector3.right );
-			var rotationY = Quaternion.AngleAxis( mouse.x, Vector3.up );
+			var rotationX = Quaternion.AngleAxis( _lastMouseDelta.y * 10, Vector3.left );
+			var rotationY = Quaternion.AngleAxis( _lastMouseDelta.x * 10, Vector3.up );
 
 			trans.rotation *= rotationX * rotationY;
+
+			_lastSwayPos = trans.localRotation * Vector3.down * _lastMouseDelta.y * 0.1f + trans.localRotation * Vector3.left * _lastMouseDelta.x * 0.1f;
+			trans.position += _lastSwayPos;
 		}
 
 		// Fields
-
-		[Header( "Rotation" ), SerializeField]
-		private Vector3 rotationMultiplier = new( 6, 1, 4 );
-
-		[SerializeField]
-		private float rotationDamping = 6;
-
-		[Header( "Offset" ), SerializeField]
-		private Vector2 offsetMultiplier = new( 0.1f, 0.05f );
-
-		[SerializeField]
-		private float offsetDamping = 3;
 	}
 }
