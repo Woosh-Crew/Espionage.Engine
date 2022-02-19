@@ -15,7 +15,7 @@ namespace Espionage.Engine.Viewmodels
 			var trans = transform;
 			_lastSwayRot = Quaternion.Slerp( _lastSwayRot, Quaternion.Euler( new Vector3( mouse.y * rotationMultiplier.x, mouse.x * rotationMultiplier.y, mouse.x * rotationMultiplier.z ) ), rotationDamping * Time.deltaTime );
 
-			_lastSwayPos = Easing.Linear( _lastSwayPos, transform.localRotation * Vector3.up * mouse.y * offsetMultiplier.y +
+			_lastSwayPos = Easing.Spring( _lastSwayPos, transform.localRotation * Vector3.up * mouse.y * offsetMultiplier.y +
 			                                            trans.localRotation * Vector3.left * mouse.x * offsetMultiplier.x, offsetDamping * Time.deltaTime );
 
 			// For some reason local rotation..
@@ -25,7 +25,6 @@ namespace Espionage.Engine.Viewmodels
 		}
 
 		// Fields
-
 		[Header( "Rotation" ), SerializeField]
 		private Vector3 rotationMultiplier = new( 6, 1, 4 );
 
