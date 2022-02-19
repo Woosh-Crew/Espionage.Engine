@@ -8,7 +8,6 @@ namespace Espionage.Engine
 	internal class CameraController : MonoBehaviour
 	{
 		private Camera _cam;
-		private Camera _viewmodelCam;
 
 		private void Awake()
 		{
@@ -16,17 +15,7 @@ namespace Espionage.Engine
 			_cam = GetComponent<Camera>();
 			_cam.depth = 2;
 
-			// Viewmodel Camera
-			var viewmodelObj = new GameObject( "Viewmodel Camera" );
-			viewmodelObj.transform.parent = transform;
-			_viewmodelCam = viewmodelObj.AddComponent<Camera>();
-
-			_viewmodelCam.clearFlags = CameraClearFlags.Depth;
-			_viewmodelCam.cullingMask = LayerMask.GetMask( "Viewmodel", "TransparentFX" );
-			_viewmodelCam.depth = 4;
-
-			_viewmodelCam.nearClipPlane = 0.1f;
-			_viewmodelCam.farClipPlane = 10;
+			Engine.Game.OnCameraCreated( _cam );
 		}
 
 		private Transform _lastViewer;
@@ -38,7 +27,6 @@ namespace Espionage.Engine
 			trans.localRotation = camSetup.Rotation;
 
 			_cam.fieldOfView = camSetup.Damping > 0 ? Mathf.Lerp( _cam.fieldOfView, camSetup.FieldOfView, camSetup.Damping * Time.deltaTime ) : camSetup.FieldOfView;
-			_viewmodelCam.fieldOfView = _cam.fieldOfView;
 
 			if ( _lastViewer != camSetup.Viewer )
 			{

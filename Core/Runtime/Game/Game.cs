@@ -132,6 +132,10 @@ namespace Espionage.Engine
 			ITripod.Modifier.Apply( ref camSetup );
 		}
 
+		/// <summary> Override this if your camera needs custom components </summary>
+		/// <param name="camera"> The Main Camera </param>
+		public void OnCameraCreated( Camera camera ) { }
+
 		//
 		// Build Input
 		//

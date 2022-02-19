@@ -12,12 +12,6 @@ namespace Espionage.Engine
 		protected override void OnAwake()
 		{
 			All.Add( this );
-
-			foreach ( var render in GetComponentsInChildren<Renderer>() )
-			{
-				render.gameObject.layer = LayerMask.NameToLayer( "Viewmodel" );
-			}
-
 			Effects = GetComponents<IEffect>().ToList();
 		}
 
