@@ -17,8 +17,6 @@ namespace Espionage.Engine.Viewmodels
 			_lastMouseDelta = Vector2.Lerp( _lastMouseDelta, mouse, 10 * Time.deltaTime );
 
 			var trans = transform;
-
-			// calculate target rotation
 			var rotationX = Quaternion.AngleAxis( _lastMouseDelta.y * 10, Vector3.left );
 			var rotationY = Quaternion.AngleAxis( _lastMouseDelta.x * 10, Vector3.up );
 
