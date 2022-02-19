@@ -21,11 +21,11 @@ namespace Espionage.Engine.Cameras
 				return;
 			}
 
-			_smoothedPosition = Vector3.Slerp( _smoothedPosition, Local.Pawn.EyePos + camSetup.Rotation * Vector3.back * distance, smoothing * Time.deltaTime );
+			var offseted = camSetup.Rotation * Vector3.left * offset.x + camSetup.Rotation * Vector3.up * offset.y + camSetup.Rotation * Vector3.forward * offset.z;
+			_smoothedPosition = Vector3.Slerp( _smoothedPosition, Local.Pawn.EyePos + camSetup.Rotation * Vector3.back * distance + offseted, smoothing * Time.deltaTime );
 			camSetup.Position = _smoothedPosition;
 
 			// Offset
-			camSetup.Position += camSetup.Rotation * Vector3.left * offset.x + camSetup.Rotation * Vector3.up * offset.y + camSetup.Rotation * Vector3.forward * offset.z;
 
 			camSetup.Rotation = Local.Pawn.EyeRot;
 		}
@@ -39,13 +39,13 @@ namespace Espionage.Engine.Cameras
 		// Fields
 
 		[SerializeField]
-		private float smoothing = 10;
+		private float smoothing = 15;
 
 		[SerializeField]
 		private float distance = 5;
 
 		[SerializeField]
-		private Vector2 pitchClamp = new( 20, 88 );
+		private Vector2 pitchClamp = new( 88, 15 );
 
 		[SerializeField]
 		private Vector3 offset;
