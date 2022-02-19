@@ -12,6 +12,8 @@ namespace Espionage.Engine.Cameras
 
 		public void Deactivated() { }
 
+		private Vector3 _smoothedPosition;
+
 		void ITripod.Build( ref ITripod.Setup camSetup )
 		{
 			if ( Local.Pawn == null )
@@ -19,7 +21,9 @@ namespace Espionage.Engine.Cameras
 				return;
 			}
 
-			camSetup.Position = Local.Pawn.EyePos + camSetup.Rotation * Vector3.back * distance;
+			_smoothedPosition = Vector3.Lerp( _smoothedPosition, Local.Pawn.EyePos + camSetup.Rotation * Vector3.back * distance, smoothing * Time.deltaTime );
+
+			camSetup.Position = _smoothedPosition;
 			camSetup.Rotation = Local.Pawn.EyeRot;
 		}
 
@@ -30,9 +34,12 @@ namespace Espionage.Engine.Cameras
 		}
 
 		// Fields
-		
+
 		[SerializeField]
-		private float distance = 88;
+		private float smoothing = 10;
+
+		[SerializeField]
+		private float distance = 5;
 
 		[SerializeField]
 		private float pitchClamp = 88;
