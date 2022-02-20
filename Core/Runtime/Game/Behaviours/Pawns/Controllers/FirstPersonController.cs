@@ -25,6 +25,7 @@ namespace Espionage.Engine
 			wishDir = wishDir.normalized * WishSpeed * Time.deltaTime;
 
 			Velocity = wishDir;
+			ApplyFriction();
 			Accelerate( wishDir.normalized, wishDir.magnitude, 0, 10 );
 
 			Controller.Move( Velocity );
@@ -46,43 +47,65 @@ namespace Espionage.Engine
 
 		// Helpers
 
-		/// <summary>
-		/// Add our wish direction and speed onto our velocity
-		/// </summary>
-		public virtual void Accelerate( Vector3 wishdir, float wishspeed, float speedLimit, float acceleration )
+		public virtual void Accelerate( Vector3 wishDir, float wishSpeed, float speedLimit, float acceleration )
 		{
-			// This gets overridden because some games (CSPort) want to allow dead (observer) players
-			// to be able to move around.
-			// if ( !CanAccelerate() )
-			//     return;
-
-			if ( speedLimit > 0 && wishspeed > speedLimit )
+			if ( speedLimit > 0 && wishSpeed > speedLimit )
 			{
-				wishspeed = speedLimit;
+				wishSpeed = speedLimit;
 			}
 
 			// See if we are changing direction a bit
-			var currentspeed = Vector3.Dot( Velocity, wishdir );
+			var currentSpeed = Vector3.Dot( Velocity, wishDir );
 
-			// Reduce wishspeed by the amount of veer.
-			var addspeed = wishspeed - currentspeed;
+			// Reduce wishSpeed by the amount of veer.
+			var addSpeed = wishSpeed - currentSpeed;
 
 			// If not going to add any speed, done.
-			if ( addspeed <= 0 )
+			if ( addSpeed <= 0 )
 			{
 				return;
 			}
 
 			// Determine amount of acceleration.
-			var accelspeed = acceleration * Time.deltaTime * wishspeed;
+			var accelSpeed = acceleration * Time.deltaTime * wishSpeed;
 
-			// Cap at addspeed
-			if ( accelspeed > addspeed )
+			// Cap at addSpeed
+			if ( accelSpeed > addSpeed )
 			{
-				accelspeed = addspeed;
+				accelSpeed = addSpeed;
 			}
 
-			Velocity += wishdir * accelspeed;
+			Velocity += wishDir * accelSpeed;
+		}
+
+		public virtual void ApplyFriction( float frictionAmount = 1.0f, float stopSpeed = 100f )
+		{
+			// Calculate speed
+			var speed = Velocity.magnitude;
+			if ( speed < 0.1f )
+			{
+				return;
+			}
+
+			// Bleed off some speed, but if we have less than the bleed
+			//  threshold, bleed the threshold amount.
+			var control = speed < stopSpeed ? stopSpeed : speed;
+
+			// Add the amount to the drop amount.
+			var drop = control * Time.deltaTime * frictionAmount;
+
+			// scale the velocity
+			var newspeed = speed - drop;
+			if ( newspeed < 0 )
+			{
+				newspeed = 0;
+			}
+
+			if ( newspeed != speed )
+			{
+				newspeed /= speed;
+				Velocity *= newspeed;
+			}
 		}
 
 		// Fields
