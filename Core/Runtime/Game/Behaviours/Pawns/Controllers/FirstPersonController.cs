@@ -18,6 +18,15 @@ namespace Espionage.Engine
 			var input = client.Input;
 			var rot = transform.rotation;
 
+			// Start Gravity
+			Velocity -= Vector3.down * gravity / 2;
+
+
+			if ( Controller.isGrounded )
+			{
+				ApplyFriction();
+			}
+
 			// Smooth WishSpeed, so it isn't jarring
 			WishSpeed = Mathf.Lerp( WishSpeed, GrabWishSpeed( client ), 6 * Time.deltaTime );
 
@@ -25,8 +34,11 @@ namespace Espionage.Engine
 			wishDir = wishDir.normalized * WishSpeed * Time.deltaTime;
 
 			Velocity = wishDir;
-			ApplyFriction();
+
 			Accelerate( wishDir.normalized, wishDir.magnitude, 0, 10 );
+
+			// Finish Gravity
+			Velocity -= Vector3.down * gravity / 2;
 
 			Controller.Move( Velocity );
 		}
@@ -115,5 +127,8 @@ namespace Espionage.Engine
 
 		[SerializeField]
 		private float sprintSpeed = 15;
+
+		[SerializeField]
+		private float gravity = 20;
 	}
 }
