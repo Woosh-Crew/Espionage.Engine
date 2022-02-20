@@ -67,7 +67,7 @@ namespace Espionage.Engine
 
 		// Helpers
 
-		public virtual void Accelerate( Vector3 wishDir, float wishSpeed, float speedLimit, float acceleration )
+		protected virtual void Accelerate( Vector3 wishDir, float wishSpeed, float speedLimit, float acceleration )
 		{
 			if ( speedLimit > 0 && wishSpeed > speedLimit )
 			{
@@ -98,7 +98,7 @@ namespace Espionage.Engine
 			Velocity += wishDir * accelSpeed;
 		}
 
-		public virtual void ApplyFriction( float frictionAmount = 1.0f, float stopSpeed = 100f )
+		protected virtual void ApplyFriction( float frictionAmount = 10.0f, float stopSpeed = 100f )
 		{
 			// Calculate speed
 			var speed = Velocity.magnitude;
@@ -115,16 +115,16 @@ namespace Espionage.Engine
 			var drop = control * Time.deltaTime * frictionAmount;
 
 			// scale the velocity
-			var newspeed = speed - drop;
-			if ( newspeed < 0 )
+			var newSpeed = speed - drop;
+			if ( newSpeed < 0 )
 			{
-				newspeed = 0;
+				newSpeed = 0;
 			}
 
-			if ( newspeed != speed )
+			if ( newSpeed != speed )
 			{
-				newspeed /= speed;
-				Velocity *= newspeed;
+				newSpeed /= speed;
+				Velocity *= newSpeed;
 			}
 		}
 
