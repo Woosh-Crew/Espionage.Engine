@@ -19,8 +19,7 @@ namespace Espionage.Engine
 			var rot = transform.rotation;
 
 			// Start Gravity
-			Velocity -= Vector3.down * gravity / 2;
-
+			Velocity -= new Vector3( 0, gravity / 2, 0 );
 
 			if ( Controller.isGrounded )
 			{
@@ -33,12 +32,11 @@ namespace Espionage.Engine
 			var wishDir = rot * Vector3.forward * input.Forward + rot * Vector3.right * input.Horizontal;
 			wishDir = wishDir.normalized * WishSpeed * Time.deltaTime;
 
-			Velocity = wishDir;
-
 			Accelerate( wishDir.normalized, wishDir.magnitude, 0, 10 );
 
 			// Finish Gravity
-			Velocity -= Vector3.down * gravity / 2;
+			Velocity -= new Vector3( 0, gravity / 2, 0 );
+
 
 			Controller.Move( Velocity );
 		}
