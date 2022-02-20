@@ -27,7 +27,7 @@ namespace Espionage.Engine
 				cappedVel.y = 0;
 				Velocity = cappedVel;
 
-				ApplyFriction();
+				ApplyFriction( friction, stopSpeed );
 			}
 
 			// Smooth WishSpeed, so it isn't jarring
@@ -98,7 +98,7 @@ namespace Espionage.Engine
 			Velocity += wishDir * accelSpeed;
 		}
 
-		protected virtual void ApplyFriction( float frictionAmount = 10.0f, float stopSpeed = 100f )
+		protected virtual void ApplyFriction( float frictionAmount = 10.0f, float stopPower = 100f )
 		{
 			// Calculate speed
 			var speed = Velocity.magnitude;
@@ -109,7 +109,7 @@ namespace Espionage.Engine
 
 			// Bleed off some speed, but if we have less than the bleed
 			//  threshold, bleed the threshold amount.
-			var control = speed < stopSpeed ? stopSpeed : speed;
+			var control = speed < stopPower ? stopPower : speed;
 
 			// Add the amount to the drop amount.
 			var drop = control * Time.deltaTime * frictionAmount;
@@ -142,5 +142,11 @@ namespace Espionage.Engine
 
 		[SerializeField]
 		private float gravity = 20;
+
+		[SerializeField]
+		private float friction = 10;
+
+		[SerializeField]
+		private float stopSpeed = 100;
 	}
 }
