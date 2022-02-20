@@ -16,21 +16,17 @@ namespace Espionage.Engine
 			base.Simulate( client );
 
 			var input = client.Input;
-
 			var rot = transform.rotation;
-			var wishDir = rot * Vector3.forward * input.Forward + rot * Vector3.right * input.Horizontal;
-
-			if ( !Controller.isGrounded )
-			{
-				wishDir += Vector3.down;
-			}
 
 			// Smooth WishSpeed, so it isn't jarring
 			WishSpeed = Mathf.Lerp( WishSpeed, GrabWishSpeed( client ), 6 * Time.deltaTime );
 
+			var wishDir = rot * Vector3.forward * input.Forward + rot * Vector3.right * input.Horizontal;
 			wishDir = wishDir.normalized * WishSpeed * Time.deltaTime;
 
-			Controller.Move( wishDir );
+			Velocity = wishDir;
+
+			Controller.Move( Velocity );
 		}
 
 		// Wish Speed
