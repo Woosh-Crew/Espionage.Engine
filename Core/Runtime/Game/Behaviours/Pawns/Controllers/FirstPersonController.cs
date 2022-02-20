@@ -26,7 +26,7 @@ namespace Espionage.Engine
 			}
 
 			// Smooth WishSpeed, so it isn't jarring
-			WishSpeed = Mathf.Lerp( WishSpeed, GrabWishSpeed( client ), 8 * Time.deltaTime );
+			WishSpeed = Mathf.Lerp( WishSpeed, GrabWishSpeed( client ), 4 * Time.deltaTime );
 
 			wishDir = wishDir.normalized * WishSpeed * Time.deltaTime;
 
@@ -39,7 +39,7 @@ namespace Espionage.Engine
 
 		protected virtual float GrabWishSpeed( Client cl )
 		{
-			if ( Input.GetKey( KeyCode.LeftShift ) )
+			if ( cl.Input.Forward != 0 && cl.Input.Horizontal != 0 && Input.GetKey( KeyCode.LeftShift ) )
 			{
 				return sprintSpeed;
 			}
