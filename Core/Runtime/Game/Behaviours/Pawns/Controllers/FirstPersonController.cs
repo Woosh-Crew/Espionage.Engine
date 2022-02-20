@@ -19,10 +19,14 @@ namespace Espionage.Engine
 			var rot = transform.rotation;
 
 			// Start Gravity
-			Velocity -= new Vector3( 0, gravity / 2, 0 );
+			Velocity -= new Vector3( 0, gravity / 2, 0 ) * Time.deltaTime;
 
 			if ( Controller.isGrounded )
 			{
+				var cappedVel = Velocity;
+				cappedVel.y = 0;
+				Velocity = cappedVel;
+
 				ApplyFriction();
 			}
 
@@ -35,8 +39,14 @@ namespace Espionage.Engine
 			Accelerate( wishDir.normalized, wishDir.magnitude, 0, 10 );
 
 			// Finish Gravity
-			Velocity -= new Vector3( 0, gravity / 2, 0 );
+			Velocity -= new Vector3( 0, gravity / 2, 0 ) * Time.deltaTime;
 
+			if ( Controller.isGrounded )
+			{
+				var cappedVel = Velocity;
+				cappedVel.y = 0;
+				Velocity = cappedVel;
+			}
 
 			Controller.Move( Velocity );
 		}
@@ -117,6 +127,10 @@ namespace Espionage.Engine
 				Velocity *= newspeed;
 			}
 		}
+
+		// Move
+
+		protected virtual void GroundedMove() { }
 
 		// Fields
 
