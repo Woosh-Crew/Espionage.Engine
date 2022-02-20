@@ -39,7 +39,7 @@ namespace Espionage.Engine
 
 		protected virtual float GrabWishSpeed( Client cl )
 		{
-			if ( cl.Input.Forward != 0 || cl.Input.Horizontal != 0 && Input.GetKey( KeyCode.LeftShift ) )
+			if ( Input.GetKey( KeyCode.LeftShift ) && cl.Input.Forward != 0 || cl.Input.Horizontal != 0 )
 			{
 				return sprintSpeed;
 			}
