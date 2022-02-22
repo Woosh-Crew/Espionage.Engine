@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using Espionage.Engine.Components;
 
 namespace Espionage.Engine.Resources
@@ -56,7 +57,13 @@ namespace Espionage.Engine.Resources
 		/// <param name="noneFound">If there is no map found, what do we do?</param>
 		public static Map Find( string path, Func<Map> noneFound = null )
 		{
-			return Database[path] ?? noneFound?.Invoke();
+			if ( string.IsNullOrEmpty( path ) )
+			{
+				throw new FileNotFoundException( "Invalid File / Path" );
+			}
+
+			var map = Database[path];
+			return map;
 		}
 
 		//
