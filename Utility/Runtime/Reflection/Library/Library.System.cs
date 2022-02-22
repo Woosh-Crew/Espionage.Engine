@@ -71,7 +71,7 @@ namespace Espionage.Engine
 					{
 						var type = types[typeIndex];
 						// If we don't have the interface, or if were not a static class.
-						if ( !(type.IsAbstract && type.IsSealed || type.HasInterface<ILibrary>()) || Utility.IgnoredNamespaces.Any( e => e == type.Namespace ) )
+						if ( !(type.IsAbstract && type.IsSealed || type.HasInterface<ILibrary>() || type.IsDefined( typeof( LibraryAttribute ) )) || Utility.IgnoredNamespaces.Any( e => e == type.Namespace ) )
 						{
 							continue;
 						}
