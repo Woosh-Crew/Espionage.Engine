@@ -36,6 +36,8 @@ namespace Espionage.Engine.Services
 				y = Input.GetAxis( "Mouse Y" ) * 2
 			};
 
+			_setup.MouseWheel = Input.GetAxisRaw( "Mouse ScrollWheel" );
+
 			_setup.Forward = Input.GetAxisRaw( "Vertical" );
 			_setup.Horizontal = Input.GetAxisRaw( "Horizontal" );
 

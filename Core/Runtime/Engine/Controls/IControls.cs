@@ -12,6 +12,9 @@ namespace Espionage.Engine
 			/// <summary> The Current Mouse Delta </summary>
 			public Vector2 MouseDelta;
 
+			/// <summary> The Current Mouse Delta </summary>
+			public float MouseWheel;
+
 			/// <summary> Where a pawns Eyes should be facing (Angles) </summary>
 			public Vector3 ViewAngles;
 
@@ -25,6 +28,7 @@ namespace Espionage.Engine
 			public void Clear()
 			{
 				MouseDelta = Vector2.zero;
+				MouseWheel = 0;
 
 				Forward = 0;
 				Horizontal = 0;

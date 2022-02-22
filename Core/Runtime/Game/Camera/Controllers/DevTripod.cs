@@ -13,6 +13,8 @@ namespace Espionage.Engine.Cameras
 		private bool _changeFov;
 		private float _fovChangeDelta;
 
+		private float _speedMulti = 1;
+
 		void ITripod.Build( ref ITripod.Setup camSetup )
 		{
 			// FOV
@@ -54,6 +56,8 @@ namespace Espionage.Engine.Cameras
 				vel *= 0.2f;
 			}
 
+			vel *= _speedMulti;
+
 			_targetPos += vel * Time.deltaTime;
 
 			camSetup.Position = _interpolate ? Vector3.Lerp( camSetup.Position, _targetPos, 2 * Time.deltaTime ) : Vector3.Lerp( camSetup.Position, _targetPos, 5 * Time.deltaTime );
@@ -74,26 +78,34 @@ namespace Espionage.Engine.Cameras
 
 		void IControls.Build( ref IControls.Setup setup )
 		{
-			_changeFov = Input.GetMouseButton( 1 );
-
-			_direction = new Vector2( setup.Forward, setup.Horizontal ) / (_changeFov ? 2 : 1);
-
-			if ( _changeFov )
+			try
 			{
-				_fovChangeDelta = -Input.GetAxisRaw( "Mouse Y" );
-				return;
+				_changeFov = Input.GetMouseButton( 1 );
+
+				_direction = new Vector2( setup.Forward, setup.Horizontal ) / (_changeFov ? 2 : 1);
+
+				if ( _changeFov )
+				{
+					_fovChangeDelta = -Input.GetAxisRaw( "Mouse Y" );
+					return;
+				}
+
+				// We don't use ViewAngles here, as they are not our eyes.
+				_targetRot += new Vector3( -setup.MouseDelta.y, setup.MouseDelta.x, 0 );
+				_targetRot.x = Mathf.Clamp( _targetRot.x, -88, 88 );
+
+				if ( Input.GetMouseButtonDown( 2 ) )
+				{
+					_interpolate = !_interpolate;
+				}
+
+				_speedMulti += setup.MouseWheel * 2;
+				_speedMulti = Mathf.Clamp( _speedMulti, 0.1f, 10 );
 			}
-
-			// We don't use ViewAngles here, as they are not our eyes.
-			_targetRot += new Vector3( -setup.MouseDelta.y, setup.MouseDelta.x, 0 );
-			_targetRot.x = Mathf.Clamp( _targetRot.x, -88, 88 );
-
-			if ( Input.GetMouseButtonDown( 2 ) )
+			finally
 			{
-				_interpolate = !_interpolate;
+				setup.Clear();
 			}
-
-			setup.Clear();
 		}
 	}
 }
