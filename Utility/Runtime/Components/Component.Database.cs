@@ -3,11 +3,11 @@ using System.Linq;
 
 namespace Espionage.Engine.Components
 {
-	public class ComponentDatabase<T> : IDatabase<IComponent<T>> where T : class
+	public class Components<T> : IDatabase<IComponent<T>> where T : class
 	{
 		public IEnumerable<IComponent<T>> All => _components;
 
-		public ComponentDatabase( T item )
+		public Components( T item )
 		{
 			_target = item;
 		}

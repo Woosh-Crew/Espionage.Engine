@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 
 namespace Espionage.Engine.Resources
 {
+	[Library, Title( "Editor Map" ), Group( "Maps" )]
 	public class EditorSceneMapProvider : IMapProvider
 	{
 		// Id
@@ -26,6 +27,7 @@ namespace Espionage.Engine.Resources
 		[RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.AfterSceneLoad )]
 		private static void Init()
 		{
+			// Dont give a shit if this is hacky, its editor only
 			var provider = new EditorSceneMapProvider { Scene = SceneManager.GetActiveScene() };
 			Map.Current = new Map( provider );
 			Map.Current.Load();

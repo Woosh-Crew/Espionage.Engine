@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 namespace Espionage.Engine.Resources
 {
+	[Library, Title( "Asset Bundle Map" ), Group( "Maps" ), File( Extension = "umap", Serialization = "Unity" )]
 	public class AssetBundleMapProvider : IMapProvider
 	{
 		public string Identifier => File.FullName;

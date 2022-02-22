@@ -19,7 +19,7 @@ namespace Espionage.Engine.Resources
 
 		// Provider
 		private IMapProvider Provider { get; }
-		public ComponentDatabase<Map> Components { get; }
+		public Components<Map> Components { get; }
 
 		// Meta Data
 		public string Identifier => Provider.Identifier;
@@ -41,7 +41,7 @@ namespace Espionage.Engine.Resources
 		public Map( IMapProvider provider )
 		{
 			ClassInfo = Library.Database[GetType()];
-			Components = new ComponentDatabase<Map>( this );
+			Components = new Components<Map>( this );
 
 			Provider = provider;
 			Database.Add( this );
@@ -135,28 +135,6 @@ namespace Espionage.Engine.Resources
 		public void Dispose()
 		{
 			Unload( () => Database.Remove( this ) );
-		}
-
-		//
-		// Commands
-		//
-
-		[Debugging.Cmd( "map" )]
-		private static void CmdGetMap()
-		{
-			if ( Current is null )
-			{
-				Debugging.Log.Info( "No Map" );
-				return;
-			}
-
-			Debugging.Log.Info( $"Map: [{Current.Title}] - [{Current.Identifier}]" );
-		}
-
-		[Debugging.Cmd( "map.load_path" )]
-		private static void CmdLoadFromPath( string path )
-		{
-			Find( path, () => new Map( new AssetBundleMapProvider( new FileInfo( path ) ) ) )?.Load();
 		}
 	}
 }

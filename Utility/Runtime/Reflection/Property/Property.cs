@@ -8,7 +8,7 @@ namespace Espionage.Engine
 {
 	public sealed class Property
 	{
-		public ComponentDatabase<Property> Components { get; }
+		public Components<Property> Components { get; }
 
 		internal Property( Library owner, PropertyInfo info )
 		{
@@ -19,7 +19,7 @@ namespace Espionage.Engine
 			Title = info.Name;
 
 			// Components
-			Components = new ComponentDatabase<Property>( this );
+			Components = new Components<Property>( this );
 
 			// This is really expensive (6ms)...
 			// Get Components attached to type

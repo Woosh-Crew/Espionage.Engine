@@ -7,7 +7,7 @@ namespace Espionage.Engine.Resources
 	public sealed partial class Model : IResource, IDisposable, ILibrary
 	{
 		public Library ClassInfo { get; }
-		public ComponentDatabase<Model> Components { get; }
+		public Components<Model> Components { get; }
 
 		//
 		// Meta Data
@@ -26,7 +26,7 @@ namespace Espionage.Engine.Resources
 		private Model( IModelProvider provider )
 		{
 			ClassInfo = Library.Database[GetType()];
-			Components = new ComponentDatabase<Model>( this );
+			Components = new Components<Model>( this );
 
 			Provider = provider;
 		}

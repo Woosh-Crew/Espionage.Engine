@@ -29,7 +29,7 @@ namespace Espionage.Engine
 			Name = type.FullName;
 
 			// Components
-			Components = new ComponentDatabase<Library>( this );
+			Components = new Components<Library>( this );
 
 			// This is really expensive (6ms)...
 			// Get Components attached to type
@@ -127,6 +127,6 @@ namespace Espionage.Engine
 		/// include icons, company, stylesheet, etc. They allow us
 		/// to do some really crazy cool shit
 		/// </summary>
-		public ComponentDatabase<Library> Components { get; }
+		public Components<Library> Components { get; }
 	}
 }
