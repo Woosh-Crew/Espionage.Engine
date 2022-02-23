@@ -130,6 +130,14 @@ namespace Espionage.Engine
 
 			public void Add( T item )
 			{
+				if ( _all.ContainsKey( item.Name ) )
+				{
+					Debugging.Log.Warning( $"Replacing {item.Name}" );
+					_all[item.Name] = item;
+
+					return;
+				}
+
 				_all.Add( item.Name, item );
 			}
 

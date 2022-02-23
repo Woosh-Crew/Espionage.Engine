@@ -80,11 +80,6 @@ namespace Espionage.Engine
 							continue;
 						}
 
-						// if ( !(type.IsAbstract && type.IsSealed) )
-						// {
-						// 	continue;
-						// }
-
 						Database.Add( CreateRecord( type ) );
 					}
 				}
