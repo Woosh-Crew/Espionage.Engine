@@ -2,7 +2,7 @@
 
 namespace Espionage.Engine.Services
 {
-	public interface IService : ILibrary, ICallbacks, IDisposable
+	public interface IService : ILibrary, IDisposable
 	{
 		void OnReady();
 		void OnShutdown();

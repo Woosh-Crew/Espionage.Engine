@@ -10,7 +10,7 @@ namespace Espionage.Engine
 	/// <see cref="MonoBehaviour"/> with Espionage.Engine Functionality
 	/// </summary>
 	[Constructor( nameof( Constructor ) )]
-	public abstract class Behaviour : MonoBehaviour, ILibrary, ICallbacks
+	public abstract class Behaviour : MonoBehaviour, ILibrary
 	{
 		public Library ClassInfo { get; private set; }
 

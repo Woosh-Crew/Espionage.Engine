@@ -2,7 +2,7 @@ using UnityEngine.UIElements;
 
 namespace Espionage.Engine.Editor
 {
-	public class Element : VisualElement, ILibrary, ICallbacks
+	public class Element : VisualElement, ILibrary
 	{
 		public Library ClassInfo { get; set; }
 

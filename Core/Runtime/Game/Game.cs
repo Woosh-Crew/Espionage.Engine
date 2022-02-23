@@ -7,7 +7,7 @@ namespace Espionage.Engine
 	/// The Entry point for your game. Use this as your "GameManager".
 	/// </summary>
 	[Spawnable, Group( "Engine" )]
-	public abstract class Game : ILibrary, ICallbacks
+	public abstract class Game : ILibrary
 	{
 		public Loader Loader { get; protected set; }
 		public Splash Splash { get; protected set; }

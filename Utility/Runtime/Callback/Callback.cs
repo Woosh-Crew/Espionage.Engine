@@ -70,7 +70,7 @@ namespace Espionage.Engine
 		}
 
 		/// <summary> Register an object to receive callbacks </summary>
-		public static void Register( ICallbacks item )
+		public static void Register( ILibrary item )
 		{
 			if ( item is null )
 			{
@@ -81,7 +81,7 @@ namespace Espionage.Engine
 		}
 
 		/// <summary> Unregister an object to stop receiving callbacks </summary>
-		public static void Unregister( ICallbacks item )
+		public static void Unregister( ILibrary item )
 		{
 			if ( item is null )
 			{

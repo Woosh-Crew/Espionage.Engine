@@ -9,7 +9,7 @@ namespace Espionage.Engine.Tools.Editor
 {
 	/// <summary> A Tool is just an EditorWindow with 
 	/// ILibrary and callbacks registered and a menu bar </summary>
-	public class EditorTool : EditorWindow, ILibrary, ICallbacks
+	public class EditorTool : EditorWindow, ILibrary
 	{
 		public Library ClassInfo { get; private set; }
 
