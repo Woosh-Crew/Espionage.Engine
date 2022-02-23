@@ -4,10 +4,10 @@ using Espionage.Engine.Components;
 namespace Espionage.Engine
 {
 	public sealed class Function : IMember
-	{ 
+	{
 		public MethodInfo Info { get; }
 		public Components<Function> Components { get; }
-		
+
 		internal Function( Library owner, MethodInfo info )
 		{
 			ClassInfo = owner;
@@ -29,12 +29,14 @@ namespace Espionage.Engine
 				}
 			}
 		}
-		
+
 		public string Name { get; set; }
 		public string Title { get; set; }
 		public string Group { get; set; }
 		public string Help { get; set; }
-		
+
+		public bool IsStatic => Info.IsStatic;
+
 		private Library ClassInfo { get; }
 	}
 }

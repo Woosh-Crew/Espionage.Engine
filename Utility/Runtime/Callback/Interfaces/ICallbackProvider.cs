@@ -6,7 +6,7 @@ namespace Espionage.Engine.Internal.Callbacks
 {
 	public interface ICallbackProvider : IDisposable
 	{
-		void Add( Function function );
+		void Add( string eventName, Function function );
 
 		void Run( string name );
 		object[] Run( string name, params object[] args );

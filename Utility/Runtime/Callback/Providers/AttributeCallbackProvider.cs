@@ -11,21 +11,20 @@ namespace Espionage.Engine.Internal.Callbacks
 		private Dictionary<string, CallbackInfo.Group> _callbacks = new();
 		private Dictionary<Type, List<object>> _registered = new();
 
-		public void Add( Function function )
+		public void Add( string eventName, Function function )
 		{
-			var attributes = function.Info.GetCustomAttributes<CallbackAttribute>();
-
-			foreach ( var attribute in attributes )
+			if ( !_callbacks.ContainsKey( eventName ) )
 			{
-				if ( !_callbacks.ContainsKey( attribute.Name ) )
-				{
-					_callbacks.Add( attribute.Name, new CallbackInfo.Group() );
-				}
-
-				_callbacks.TryGetValue( attribute.Name, out var items );
-				items?.Add( new CallbackInfo { IsStatic = function.Info.IsStatic }.FromType( function.Info.DeclaringType )
-					.WithCallback( Build( function.Info ) ) );
+				_callbacks.Add( eventName, new CallbackInfo.Group() );
 			}
+
+			var items = _callbacks[eventName];
+
+			items?.Add(
+				new CallbackInfo { IsStatic = function.IsStatic }
+					.FromType( function.Info.DeclaringType )
+					.WithCallback( Build( function.Info ) )
+			);
 		}
 
 		public void Run( string name )

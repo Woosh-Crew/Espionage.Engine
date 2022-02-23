@@ -68,7 +68,7 @@ namespace Espionage.Engine
 			using ( Stopwatch( "Debugging Initialized" ) )
 			{
 				Log ??= new SimpleLoggingProvider();
-				Console ??= new AttributeCommandProvider();
+				Console ??= new SimpleCommandProvider();
 
 				// Setup Default Commands
 

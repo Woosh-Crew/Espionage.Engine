@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Espionage.Engine.Internal.Commands
 {
 	/// <summary>Attribute Command Provider caches commands based off an attribute</summary>
-	internal class AttributeCommandProvider : ICommandProvider
+	internal class SimpleCommandProvider : ICommandProvider
 	{
 		// Commands
 
@@ -23,7 +23,7 @@ namespace Espionage.Engine.Internal.Commands
 		// Provider
 		//
 
-		public AttributeCommandProvider()
+		public SimpleCommandProvider()
 		{
 			_commands ??= new Dictionary<string, Command>( StringComparer.CurrentCultureIgnoreCase );
 			_commands.Clear();
