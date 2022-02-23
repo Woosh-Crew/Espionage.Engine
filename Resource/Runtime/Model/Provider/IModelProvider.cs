@@ -1,10 +1,11 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Espionage.Engine.Resources
 {
 	public interface IModelProvider : IResource, IAsset
 	{
-		// Loading Meta
+		GameObject Model { get; }
 		float Progress { get; }
 	}
 }

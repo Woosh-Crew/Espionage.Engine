@@ -2,7 +2,7 @@ using System;
 
 namespace Espionage.Engine
 {
-	[AttributeUsage( AttributeTargets.Class )]
+	[AttributeUsage( AttributeTargets.Class, AllowMultiple = true )]
 	public sealed class ManagerAttribute : Attribute
 	{
 		public ManagerAttribute( string initializer )
