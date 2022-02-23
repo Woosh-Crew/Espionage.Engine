@@ -8,7 +8,7 @@ namespace Espionage.Engine
 	/// Reflection Component for storing Tags / Aliases.
 	/// </summary>
 	[AttributeUsage( AttributeTargets.Class | AttributeTargets.Property )]
-	public sealed class TagsAttribute : Attribute, IComponent<Library>, IComponent<Property>
+	public sealed class TagsAttribute : Attribute, IComponent<Library>, IComponent<Property>, IComponent<Function>
 	{
 		public string[] Tags { get; }
 
@@ -20,5 +20,6 @@ namespace Espionage.Engine
 		public void OnAttached( Library library ) { }
 
 		public void OnAttached( Property property ) { }
+		public void OnAttached( Function item ) { }
 	}
 }

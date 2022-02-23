@@ -12,7 +12,7 @@ namespace Espionage.Engine
 	/// Reflection Component that stores a reference to an Icon.
 	/// </summary>
 	[AttributeUsage( AttributeTargets.Class | AttributeTargets.Property )]
-	public sealed class IconAttribute : Attribute, IComponent<Library>, IComponent<Property>
+	public sealed class IconAttribute : Attribute, IComponent<Library>, IComponent<Property>, IComponent<Function>
 	{
 		private readonly string _path;
 
@@ -21,12 +21,13 @@ namespace Espionage.Engine
 			_path = path;
 		}
 
-#if UNITY_EDITOR
+	#if UNITY_EDITOR
 		public Texture Icon => AssetDatabase.LoadAssetAtPath<Texture>( _path );
-#else
+	#else
 		public Texture Icon => throw new NotImplementedException();
-#endif
+	#endif
 		public void OnAttached( Library library ) { }
 		public void OnAttached( Property property ) { }
+		public void OnAttached( Function item ) { }
 	}
 }
