@@ -3,6 +3,13 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
+[Flags]
+public enum Layer : short
+{
+	Runtime = 0x1,
+	Editor = 0x2
+}
+
 namespace Espionage.Engine.Internal
 {
 	internal static class Manager
