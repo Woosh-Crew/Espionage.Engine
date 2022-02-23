@@ -124,7 +124,6 @@ namespace Espionage.Engine
 
 			public void Add( Property item )
 			{
-				Debugging.Log.Info( item.Name );
 				_all.Add( item.Name, item );
 			}
 
