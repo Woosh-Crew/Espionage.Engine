@@ -8,7 +8,7 @@ namespace Espionage.Engine
 	[Manager( nameof( Initialize ), Layer = Layer.Editor | Layer.Runtime, Order = -100 )]
 	public static class Callback
 	{
-		internal static ICallbackProvider Provider { get; set; }
+		public static ICallbackProvider Provider { get; set; }
 
 		internal static void Initialize()
 		{

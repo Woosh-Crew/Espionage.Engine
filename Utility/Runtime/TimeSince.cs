@@ -1,16 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 namespace Espionage.Engine
 {
-	public struct TimeSince
+	public readonly struct TimeSince : IEquatable<TimeSince>, IEquatable<float>
 	{
 		private TimeSince( float time )
 		{
 			_time = Time.time - time;
 		}
-		
+
 		private readonly float _time;
 
 		public static implicit operator float( TimeSince ts )
@@ -21,6 +20,31 @@ namespace Espionage.Engine
 		public static implicit operator TimeSince( float ts )
 		{
 			return new TimeSince( ts );
+		}
+
+		public override bool Equals( object obj )
+		{
+			if ( obj is float value )
+			{
+				return value.Equals( Time.time - _time );
+			}
+
+			return obj is TimeSince other && Equals( other );
+		}
+
+		public bool Equals( TimeSince other )
+		{
+			return _time.Equals( other._time );
+		}
+
+		public bool Equals( float other )
+		{
+			return (Time.time - _time).Equals( other );
+		}
+
+		public override int GetHashCode()
+		{
+			return _time.GetHashCode();
 		}
 	}
 }
