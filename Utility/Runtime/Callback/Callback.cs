@@ -90,5 +90,42 @@ namespace Espionage.Engine
 
 			Provider?.Unregister( item );
 		}
+
+		internal struct Info
+		{
+			// Class
+			public Type Class { get; internal set; }
+			public bool IsStatic { get; internal set; }
+
+
+			// Delegate
+			public delegate object Action( object target, object[] args );
+
+			private Action _callback;
+
+			public object Invoke( object target = null, object[] args = null )
+			{
+				return _callback?.Invoke( target, args );
+			}
+
+			//
+			// Builder
+			//
+
+			public Info WithCallback( Action callbackEvent )
+			{
+				_callback = callbackEvent;
+				return this;
+			}
+
+			public Info FromType( Type type )
+			{
+				Class = type;
+				return this;
+			}
+
+			// Group
+			public class Group : List<Info> { }
+		}
 	}
 }

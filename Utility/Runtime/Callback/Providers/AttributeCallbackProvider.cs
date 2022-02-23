@@ -8,20 +8,20 @@ namespace Espionage.Engine.Internal.Callbacks
 {
 	internal class AttributeCallbackProvider : ICallbackProvider
 	{
-		private Dictionary<string, CallbackInfo.Group> _callbacks = new();
+		private Dictionary<string, Callback.Info.Group> _callbacks = new();
 		private Dictionary<Type, List<object>> _registered = new();
 
 		public void Add( string eventName, Function function )
 		{
 			if ( !_callbacks.ContainsKey( eventName ) )
 			{
-				_callbacks.Add( eventName, new CallbackInfo.Group() );
+				_callbacks.Add( eventName, new Callback.Info.Group() );
 			}
 
 			var items = _callbacks[eventName];
 
 			items?.Add(
-				new CallbackInfo { IsStatic = function.IsStatic }
+				new Callback.Info { IsStatic = function.IsStatic }
 					.FromType( function.Info.DeclaringType )
 					.WithCallback( Build( function.Info ) )
 			);
@@ -135,7 +135,7 @@ namespace Espionage.Engine.Internal.Callbacks
 			Debugging.Log.Warning( "Disposing ICallbackProvider" );
 		}
 
-		private static CallbackInfo.Action Build( MethodBase info )
+		private static Callback.Info.Action Build( MethodBase info )
 		{
 			return ( target, args ) => info?.Invoke( target, args );
 		}
