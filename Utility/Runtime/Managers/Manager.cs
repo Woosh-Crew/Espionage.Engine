@@ -9,24 +9,17 @@ namespace Espionage.Engine.Internal
 	{
 		private static void Invoker( Layer layer )
 		{
-			// Get all manager types - this is the most aids shit ever
 			var types = AppDomain.CurrentDomain.GetAssemblies()
-				.Where( Utility.IgnoreIfNotUserGeneratedAssembly )
+				.Where( e => e == typeof( Library ).Assembly || e.GetReferencedAssemblies().Any( assemblyName => assemblyName.Name == typeof( Library ).Assembly.GetName().Name ) )
 				.SelectMany( e => e.GetTypes()
 					.Where( type =>
 					{
-						if ( Utility.IgnoredNamespaces.Any( s => s == type.Namespace ) )
+						if ( !type.IsDefined( typeof( ManagerAttribute ) ) )
 						{
 							return false;
 						}
 
 						var attribute = type.GetCustomAttribute<ManagerAttribute>();
-
-						if ( attribute is null )
-						{
-							return false;
-						}
-
 						if ( attribute.Layer == (Layer.Runtime | Layer.Editor) )
 						{
 							return layer == Layer.Editor;
@@ -36,11 +29,9 @@ namespace Espionage.Engine.Internal
 					} ) )
 				.OrderBy( e => e.GetCustomAttribute<ManagerAttribute>().Order );
 
-			// Invoke all init methods - or cache if it returns task
 			foreach ( var item in types )
 			{
-				var method = item.GetMethod( item.GetCustomAttribute<ManagerAttribute>().Method, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic );
-				method?.Invoke( null, null );
+				item.GetMethod( item.GetCustomAttribute<ManagerAttribute>().Method, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic )?.Invoke( null, null );
 			}
 		}
 
@@ -54,7 +45,7 @@ namespace Espionage.Engine.Internal
 			}
 		}
 
-#if UNITY_EDITOR
+	#if UNITY_EDITOR
 
 		[UnityEditor.InitializeOnLoadMethod]
 		private static void InvokeEditor()
@@ -66,6 +57,6 @@ namespace Espionage.Engine.Internal
 			}
 		}
 
-#endif
+	#endif
 	}
 }
