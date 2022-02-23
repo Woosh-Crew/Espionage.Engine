@@ -30,6 +30,11 @@ namespace Espionage.Engine
 			}
 		}
 
+		public object Invoke( object target, params object[] parameters )
+		{
+			return Info.Invoke( target, parameters );
+		}
+
 		public string Name { get; set; }
 		public string Title { get; set; }
 		public string Group { get; set; }

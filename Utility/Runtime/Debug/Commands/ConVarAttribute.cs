@@ -5,7 +5,7 @@ using Espionage.Engine.Internal.Commands;
 namespace Espionage.Engine
 {
 	/// <summary>
-	/// A Var is basically a <see cref="ConCmd.ConCmdAttribute"/>, with the command prebuilt when initializing.
+	/// A Var is basically a <see cref="ConCmdAttribute"/>, with the command prebuilt when initializing.
 	/// This var allows you to change and read a property at any time. You can also serialize the value
 	/// for persistence. Attribute must be attached to a static property.
 	/// </summary>

@@ -12,7 +12,7 @@ namespace Espionage.Engine
 	/// You should be using this over Unity's debug library.
 	/// </summary>
 	[Library, Group( "Diagnostics" ), Manager( nameof( Initialize ), Layer = Layer.Runtime | Layer.Editor, Order = -200 )]
-	public static partial class Debugging
+	public static class Debugging
 	{
 		// Providers
 
@@ -74,17 +74,35 @@ namespace Espionage.Engine
 
 				// Quit
 				Console.Add( new Command()
-				{
-					Name = "quit",
-					Help = "Quits the application"
-				}.WithAction( _ => Application.Quit() ) );
+					{
+						Name = "quit",
+						Help = "Quits the application"
+					}.WithAction( _ => Application.Quit() )
+				);
 
 				// Clear
 				Console.Add( new Command()
-				{
-					Name = "clear",
-					Help = "Clears everything in the log"
-				}.WithAction( _ => Log.Clear() ) );
+					{
+						Name = "clear",
+						Help = "Clears everything in the log"
+					}.WithAction( _ => Log.Clear() )
+				);
+
+				// Help
+				Console.Add( new Command()
+					{
+						Name = "help",
+						Help = "Returns Help Message on all commands"
+					}.WithAction( _ =>
+					{
+						Log.Info( "Dumping All" );
+
+						foreach ( var command in Console.All )
+						{
+							Log.Info( $"{command.Name} = {command.Help}" );
+						}
+					} )
+				);
 			}
 		}
 

@@ -53,6 +53,7 @@ namespace Espionage.Engine.Resources
 				if ( _records.ContainsKey( item.Identifier! ) )
 				{
 					_records[item.Identifier] = item;
+					Debugging.Log.Warning( $"For some reason we're replacing a resource? [{item.Identifier}]" );
 				}
 				else
 				{

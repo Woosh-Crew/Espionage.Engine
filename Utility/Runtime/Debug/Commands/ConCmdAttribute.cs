@@ -4,6 +4,9 @@ using Espionage.Engine.Internal.Commands;
 
 namespace Espionage.Engine
 {
+	/// <summary>
+	/// A Method that can be invoked through a command line.
+	/// </summary>
 	[AttributeUsage( AttributeTargets.Method, Inherited = false )]
 	public class ConCmdAttribute : Attribute, IComponent<Function>
 	{
