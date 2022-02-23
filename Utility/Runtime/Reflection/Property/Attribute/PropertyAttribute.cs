@@ -17,6 +17,11 @@ namespace Espionage.Engine
 
 		public PropertyAttribute() { }
 
+		public PropertyAttribute( string name )
+		{
+			Name = name;
+		}
+
 		public Property CreateRecord( Library library, PropertyInfo info )
 		{
 			return new Property( library, info )
