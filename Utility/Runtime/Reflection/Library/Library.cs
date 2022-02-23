@@ -23,6 +23,13 @@ namespace Espionage.Engine
 	[Serializable]
 	public sealed partial class Library
 	{
+		/// <summary>
+		/// Components are added meta data onto that library, this can
+		/// include icons, company, stylesheet, etc. They allow us
+		/// to do some really crazy cool shit
+		/// </summary>
+		public Components<Library> Components { get; }
+
 		public Library( [NotNull] Type type )
 		{
 			Class = type;
@@ -42,12 +49,14 @@ namespace Espionage.Engine
 				}
 			}
 
-			// Properties
-			Properties = new InternalPropertyDatabase();
+			// Grab Class Members
 
-			// Get all Properties (Defined by the User)
-			const BindingFlags propertyFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic;
-			foreach ( var propertyInfo in Class.GetProperties( propertyFlags ) )
+			const BindingFlags flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic;
+
+			// Properties
+			Properties = new MemberDatabase<Property>();
+
+			foreach ( var propertyInfo in Class.GetProperties( flags ) )
 			{
 				if ( !propertyInfo.IsDefined( typeof( PropertyAttribute ) ) )
 				{
@@ -60,11 +69,9 @@ namespace Espionage.Engine
 			}
 
 			// Functions
-			Functions = new InternalFunctionDatabase();
+			Functions = new MemberDatabase<Function>();
 
-			// Get all Properties (Defined by the User)
-			const BindingFlags methodFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic;
-			foreach ( var methodInfo in Class.GetMethods( methodFlags ) )
+			foreach ( var methodInfo in Class.GetMethods( flags ) )
 			{
 				if ( !methodInfo.IsDefined( typeof( FunctionAttribute ) ) )
 				{
@@ -109,30 +116,29 @@ namespace Espionage.Engine
 		public IDatabase<Property, string> Properties { get; private set; }
 
 		/// <summary>
-		/// All the properties on this library. These are the members
-		/// that have the Property attribute on them. They are used for
-		/// serialization.
+		/// All the functions on this library. These are the members
+		/// that have the Function attribute on them. 
 		/// </summary>
 		public IDatabase<Function, string> Functions { get; private set; }
 
-		private class InternalPropertyDatabase : IDatabase<Property, string>
+		private class MemberDatabase<T> : IDatabase<T, string> where T : class, IMember
 		{
-			private readonly Dictionary<string, Property> _all = new();
-			public IEnumerable<Property> All => _all.Values;
+			private readonly Dictionary<string, T> _all = new();
+			public IEnumerable<T> All => _all.Values;
 
-			public Property this[ string key ] => _all.ContainsKey( key ) ? _all[key] : null;
+			public T this[ string key ] => _all.ContainsKey( key ) ? _all[key] : null;
 
-			public void Add( Property item )
+			public void Add( T item )
 			{
 				_all.Add( item.Name, item );
 			}
 
-			public bool Contains( Property item )
+			public bool Contains( T item )
 			{
 				return _all.ContainsKey( item.Name );
 			}
 
-			public void Remove( Property item )
+			public void Remove( T item )
 			{
 				_all.Remove( item.Name );
 			}
@@ -142,45 +148,5 @@ namespace Espionage.Engine
 				_all.Clear();
 			}
 		}
-
-		private class InternalFunctionDatabase : IDatabase<Function, string>
-		{
-			private readonly Dictionary<string, Function> _all = new();
-			public IEnumerable<Function> All => _all.Values;
-
-			public Function this[ string key ] => _all.ContainsKey( key ) ? _all[key] : null;
-
-			public void Add( Function item )
-			{
-				_all.Add( item.Name, item );
-			}
-
-			public bool Contains( Function item )
-			{
-				return _all.ContainsKey( item.Name );
-			}
-
-			public void Remove( Function item )
-			{
-				_all.Remove( item.Name );
-			}
-
-			public void Clear()
-			{
-				_all.Clear();
-			}
-		}
-
-
-		//
-		// Components
-		//
-
-		/// <summary>
-		/// Components are added meta data onto that library, this can
-		/// include icons, company, stylesheet, etc. They allow us
-		/// to do some really crazy cool shit
-		/// </summary>
-		public Components<Library> Components { get; }
 	}
 }
