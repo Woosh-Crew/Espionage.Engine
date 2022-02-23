@@ -1,33 +1,20 @@
 ﻿using System;
 using Espionage.Engine.Components;
+using UnityEngine;
 
 namespace Espionage.Engine.Resources
 {
 	[Group( "Models" )]
-	public sealed partial class Model : IResource, IDisposable, ILibrary
+	public sealed class Model : Resource
 	{
-		public Library ClassInfo { get; }
+		private IModelProvider Provider { get; }
 		public Components<Model> Components { get; }
 
-		//
-		// Meta Data
-		//
-
-		private IModelProvider Provider { get; }
-
-		public string Identifier => Provider.Identifier;
-		public string Title { get; set; }
-		public string Description { get; set; }
-
-		//
-		// Constructors
-		//
+		public override string Identifier => Provider.Identifier;
 
 		private Model( IModelProvider provider )
 		{
-			ClassInfo = Library.Database[GetType()];
 			Components = new Components<Model>( this );
-
 			Provider = provider;
 		}
 
@@ -40,26 +27,15 @@ namespace Espionage.Engine.Resources
 		// Resource
 		//
 
-		public bool IsLoading => Provider.IsLoading;
+		public override bool IsLoading => Provider.IsLoading;
 
 		public void Load( Action onLoad = null )
 		{
-			onLoad += () =>
-			{
-				Callback.Run( "map.loaded" );
-			};
-
 			Provider.Load( onLoad );
 		}
 
-
 		public void Unload( Action onUnload = null )
 		{
-			onUnload += () =>
-			{
-				Callback.Run( "map.loaded" );
-			};
-
 			Provider.Unload( onUnload );
 		}
 
