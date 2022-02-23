@@ -10,78 +10,43 @@ namespace Espionage.Engine
 {
 	public static partial class Debugging
 	{
-		//
-		// Terminal
-		//
-
-		/// <summary>
-		/// Add this attribute to a method for it be added to the command database. Then later 
-		/// invoked using its name / identifier. Attribute must be attached to a static method.
-		/// </summary>
 		[AttributeUsage( AttributeTargets.Method, Inherited = false )]
-		public class CmdAttribute : Attribute, ICommandCreator
+		public class CmdAttribute : Attribute, IComponent<Function>
 		{
-			public string[] Names { get; }
-
-			/// <summary>
-			/// What should we print when help is invoked in the console.
-			/// </summary>
-			public string Help { get; set; }
-
-			/// <summary><inheritdoc cref="CmdAttribute"/></summary>
-			/// <param name="names">What is the name of the command to invoke this method.</param>
-			public CmdAttribute( params string[] names )
+			public void OnAttached( Function item )
 			{
-				Names = names;
+				Log.Info( "Adding Command" );
+
+				if ( !item.Info.IsStatic )
+				{
+					Log.Error( $"Function \"{item.Name}\" Must be Static!" );
+					return;
+				}
+
+				foreach ( var command in Create( item ) )
+				{
+					Console.Add( command );
+				}
 			}
 
-			public List<Command> Create( MemberInfo info )
+			public Command Create( IMember info )
 			{
 				var commands = new List<Command>();
 
-				var helpBuilder = new StringBuilder( Help + " - (" );
+				var helpBuilder = new StringBuilder( info.Help + " - (" );
 				var helpMessage = BuildHelpMessage( info, helpBuilder );
 				helpBuilder.Append( " )" );
 
-				foreach ( var item in Names )
+				var command = new Command()
 				{
-					var command = new Command()
-					{
-						Name = item,
-						Help = helpBuilder.ToString(),
-						Info = info
-					};
+					Name = info.Name,
+					Help = helpBuilder.ToString(),
+					Info = info as MemberInfo
+				};
 
-					OnCreate( ref command, info );
-					commands.Add( command );
-				}
+				OnCreate( ref command, info );
 
-				return commands;
-			}
-
-			protected virtual StringBuilder BuildHelpMessage( MemberInfo info, StringBuilder builder )
-			{
-				if ( info is not MethodInfo method )
-				{
-					return builder;
-				}
-
-				var parameters = method.GetParameters();
-
-				foreach ( var item in parameters )
-				{
-					if ( item.HasDefaultValue )
-					{
-						var text = item.DefaultValue is null ? "null" : item.DefaultValue.ToString();
-						builder.Append( $" {item.ParameterType.Name} = {text}" );
-					}
-					else
-					{
-						builder.Append( $" {item.ParameterType.Name}" );
-					}
-				}
-
-				return builder;
+				return command;
 			}
 
 			protected virtual void OnCreate( ref Command command, MemberInfo info )
@@ -98,65 +63,40 @@ namespace Espionage.Engine
 		/// for persistence. Attribute must be attached to a static property.
 		/// </summary>
 		[AttributeUsage( AttributeTargets.Property )]
-		public sealed class VarAttribute : CmdAttribute
+		public sealed class ConVarAttribute : Attribute, IComponent<Property>
 		{
-			/// <summary>
-			/// Will this Var be serialized, and saved for use after the application closes?
-			/// </summary>
-			public bool Saved { get; set; }
-
-			/// <summary>
-			/// If True, user wont be able to set the value of the target property.
-			/// </summary>
-			public bool IsReadOnly { get; set; }
-
-			public VarAttribute( string name ) : base( name ) { }
-
-			protected override void OnCreate( ref Command command, MemberInfo info )
+			public void OnAttached( Property item )
 			{
-				var property = info as PropertyInfo;
-				var name = command.Name;
+				if ( !item.IsStatic )
+				{
+					Log.Error( $"Property \"{item.Name}\" Must be Static!" );
+					return;
+				}
 
-				// if ( Saved )
-				// Set the properties value when we create the command.
-				// Only static properties should be allowed to be saved.
+				var command = new Command()
+				{
+					Name = item.Name,
+					Help = item.Help,
+					Info = item.Info
+				};
 
 				command.WithAction(
 					( parameters ) =>
 					{
-						if ( !IsReadOnly && parameters is not null && parameters.Length > 0 )
+						if ( parameters is not null && parameters.Length > 0 )
 						{
-							property?.SetValue( null, parameters[0] );
-							Log.Info( $"{name} is now {property?.GetValue( null )}" );
+							var value = parameters[0];
+							item[null] = value;
 
-							if ( Saved )
-							{
-								SaveValue();
-							}
+							Log.Info( $"{item.Name} is now {value}" );
 						}
 						else
 						{
-							Log.Info( $"{name} = {property?.GetValue( null )}" );
+							Log.Info( $"{item.Name} is now {item[null]}" );
 						}
 					} );
-			}
 
-			protected override StringBuilder BuildHelpMessage( MemberInfo info, StringBuilder builder )
-			{
-				if ( info is not PropertyInfo property )
-				{
-					return builder;
-				}
-
-				builder.Append( $" {property.PropertyType.Name} " );
-
-				return builder;
-			}
-
-
-			private void SaveValue()
-			{
-				Log.Error( "Values cant be saved or restored just yet" );
+				Console.Add( command );
 			}
 		}
 	}

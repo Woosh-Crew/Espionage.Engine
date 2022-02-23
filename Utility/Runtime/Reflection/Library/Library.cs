@@ -33,7 +33,8 @@ namespace Espionage.Engine
 
 			// This is really expensive (6ms)...
 			// Get Components attached to type
-			foreach ( var item in Class.GetCustomAttributes() )
+			var attributes = Class.GetCustomAttributes();
+			foreach ( var item in attributes )
 			{
 				if ( item is IComponent<Library> library )
 				{
@@ -45,8 +46,8 @@ namespace Espionage.Engine
 			Properties = new InternalPropertyDatabase();
 
 			// Get all Properties (Defined by the User)
-			const BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;
-			foreach ( var propertyInfo in Class.GetProperties( flags ) )
+			const BindingFlags propertyFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic;
+			foreach ( var propertyInfo in Class.GetProperties( propertyFlags ) )
 			{
 				if ( !propertyInfo.IsDefined( typeof( PropertyAttribute ) ) )
 				{
@@ -56,6 +57,23 @@ namespace Espionage.Engine
 				// Only add property if it has the attribute
 				var attribute = propertyInfo.GetCustomAttribute<PropertyAttribute>();
 				Properties.Add( attribute.CreateRecord( this, propertyInfo ) );
+			}
+
+			// Functions
+			Functions = new InternalFunctionDatabase();
+
+			// Get all Properties (Defined by the User)
+			const BindingFlags flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic;
+			foreach ( var methodInfo in Class.GetMethods( flags ) )
+			{
+				if ( !methodInfo.IsDefined( typeof( FunctionAttribute ) ) )
+				{
+					continue;
+				}
+
+				// Only add property if it has the attribute
+				var attribute = methodInfo.GetCustomAttribute<FunctionAttribute>();
+				Functions.Add( attribute.CreateRecord( this, methodInfo ) );
 			}
 		}
 
@@ -90,6 +108,13 @@ namespace Espionage.Engine
 		/// </summary>
 		public IDatabase<Property, string> Properties { get; private set; }
 
+		/// <summary>
+		/// All the properties on this library. These are the members
+		/// that have the Property attribute on them. They are used for
+		/// serialization.
+		/// </summary>
+		public IDatabase<Function, string> Functions { get; private set; }
+
 		private class InternalPropertyDatabase : IDatabase<Property, string>
 		{
 			private readonly Dictionary<string, Property> _all = new();
@@ -99,6 +124,7 @@ namespace Espionage.Engine
 
 			public void Add( Property item )
 			{
+				Debugging.Log.Info( item.Name );
 				_all.Add( item.Name, item );
 			}
 
@@ -117,6 +143,35 @@ namespace Espionage.Engine
 				_all.Clear();
 			}
 		}
+
+		private class InternalFunctionDatabase : IDatabase<Function, string>
+		{
+			private readonly Dictionary<string, Function> _all = new();
+			public IEnumerable<Function> All => _all.Values;
+
+			public Function this[ string key ] => _all.ContainsKey( key ) ? _all[key] : null;
+
+			public void Add( Function item )
+			{
+				_all.Add( item.Name, item );
+			}
+
+			public bool Contains( Function item )
+			{
+				return _all.ContainsKey( item.Name );
+			}
+
+			public void Remove( Function item )
+			{
+				_all.Remove( item.Name );
+			}
+
+			public void Clear()
+			{
+				_all.Clear();
+			}
+		}
+
 
 		//
 		// Components

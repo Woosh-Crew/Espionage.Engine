@@ -1,9 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using Espionage.Engine.Internal;
 using Espionage.Engine.Internal.Logging;
 using Espionage.Engine.Internal.Commands;
 using UnityEngine;
@@ -15,7 +11,7 @@ namespace Espionage.Engine
 	/// logging, commands, overlays, and other utility features.
 	/// You should be using this over Unity's debug library.
 	/// </summary>
-	[Manager( nameof( Initialize ), Layer = Layer.Runtime | Layer.Editor, Order = -200 )]
+	[Library, Group( "Diagnostics" ), Manager( nameof( Initialize ), Layer = Layer.Runtime | Layer.Editor, Order = -200 )]
 	public static partial class Debugging
 	{
 		// Providers
@@ -98,21 +94,21 @@ namespace Espionage.Engine
 
 		// App
 
-		[Var( "application.unity_version", IsReadOnly = true )]
+		[ConVar, Property( "application.unity_version" ), Editable( false )]
 		private static string UnityVersion => Application.unityVersion;
 
-		[Var( "application.sys_language", IsReadOnly = true )]
+		[ConVar, Property( "application.sys_language" ), Editable( false )]
 		private static string SystemLang => Application.systemLanguage.ToString();
 
-		[Var( "application.target_fps" )]
+		[ConVar, Property( "application.target_fps" ), Editable( false )]
 		private static int TargetFramerate { get => Application.targetFrameRate; set => Application.targetFrameRate = value; }
 
 		// Debug
 
-		[Var( "debug.overlay" )]
+		[ConVar, Property( "debug.overlay" )]
 		private static bool ShowOverlays { get => Overlay.Show; set => Overlay.Show = value; }
 
-		[Var( "debug.report_stopwatch" )]
+		[ConVar, Property( "debug.report_stopwatch" )]
 		private static bool ReportStopwatch { get; set; } = true;
 
 		internal class TimedScope : IDisposable

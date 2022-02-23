@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Espionage.Engine.Components;
-using UnityEngine.LowLevel;
 
 namespace Espionage.Engine
 {
-	public sealed class Property
+	public sealed class Property : IMember
 	{
+		public PropertyInfo Info { get; }
 		public Components<Property> Components { get; }
 
 		internal Property( Library owner, PropertyInfo info )
@@ -38,10 +36,11 @@ namespace Espionage.Engine
 		public string Group { get; set; }
 		public string Help { get; set; }
 		public bool Serialized { get; set; }
+
+		public bool IsStatic => Info.GetMethod.IsStatic;
 		public Type Type => Info.PropertyType;
 
 		private Library ClassInfo { get; }
-		private PropertyInfo Info { get; }
 
 		public object this[ object from ]
 		{

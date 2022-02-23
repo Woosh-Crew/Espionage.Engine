@@ -27,39 +27,6 @@ namespace Espionage.Engine.Internal.Commands
 		{
 			_commands ??= new Dictionary<string, Command>( StringComparer.CurrentCultureIgnoreCase );
 			_commands.Clear();
-
-			// Select all types where ILibrary exists or if it has the correct attribute
-			for ( var assemblyIndex = 0; assemblyIndex < AppDomain.CurrentDomain.GetAssemblies().Length; assemblyIndex++ )
-			{
-				var assembly = AppDomain.CurrentDomain.GetAssemblies()[assemblyIndex];
-				if ( !Utility.IgnoreIfNotUserGeneratedAssembly( assembly ) )
-				{
-					continue;
-				}
-
-				foreach ( var type in assembly.GetTypes() )
-				{
-					if ( Utility.IgnoredNamespaces.Any( e => e == type.Namespace ) )
-					{
-						continue;
-					}
-
-					foreach ( var member in type.GetMembers( BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic ) )
-					{
-						var attribute = member.GetCustomAttribute<Debugging.CmdAttribute>();
-
-						if ( attribute is null )
-						{
-							continue;
-						}
-
-						foreach ( var item in attribute.Create( member ) )
-						{
-							Add( item );
-						}
-					}
-				}
-			}
 		}
 
 		public void Add( Command command )

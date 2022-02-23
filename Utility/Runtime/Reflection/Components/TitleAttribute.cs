@@ -7,7 +7,7 @@ namespace Espionage.Engine
 	/// Reflection Component that changes the Tile value on a Library or Property.
 	/// </summary>
 	[AttributeUsage( AttributeTargets.Class | AttributeTargets.Property, Inherited = false )]
-	public sealed class TitleAttribute : Attribute, IComponent<Library>, IComponent<Property>
+	public sealed class TitleAttribute : Attribute, IComponent<Library>, IComponent<Property>, IComponent<Function>
 	{
 		private readonly string _title;
 
@@ -24,6 +24,11 @@ namespace Espionage.Engine
 		public void OnAttached( Property property )
 		{
 			property.Title = _title;
+		}
+
+		public void OnAttached( Function item )
+		{
+			item.Title = _title;
 		}
 	}
 }

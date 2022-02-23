@@ -26,7 +26,7 @@ namespace Espionage.Engine
 		{
 			return new Property( library, info )
 			{
-				Name = Name,
+				Name = string.IsNullOrEmpty( Name ) ? info.Name : Name,
 				Help = Help,
 				Title = Title,
 				Group = Group,

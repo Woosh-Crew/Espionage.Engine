@@ -60,21 +60,30 @@ namespace Espionage.Engine
 				{
 					var assembly = AppDomain.CurrentDomain.GetAssemblies()[assemblyIndex];
 
-					// Some fully awesome code  - maybe stupid? i dont care its awesome
-					if ( assembly.GetReferencedAssemblies().All( e => e.Name != typeof( Library ).Assembly.GetName().Name ) )
+					if ( assembly != typeof( Library ).Assembly )
 					{
-						continue;
+						// Some fully awesome code  - maybe stupid? i dont care its awesome
+						if ( assembly.GetReferencedAssemblies().All( e => e.Name != typeof( Library ).Assembly.GetName().Name ) )
+						{
+							continue;
+						}
 					}
 
 					var types = assembly.GetTypes();
 					for ( var typeIndex = 0; typeIndex < types.Length; typeIndex++ )
 					{
 						var type = types[typeIndex];
+
 						// If we don't have the interface, or if were not a static class.
-						if ( !(type.IsAbstract && type.IsSealed || type.HasInterface<ILibrary>() || type.IsDefined( typeof( LibraryAttribute ) )) || Utility.IgnoredNamespaces.Any( e => e == type.Namespace ) )
+						if ( !(type.HasInterface<ILibrary>() || type.IsDefined( typeof( LibraryAttribute ) )) )
 						{
 							continue;
 						}
+
+						// if ( !(type.IsAbstract && type.IsSealed) )
+						// {
+						// 	continue;
+						// }
 
 						Database.Add( CreateRecord( type ) );
 					}
