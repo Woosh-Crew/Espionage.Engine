@@ -1,10 +1,11 @@
 ﻿using System;
+using UnityEngine;
 
 namespace Espionage.Engine.Resources
 {
-	public interface ITextureProvider : IResource
+	public interface ITextureProvider : IResource, IAsset
 	{
-		// Loading Meta
+		public Texture2D Texture { get; }
 		float Progress { get; }
 	}
 }

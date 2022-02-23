@@ -55,6 +55,7 @@ namespace Espionage.Engine
 
 		#elif UNITY_STANDALONE
 			// Get Object from AssetBundle and Spawn
+			return null;
 
 		#else
 			return null;

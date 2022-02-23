@@ -1,4 +1,6 @@
-﻿namespace Espionage.Engine.Resources
+﻿using UnityEngine;
+
+namespace Espionage.Engine.Resources
 {
 	[Group( "Textures" )]
 	public class Texture : Resource
