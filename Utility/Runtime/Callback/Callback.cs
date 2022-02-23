@@ -5,8 +5,8 @@ using Espionage.Engine.Internal.Callbacks;
 
 namespace Espionage.Engine
 {
-	[Manager( nameof( Initialize ), Layer = Layer.Editor | Layer.Runtime, Order = 50 )]
-	public static partial class Callback
+	[Manager( nameof( Initialize ), Layer = Layer.Editor | Layer.Runtime, Order = -100 )]
+	public static class Callback
 	{
 		internal static ICallbackProvider Provider { get; set; }
 

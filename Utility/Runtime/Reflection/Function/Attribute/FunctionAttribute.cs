@@ -25,10 +25,10 @@ namespace Espionage.Engine
 		{
 			return new Function( library, info )
 			{
-				Name = Name,
+				Name = string.IsNullOrEmpty( Name ) ? info.Name : Name,
 				Help = Help,
 				Title = Title,
-				Group = Group,
+				Group = Group
 			};
 		}
 	}
