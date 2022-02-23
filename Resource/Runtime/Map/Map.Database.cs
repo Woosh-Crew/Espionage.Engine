@@ -2,7 +2,7 @@
 
 namespace Espionage.Engine.Resources
 {
-	public sealed partial class Map
+	public partial class Map
 	{
 		/// <summary>
 		/// A reference to all the maps that have already been found or loaded.

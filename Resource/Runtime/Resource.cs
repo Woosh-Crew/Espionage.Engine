@@ -10,24 +10,33 @@ namespace Espionage.Engine.Resources
 		public Resource()
 		{
 			ClassInfo = Library.Database[GetType()];
-			Database.Add( this );
 		}
+
+		public T Grab<T>( string path ) where T : Resource
+		{
+			return null;
+		}
+
+		// Resource
 
 		public abstract string Identifier { get; }
 		public virtual bool IsLoading { get; protected set; }
-		
-		public virtual void Load( Action onLoad = null ) { }
+
+		public virtual void Load( Action onLoad = null )
+		{
+			Database.Add( this );
+		}
 
 		public virtual void Unload( Action onUnload = null )
 		{
 			Database.Remove( this );
 		}
 
-		public virtual void Dispose()
+		public void Dispose()
 		{
 			Unload();
 		}
-		
+
 		///	<summary> A reference to all resources that are loaded. </summary>
 		public static IDatabase<Resource, string> Database { get; } = new InternalDatabase();
 

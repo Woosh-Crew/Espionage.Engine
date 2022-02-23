@@ -18,27 +18,23 @@ namespace Espionage.Engine.Resources
 			Provider = provider;
 		}
 
-		public static Model Load( string path )
-		{
-			return null;
-		}
 
-		//
 		// Resource
-		//
 
 		public override bool IsLoading => Provider.IsLoading;
 
-		public void Load( Action onLoad = null )
+		public override void Load( Action onLoad = null )
 		{
+			base.Load( onLoad );
+
 			Provider.Load( onLoad );
 		}
 
-		public void Unload( Action onUnload = null )
+		public override void Unload( Action onUnload = null )
 		{
+			base.Unload( onUnload );
+
 			Provider.Unload( onUnload );
 		}
-
-		public void Dispose() { }
 	}
 }

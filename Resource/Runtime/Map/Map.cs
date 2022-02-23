@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Linq;
 using Espionage.Engine.Components;
 
 namespace Espionage.Engine.Resources
@@ -14,12 +13,12 @@ namespace Espionage.Engine.Resources
 	/// You should be using this instead of UnityEngine.SceneManager.
 	/// </remarks>
 	[Group( "Maps" )]
-	public sealed partial class Map : IResource, IDisposable, ILibrary, ILoadable
+	public partial class Map : IResource, IDisposable, ILibrary, ILoadable
 	{
 		public static Map Current { get; internal set; }
 
 		// Provider
-		private IMapProvider Provider { get; }
+		protected IMapProvider Provider { get; }
 		public Components<Map> Components { get; }
 
 		// Meta Data
@@ -152,5 +151,13 @@ namespace Espionage.Engine.Resources
 		{
 			Unload( () => Database.Remove( this ) );
 		}
+	}
+
+	/// <inheritdoc cref="Map"/>
+	/// <typeparam name="T"> Provider </typeparam>
+	public class Map<T> : Map where T : class, IMapProvider
+	{
+		public new T Provider => base.Provider as T;
+		public Map( T provider ) : base( provider ) { }
 	}
 }
