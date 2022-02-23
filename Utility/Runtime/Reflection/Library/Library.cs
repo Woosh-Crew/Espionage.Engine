@@ -95,7 +95,7 @@ namespace Espionage.Engine
 			private readonly Dictionary<string, Property> _all = new();
 			public IEnumerable<Property> All => _all.Values;
 
-			public Property this[ string key ] => _all[key];
+			public Property this[ string key ] => _all.ContainsKey( key ) ? _all[key] : null;
 
 			public void Add( Property item )
 			{

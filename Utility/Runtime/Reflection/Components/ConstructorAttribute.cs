@@ -8,7 +8,7 @@ namespace Espionage.Engine
 	/// Attribute that allows the definition of a custom constructor.
 	/// Must return an ILibrary and Must have one parameter that takes in a Library.
 	/// </summary>
-	[AttributeUsage( AttributeTargets.Class, Inherited = true )]
+	[AttributeUsage( AttributeTargets.Class )]
 	public sealed class ConstructorAttribute : Attribute, IConstructor
 	{
 		// Attribute
@@ -25,15 +25,16 @@ namespace Espionage.Engine
 
 		public void OnAttached( Library library )
 		{
-			var method = library.Class.GetMethod( _targetMethod, BindingFlags.FlattenHierarchy | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic );
+			var method = library.Class.GetMethod( _targetMethod, BindingFlags.FlattenHierarchy | BindingFlags.Static | BindingFlags.Public );
 
 			if ( method is null )
 			{
+				Debugging.Log.Info( $"Method was not valid {library.Name} - {_targetMethod}" );
 				return;
 			}
 
-			_constructor = ( e ) => method.Invoke( null, new object[] { e } );
 			_library = library;
+			_constructor = ( e ) => method.Invoke( null, new object[] { e } );
 		}
 
 		// Constructor
@@ -45,7 +46,7 @@ namespace Espionage.Engine
 
 		public object Invoke()
 		{
-			return _constructor( _library );
+			return _constructor?.Invoke( _library );
 		}
 	}
 }

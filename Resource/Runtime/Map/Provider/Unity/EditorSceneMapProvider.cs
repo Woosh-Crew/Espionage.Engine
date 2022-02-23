@@ -51,8 +51,8 @@ namespace Espionage.Engine.Resources
 		{
 			IsLoading = true;
 
-			Scene?.Unload();
-			finished?.Invoke();
+			var request = Scene?.Unload();
+			request.completed += _ => finished?.Invoke();
 
 			IsLoading = false;
 		}

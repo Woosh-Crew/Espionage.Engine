@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Espionage.Engine.Components;
@@ -37,6 +38,7 @@ namespace Espionage.Engine
 		public string Group { get; set; }
 		public string Help { get; set; }
 		public bool Serialized { get; set; }
+		public Type Type => Info.PropertyType;
 
 		private Library ClassInfo { get; }
 		private PropertyInfo Info { get; }

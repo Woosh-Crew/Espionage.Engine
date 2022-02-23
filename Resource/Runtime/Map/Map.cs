@@ -101,11 +101,20 @@ namespace Espionage.Engine.Resources
 			}
 
 			var lastMap = Current;
-			lastMap?.Unload();
+
+			// Unload first, then load the next map
+			if ( lastMap != null )
+			{
+				Debugging.Log.Info( "Unloading, then loading" );
+				lastMap?.Unload( () => Provider.Load( onLoad ) );
+			}
+			else
+			{
+				Provider.Load( onLoad );
+			}
 
 			Current = this;
 			Callback.Run( "map.loading" );
-			Provider.Load( onLoad );
 		}
 
 		/// <summary>

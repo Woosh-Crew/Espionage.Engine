@@ -143,7 +143,7 @@ public static class LibraryDatabaseExtensions
 		return Library.Construct( library ) as T;
 	}
 
-	public static object Create( this IDatabase<Library> database, Type type )
+	public static ILibrary Create( this IDatabase<Library> database, Type type )
 	{
 		return Library.Construct( database.Get( type ) );
 	}
@@ -153,7 +153,7 @@ public static class LibraryDatabaseExtensions
 		return database.Create( type ) as T;
 	}
 
-	public static object Create( this IDatabase<Library> database, string name, bool assertMissing = false )
+	public static ILibrary Create( this IDatabase<Library> database, string name, bool assertMissing = false )
 	{
 		if ( database.TryGet( name, out var library ) )
 		{
@@ -173,7 +173,7 @@ public static class LibraryDatabaseExtensions
 		return database.Create( name, assertMissing ) as T;
 	}
 
-	public static object Create( this IDatabase<Library> database, Guid id )
+	public static ILibrary Create( this IDatabase<Library> database, Guid id )
 	{
 		var library = database.Get( id );
 

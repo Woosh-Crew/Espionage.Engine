@@ -42,7 +42,7 @@ namespace Espionage.Engine
 
 		// Constructor
 
-		private static object Constructor( Library library )
+		public static object Constructor( Library library )
 		{
 			return new GameObject( library.Name ).AddComponent( library.Class );
 		}

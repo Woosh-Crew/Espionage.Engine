@@ -7,7 +7,7 @@ namespace Espionage.Engine
 	/// Properties are variables that are changeable by the editor.
 	/// </summary>
 	[AttributeUsage( AttributeTargets.Property, Inherited = true, AllowMultiple = false )]
-	internal sealed class PropertyAttribute : Attribute
+	public sealed class PropertyAttribute : Attribute
 	{
 		public string Name { get; set; }
 		public string Title { get; set; }

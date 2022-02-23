@@ -16,7 +16,7 @@ namespace Espionage.Engine
 	{
 		/// <summary> Constructs ILibrary, if it it has a custom constructor
 		/// it'll use that to create the ILibrary </summary>
-		internal static object Construct( Library library )
+		internal static ILibrary Construct( Library library )
 		{
 			if ( library is null )
 			{
@@ -32,12 +32,12 @@ namespace Espionage.Engine
 
 			if ( library.Components.TryGet<IConstructor>( out var constructor ) )
 			{
-				return constructor.Invoke();
+				return constructor.Invoke() as ILibrary;
 			}
 
 			if ( !library.Class.IsAbstract )
 			{
-				return Activator.CreateInstance( library.Class );
+				return Activator.CreateInstance( library.Class ) as ILibrary;
 			}
 
 			Debugging.Log.Error( $"Can't construct {library.Name}, is abstract and doesn't have constructor predefined." );
