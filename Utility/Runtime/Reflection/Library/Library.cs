@@ -63,8 +63,8 @@ namespace Espionage.Engine
 			Functions = new InternalFunctionDatabase();
 
 			// Get all Properties (Defined by the User)
-			const BindingFlags flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic;
-			foreach ( var methodInfo in Class.GetMethods( flags ) )
+			const BindingFlags methodFlags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic;
+			foreach ( var methodInfo in Class.GetMethods( methodFlags ) )
 			{
 				if ( !methodInfo.IsDefined( typeof( FunctionAttribute ) ) )
 				{
