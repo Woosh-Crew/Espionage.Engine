@@ -38,7 +38,7 @@ namespace Espionage.Engine.Services
 		private ITripod.Setup _lastSetup = new()
 		{
 			Rotation = Quaternion.identity,
-			FieldOfView = 74,
+			FieldOfView = 60,
 			Position = Vector3.zero
 		};
 
