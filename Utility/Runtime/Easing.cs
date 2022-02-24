@@ -65,6 +65,8 @@ namespace Espionage.Engine
 	{
 		private const float NaturalLOGOf2 = 0.693147181f;
 
+		public delegate void EasingFunction( float start, float end, float value );
+
 		//
 		// Easing functions
 		//

@@ -4,7 +4,8 @@ using UnityEngine;
 namespace Espionage.Engine
 {
 	/// <summary>
-	/// The Entry point for your game. Use this as your "GameManager".
+	/// The Entry point for your game.
+	/// Use this as your "GameManager".
 	/// </summary>
 	[Spawnable, Group( "Engine" )]
 	public abstract class Game : ILibrary
@@ -123,15 +124,7 @@ namespace Espionage.Engine
 				Local.Pawn.PostCameraSetup( ref camSetup );
 			}
 
-			// Build Viewmodels...
-			foreach ( var viewmodel in Viewmodel.All )
-			{
-				if ( viewmodel.gameObject.activeInHierarchy )
-				{
-					viewmodel.PostCameraSetup( ref camSetup );
-				}
-			}
-
+			Viewmodel.Apply( ref camSetup );
 			ITripod.Modifier.Apply( ref camSetup );
 		}
 

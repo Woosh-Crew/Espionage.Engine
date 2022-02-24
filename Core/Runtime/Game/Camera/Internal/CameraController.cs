@@ -34,9 +34,9 @@ namespace Espionage.Engine
 
 				if ( _lastViewer != null )
 				{
-					foreach ( var renderer in _lastViewer.GetComponentsInChildren<Renderer>() )
+					foreach ( var meshRenderer in _lastViewer.GetComponentsInChildren<Renderer>() )
 					{
-						renderer.shadowCastingMode = ShadowCastingMode.On;
+						meshRenderer.shadowCastingMode = ShadowCastingMode.On;
 					}
 				}
 
@@ -44,11 +44,13 @@ namespace Espionage.Engine
 
 				if ( _lastViewer != null )
 				{
-					foreach ( var renderer in _lastViewer.GetComponentsInChildren<Renderer>() )
+					foreach ( var meshRenderer in _lastViewer.GetComponentsInChildren<Renderer>() )
 					{
-						renderer.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+						meshRenderer.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
 					}
 				}
+
+				Viewmodel.Show( _lastViewer != null );
 			}
 		}
 

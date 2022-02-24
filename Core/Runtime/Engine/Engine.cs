@@ -9,7 +9,8 @@ using UnityEngine.SceneManagement;
 namespace Espionage.Engine
 {
 	/// <summary>
-	/// Espionage.Engine Entry Point. Initializes all its services, and sets up the Game.
+	/// Espionage.Engine Entry Point.
+	/// Initializes all its services, and sets up the Game.
 	/// </summary>
 	[Manager( nameof( Initialize_Runtime ), Layer = Layer.Runtime, Order = 600 )]
 	public static class Engine
@@ -26,7 +27,7 @@ namespace Espionage.Engine
 					return;
 				}
 
-				Debugging.Log.Info( $"Using {Game.ClassInfo.Title} as the Game" );
+				Debugging.Log.Info( $"Using {Game?.ClassInfo.Title} as the Game" );
 				CreateEngineLayer();
 				Services = new ServiceDatabase();
 
@@ -57,7 +58,6 @@ namespace Espionage.Engine
 			if ( Game == null && !SetupGame() )
 			{
 				Debugging.Log.Error( "Game couldn't be found. Make sure to make a class inherited from Game" );
-				return;
 			}
 		}
 

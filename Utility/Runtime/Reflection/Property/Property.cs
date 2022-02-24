@@ -16,6 +16,7 @@ namespace Espionage.Engine
 
 			Name = info.Name;
 			Title = info.Name;
+			Group = owner.Title;
 
 			// Components
 			Components = new Components<Property>( this );

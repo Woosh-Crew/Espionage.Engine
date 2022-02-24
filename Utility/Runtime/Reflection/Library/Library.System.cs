@@ -30,7 +30,7 @@ namespace Espionage.Engine
 				return null;
 			}
 
-			if ( library.Components.TryGet<IConstructor>( out var constructor ) )
+			if ( library.Components.TryGet<ConstructorAttribute>( out var constructor ) )
 			{
 				return constructor.Invoke() as ILibrary;
 			}
@@ -74,13 +74,10 @@ namespace Espionage.Engine
 					{
 						var type = types[typeIndex];
 
-						// If we don't have the interface, or if were not a static class.
-						if ( !(type.HasInterface<ILibrary>() || type.IsDefined( typeof( LibraryAttribute ) )) )
+						if ( type.HasInterface<ILibrary>() || type.IsDefined( typeof( LibraryAttribute ) ) )
 						{
-							continue;
+							Database.Add( CreateRecord( type ) );
 						}
-
-						Database.Add( CreateRecord( type ) );
 					}
 				}
 			}

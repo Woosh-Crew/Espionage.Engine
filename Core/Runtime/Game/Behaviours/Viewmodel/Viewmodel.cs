@@ -10,6 +10,28 @@ namespace Espionage.Engine
 	{
 		public static List<Viewmodel> All { get; } = new();
 
+		public static void Apply( ref ITripod.Setup setup )
+		{
+			// Build Viewmodels...
+			foreach ( var viewmodel in All )
+			{
+				if ( viewmodel.gameObject.activeInHierarchy )
+				{
+					viewmodel.PostCameraSetup( ref setup );
+				}
+			}
+		}
+
+		public static void Show( bool value )
+		{
+			foreach ( var viewmodel in All )
+			{
+				viewmodel.gameObject.SetActive( value );
+			}
+		}
+
+		// Instance
+
 		protected override void OnAwake()
 		{
 			All.Add( this );
