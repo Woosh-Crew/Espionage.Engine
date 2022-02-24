@@ -19,11 +19,7 @@ namespace Espionage.Engine.Cameras
 		{
 			// FOV
 			camSetup.Damping = 15;
-
-			if ( _changeFov )
-			{
-				camSetup.FieldOfView = _targetFov;
-			}
+			camSetup.FieldOfView = _targetFov;
 
 			// Rotation
 
@@ -66,11 +62,7 @@ namespace Espionage.Engine.Cameras
 		public void Activated( ref ITripod.Setup camSetup )
 		{
 			_targetPos = camSetup.Position;
-
-			var euler = camSetup.Rotation.eulerAngles;
-			euler.z = 0;
-			_targetRot = euler;
-
+			_targetRot = camSetup.Rotation.eulerAngles.WithZ( 0 );
 			_targetFov = camSetup.FieldOfView;
 		}
 

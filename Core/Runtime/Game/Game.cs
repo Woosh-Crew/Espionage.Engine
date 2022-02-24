@@ -102,6 +102,9 @@ namespace Espionage.Engine
 
 		public virtual ITripod.Setup BuildCamera( ITripod.Setup camSetup )
 		{
+			// Default FOV
+			camSetup.FieldOfView = 68;
+
 			var cam = FindActiveCamera();
 
 			if ( LastTripod != cam )
