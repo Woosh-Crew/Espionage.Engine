@@ -32,6 +32,8 @@ namespace Espionage.Engine
 			var wishDir = rot * Vector3.forward * input.Forward + rot * Vector3.right * input.Horizontal;
 			wishDir = wishDir.normalized * WishSpeed * Time.deltaTime;
 
+			Velocity = wishDir;
+
 			// Finish Gravity
 			Velocity -= new Vector3( 0, gravity / 2, 0 ) * Time.deltaTime;
 
