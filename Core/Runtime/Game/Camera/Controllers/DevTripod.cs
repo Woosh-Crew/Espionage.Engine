@@ -11,7 +11,7 @@ namespace Espionage.Engine.Cameras
 		private bool _interpolate;
 
 		private bool _changeFov;
-		private float _fovChangeDelta;
+		private float _targetFov;
 
 		private float _speedMulti = 1;
 
@@ -22,7 +22,7 @@ namespace Espionage.Engine.Cameras
 
 			if ( _changeFov )
 			{
-				camSetup.FieldOfView += _fovChangeDelta * 150 * Time.deltaTime;
+				camSetup.FieldOfView = _targetFov;
 			}
 
 			// Rotation
@@ -70,6 +70,8 @@ namespace Espionage.Engine.Cameras
 			var euler = camSetup.Rotation.eulerAngles;
 			euler.z = 0;
 			_targetRot = euler;
+
+			_targetFov = camSetup.FieldOfView;
 		}
 
 		public void Deactivated() { }
@@ -86,7 +88,7 @@ namespace Espionage.Engine.Cameras
 
 				if ( _changeFov )
 				{
-					_fovChangeDelta = -Input.GetAxisRaw( "Mouse Y" );
+					_targetFov += -Input.GetAxisRaw( "Mouse Y" ) * 150 * Time.deltaTime;
 					return;
 				}
 
