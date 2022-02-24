@@ -23,11 +23,7 @@ namespace Espionage.Engine
 
 			if ( Controller.isGrounded )
 			{
-				var cappedVel = Velocity;
-				cappedVel.y = 0;
-				Velocity = cappedVel;
-
-				ApplyFriction( friction, stopSpeed );
+				Velocity = Velocity.WithY( 0 );
 			}
 
 			// Smooth WishSpeed, so it isn't jarring
@@ -36,16 +32,12 @@ namespace Espionage.Engine
 			var wishDir = rot * Vector3.forward * input.Forward + rot * Vector3.right * input.Horizontal;
 			wishDir = wishDir.normalized * WishSpeed * Time.deltaTime;
 
-			Accelerate( wishDir.normalized, wishDir.magnitude, 0, 10 );
-
 			// Finish Gravity
 			Velocity -= new Vector3( 0, gravity / 2, 0 ) * Time.deltaTime;
 
 			if ( Controller.isGrounded )
 			{
-				var cappedVel = Velocity;
-				cappedVel.y = 0;
-				Velocity = cappedVel;
+				Velocity = Velocity.WithY( 0 );
 			}
 
 			Controller.Move( Velocity );
@@ -63,69 +55,6 @@ namespace Espionage.Engine
 			}
 
 			return walkSpeed;
-		}
-
-		// Helpers
-
-		protected virtual void Accelerate( Vector3 wishDir, float wishSpeed, float speedLimit, float acceleration )
-		{
-			if ( speedLimit > 0 && wishSpeed > speedLimit )
-			{
-				wishSpeed = speedLimit;
-			}
-
-			// See if we are changing direction a bit
-			var currentSpeed = Vector3.Dot( Velocity, wishDir );
-
-			// Reduce wishSpeed by the amount of veer.
-			var addSpeed = wishSpeed - currentSpeed;
-
-			// If not going to add any speed, done.
-			if ( addSpeed <= 0 )
-			{
-				return;
-			}
-
-			// Determine amount of acceleration.
-			var accelSpeed = acceleration * Time.deltaTime * wishSpeed;
-
-			// Cap at addSpeed
-			if ( accelSpeed > addSpeed )
-			{
-				accelSpeed = addSpeed;
-			}
-
-			Velocity += wishDir * accelSpeed;
-		}
-
-		protected virtual void ApplyFriction( float frictionAmount = 10.0f, float stopPower = 100f )
-		{
-			// Calculate speed
-			var speed = Velocity.magnitude;
-			if ( speed < 0.1f )
-			{
-				return;
-			}
-
-			// Bleed off some speed, but if we have less than the bleed
-			//  threshold, bleed the threshold amount.
-			var control = speed < stopPower ? stopPower : speed;
-
-			// Add the amount to the drop amount.
-			var drop = control * Time.deltaTime * frictionAmount;
-
-			// scale the velocity
-			var newSpeed = speed - drop;
-			if ( newSpeed < 0 )
-			{
-				newSpeed = 0;
-			}
-
-			if ( newSpeed != speed )
-			{
-				newSpeed /= speed;
-				Velocity *= newSpeed;
-			}
 		}
 
 		// Move
