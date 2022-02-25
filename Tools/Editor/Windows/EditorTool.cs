@@ -91,7 +91,7 @@ namespace Espionage.Engine.Tools.Editor
 			helpMenu.AddItem( new GUIContent( "About" ), false, AboutWindow.ShowWindow );
 
 			// Wiki
-			var helpUrl = ClassInfo.Components.Get<HelpURLAttribute>()?.URL ?? "https://github.com/Woosh-Crew/Espionage.Engine/wiki";
+			var helpUrl = ClassInfo.Components.Get<HelpAttribute>()?.URL ?? "https://github.com/Woosh-Crew/Espionage.Engine/wiki";
 			helpMenu.AddItem( new GUIContent( "Wiki" ), false, () => Application.OpenURL( helpUrl ) );
 			_menuBar.Add( "Help", helpMenu );
 		}

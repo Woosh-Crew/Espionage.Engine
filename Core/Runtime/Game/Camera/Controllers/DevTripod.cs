@@ -2,6 +2,7 @@
 
 namespace Espionage.Engine.Cameras
 {
+	[Library( "tripod.dev" ), Group( "Tripods" ), Title( "Dev Cam" )]
 	public class DevTripod : ITripod, IControls
 	{
 		private Vector2 _direction;

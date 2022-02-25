@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using Espionage.Engine.Editor;
+using Espionage.Engine.Tools.Editor;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -8,19 +10,43 @@ using UnityEngine.SceneManagement;
 
 namespace Espionage.Engine.Resources.Editor
 {
-	public class SceneCompiler
+	[Title( "Map Compiler" ), Group( "Compiler" )]
+	public class SceneCompiler : EditorTool
 	{
+		protected override void OnCreateGUI()
+		{
+			rootVisualElement.Add( new HeaderBar( "Map Compiler", "Compile your maps", null, "Header-Bottom-Border" ) );
+		}
+
+		// Menu Items
+
+		[MenuItem( "Tools/Espionage.Engine/Compiler/Map Compiler", priority = -50 )]
+		public static void OpenWindow()
+		{
+			GetWindow<SceneCompiler>();
+		}
+
+		[MenuItem( "Tools/Espionage.Engine/Compiler/Quick Compile Map _F6" )]
+		public static void CompileActiveScene()
+		{
+			Compile( SceneManager.GetActiveScene().path, BuildTarget.StandaloneWindows );
+		}
+
+		// Compiler
+
 		public static void Compile( string scenePath, params BuildTarget[] targets )
 		{
 			// Ask the user if they want to save the scene, if not don't export!
-			if ( !EditorSceneManager.SaveModifiedScenesIfUserWantsTo( new[] { SceneManager.GetActiveScene() } ) )
+			var activeScene = SceneManager.GetActiveScene();
+			var originalPath = activeScene.path;
+
+			if ( activeScene.path == scenePath && !EditorSceneManager.SaveModifiedScenesIfUserWantsTo( new[] { SceneManager.GetActiveScene() } ) )
 			{
 				return;
 			}
 
-			var originalScene = SceneManager.GetActiveScene();
 			var scene = EditorSceneManager.OpenScene( scenePath, OpenSceneMode.Single );
-			
+
 			var exportPath = $"Exports/{Library.Database.Get<Map>().Group}/{scene.name}/";
 
 			// Track how long exporting took
@@ -50,7 +76,7 @@ namespace Espionage.Engine.Resources.Editor
 						Directory.CreateDirectory( Path.GetFullPath( exportPath ) );
 					}
 
-					var extension = Library.Database.Get<Map>().Components.Get<FileAttribute>().Extension ?? "map";
+					var extension = Library.Database.Get<AssetBundleMapProvider>().Components.Get<FileAttribute>().Extension ?? "map";
 
 					var builds = new[]
 					{
@@ -74,7 +100,6 @@ namespace Espionage.Engine.Resources.Editor
 					}
 
 					// Shove Meta Data In
-					
 				}
 				catch ( Exception e )
 				{
@@ -82,7 +107,7 @@ namespace Espionage.Engine.Resources.Editor
 				}
 				finally
 				{
-					EditorSceneManager.OpenScene( originalScene.path );
+					EditorSceneManager.OpenScene( originalPath );
 
 					// Delete Level1, as its not needed anymore
 					AssetDatabase.DeleteAsset( "Assets/Map.unity" );

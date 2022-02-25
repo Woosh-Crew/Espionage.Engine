@@ -112,6 +112,12 @@ namespace Espionage.Engine
 
 		// App
 
+		[ConVar, Property( "application.product_name" ), Editable( false )]
+		private static string ProductName => Application.productName;
+
+		[ConVar, Property( "application.company_name" ), Editable( false )]
+		private static string CompanyName => Application.companyName;
+
 		[ConVar, Property( "application.unity_version" ), Editable( false )]
 		private static string UnityVersion => Application.unityVersion;
 

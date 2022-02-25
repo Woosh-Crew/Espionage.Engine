@@ -9,12 +9,14 @@ namespace Espionage.Engine
 	[AttributeUsage( AttributeTargets.Class )]
 	public sealed class HelpAttribute : Attribute, IComponent<Library>, IComponent<Property>, IComponent<Function>
 	{
-		private readonly string _help;
+		public string URL { get; set; }
 
 		public HelpAttribute( string help )
 		{
 			_help = help;
 		}
+
+		private readonly string _help;
 
 		public void OnAttached( Library library )
 		{

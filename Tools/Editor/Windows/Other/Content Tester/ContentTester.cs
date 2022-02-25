@@ -7,7 +7,7 @@ using Espionage.Engine.Resources;
 
 namespace Espionage.Engine.Tools.Editor
 {
-	[Title( "Content Tester" ), Group( "Tool" ), Icon( EditorIcons.Game ), HelpURL( "https://github.com/Woosh-Crew/Espionage.Engine/wiki" )]
+	[Title( "Content Tester" ), Group( "Tool" ), Icon( EditorIcons.Game )]
 	public class ContentTester : EditorTool
 	{
 		[MenuItem( "Tools/Content Tester _F7", false, -150 )]

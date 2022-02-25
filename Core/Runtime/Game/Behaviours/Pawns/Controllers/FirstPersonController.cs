@@ -73,11 +73,5 @@ namespace Espionage.Engine
 
 		[SerializeField]
 		private float gravity = 20;
-
-		[SerializeField]
-		private float friction = 10;
-
-		[SerializeField]
-		private float stopSpeed = 100;
 	}
 }
