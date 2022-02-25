@@ -80,7 +80,6 @@ namespace Espionage.Engine.Tools.Editor
 
 				foreach ( var function in grouping )
 				{
-					Debugging.Log.Info( function.Group.Remove( 0, grouping.Key.Length ) );
 					menuItem.AddItem( new GUIContent( function.Group.Remove( 0, grouping.Key.Length + 1 ) ), false, () => function.Invoke( function.IsStatic ? null : this, null ) );
 				}
 
