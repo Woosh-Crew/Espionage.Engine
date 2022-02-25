@@ -10,12 +10,17 @@ using UnityEngine.SceneManagement;
 
 namespace Espionage.Engine.Resources.Editor
 {
-	[Title( "Map Compiler" ), Group( "Compiler" )]
-	public class SceneCompiler : EditorTool
+	[Title( "Map Compiler" ), Help( "Compile your maps" ), Group( "Compiler" )]
+	public class SceneCompiler : EditorTool, IHasCustomMenu
 	{
 		protected override void OnCreateGUI()
 		{
-			rootVisualElement.Add( new HeaderBar( "Map Compiler", "Compile your maps", null, "Header-Bottom-Border" ) );
+			rootVisualElement.Add( new HeaderBar( ClassInfo.Title, ClassInfo.Help, null, "Header-Bottom-Border" ) );
+		}
+
+		public void AddItemsToMenu( GenericMenu menu )
+		{
+			menu.AddItem( new GUIContent( "Quick Compile Map" ), false, CompileActiveScene );
 		}
 
 		// Menu Items
@@ -30,6 +35,12 @@ namespace Espionage.Engine.Resources.Editor
 		public static void CompileActiveScene()
 		{
 			Compile( SceneManager.GetActiveScene().path, BuildTarget.StandaloneWindows );
+		}
+
+		[Function, Menu, Group( "File/Open Scene" )]
+		private void OpenScene()
+		{
+			Debugging.Log.Info( "Opening Scene" );
 		}
 
 		// Compiler
@@ -50,7 +61,7 @@ namespace Espionage.Engine.Resources.Editor
 			var exportPath = $"Exports/{Library.Database.Get<Map>().Group}/{scene.name}/";
 
 			// Track how long exporting took
-			using ( Debugging.Stopwatch( "Level Compiled", true ) )
+			using ( Debugging.Stopwatch( "Map Compiled", true ) )
 			{
 				//
 				// Export Level Processes
@@ -92,7 +103,7 @@ namespace Espionage.Engine.Resources.Editor
 					{
 						var bundle = BuildPipeline.BuildAssetBundles( exportPath, builds, BuildAssetBundleOptions.ChunkBasedCompression, target );
 
-						if ( bundle is null )
+						if ( bundle == null )
 						{
 							EditorUtility.DisplayDialog( "ERROR", $"Map asset bundle compile failed. {target.ToString()}", "Okay" );
 							return;

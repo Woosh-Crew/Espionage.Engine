@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.EditorTools;
 using UnityEditor.Toolbars;
@@ -70,7 +71,21 @@ namespace Espionage.Engine.Tools.Editor
 			_menuBar = new MenuBar( pos );
 			rootVisualElement.Add( _menuBar );
 
-			OnMenuBarCreated( _menuBar );
+			// Function base Menus
+			var menuItems = ClassInfo.Functions.All.Where( e => e.Components.Has<MenuAttribute>() ).GroupBy( e => e.Group.Split( '/' )[0] );
+
+			foreach ( var grouping in menuItems )
+			{
+				var menuItem = new GenericMenu();
+
+				foreach ( var function in grouping )
+				{
+					Debugging.Log.Info( function.Group.Remove( 0, grouping.Key.Length ) );
+					menuItem.AddItem( new GUIContent( function.Group.Remove( 0, grouping.Key.Length + 1 ) ), false, () => function.Invoke( function.IsStatic ? null : this, null ) );
+				}
+
+				_menuBar.Add( grouping.Key, menuItem );
+			}
 
 			// Create Tools Menu
 			var toolsMenu = new GenericMenu();

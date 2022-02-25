@@ -46,9 +46,6 @@ namespace Espionage.Engine.Components
 		// Accessors
 		//
 
-		// these would be extension methods but c#
-		// had a fit everytime I tried to do it
-
 		public TComponent Get<TComponent>() where TComponent : class, IComponent<T>
 		{
 			return All.FirstOrDefault( e => e is TComponent ) as TComponent;
@@ -63,6 +60,11 @@ namespace Espionage.Engine.Components
 		{
 			output = Get<TComponent>();
 			return output != null;
+		}
+
+		public bool Has<TComponent>() where TComponent : class, IComponent<T>
+		{
+			return All.OfType<TComponent>().Any();
 		}
 	}
 }

@@ -10,11 +10,6 @@ namespace Espionage.Engine
 	public sealed class PropertyAttribute : Attribute
 	{
 		public string Name { get; set; }
-		public string Title { get; set; }
-		public string Group { get; set; }
-		public string Help { get; set; }
-		public bool Serialized { get; set; }
-
 		public PropertyAttribute() { }
 
 		public PropertyAttribute( string name )
@@ -24,14 +19,7 @@ namespace Espionage.Engine
 
 		public Property CreateRecord( Library library, PropertyInfo info )
 		{
-			return new Property( library, info )
-			{
-				Name = string.IsNullOrEmpty( Name ) ? info.Name : Name,
-				Help = Help,
-				Title = Title,
-				Group = Group,
-				Serialized = Serialized
-			};
+			return new Property( library, info ) { Name = string.IsNullOrEmpty( Name ) ? info.Name : Name };
 		}
 	}
 }

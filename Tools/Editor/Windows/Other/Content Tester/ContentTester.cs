@@ -7,21 +7,18 @@ using Espionage.Engine.Resources;
 
 namespace Espionage.Engine.Tools.Editor
 {
-	[Title( "Content Tester" ), Group( "Tool" ), Icon( EditorIcons.Game )]
+	[Title( "Content Tester" ), Group( "Tool" ), Help( "Test Assets such as Maps and Models" ), Icon( EditorIcons.Game )]
 	public class ContentTester : EditorTool
 	{
 		[MenuItem( "Tools/Content Tester _F7", false, -150 )]
 		private static void ShowEditor()
 		{
-			var wind = GetWindow<ContentTester>();
+			GetWindow<ContentTester>();
 		}
 
 		protected override void OnCreateGUI()
 		{
-			var texture = ClassInfo.Components.Get<IconAttribute>().Icon;
-			var icon = new Image() { image = texture };
-
-			var header = new HeaderBar( ClassInfo.Title, ClassInfo.Help, icon, "Header-Bottom-Border" );
+			var header = new HeaderBar( ClassInfo.Title, ClassInfo.Help, null, "Header-Bottom-Border" );
 			rootVisualElement.Add( header );
 
 			// Map testing

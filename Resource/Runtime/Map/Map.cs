@@ -61,7 +61,7 @@ namespace Espionage.Engine.Resources
 				throw new FileNotFoundException( "Invalid File / Path" );
 			}
 
-			var map = Database[path];
+			var map = Database[path] ?? (noneFound?.Invoke() ?? new Map( path ));
 			return map;
 		}
 
