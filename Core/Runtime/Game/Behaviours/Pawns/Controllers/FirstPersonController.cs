@@ -10,6 +10,8 @@ namespace Espionage.Engine
 		}
 
 		public CharacterController Controller { get; private set; }
+		public Vector3 WishVelocity { get; protected set; }
+		private Vector3 _storedVelocity;
 
 		public override void Simulate( Client client )
 		{
@@ -27,12 +29,14 @@ namespace Espionage.Engine
 			}
 
 			// Smooth WishSpeed, so it isn't jarring
-			WishSpeed = Mathf.Lerp( WishSpeed, GrabWishSpeed( client ), 6 * Time.deltaTime );
+			WishSpeed = Mathf.Lerp( WishSpeed, GrabWishSpeed( client ), 8 * Time.deltaTime );
 
-			var wishDir = rot * Vector3.forward * input.Forward + rot * Vector3.right * input.Horizontal;
-			wishDir = wishDir.normalized * WishSpeed * Time.deltaTime;
+			WishVelocity = rot * Vector3.forward * input.Forward + rot * Vector3.right * input.Horizontal;
+			WishVelocity = WishVelocity.normalized * (WishSpeed / 20) * Time.deltaTime;
 
-			Velocity = wishDir;
+			GroundedMove();
+
+			Velocity = Vector3.SmoothDamp( Velocity, Vector3.zero, ref _storedVelocity, 0.1f );
 
 			// Finish Gravity
 			Velocity -= new Vector3( 0, gravity / 2, 0 ) * Time.deltaTime;
@@ -41,8 +45,6 @@ namespace Espionage.Engine
 			{
 				Velocity = Velocity.WithY( 0 );
 			}
-
-			Controller.Move( Velocity );
 		}
 
 		// Wish Speed
@@ -59,9 +61,22 @@ namespace Espionage.Engine
 			return walkSpeed;
 		}
 
+		// Helpers
+
+		public void Move()
+		{
+			Controller.Move( Velocity );
+		}
+
 		// Move
 
-		protected virtual void GroundedMove() { }
+		protected virtual void GroundedMove()
+		{
+			Velocity += WishVelocity;
+			Velocity = Vector3.ClampMagnitude( Velocity, WishSpeed / 100 );
+
+			Move();
+		}
 
 		// Fields
 

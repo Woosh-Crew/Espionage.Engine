@@ -11,7 +11,7 @@ namespace Espionage.Engine
 		}
 
 		public Pawn Pawn { get; private set; }
-		public virtual Vector3 Velocity { get; set; }
+		public Vector3 Velocity { get; set; }
 
 		public override void Simulate( Client client )
 		{

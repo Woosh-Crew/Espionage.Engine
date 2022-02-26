@@ -15,7 +15,6 @@ namespace Espionage.Engine
 		public Menu Menu { get; protected set; }
 
 		// Class
-
 		public Library ClassInfo { get; }
 
 		protected Game()
@@ -30,25 +29,23 @@ namespace Espionage.Engine
 		}
 
 		// Required
-
 		public abstract void OnReady();
 		public abstract void OnShutdown();
 
 		// Networking
 
-		public virtual void Simulate( Client client )
+		public virtual void Simulate( Client cl )
 		{
 			// Temp simulator.
 			if ( Local.Pawn != null )
 			{
-				Local.Pawn.Simulate( client );
+				Local.Pawn.Simulate( cl );
 			}
 		}
 
 		//
 		// Gamemode
 		//
-
 		private Gamemode _gamemode;
 
 		public Gamemode Gamemode
@@ -82,7 +79,6 @@ namespace Espionage.Engine
 		//
 		// Build Camera
 		//
-
 		private ITripod LastTripod { get; set; }
 
 		protected virtual ITripod FindActiveCamera()

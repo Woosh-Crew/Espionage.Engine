@@ -6,7 +6,7 @@ namespace Espionage.Engine
 	/// <summary>
 	/// Reflection Component that stores a help message or tooltip.
 	/// </summary>
-	[AttributeUsage( AttributeTargets.Class )]
+	[AttributeUsage( AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Property )]
 	public sealed class HelpAttribute : Attribute, IComponent<Library>, IComponent<Property>, IComponent<Function>
 	{
 		public string URL { get; set; }

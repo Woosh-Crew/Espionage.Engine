@@ -26,4 +26,9 @@ public static class Vector3Extensions
 	{
 		return Vector3.Slerp( input, b, t );
 	}
+
+	public static float Dot( this Vector3 input, Vector3 b )
+	{
+		return Vector3.Dot( input, b );
+	}
 }

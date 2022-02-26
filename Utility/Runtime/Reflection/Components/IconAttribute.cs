@@ -11,7 +11,7 @@ namespace Espionage.Engine
 	/// <summary>
 	/// Reflection Component that stores a reference to an Icon.
 	/// </summary>
-	[AttributeUsage( AttributeTargets.Class | AttributeTargets.Property )]
+	[AttributeUsage( AttributeTargets.Class | AttributeTargets.Property| AttributeTargets.Method )]
 	public sealed class IconAttribute : Attribute, IComponent<Library>, IComponent<Property>, IComponent<Function>
 	{
 		private readonly string _path;

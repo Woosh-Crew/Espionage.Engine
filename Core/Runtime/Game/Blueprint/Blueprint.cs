@@ -37,19 +37,19 @@ namespace Espionage.Engine
 		/// </summary>
 		/// <typeparam name="T">Component</typeparam>
 		/// <returns>Component of type T</returns>
-		public T Spawn<T>() where T : MonoBehaviour
+		public T Spawn<T>( Vector3 pos = default, Quaternion rot = default ) where T : MonoBehaviour
 		{
-			return Spawn().GetComponent<T>();
+			return Spawn( pos, rot ).GetComponent<T>();
 		}
 
 		/// <summary>
 		/// Spawns the GameObject
 		/// </summary>
-		public GameObject Spawn()
+		public GameObject Spawn( Vector3 pos = default, Quaternion rot = default )
 		{
 		#if UNITY_EDITOR
 			var asset = AssetDatabase.LoadAssetAtPath<GameObject>( Path );
-			var newObject = Object.Instantiate( asset );
+			var newObject = Object.Instantiate( asset, pos, rot );
 			OnSpawn( newObject );
 			return newObject;
 

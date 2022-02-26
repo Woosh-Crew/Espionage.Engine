@@ -46,23 +46,6 @@ namespace Espionage.Engine
 			}
 		}
 
-
-	#if UNITY_EDITOR
-
-		[UnityEditor.InitializeOnLoadMethod]
-		private static void Initialize_Editor()
-		{
-			// #if Its in the scope
-			// cause of the manager attribute
-
-			if ( Game == null && !SetupGame() )
-			{
-				Debugging.Log.Error( "Game couldn't be found. Make sure to make a class inherited from Game" );
-			}
-		}
-
-	#endif
-
 		private static bool SetupGame()
 		{
 			var target = Library.Database.Find<Game>();
@@ -147,6 +130,7 @@ namespace Espionage.Engine
 				// Frame Update
 				if ( loop.subSystemList[i].type == typeof( Update ) )
 				{
+					Debugging.Log.Info( "Hooking Update" );
 					loop.subSystemList[i].updateDelegate += OnUpdate;
 				}
 
@@ -190,6 +174,7 @@ namespace Espionage.Engine
 			}
 
 			Callback.Run( "application.frame" );
+			Debugging.Log.Info( "Update" );
 
 			// More temp - this should 
 			// Be called at an engine level
@@ -199,11 +184,6 @@ namespace Espionage.Engine
 		private static void OnPhysicsUpdate()
 		{
 			Callback.Run( "physics.frame" );
-		}
-
-		private static void OnLateUpdate()
-		{
-			Callback.Run( "application.late_frame" );
 		}
 
 		private static void OnShutdown()
