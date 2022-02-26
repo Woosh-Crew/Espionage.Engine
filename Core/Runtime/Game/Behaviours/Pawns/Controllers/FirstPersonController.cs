@@ -36,7 +36,7 @@ namespace Espionage.Engine
 
 			GroundedMove();
 
-			Velocity = Vector3.SmoothDamp( Velocity, Vector3.zero, ref _storedVelocity, 0.1f );
+			Velocity = Vector3.SmoothDamp( Velocity, Vector3.zero, ref _storedVelocity, smoothing );
 
 			// Finish Gravity
 			Velocity -= new Vector3( 0, gravity / 2, 0 ) * Time.deltaTime;
@@ -85,6 +85,9 @@ namespace Espionage.Engine
 
 		[SerializeField]
 		private float sprintSpeed = 15;
+
+		[SerializeField]
+		private float smoothing = 0.05f;
 
 		[SerializeField]
 		private float gravity = 20;
