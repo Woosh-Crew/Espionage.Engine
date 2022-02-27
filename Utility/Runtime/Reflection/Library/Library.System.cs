@@ -14,8 +14,31 @@ namespace Espionage.Engine
 	[Manager( nameof( Cache ), Layer = Layer.Editor | Layer.Runtime, Order = -10 )]
 	public partial class Library
 	{
-		/// <summary> Constructs ILibrary, if it it has a custom constructor
-		/// it'll use that to create the ILibrary </summary>
+		/// <summary>
+		/// Registers the target object with the Library.
+		/// Which allows it to receive instance callbacks and
+		/// returns its library instance.
+		/// </summary>
+		public static Library Register( ILibrary value )
+		{
+			Callback.Register( value );
+			return Database[value.GetType()];
+		}
+
+		/// <summary>
+		/// Cleans up ILibrary object, removes it from instance
+		/// callback database so the garbage collector picks it up.
+		/// </summary>
+		/// <param name="value"></param>
+		public static void Unregister( ILibrary value )
+		{
+			Callback.Unregister( value );
+		}
+
+		/// <summary>
+		/// Constructs ILibrary, if it it has a custom constructor
+		/// it'll use that to create the ILibrary
+		/// </summary>
 		internal static ILibrary Construct( Library library )
 		{
 			if ( library is null )

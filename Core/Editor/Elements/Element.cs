@@ -8,8 +8,7 @@ namespace Espionage.Engine.Editor
 
 		public Element()
 		{
-			ClassInfo = Library.Database.Get( GetType() );
-			Callback.Register( this );
+			ClassInfo = Library.Register( this );
 
 			foreach ( var item in ClassInfo.Components.GetAll<StyleSheetAttribute>() )
 			{
@@ -19,7 +18,7 @@ namespace Espionage.Engine.Editor
 
 		~Element()
 		{
-			Callback.Unregister( this );
+			Library.Unregister( this );
 		}
 	}
 }

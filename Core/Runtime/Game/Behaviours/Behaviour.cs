@@ -18,9 +18,7 @@ namespace Espionage.Engine
 
 		private void Awake()
 		{
-			ClassInfo = Library.Database[GetType()];
-			Callback.Register( this );
-
+			ClassInfo = Library.Register( this );
 			OnAwake();
 		}
 
@@ -30,7 +28,7 @@ namespace Espionage.Engine
 
 		private void OnDestroy()
 		{
-			Callback.Unregister( this );
+			Library.Unregister( this );
 			OnDelete();
 		}
 

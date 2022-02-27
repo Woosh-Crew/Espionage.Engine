@@ -19,13 +19,12 @@ namespace Espionage.Engine
 
 		protected Game()
 		{
-			ClassInfo = Library.Database.Get( GetType() );
-			Callback.Register( this );
+			ClassInfo = Library.Register( this );
 		}
 
 		~Game()
 		{
-			Callback.Unregister( this );
+			Library.Unregister( this );
 		}
 
 		// Required

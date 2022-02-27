@@ -14,14 +14,9 @@ namespace Espionage.Engine.Tools.Editor
 	{
 		public Library ClassInfo { get; private set; }
 
-		private void Awake()
-		{
-			Callback.Register( this );
-		}
-
 		protected virtual void OnEnable()
 		{
-			ClassInfo = Library.Database[GetType()];
+			ClassInfo = Library.Register( this );
 
 			titleContent = new GUIContent( ClassInfo.Title, ClassInfo.Help );
 
@@ -31,9 +26,9 @@ namespace Espionage.Engine.Tools.Editor
 			}
 		}
 
-		private void OnDestroy()
+		private void OnDisable()
 		{
-			Callback.Unregister( this );
+			Library.Unregister( this );
 		}
 
 		private void CreateGUI()

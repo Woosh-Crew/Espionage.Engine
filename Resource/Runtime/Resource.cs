@@ -9,7 +9,12 @@ namespace Espionage.Engine.Resources
 
 		public Resource()
 		{
-			ClassInfo = Library.Database[GetType()];
+			ClassInfo = Library.Register( this );
+		}
+
+		~Resource()
+		{
+			Library.Unregister( this );
 		}
 
 		public T Grab<T>( string path ) where T : Resource

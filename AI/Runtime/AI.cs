@@ -2,7 +2,5 @@
 
 namespace Espionage.Engine.AI
 {
-	public class AI
-	{
-	}
+	public class AI { }
 }

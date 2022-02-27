@@ -23,21 +23,11 @@ namespace Espionage.Engine
 
 			public void Add( Library item )
 			{
-				if ( item.Class is null )
-				{
-					throw new Exception( $"Library doesn't have an owning class: {item.Name}" );
-				}
-
-				if ( string.IsNullOrEmpty( item.Name ) )
+				if ( string.IsNullOrEmpty( item.Title ) )
 				{
 					// Do space before uppercase char
 					var type = item.Class;
-					item.Name = string.Concat( type.FullName!.Select( x => char.IsUpper( x ) ? " " + x : x.ToString() ) ).TrimStart( ' ' );
-				}
-
-				if ( string.IsNullOrEmpty( item.Title ) )
-				{
-					item.Title = item.Class.Name;
+					item.Title = string.Concat( type.Name!.Select( x => char.IsUpper( x ) ? " " + x : x.ToString() ) ).TrimStart( ' ' );
 				}
 
 				if ( string.IsNullOrEmpty( item.Group ) )

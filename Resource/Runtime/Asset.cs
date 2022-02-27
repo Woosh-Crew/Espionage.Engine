@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using UnityEngine;
 
@@ -16,7 +17,12 @@ namespace Espionage.Engine.Resources
 
 		private void OnEnable()
 		{
-			ClassInfo = Library.Database[GetType()];
+			ClassInfo = Library.Register( this );
+		}
+
+		private void OnDisable()
+		{
+			Library.Unregister( this );
 		}
 
 		public virtual bool CanCompile()
@@ -24,7 +30,7 @@ namespace Espionage.Engine.Resources
 			return true;
 		}
 
-#if UNITY_EDITOR
+	#if UNITY_EDITOR
 
 		public virtual void Compile( params BuildTarget[] targets )
 		{
@@ -70,6 +76,6 @@ namespace Espionage.Engine.Resources
 			}
 		}
 
-#endif
+	#endif
 	}
 }
