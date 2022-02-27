@@ -8,10 +8,14 @@
 		{
 			ClassInfo = Library.Register( this );
 		}
-		
+
 		public virtual void OnReady() { }
 		public virtual void OnUpdate() { }
-		public virtual void OnShutdown() {  }
-		public virtual void Dispose() {  }
+		public virtual void OnShutdown() { }
+
+		public virtual void Dispose()
+		{
+			OnShutdown();
+		}
 	}
 }
