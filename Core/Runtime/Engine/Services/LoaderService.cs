@@ -2,25 +2,12 @@
 
 namespace Espionage.Engine.Services
 {
-	public class LoaderService : IService
+	public class LoaderService : Service
 	{
-		public Library ClassInfo { get; }
-
-		public LoaderService()
-		{
-			ClassInfo = Library.Database[GetType()];
-			Callback.Register( this );
-		}
-
-		~LoaderService()
-		{
-			Callback.Unregister( this );
-		}
-
 		public Loader Loader => Engine.Game.Loader;
 		private Scene _scene;
 
-		public void OnReady()
+		public override void OnReady()
 		{
 			if ( Loader == null )
 			{
@@ -28,11 +15,5 @@ namespace Espionage.Engine.Services
 				return;
 			}
 		}
-
-		// Not Needed
-
-		public void OnShutdown() { }
-		public void OnUpdate() { }
-		public void Dispose() { }
 	}
 }

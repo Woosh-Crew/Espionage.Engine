@@ -4,18 +4,9 @@ using UnityEngine;
 namespace Espionage.Engine.Services
 {
 	[Order( -5 )]
-	internal class CameraService : IService
+	internal class CameraService : Service
 	{
-		public Library ClassInfo { get; }
-
-		public CameraService()
-		{
-			ClassInfo = Library.Database[GetType()];
-		}
-
-		// Ready
-
-		public void OnReady()
+		public override void OnReady()
 		{
 			if ( !Application.isPlaying )
 			{
@@ -29,8 +20,6 @@ namespace Espionage.Engine.Services
 			_camera = obj.AddComponent<CameraController>();
 		}
 
-		public void OnShutdown() { }
-
 		// Frame
 
 		private CameraController _camera;
@@ -42,7 +31,7 @@ namespace Espionage.Engine.Services
 			Position = Vector3.zero
 		};
 
-		public void OnUpdate()
+		public override void OnUpdate()
 		{
 			if ( Engine.Game == null || !Application.isPlaying )
 			{
@@ -63,7 +52,5 @@ namespace Espionage.Engine.Services
 			// Set the viewer to null, so its cleared every frame.
 			_lastSetup.Viewer = null;
 		}
-
-		public void Dispose() { }
 	}
 }

@@ -1,19 +1,13 @@
 ﻿namespace Espionage.Engine.Services
 {
-	internal class SplashService : IService
+	internal class SplashService : Service
 	{
-		public Library ClassInfo { get; }
 		private Splash Splash => Engine.Game.Splash;
-
-		public SplashService()
-		{
-			ClassInfo = Library.Database[GetType()];
-		}
 
 		private TimeSince _splashTime;
 		private bool _finished;
 
-		public void OnUpdate()
+		public override void OnUpdate()
 		{
 			if ( _splashTime >= (Splash?.Delay ?? 2) && !_finished )
 			{
@@ -21,11 +15,5 @@
 				Debugging.Log.Info( "Splash Loaded" );
 			}
 		}
-
-		// Not Needed
-
-		public void OnReady() { }
-		public void OnShutdown() { }
-		public void Dispose() { }
 	}
 }
