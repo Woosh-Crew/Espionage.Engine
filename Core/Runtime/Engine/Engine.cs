@@ -174,7 +174,6 @@ namespace Espionage.Engine
 			}
 
 			Callback.Run( "application.frame" );
-			Debugging.Log.Info( "Update" );
 
 			// More temp - this should 
 			// Be called at an engine level

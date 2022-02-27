@@ -10,7 +10,7 @@ namespace Espionage.Engine.Tools.Editor
 	[Title( "Content Tester" ), Group( "Tool" ), Help( "Test Assets such as Maps and Models" ), Icon( EditorIcons.Game )]
 	public class ContentTester : EditorTool
 	{
-		[MenuItem( "Tools/Content Tester _F7", false, -150 )]
+		[MenuItem( "Tools/Espionage.Engine/Content Tester _F7", priority = -25 )]
 		private static void ShowEditor()
 		{
 			GetWindow<ContentTester>();

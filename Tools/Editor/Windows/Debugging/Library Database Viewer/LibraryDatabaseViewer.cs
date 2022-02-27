@@ -8,7 +8,7 @@ namespace Espionage.Engine.Tools.Editor
 	[Title( "Library Database" ), Group( "Debug" ), Icon( EditorIcons.Terminal )]
 	public class LibraryDatabaseViewer : EditorTool
 	{
-		[MenuItem( "Tools/Debug/Library Viewer", false, 500 )]
+		[MenuItem( "Tools/Espionage.Engine/Debug/Library Viewer", false, 500 )]
 		private static void ShowEditor()
 		{
 			GetWindow<LibraryDatabaseViewer>();

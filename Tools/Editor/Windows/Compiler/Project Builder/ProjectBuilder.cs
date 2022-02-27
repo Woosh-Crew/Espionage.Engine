@@ -13,7 +13,7 @@ namespace Espionage.Engine.Tools.Editor
 	[Title( "Project Builder" ), Group( "Compiler" ), Icon( EditorIcons.Code ), StyleSheet( GUID = "286338582a0f405dad4fcb85ab99dcc7" )]
 	public class ProjectBuilder : EditorTool
 	{
-		[MenuItem( "Tools/Project Builder _F5", false, -150 )]
+		[MenuItem( "Tools/Espionage.Engine/Project Builder _F5", priority = -25 )]
 		private static void ShowEditor()
 		{
 			GetWindow<ProjectBuilder>();

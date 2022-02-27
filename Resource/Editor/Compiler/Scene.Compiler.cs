@@ -25,7 +25,7 @@ namespace Espionage.Engine.Resources.Editor
 
 		// Menu Items
 
-		[MenuItem( "Tools/Espionage.Engine/Compiler/Map Compiler", priority = -50 )]
+		[MenuItem( "Tools/Espionage.Engine/Compiler/Map Compiler", priority = 2 )]
 		public static void OpenWindow()
 		{
 			GetWindow<SceneCompiler>();
