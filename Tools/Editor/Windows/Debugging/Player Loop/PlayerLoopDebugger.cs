@@ -1,13 +1,9 @@
-﻿using System.Text;
-using Espionage.Engine.Editor;
-using UnityEditor;
-using UnityEngine;
-using UnityEngine.LowLevel;
+﻿using UnityEngine.LowLevel;
 using UnityEngine.UIElements;
 
 namespace Espionage.Engine.Tools.Editor
 {
-	[Group( "Debug" ), Title( "Player Loop" )]
+	[Group( "Debug" ), Title( "Player Loop Viewer" )]
 	public class PlayerLoopDebugger : EditorTool
 	{
 		protected override void OnCreateGUI()

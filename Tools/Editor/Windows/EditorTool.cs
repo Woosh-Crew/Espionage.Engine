@@ -1,8 +1,6 @@
 using System;
 using System.Linq;
 using UnityEditor;
-using UnityEditor.EditorTools;
-using UnityEditor.Toolbars;
 using UnityEngine;
 using Espionage.Engine.Editor;
 
@@ -68,7 +66,7 @@ namespace Espionage.Engine.Tools.Editor
 			rootVisualElement.Add( _menuBar );
 
 			// Function base Menus
-			var menuItems = ClassInfo.Functions.All.Where( e => e.Components.Has<MenuAttribute>() ).GroupBy( e => e.Group.Split( '/' )[0] );
+			var menuItems = ClassInfo.Functions.All.Where( e => e.Components.Has<MenuAttribute>() ).GroupBy( e => e.Components.Get<MenuAttribute>().Path.Split( '/' )[0] );
 
 			foreach ( var grouping in menuItems )
 			{
@@ -76,7 +74,8 @@ namespace Espionage.Engine.Tools.Editor
 
 				foreach ( var function in grouping )
 				{
-					menuItem.AddItem( new GUIContent( function.Group.Remove( 0, grouping.Key.Length + 1 ) ), false, () => function.Invoke( function.IsStatic ? null : this, null ) );
+					var menuComp = function.Components.Get<MenuAttribute>();
+					menuItem.AddItem( new GUIContent( menuComp.Path.Remove( 0, grouping.Key.Length + 1 ) ), false, () => function.Invoke( function.IsStatic ? null : this, null ) );
 				}
 
 				_menuBar.Add( grouping.Key, menuItem );

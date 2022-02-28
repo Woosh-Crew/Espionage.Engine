@@ -12,11 +12,8 @@ namespace Espionage.Engine
 
 		internal static void Initialize()
 		{
-			using ( Debugging.Stopwatch( "Callbacks Initialized" ) )
-			{
-				// AttributeCallbackProvider is the default provider
-				Provider ??= new AttributeCallbackProvider();
-			}
+			// AttributeCallbackProvider is the default provider
+			Provider ??= new AttributeCallbackProvider();
 		}
 
 		/// <summary> Runs a callback with an array of args. </summary>

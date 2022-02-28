@@ -37,7 +37,7 @@ namespace Espionage.Engine.Resources.Editor
 			Compile( SceneManager.GetActiveScene().path, BuildTarget.StandaloneWindows );
 		}
 
-		[Function, Menu, Group( "File/Open Scene" )]
+		[Function, Menu( "File/Open Scene" )]
 		private void OpenScene()
 		{
 			Debugging.Log.Info( "Opening Scene" );

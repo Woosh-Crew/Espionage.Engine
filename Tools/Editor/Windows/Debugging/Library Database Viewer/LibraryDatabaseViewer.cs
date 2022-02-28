@@ -2,20 +2,25 @@ using System.Linq;
 using UnityEngine.UIElements;
 using UnityEditor;
 using Espionage.Engine.Editor;
-using UnityEditor.UIElements;
 using UnityEngine;
-
 
 namespace Espionage.Engine.Tools.Editor
 {
-	[Title( "Library Database" ), Group( "Debug" ), Icon( EditorIcons.Terminal )]
+	[Title( "Library Database Viewer" ), Group( "Debug" ), Icon( EditorIcons.Terminal )]
 	public class LibraryDatabaseViewer : EditorTool
 	{
+		// Menu Items
+
 		[MenuItem( "Tools/Espionage.Engine/Debug/Library Database", false, 500 )]
 		private static void ShowEditor()
 		{
 			GetWindow<LibraryDatabaseViewer>();
 		}
+
+		[Function, Menu( "Viewer/Clear" )]
+		private void RemoveActive() { }
+
+		// UI
 
 		private Library Active { get; set; }
 
@@ -24,6 +29,10 @@ namespace Espionage.Engine.Tools.Editor
 			var all = Library.Database.All.GroupBy( e => e.Group ).OrderBy( e => e.Key );
 
 			var treeContainer = new ScrollView( ScrollViewMode.Vertical );
+
+			var titleBar = new TitleBar( "Library Database", null, "Bottom" );
+			titleBar.style.marginBottom = 8;
+			treeContainer.Add( titleBar );
 
 			foreach ( var item in all )
 			{
@@ -55,6 +64,8 @@ namespace Espionage.Engine.Tools.Editor
 				tree.style.paddingBottom = 8;
 				treeContainer.Add( tree );
 			}
+
+			// Create Split View
 
 			var splitView = new TwoPaneSplitView( 0, 300, TwoPaneSplitViewOrientation.Horizontal );
 			splitView.Add( treeContainer );

@@ -52,6 +52,7 @@ namespace Espionage.Engine
 			const BindingFlags flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic;
 
 			// Properties
+
 			Properties = new MemberDatabase<Property>();
 
 			foreach ( var propertyInfo in Class.GetProperties( flags ) )
@@ -61,12 +62,14 @@ namespace Espionage.Engine
 					continue;
 				}
 
+
 				// Only add property if it has the attribute
 				var attribute = propertyInfo.GetCustomAttribute<PropertyAttribute>();
 				Properties.Add( attribute.CreateRecord( this, propertyInfo ) );
 			}
 
 			// Functions
+
 			Functions = new MemberDatabase<Function>();
 
 			foreach ( var methodInfo in Class.GetMethods( flags ) )
