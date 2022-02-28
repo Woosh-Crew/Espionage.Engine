@@ -14,7 +14,7 @@ namespace Espionage.Engine
 			Pawn = item;
 		}
 
-		private List<Pickup> Items { get; set; }
+		private List<Pickup> Items { get; } = new();
 
 		public virtual void Add( Pickup item )
 		{
@@ -50,8 +50,15 @@ namespace Espionage.Engine
 			Items.Remove( item );
 		}
 
-		public void Clear() { }
+		public void Clear()
+		{
+			for ( var i = 0; i < Items.Count; i++ )
+			{
+				Remove( Items[i] );
+			}
 
+			Items.Clear();
+		}
 
 		public virtual bool Contains( Pickup item )
 		{
