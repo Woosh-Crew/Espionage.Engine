@@ -5,7 +5,6 @@ namespace Espionage.Engine.Viewmodels
 	public sealed class SimpleSway : Behaviour, Viewmodel.IEffect
 	{
 		private Vector2 _lastMouseDelta;
-		private Vector3 _lastSwayPos;
 
 		public void PostCameraSetup( ref ITripod.Setup setup )
 		{
@@ -23,8 +22,7 @@ namespace Espionage.Engine.Viewmodels
 			trans.rotation *= rotationX * rotationY;
 
 			var localRotation = trans.localRotation;
-			_lastSwayPos = localRotation * Vector3.down * _lastMouseDelta.y * 0.1f + localRotation * Vector3.left * _lastMouseDelta.x * 0.1f;
-			trans.position += _lastSwayPos;
+			trans.position += localRotation * Vector3.down * _lastMouseDelta.y * (scale / 10) + localRotation * Vector3.left * _lastMouseDelta.x * (scale / 10);
 		}
 
 		// Fields
