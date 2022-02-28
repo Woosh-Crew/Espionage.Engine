@@ -2,19 +2,17 @@
 
 namespace Espionage.Engine.Cameras
 {
-	public class ThirdPersonTripod : Behaviour, ITripod, IControls
+	public class ThirdPersonTripod : Tripod
 	{
-		public void Activated( ref ITripod.Setup camSetup )
+		public override void Activated( ref ITripod.Setup camSetup )
 		{
 			camSetup.Position = Local.Pawn.EyePos;
 			camSetup.Rotation = Local.Pawn.EyeRot;
 		}
 
-		public void Deactivated() { }
-
 		private Vector3 _smoothedPosition;
 
-		void ITripod.Build( ref ITripod.Setup camSetup )
+		protected override void OnBuildTripod( ref ITripod.Setup camSetup )
 		{
 			if ( Local.Pawn == null )
 			{
@@ -30,12 +28,6 @@ namespace Espionage.Engine.Cameras
 			camSetup.Rotation = Local.Pawn.EyeRot;
 		}
 
-		void IControls.Build( ref IControls.Setup setup )
-		{
-			setup.ViewAngles += new Vector3( -setup.MouseDelta.y, setup.MouseDelta.x, 0 );
-			setup.ViewAngles.x = Mathf.Clamp( setup.ViewAngles.x, -pitchClamp.x, pitchClamp.y );
-		}
-
 		// Fields
 
 		[SerializeField]
@@ -43,9 +35,6 @@ namespace Espionage.Engine.Cameras
 
 		[SerializeField]
 		private float distance = 5;
-
-		[SerializeField]
-		private Vector2 pitchClamp = new( 88, 15 );
 
 		[SerializeField]
 		private Vector3 offset;
