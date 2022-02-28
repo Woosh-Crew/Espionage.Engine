@@ -1,5 +1,6 @@
 ﻿namespace Espionage.Engine.Services
 {
+	[Group( "Services" )]
 	public abstract class Service : IService
 	{
 		public Library ClassInfo { get; }

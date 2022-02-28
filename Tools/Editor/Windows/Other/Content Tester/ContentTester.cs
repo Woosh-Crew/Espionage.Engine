@@ -7,7 +7,7 @@ using Espionage.Engine.Resources;
 
 namespace Espionage.Engine.Tools.Editor
 {
-	[Title( "Content Tester" ), Group( "Tool" ), Help( "Test Assets such as Maps and Models" ), Icon( EditorIcons.Game )]
+	[Title( "Content Tester" ), Help( "Test Assets such as Maps and Models" ), Icon( EditorIcons.Game )]
 	public class ContentTester : EditorTool
 	{
 		[MenuItem( "Tools/Espionage.Engine/Content Tester _F7", priority = -25 )]
