@@ -13,7 +13,7 @@ namespace Espionage.Engine.Viewmodels
 				Input.GetAxisRaw( "Mouse Y" )
 			);
 
-			_lastMouseDelta = Vector2.Lerp( _lastMouseDelta, mouse, 10 * Time.deltaTime );
+			_lastMouseDelta = Vector2.Lerp( _lastMouseDelta, mouse, smoothing * Time.deltaTime );
 
 			var trans = transform;
 			var rotationX = Quaternion.AngleAxis( _lastMouseDelta.y * scale, Vector3.left );
@@ -22,12 +22,15 @@ namespace Espionage.Engine.Viewmodels
 			trans.rotation *= rotationX * rotationY;
 
 			var localRotation = trans.localRotation;
-			trans.position += localRotation * Vector3.down * _lastMouseDelta.y * (scale / 10) + localRotation * Vector3.left * _lastMouseDelta.x * (scale / 10);
+			trans.position += localRotation * Vector3.down * _lastMouseDelta.y * (scale / 100) + localRotation * Vector3.left * _lastMouseDelta.x * (scale / 100);
 		}
 
 		// Fields
 
 		[SerializeField]
 		private float scale = 10;
+
+		[SerializeField]
+		private float smoothing = 10;
 	}
 }
