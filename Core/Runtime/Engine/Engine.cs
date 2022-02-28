@@ -76,7 +76,7 @@ namespace Espionage.Engine
 
 			public ServiceDatabase()
 			{
-				foreach ( var service in Library.Database.GetAll<IService>() )
+				foreach ( var service in Library.Database.GetAll<IService>().Where( e => !e.Class.IsAbstract ) )
 				{
 					Add( Library.Database.Create<IService>( service.Class ) );
 				}

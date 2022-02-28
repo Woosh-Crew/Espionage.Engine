@@ -22,7 +22,8 @@ namespace Espionage.Engine.Viewmodels
 
 			trans.rotation *= rotationX * rotationY;
 
-			_lastSwayPos = trans.localRotation * Vector3.down * _lastMouseDelta.y * 0.1f + trans.localRotation * Vector3.left * _lastMouseDelta.x * 0.1f;
+			var localRotation = trans.localRotation;
+			_lastSwayPos = localRotation * Vector3.down * _lastMouseDelta.y * 0.1f + localRotation * Vector3.left * _lastMouseDelta.x * 0.1f;
 			trans.position += _lastSwayPos;
 		}
 
