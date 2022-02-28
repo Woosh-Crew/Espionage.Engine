@@ -51,6 +51,7 @@ namespace Espionage.Engine.Tools.Editor
 					Refresh();
 				};
 
+				tree.Query<Foldout>().First().value = false;
 				tree.style.paddingBottom = 8;
 				treeContainer.Add( tree );
 			}
@@ -76,7 +77,7 @@ namespace Espionage.Engine.Tools.Editor
 		{
 			var root = new VisualElement();
 
-			root.Add( new HeaderBar( $"{library.Title}", "Viewing Library", null, "Header-Bottom-Border" ) );
+			root.Add( new HeaderBar( $"{library.Title}", $"Viewing {library.Name}", null, "Header-Bottom-Border" ) );
 
 			return root;
 		}
