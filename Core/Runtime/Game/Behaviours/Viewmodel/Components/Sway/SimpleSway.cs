@@ -17,8 +17,8 @@ namespace Espionage.Engine.Viewmodels
 			_lastMouseDelta = Vector2.Lerp( _lastMouseDelta, mouse, 10 * Time.deltaTime );
 
 			var trans = transform;
-			var rotationX = Quaternion.AngleAxis( _lastMouseDelta.y * 10, Vector3.left );
-			var rotationY = Quaternion.AngleAxis( _lastMouseDelta.x * 10, Vector3.up );
+			var rotationX = Quaternion.AngleAxis( _lastMouseDelta.y * scale, Vector3.left );
+			var rotationY = Quaternion.AngleAxis( _lastMouseDelta.x * scale, Vector3.up );
 
 			trans.rotation *= rotationX * rotationY;
 
@@ -27,5 +27,8 @@ namespace Espionage.Engine.Viewmodels
 		}
 
 		// Fields
+
+		[SerializeField]
+		private float scale = 10;
 	}
 }
