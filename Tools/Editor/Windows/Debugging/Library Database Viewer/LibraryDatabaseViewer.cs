@@ -2,6 +2,7 @@ using System.Linq;
 using UnityEngine.UIElements;
 using UnityEditor;
 using Espionage.Engine.Editor;
+using UnityEditor.UIElements;
 using UnityEngine;
 
 
@@ -18,24 +19,44 @@ namespace Espionage.Engine.Tools.Editor
 
 		private Library Active { get; set; }
 
-
 		protected override void OnCreateGUI()
 		{
-			var all = Library.Database.All.ToList();
-			var tree = new ListView( all, 20, () => new Label(), ( e, i ) => ((Label)e).text = all[i].Title ) { selectionType = SelectionType.Single };
+			var all = Library.Database.All.GroupBy( e => e.Group ).OrderBy( e => e.Key );
 
-			tree.showFoldoutHeader = true;
-			tree.showBoundCollectionSize = false;
-			tree.headerTitle = "fuck";
+			var treeContainer = new ScrollView( ScrollViewMode.Vertical );
 
-			tree.onSelectionChange += objects =>
+			foreach ( var item in all )
 			{
-				Active = objects.First() as Library;
-				Refresh();
-			};
+				var database = item.ToList();
+
+				var tree = new ListView( database, 20, () =>
+				{
+					var label = new Label();
+
+					label.style.paddingLeft = 12;
+					label.style.unityTextAlign = TextAnchor.MiddleLeft;
+
+					return label;
+				}, ( e, i ) => ((Label)e).text = database[i].Title )
+				{
+					selectionType = SelectionType.Single,
+					showFoldoutHeader = true,
+					showBoundCollectionSize = false,
+					headerTitle = string.IsNullOrEmpty( item.Key ) ? "No Group" : item.Key
+				};
+
+				tree.onSelectionChange += objects =>
+				{
+					Active = objects.First() as Library;
+					Refresh();
+				};
+
+				tree.style.paddingBottom = 8;
+				treeContainer.Add( tree );
+			}
 
 			var splitView = new TwoPaneSplitView( 0, 300, TwoPaneSplitViewOrientation.Horizontal );
-			splitView.Add( tree );
+			splitView.Add( treeContainer );
 
 			_viewerPanel = new VisualElement();
 			splitView.Add( _viewerPanel );
