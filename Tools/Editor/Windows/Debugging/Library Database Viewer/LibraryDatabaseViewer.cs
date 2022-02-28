@@ -30,8 +30,7 @@ namespace Espionage.Engine.Tools.Editor
 
 			var treeContainer = new ScrollView( ScrollViewMode.Vertical );
 
-			var titleBar = new TitleBar( "Library Database", null, "Bottom" );
-			titleBar.style.marginBottom = 8;
+			var titleBar = new TitleBar( "Library Database", null, "Bottom" ) { style = { marginBottom = 8 } };
 			treeContainer.Add( titleBar );
 
 			foreach ( var item in all )
@@ -89,6 +88,30 @@ namespace Espionage.Engine.Tools.Editor
 			var root = new VisualElement();
 
 			root.Add( new HeaderBar( $"{library.Title}", $"Viewing {library.Name}", null, "Header-Bottom-Border" ) );
+
+			root.Add( new Label( "Library Components" ) );
+
+			// Components
+			foreach ( var component in library.Components.All )
+			{
+				root.Add( new Label( component.GetType().Name.Replace( "Attribute", "" ) ) );
+			}
+
+			root.Add( new Label( "Properties" ) );
+
+			// Properties
+			foreach ( var property in library.Properties.All )
+			{
+				root.Add( new Label( property.Name ) );
+			}
+
+			root.Add( new Label( "Functions" ) );
+
+			// Functions
+			foreach ( var function in library.Functions.All )
+			{
+				root.Add( new Label( function.Name ) );
+			}
 
 			return root;
 		}

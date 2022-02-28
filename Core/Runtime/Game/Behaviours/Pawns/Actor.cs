@@ -43,8 +43,14 @@ namespace Espionage.Engine
 
 		/// <summary>
 		/// Sees if it has an AI Controller Attached to the actor
-		/// and returns true for false depending on if it is null or active 
+		/// and returns true or false depending on if it is null or active 
 		/// </summary>
 		public bool IsBot => throw new NotImplementedException();
+
+		/// <summary>
+		/// Sees if it has an controller that can be used by a client,
+		/// and returns true or false depending on if it is null or active 
+		/// </summary>
+		public bool IsClient => throw new NotImplementedException();
 	}
 }
