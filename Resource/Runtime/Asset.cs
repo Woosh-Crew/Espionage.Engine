@@ -11,6 +11,7 @@ namespace Espionage.Engine.Resources
 	/// <summary>
 	/// An asset that can be compiled for use at Runtime.
 	/// </summary>
+	[Group( "Resources" )]
 	public abstract class Asset : ScriptableObject, ILibrary, IAsset
 	{
 		public Library ClassInfo { get; private set; }

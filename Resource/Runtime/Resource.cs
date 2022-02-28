@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace Espionage.Engine.Resources
 {
+	[Group( "Resources" )]
 	public abstract class Resource : IResource, IDisposable, ILibrary
 	{
 		public Library ClassInfo { get; }
