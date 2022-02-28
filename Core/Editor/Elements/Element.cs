@@ -2,6 +2,7 @@ using UnityEngine.UIElements;
 
 namespace Espionage.Engine.Editor
 {
+	[Group( "UI Elements" )]
 	public class Element : VisualElement, ILibrary
 	{
 		public Library ClassInfo { get; set; }

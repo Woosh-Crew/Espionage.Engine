@@ -11,7 +11,7 @@ namespace Espionage.Engine
 	/// logging, commands, overlays, and other utility features.
 	/// You should be using this over Unity's debug library.
 	/// </summary>
-	[Library, Group( "Diagnostics" ), Manager( nameof( Initialize ), Layer = Layer.Runtime | Layer.Editor, Order = -200 )]
+	[Library, Group( "Debug" ), Manager( nameof( Initialize ), Layer = Layer.Runtime | Layer.Editor, Order = -200 )]
 	public static class Debugging
 	{
 		// Providers
