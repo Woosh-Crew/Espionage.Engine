@@ -9,6 +9,7 @@ namespace Espionage.Engine
 	/// All Saving, Loading, ETC, is local to the games
 	/// data storage.
 	/// </summary>
+	[Library, Group( "Input / Output" ), Title( "File System" )]
 	public static class Files
 	{
 		/// <summary>
