@@ -25,9 +25,18 @@ namespace Espionage.Engine
 			{
 				if ( string.IsNullOrEmpty( item.Title ) )
 				{
-					// Do space before uppercase char
+					// Do space before uppercase char 
 					var type = item.Class;
-					item.Title = string.Concat( type.Name!.Select( x => char.IsUpper( x ) ? " " + x : x.ToString() ) ).TrimStart( ' ' );
+
+					// This is so aids...
+					if ( type.IsGenericType )
+					{
+						item.Title = (type.IsInterface ? type.Name : string.Concat( type.Name!.Select( x => char.IsUpper( x ) ? " " + x : x.ToString() ) ).TrimStart( ' ' )).Split( '`' )[0] + $"<{type.GetGenericArguments()[0]?.Name}>";
+					}
+					else
+					{
+						item.Title = type.IsInterface ? type.Name : string.Concat( type.Name!.Select( x => char.IsUpper( x ) ? " " + x : x.ToString() ) ).TrimStart( ' ' );
+					}
 				}
 
 				if ( string.IsNullOrEmpty( item.Group ) )
