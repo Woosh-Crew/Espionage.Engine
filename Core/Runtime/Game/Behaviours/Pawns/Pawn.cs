@@ -4,7 +4,10 @@ using UnityEngine;
 namespace Espionage.Engine
 {
 	/// <summary>
-	/// Pawns can be possessed by clients, and allows the game to flow. 
+	/// Pawns can be possessed by clients,
+	/// and allows the game to flow. By
+	/// default Pawns have a Controller and
+	/// Tripod.
 	/// </summary>
 	[Group( "Pawns" )]
 	public class Pawn : Behaviour
