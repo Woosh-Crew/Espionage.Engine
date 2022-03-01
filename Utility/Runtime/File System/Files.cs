@@ -51,12 +51,12 @@ namespace Espionage.Engine
 				throw new FileLoadException( "Directory doesn't exist" );
 			}
 
-			var library = Library.Database.Get<T>();
 			var fileInfo = new FileInfo( path );
+
+			var library = Library.Database.Find<T>( e => e.Components.Get<FileAttribute>().Extension == fileInfo.Extension[1..] );
 
 			if ( fileInfo.Extension[1..] != library.Components.Get<FileAttribute>()?.Extension )
 			{
-				Debugging.Log.Info( fileInfo.Extension );
 				throw new FileLoadException( "Invalid Extension for File" );
 			}
 
