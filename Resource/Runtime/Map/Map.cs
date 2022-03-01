@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Espionage.Engine.Components;
 using UnityEngine.SceneManagement;
@@ -45,6 +46,8 @@ namespace Espionage.Engine.Resources
 
 			Components = new Components<Map>( this );
 			Provider = provider;
+
+			Database.Add( this );
 		}
 
 		~Map()
@@ -54,7 +57,7 @@ namespace Espionage.Engine.Resources
 
 		public static Map Find( string path )
 		{
-			return new Map( Files.Load<IFile<Map, Scene>>( path ).Provider() );
+			return Database[path] ?? new Map( Files.Load<IFile<Map, Scene>>( path ).Provider() );
 		}
 
 		//
@@ -122,6 +125,51 @@ namespace Espionage.Engine.Resources
 			}
 
 			Provider.Unload( onUnload );
+		}
+
+		//
+		// Database
+		//
+
+		/// <summary>
+		/// A reference to all the maps that have already been found or loaded.
+		/// </summary>
+		public static IDatabase<Map, string> Database { get; } = new InternalDatabase();
+
+		private class InternalDatabase : IDatabase<Map, string>
+		{
+			public IEnumerable<Map> All => _records.Values;
+			private readonly Dictionary<string, Map> _records = new();
+
+			public Map this[ string key ] => _records.ContainsKey( key ) ? _records[key] : null;
+
+			public void Add( Map item )
+			{
+				// Store it in Database
+				if ( _records.ContainsKey( item.Identifier! ) )
+				{
+					_records[item.Identifier] = item;
+				}
+				else
+				{
+					_records.Add( item.Identifier!, item );
+				}
+			}
+
+			public void Clear()
+			{
+				_records.Clear();
+			}
+
+			public bool Contains( Map item )
+			{
+				return _records.ContainsKey( item.Identifier );
+			}
+
+			public void Remove( Map item )
+			{
+				_records.Remove( item.Identifier );
+			}
 		}
 	}
 }
