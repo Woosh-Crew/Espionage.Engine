@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Text;
 using UnityEngine;
 
@@ -6,19 +7,26 @@ namespace Espionage.Engine
 {
 	/// <summary>
 	/// Files, is Espionage.Engines File System.
-	/// All Saving, Loading, ETC, is local to the games
-	/// data storage.
+	/// All Saving, Loading, ETC. Path is local to the games
+	/// data storage. ( <see cref="Application.dataPath"/> )
 	/// </summary>
 	[Library, Group( "Input / Output" ), Title( "File System" )]
 	public static class Files
 	{
+		public enum Path
+		{
+			User,
+			Application,
+			Cache
+		}
+
 		/// <summary>
 		/// Just gives us the raw data
 		/// from a file at a path
 		/// </summary>
-		private static byte[] Load( string path )
+		public static byte[] Load( string path, Path directory = Path.Application )
 		{
-			path = Path.Combine( Application.dataPath, path );
+			path = GetPath( path, directory );
 
 			if ( !File.Exists( path ) )
 			{
@@ -33,7 +41,7 @@ namespace Espionage.Engine
 		/// it will overwrite if the file at that
 		/// path already exists.
 		/// </summary>
-		private static void Save( string text, string path )
+		public static void Save( string text, string path, Path directory = Path.Application )
 		{
 			Save( Encoding.UTF8.GetBytes( text ), path );
 		}
@@ -43,9 +51,9 @@ namespace Espionage.Engine
 		/// it will overwrite if the file at that
 		/// path already exists.
 		/// </summary>
-		private static void Save( byte[] data, string path )
+		public static void Save( byte[] data, string path, Path directory = Path.Application )
 		{
-			path = Path.Combine( Application.dataPath, path );
+			path = GetPath( path, directory );
 
 			if ( !Directory.Exists( path ) )
 			{
@@ -59,11 +67,26 @@ namespace Espionage.Engine
 		/// <summary>
 		/// Opens a FileStream to the designated path.
 		/// </summary>
-		private static FileStream Read( string path )
+		public static FileStream Read( string path, Path directory = Path.Application )
 		{
-			path = Path.Combine( Application.dataPath, path );
-
+			path = GetPath( path, directory );
 			return new FileStream( path, FileMode.Open, FileAccess.Read );
+		}
+
+		public static string GetPath( string path, Path directory )
+		{
+			return System.IO.Path.Combine( GetPath( directory ), path );
+		}
+
+		public static string GetPath( Path path )
+		{
+			return path switch
+			{
+				Path.User => Application.persistentDataPath,
+				Path.Application => Application.dataPath,
+				Path.Cache => Application.temporaryCachePath,
+				_ => throw new ArgumentOutOfRangeException( nameof( path ), path, null )
+			};
 		}
 	}
 }
