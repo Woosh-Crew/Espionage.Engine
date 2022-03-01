@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using UnityEngine;
@@ -13,6 +14,14 @@ namespace Espionage.Engine
 	[Library, Group( "Input / Output" ), Title( "File System" )]
 	public static class Files
 	{
+		public static readonly Dictionary<string, string> Paths = new()
+		{
+			["user"] = Application.persistentDataPath,
+			["game"] = Application.dataPath,
+			["cache"] = Application.temporaryCachePath,
+			["config"] = $"{Application.persistentDataPath}/Data"
+		};
+
 		/// <summary>
 		/// Just gives us the raw data
 		/// from a file at a path
@@ -27,6 +36,37 @@ namespace Espionage.Engine
 			}
 
 			return File.ReadAllBytes( path );
+		}
+
+		/// <summary>
+		/// Load and deserialize the data for us.
+		/// </summary>
+		public static T Load<T>( string path ) where T : class, IFile
+		{
+			// Get the actual path
+			path = GetPath( path );
+
+			if ( !Directory.Exists( path ) )
+			{
+				throw new FileLoadException( "Directory doesn't exist" );
+			}
+
+			var library = Library.Database.Get<T>();
+			var fileInfo = new FileInfo( path );
+
+			if ( fileInfo.Extension != library.Components.Get<FileAttribute>()?.Extension )
+			{
+				throw new FileLoadException( "Invalid Extension for File" );
+			}
+
+			var file = Library.Database.Create<T>( library.Class );
+
+			file.File = fileInfo;
+
+			using var stream = fileInfo.Open( FileMode.Open, FileAccess.Read );
+			file.Load( stream );
+
+			return file;
 		}
 
 		/// <summary>
@@ -68,22 +108,17 @@ namespace Espionage.Engine
 
 		private static string GetPath( string path )
 		{
-			var splittedPath = path.Split( ':' );
+			var splitPath = path.Split( ':' );
 
-			if ( splittedPath.Length < 1 )
+			if ( splitPath.Length < 1 )
 			{
-				throw new InvalidOperationException( "Invalid Path" );
+				// Its probably a full path
+				return path;
 			}
 
-			var grabbedPath = splittedPath[0] switch
-			{
-				"user" => Application.persistentDataPath,
-				"game" => Application.dataPath,
-				"cache" => Application.temporaryCachePath,
-				_ => throw new ArgumentOutOfRangeException( nameof( path ), path, null )
-			};
+			var grabbedPath = Paths[splitPath[0]];
 
-			return Path.Combine( grabbedPath, splittedPath[1] );
+			return Path.Combine( grabbedPath, splitPath[1] );
 		}
 	}
 }
