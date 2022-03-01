@@ -39,7 +39,7 @@ namespace Espionage.Engine.Tools.Editor
 				return;
 			}
 
-			new Map( Files.Load<IFile<Map, Scene>>( path ).Provider() ).Load();
+			Map.Find( path ).Load();
 		}
 
 		[Function, Menu( "Maps/Test Open Map" )]

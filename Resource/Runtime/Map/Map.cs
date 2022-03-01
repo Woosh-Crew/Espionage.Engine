@@ -14,16 +14,16 @@ namespace Espionage.Engine.Resources
 	/// You should be using this instead of UnityEngine.SceneManager.
 	/// </remarks>
 	[Group( "Maps" ), Path( "maps", "game://Maps/" )]
-	public sealed class Map : Resource, ILoadable
+	public sealed class Map : IResource, ILibrary, ILoadable
 	{
 		public static Map Current { get; internal set; }
 
 		// Provider
-		public IProvider<Map, Scene> Provider { get; }
+		public Resource.IProvider<Map, Scene> Provider { get; }
 		public Components<Map> Components { get; }
 
 		// Meta Data
-		public override string Identifier => Provider.Identifier;
+		public string Identifier => Provider.Identifier;
 		public string Title { get; set; }
 		public string Description { get; set; }
 
@@ -35,15 +35,27 @@ namespace Espionage.Engine.Resources
 		// Constructors
 		//
 
+		public Library ClassInfo { get; }
+
 		/// <summary>Make a reference to a map, using a provider.</summary>
 		/// <param name="provider">What provider should we use for loading and unloading maps?</param>
-		public Map( IProvider<Map, Scene> provider )
+		public Map( Resource.IProvider<Map, Scene> provider )
 		{
+			ClassInfo = Library.Register( this );
+
 			Components = new Components<Map>( this );
 			Provider = provider;
 		}
 
-		public Map( string path ) : this( new AssetBundleMapProvider( new FileInfo( path ) ) ) { }
+		~Map()
+		{
+			Library.Unregister( this );
+		}
+
+		public static Map Find( string path )
+		{
+			return new Map( Files.Load<IFile<Map, Scene>>( path ).Provider() );
+		}
 
 		//
 		// Resource 
@@ -52,16 +64,14 @@ namespace Espionage.Engine.Resources
 		public Action Loaded { get; set; }
 		public Action Unloaded { get; set; }
 
-		public override bool IsLoading => Provider.IsLoading;
+		public bool IsLoading => Provider.IsLoading;
 
-		public override void Load( Action onLoad = null )
+		public void Load( Action onLoad = null )
 		{
 			if ( IsLoading )
 			{
 				throw new Exception( "Already performing an operation action this map" );
 			}
-
-			base.Load( onLoad );
 
 			onLoad += Loaded;
 			onLoad += () =>
@@ -92,14 +102,12 @@ namespace Espionage.Engine.Resources
 			Callback.Run( "map.loading" );
 		}
 
-		public override void Unload( Action onUnload = null )
+		public void Unload( Action onUnload = null )
 		{
 			if ( IsLoading )
 			{
 				throw new Exception( "Already performing an operation action this map" );
 			}
-
-			base.Unload( onUnload );
 
 			// Add Callback
 			onUnload += Unloaded;

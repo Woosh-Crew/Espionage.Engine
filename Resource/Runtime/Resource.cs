@@ -18,32 +18,33 @@ namespace Espionage.Engine.Resources
 			Library.Unregister( this );
 		}
 
-		public static T Grab<T>( string path, T item ) where T : class, IResource
-		{
-			return item;
-		}
-
 		// Resource
 
 		public abstract string Identifier { get; }
 		public virtual bool IsLoading { get; protected set; }
 
-		public virtual void Load( Action onLoad = null )
+		void IResource.Load( Action onLoad )
 		{
 			Database.Add( this );
+			OnLoad( onLoad );
 		}
 
-		public virtual void Unload( Action onUnload = null )
+		protected virtual void OnLoad( Action onLoad ) { }
+
+		void IResource.Unload( Action onUnload )
 		{
 			Database.Remove( this );
+			OnUnload( onUnload );
 		}
+
+		protected virtual void OnUnload( Action onUnload ) { }
 
 		public void Dispose()
 		{
-			Unload();
+			(this as IResource).Unload();
 		}
 
-		public interface IProvider<T, out TOutput> where T : Resource
+		public interface IProvider<T, out TOutput> where T : IResource
 		{
 			TOutput Output { get; }
 			float Progress { get; }
