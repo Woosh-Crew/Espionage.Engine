@@ -19,7 +19,7 @@ namespace Espionage.Engine
 			["user"] = Application.persistentDataPath,
 			["game"] = Application.dataPath,
 			["cache"] = Application.temporaryCachePath,
-			["config"] = $"{Application.persistentDataPath}/Data"
+			["config"] = "user://Data"
 		};
 
 		/// <summary>
@@ -107,7 +107,7 @@ namespace Espionage.Engine
 			return new FileStream( path, FileMode.Open, FileAccess.Read );
 		}
 
-		private static string GetPath( string path )
+		public static string GetPath( string path )
 		{
 			if ( !path.Contains( "://" ) )
 			{
@@ -115,11 +115,9 @@ namespace Espionage.Engine
 			}
 
 			var splitPath = path.Split( "://" );
+			splitPath[0] = GetPath( Paths[splitPath[0]] );
 
-			// Potential stack overflow if you are stupid
-			var grabbedPath = Paths[GetPath( splitPath[0] )];
-
-			return Path.Combine( grabbedPath, splitPath[1] );
+			return Path.Combine( splitPath[0], splitPath[1] );
 		}
 	}
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Espionage.Engine.Resources
 {
-	[Group( "Models" )]
+	[Group( "Models" ), Path( "models", "game://Models/" )]
 	public sealed class Model : Resource
 	{
 		private IModelProvider Provider { get; }

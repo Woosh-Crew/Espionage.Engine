@@ -18,9 +18,9 @@ namespace Espionage.Engine.Resources
 			Library.Unregister( this );
 		}
 
-		public T Grab<T>( string path ) where T : Resource
+		public static T Grab<T>( string path, T item ) where T : class, IResource
 		{
-			return null;
+			return item;
 		}
 
 		// Resource

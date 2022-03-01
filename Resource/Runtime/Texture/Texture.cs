@@ -3,8 +3,8 @@ using Espionage.Engine.Components;
 
 namespace Espionage.Engine.Resources
 {
-	[Group( "Textures" )]
-	public class Texture : Resource
+	[Group( "Textures" ), Path( "textures", "game://Textures/" )]
+	public sealed class Texture : Resource
 	{
 		private ITextureProvider Provider { get; }
 		public Components<Texture> Components { get; }

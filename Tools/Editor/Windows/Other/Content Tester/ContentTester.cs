@@ -38,7 +38,7 @@ namespace Espionage.Engine.Tools.Editor
 					return;
 				}
 
-				Map.Find( path ).Load();
+				Resource.Grab<Map>( path, new Map( path ) ).Load();
 			} ) { text = "Test Map" };
 
 			rootVisualElement.Add( button );

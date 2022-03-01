@@ -12,17 +12,17 @@ namespace Espionage.Engine.Resources
 	/// <remarks>
 	/// You should be using this instead of UnityEngine.SceneManager.
 	/// </remarks>
-	[Group( "Maps" ), Path( "map", "data:Maps/" )]
-	public partial class Map : IResource, IDisposable, ILibrary, ILoadable
+	[Group( "Maps" ), Path( "maps", "game://Maps/" )]
+	public sealed class Map : Resource, ILoadable
 	{
 		public static Map Current { get; internal set; }
 
 		// Provider
-		protected IMapProvider Provider { get; }
+		public IMapProvider Provider { get; }
 		public Components<Map> Components { get; }
 
 		// Meta Data
-		public string Identifier => Provider.Identifier;
+		public override string Identifier => Provider.Identifier;
 		public string Title { get; set; }
 		public string Description { get; set; }
 
@@ -34,60 +34,35 @@ namespace Espionage.Engine.Resources
 		// Constructors
 		//
 
-		public Library ClassInfo { get; }
-
 		/// <summary>Make a reference to a map, using a provider.</summary>
 		/// <param name="provider">What provider should we use for loading and unloading maps?</param>
 		public Map( IMapProvider provider )
 		{
-			ClassInfo = Library.Database[GetType()];
 			Components = new Components<Map>( this );
-
 			Provider = provider;
-			Database.Add( this );
 		}
 
 		public Map( string path ) : this( new AssetBundleMapProvider( new FileInfo( path ) ) ) { }
-
-		/// <summary>
-		/// Gets the map at a path.
-		/// </summary>
-		/// <param name="path">The path to this map.</param>
-		/// <param name="noneFound">If there is no map found, what do we do?</param>
-		public static Map Find( string path, Func<Map> noneFound = null )
-		{
-			if ( string.IsNullOrEmpty( path ) )
-			{
-				throw new FileNotFoundException( "Invalid File / Path" );
-			}
-
-			var map = Database[path] ?? (noneFound?.Invoke() ?? new Map( path ));
-			return map;
-		}
 
 		//
 		// Resource 
 		//
 
-		public Action OnLoad { get; set; }
-		public Action OnUnload { get; set; }
+		public Action Loaded { get; set; }
+		public Action Unloaded { get; set; }
 
-		public bool IsLoading => Provider.IsLoading;
+		public override bool IsLoading => Provider.IsLoading;
 
-		/// <summary>
-		/// Loads this map. Behind the scenes it'll run the providers load method.
-		/// </summary>
-		/// <param name="onLoad">
-		/// What to do when we finish loading both the scene and asset bundle
-		/// </param>
-		public void Load( Action onLoad = null )
+		public override void Load( Action onLoad = null )
 		{
 			if ( IsLoading )
 			{
 				throw new Exception( "Already performing an operation action this map" );
 			}
 
-			onLoad += OnLoad;
+			base.Load( onLoad );
+
+			onLoad += Loaded;
 			onLoad += () =>
 			{
 				Callback.Run( "map.loaded" );
@@ -116,21 +91,17 @@ namespace Espionage.Engine.Resources
 			Callback.Run( "map.loading" );
 		}
 
-		/// <summary>
-		/// Unload this Resource from memory.
-		/// </summary>
-		/// <param name="onUnload">
-		/// What to do when we finish unloading
-		/// </param>
-		public void Unload( Action onUnload = null )
+		public override void Unload( Action onUnload = null )
 		{
 			if ( IsLoading )
 			{
 				throw new Exception( "Already performing an operation action this map" );
 			}
 
+			base.Unload( onUnload );
+
 			// Add Callback
-			onUnload += OnUnload;
+			onUnload += Unloaded;
 			onUnload += () =>
 			{
 				Callback.Run( "map.unloaded" );
@@ -143,21 +114,5 @@ namespace Espionage.Engine.Resources
 
 			Provider.Unload( onUnload );
 		}
-
-		/// <summary>
-		/// Unload and remove it from the database.
-		/// </summary>
-		public void Dispose()
-		{
-			Unload( () => Database.Remove( this ) );
-		}
-	}
-
-	/// <inheritdoc cref="Map"/>
-	/// <typeparam name="T"> Provider </typeparam>
-	public class Map<T> : Map where T : class, IMapProvider
-	{
-		public new T Provider => base.Provider as T;
-		public Map( T provider ) : base( provider ) { }
 	}
 }
