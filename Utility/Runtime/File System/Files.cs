@@ -53,11 +53,11 @@ namespace Espionage.Engine
 
 			var fileInfo = new FileInfo( path );
 
-			var library = Library.Database.Find<T>( e => e.Components.Get<FileAttribute>().Extension == fileInfo.Extension[1..] );
+			var library = Library.Database.Find<T>( e => e.Components.Get<FileAttribute>()?.Extension == fileInfo.Extension[1..] );
 
-			if ( fileInfo.Extension[1..] != library.Components.Get<FileAttribute>()?.Extension )
+			if ( library == null )
 			{
-				throw new FileLoadException( "Invalid Extension for File" );
+				throw new FileLoadException( "No Valid Deserializers for this File" );
 			}
 
 			var file = Library.Database.Create<T>( library.Class );
