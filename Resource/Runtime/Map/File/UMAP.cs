@@ -3,8 +3,8 @@ using UnityEngine.SceneManagement;
 
 namespace Espionage.Engine.Resources
 {
-	[Group( "Files" ), Title( "UMAP File" ), File( Extension = "umap" )]
-	public sealed class UMAP : IFile<Map, Scene>
+	[Group( "Maps" ), Title( "UMAP File" ), File( Extension = "umap" )]
+	public sealed class UMAP : IFile<Map, Scene>, IAsset
 	{
 		public Library ClassInfo { get; }
 

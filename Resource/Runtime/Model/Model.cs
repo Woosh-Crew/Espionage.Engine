@@ -7,12 +7,12 @@ namespace Espionage.Engine.Resources
 	[Group( "Models" ), Path( "models", "game://Models/" )]
 	public sealed class Model : Resource
 	{
-		private IModelProvider Provider { get; }
+		private IProvider<Model, GameObject> Provider { get; }
 		public Components<Model> Components { get; }
 
 		public override string Identifier => Provider.Identifier;
 
-		private Model( IModelProvider provider )
+		private Model( IProvider<Model, GameObject> provider )
 		{
 			Components = new Components<Model>( this );
 			Provider = provider;

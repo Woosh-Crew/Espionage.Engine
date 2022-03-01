@@ -1,17 +1,18 @@
 ﻿using System;
 using Espionage.Engine.Components;
+using UnityEngine;
 
 namespace Espionage.Engine.Resources
 {
 	[Group( "Textures" ), Path( "textures", "game://Textures/" )]
 	public sealed class Texture : Resource
 	{
-		private ITextureProvider Provider { get; }
+		private IProvider<Texture, Texture2D> Provider { get; }
 		public Components<Texture> Components { get; }
 
 		public override string Identifier => Provider.Identifier;
 
-		private Texture( ITextureProvider provider )
+		private Texture( IProvider<Texture, Texture2D> provider )
 		{
 			Components = new Components<Texture>( this );
 			Provider = provider;
