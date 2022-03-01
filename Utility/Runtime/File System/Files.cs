@@ -13,20 +13,13 @@ namespace Espionage.Engine
 	[Library, Group( "Input / Output" ), Title( "File System" )]
 	public static class Files
 	{
-		public enum Path
-		{
-			User,
-			Application,
-			Cache
-		}
-
 		/// <summary>
 		/// Just gives us the raw data
 		/// from a file at a path
 		/// </summary>
-		public static byte[] Load( string path, Path directory = Path.Application )
+		public static byte[] Load( string path )
 		{
-			path = GetPath( path, directory );
+			path = GetPath( path );
 
 			if ( !File.Exists( path ) )
 			{
@@ -41,7 +34,7 @@ namespace Espionage.Engine
 		/// it will overwrite if the file at that
 		/// path already exists.
 		/// </summary>
-		public static void Save( string text, string path, Path directory = Path.Application )
+		public static void Save( string text, string path )
 		{
 			Save( Encoding.UTF8.GetBytes( text ), path );
 		}
@@ -51,9 +44,9 @@ namespace Espionage.Engine
 		/// it will overwrite if the file at that
 		/// path already exists.
 		/// </summary>
-		public static void Save( byte[] data, string path, Path directory = Path.Application )
+		public static void Save( byte[] data, string path )
 		{
-			path = GetPath( path, directory );
+			path = GetPath( path );
 
 			if ( !Directory.Exists( path ) )
 			{
@@ -67,26 +60,30 @@ namespace Espionage.Engine
 		/// <summary>
 		/// Opens a FileStream to the designated path.
 		/// </summary>
-		public static FileStream Read( string path, Path directory = Path.Application )
+		public static FileStream Read( string path )
 		{
-			path = GetPath( path, directory );
+			path = GetPath( path );
 			return new FileStream( path, FileMode.Open, FileAccess.Read );
 		}
 
-		public static string GetPath( string path, Path directory )
+		private static string GetPath( string path )
 		{
-			return System.IO.Path.Combine( GetPath( directory ), path );
-		}
+			var splittedPath = path.Split( ':' );
 
-		public static string GetPath( Path path )
-		{
-			return path switch
+			if ( splittedPath.Length < 1 )
 			{
-				Path.User => Application.persistentDataPath,
-				Path.Application => Application.dataPath,
-				Path.Cache => Application.temporaryCachePath,
+				throw new InvalidOperationException( "Invalid Path" );
+			}
+
+			var grabbedPath = splittedPath[0] switch
+			{
+				"user" => Application.persistentDataPath,
+				"game" => Application.dataPath,
+				"cache" => Application.temporaryCachePath,
 				_ => throw new ArgumentOutOfRangeException( nameof( path ), path, null )
 			};
+
+			return Path.Combine( grabbedPath, splittedPath[1] );
 		}
 	}
 }
