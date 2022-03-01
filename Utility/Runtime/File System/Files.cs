@@ -11,7 +11,7 @@ namespace Espionage.Engine
 	/// All Saving, Loading, ETC. You can use
 	/// short hands for defining paths.
 	/// </summary>
-	[Library, Group( "Input / Output" ), Title( "File System" )]
+	[Library, Group( "Files" ), Title( "File System" )]
 	public static class Files
 	{
 		public static readonly Dictionary<string, string> Paths = new()
@@ -64,7 +64,7 @@ namespace Espionage.Engine
 
 			file.File = fileInfo;
 
-			using var stream = fileInfo.Open( FileMode.Open, FileAccess.Read );
+			using var stream = Read( path );
 			file.Load( stream );
 
 			return file;
@@ -109,8 +109,6 @@ namespace Espionage.Engine
 
 		private static string GetPath( string path )
 		{
-			Debugging.Log.Info( path );
-
 			if ( !path.Contains( "://" ) )
 			{
 				return path;
