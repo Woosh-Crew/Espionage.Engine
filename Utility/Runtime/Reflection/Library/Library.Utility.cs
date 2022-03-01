@@ -99,7 +99,7 @@ public static class LibraryDatabaseExtensions
 			return database.All.FirstOrDefault( e => e.Class.HasInterface<T>() && !e.Class.IsAbstract );
 		}
 
-		return !database.TryGet<T>( out var item ) ? null : database.All.FirstOrDefault( e => e.Class.IsSubclassOf( item.Class ) && !e.Class.IsAbstract );
+		return database.All.FirstOrDefault( e => (type == e.Class || e.Class.IsSubclassOf( type )) && !e.Class.IsAbstract );
 	}
 
 	public static Library Find<T>( this IDatabase<Library> database, Func<Library, bool> search ) where T : class
@@ -111,7 +111,7 @@ public static class LibraryDatabaseExtensions
 			return database.All.FirstOrDefault( e => e.Class.HasInterface<T>() && !e.Class.IsAbstract && search.Invoke( e ) );
 		}
 
-		return !database.TryGet<T>( out var item ) ? null : database.All.FirstOrDefault( e => e.Class.IsSubclassOf( item.Class ) && !e.Class.IsAbstract && search.Invoke( e ) );
+		return database.All.FirstOrDefault( e => (type == e.Class || e.Class.IsSubclassOf( type )) && !e.Class.IsAbstract && search.Invoke( e ) );
 	}
 
 	public static IEnumerable<Library> GetAll<T>( this IDatabase<Library> database ) where T : class
