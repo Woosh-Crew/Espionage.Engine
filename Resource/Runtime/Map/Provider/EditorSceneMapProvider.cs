@@ -8,13 +8,13 @@ using UnityEngine.SceneManagement;
 namespace Espionage.Engine.Resources
 {
 	[Library, Title( "Editor Map" ), Group( "Maps" )]
-	public class EditorSceneMapProvider : IMapProvider
+	public class EditorSceneMapProvider : Resource.IProvider<Map, Scene>
 	{
 		// Id
 		public string Identifier => "editor";
 
 		// Outcome
-		public Scene? Scene { get; private set; }
+		public Scene Output { get; private set; }
 
 		// Loading Meta
 		public float Progress { get; }
@@ -28,7 +28,7 @@ namespace Espionage.Engine.Resources
 		private static void Init()
 		{
 			// Dont give a shit if this is hacky, its editor only
-			var provider = new EditorSceneMapProvider { Scene = SceneManager.GetActiveScene() };
+			var provider = new EditorSceneMapProvider { Output = SceneManager.GetActiveScene() };
 			Map.Current = new Map( provider );
 			Map.Current.Load();
 		}
@@ -41,7 +41,7 @@ namespace Espionage.Engine.Resources
 		{
 			IsLoading = true;
 
-			Scene = SceneManager.GetActiveScene();
+			Output = SceneManager.GetActiveScene();
 			finished?.Invoke();
 
 			IsLoading = false;
@@ -51,7 +51,7 @@ namespace Espionage.Engine.Resources
 		{
 			IsLoading = true;
 
-			var request = Scene?.Unload();
+			var request = Output.Unload();
 			request.completed += _ => finished?.Invoke();
 
 			IsLoading = false;

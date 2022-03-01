@@ -6,13 +6,13 @@ using UnityEngine.SceneManagement;
 namespace Espionage.Engine.Resources
 {
 	[Library, Title( "Asset Bundle Map" ), Group( "Maps" )]
-	public class AssetBundleMapProvider : IMapProvider
+	public class AssetBundleMapProvider : Resource.IProvider<Map, Scene>
 	{
 		public string Identifier => File.FullName;
 		private FileInfo File { get; }
 
 		// Outcome
-		public Scene? Scene { get; private set; }
+		public Scene Output { get; private set; }
 
 		// Loading Meta
 		public float Progress => _bundleRequestOperation.progress / 2 + _sceneLoadOperation.progress / 2;
@@ -54,8 +54,8 @@ namespace Espionage.Engine.Resources
 					// We've finished loading the scene.
 					Debugging.Log.Info( "Finished Loading Scene" );
 					IsLoading = false;
-					Scene = SceneManager.GetSceneByPath( scenePath );
-					SceneManager.SetActiveScene( Scene.Value );
+					Output = SceneManager.GetSceneByPath( scenePath );
+					SceneManager.SetActiveScene( Output );
 					finished?.Invoke();
 				};
 			};
@@ -64,8 +64,8 @@ namespace Espionage.Engine.Resources
 		public void Unload( Action finished )
 		{
 			// Unload scene and bundle
-			Scene?.Unload();
-			Scene = null;
+			Output.Unload();
+			Output = default;
 
 			var request = _bundle.UnloadAsync( true );
 			request.completed += ( e ) =>

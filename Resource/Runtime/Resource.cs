@@ -43,6 +43,22 @@ namespace Espionage.Engine.Resources
 			Unload();
 		}
 
+		public interface IProvider<T, out TOutput> where T : Resource
+		{
+			TOutput Output { get; }
+			float Progress { get; }
+
+			string Identifier { get; }
+			bool IsLoading { get; }
+
+			void Load( Action onLoad = null );
+			void Unload( Action onUnload = null );
+		}
+
+		//
+		// Database
+		//
+
 		///	<summary> A reference to all resources that are loaded. </summary>
 		public static IDatabase<Resource, string> Database { get; } = new InternalDatabase();
 

@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using Espionage.Engine.Components;
+using UnityEngine.SceneManagement;
 
 namespace Espionage.Engine.Resources
 {
@@ -18,7 +19,7 @@ namespace Espionage.Engine.Resources
 		public static Map Current { get; internal set; }
 
 		// Provider
-		public IMapProvider Provider { get; }
+		public IProvider<Map, Scene> Provider { get; }
 		public Components<Map> Components { get; }
 
 		// Meta Data
@@ -36,7 +37,7 @@ namespace Espionage.Engine.Resources
 
 		/// <summary>Make a reference to a map, using a provider.</summary>
 		/// <param name="provider">What provider should we use for loading and unloading maps?</param>
-		public Map( IMapProvider provider )
+		public Map( IProvider<Map, Scene> provider )
 		{
 			Components = new Components<Map>( this );
 			Provider = provider;

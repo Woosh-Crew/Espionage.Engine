@@ -1,9 +1,10 @@
 ﻿using System.IO;
+using UnityEngine.SceneManagement;
 
 namespace Espionage.Engine.Resources
 {
 	[Group( "Files" ), Title( "UMAP File" ), File( Extension = "umap" )]
-	public sealed class UMAP : IMapFile
+	public sealed class UMAP : IFile<Map, Scene>
 	{
 		public Library ClassInfo { get; }
 
@@ -18,7 +19,7 @@ namespace Espionage.Engine.Resources
 
 		// Provider
 
-		public IMapProvider Provider()
+		public Resource.IProvider<Map, Scene> Provider()
 		{
 			// This file is basically an Asset Bundle
 			return new AssetBundleMapProvider( File );

@@ -43,6 +43,8 @@ namespace Espionage.Engine
 		/// </summary>
 		public static T Load<T>( string path ) where T : class, IFile
 		{
+			using var stopwatch = Debugging.Stopwatch( "Loading File" );
+
 			// Get the actual path
 			path = GetPath( path );
 

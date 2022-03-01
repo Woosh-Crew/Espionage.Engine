@@ -7,13 +7,13 @@ using UnityEngine.SceneManagement;
 namespace Espionage.Engine.Resources
 {
 	[Library, Title( "Build Index Map" ), Group( "Maps" )]
-	public class BuildIndexMapProvider : IMapProvider
+	public class BuildIndexMapProvider : Resource.IProvider<Map, Scene>
 	{
 		// Id
 		public string Identifier => $"index:{_buildIndex}";
 
 		// Outcome
-		public Scene? Scene { get; private set; }
+		public Scene Output { get; private set; }
 
 		// Loading Meta
 		public float Progress => _operation.progress;
@@ -43,15 +43,15 @@ namespace Espionage.Engine.Resources
 			_operation = SceneManager.LoadSceneAsync( _buildIndex );
 			_operation.completed += ( _ ) =>
 			{
-				Scene = SceneManager.GetSceneByBuildIndex( _buildIndex );
+				Output = SceneManager.GetSceneByBuildIndex( _buildIndex );
 				finished?.Invoke();
 			};
 		}
 
 		public void Unload( Action finished )
 		{
-			Scene?.Unload();
-			Scene = null;
+			Output.Unload();
+			Output = default;
 		}
 	}
 }

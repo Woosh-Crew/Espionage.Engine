@@ -6,7 +6,7 @@ namespace Espionage.Engine
 	/// <summary>
 	/// Reflection Component for storing data about file specific meta.
 	/// </summary>
-	[AttributeUsage( AttributeTargets.Class )]
+	[AttributeUsage( AttributeTargets.Class, Inherited = false )]
 	public sealed class FileAttribute : Attribute, IComponent<Library>
 	{
 		/// <summary>
