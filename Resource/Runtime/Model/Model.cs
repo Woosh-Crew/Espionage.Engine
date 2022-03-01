@@ -18,6 +18,13 @@ namespace Espionage.Engine.Resources
 			Provider = provider;
 		}
 
+		public static Model Load( string path )
+		{
+			var model = new Model( Files.Load<IFile<Model, GameObject>>( path ).Provider() );
+			((IResource)model).Load();
+			return model;
+		}
+
 		// Resource
 
 		public override bool IsLoading => Provider.IsLoading;

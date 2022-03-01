@@ -51,7 +51,7 @@ namespace Espionage.Engine.Tools.Editor
 		[Function, Menu( "Maps/Compile Map" )]
 		private void OpenMapCompiler()
 		{
-			GetWindow<SceneCompiler>();
+			GetWindow<MapCompiler>();
 		}
 
 		// UI
