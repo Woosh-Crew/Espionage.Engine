@@ -8,8 +8,8 @@ namespace Espionage.Engine
 {
 	/// <summary>
 	/// Files, is Espionage.Engines File System.
-	/// All Saving, Loading, ETC. Path is local to the games
-	/// data storage. ( <see cref="Application.dataPath"/> )
+	/// All Saving, Loading, ETC. You can use
+	/// short hands for defining paths.
 	/// </summary>
 	[Library, Group( "Input / Output" ), Title( "File System" )]
 	public static class Files
@@ -46,7 +46,7 @@ namespace Espionage.Engine
 			// Get the actual path
 			path = GetPath( path );
 
-			if ( !Directory.Exists( path ) )
+			if ( !File.Exists( path ) )
 			{
 				throw new FileLoadException( "Directory doesn't exist" );
 			}
@@ -54,8 +54,9 @@ namespace Espionage.Engine
 			var library = Library.Database.Get<T>();
 			var fileInfo = new FileInfo( path );
 
-			if ( fileInfo.Extension != library.Components.Get<FileAttribute>()?.Extension )
+			if ( fileInfo.Extension[1..] != library.Components.Get<FileAttribute>()?.Extension )
 			{
+				Debugging.Log.Info( fileInfo.Extension );
 				throw new FileLoadException( "Invalid Extension for File" );
 			}
 
@@ -108,15 +109,17 @@ namespace Espionage.Engine
 
 		private static string GetPath( string path )
 		{
-			var splitPath = path.Split( ':' );
+			Debugging.Log.Info( path );
 
-			if ( splitPath.Length < 1 )
+			if ( !path.Contains( "://" ) )
 			{
-				// Its probably a full path
 				return path;
 			}
 
-			var grabbedPath = Paths[splitPath[0]];
+			var splitPath = path.Split( "://" );
+
+			// Potential stack overflow if you are stupid
+			var grabbedPath = Paths[GetPath( splitPath[0] )];
 
 			return Path.Combine( grabbedPath, splitPath[1] );
 		}
