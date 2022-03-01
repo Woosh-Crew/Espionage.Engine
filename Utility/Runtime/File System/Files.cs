@@ -43,8 +43,6 @@ namespace Espionage.Engine
 		/// </summary>
 		public static T Load<T>( string path ) where T : class, IFile
 		{
-			using var stopwatch = Debugging.Stopwatch( "Loading File" );
-
 			// Get the actual path
 			path = GetPath( path );
 
@@ -109,6 +107,11 @@ namespace Espionage.Engine
 			return new FileStream( path, FileMode.Open, FileAccess.Read );
 		}
 
+		/// <summary>
+		/// Gets the Path, If you use the virtual pathing
+		/// It'll search loaded mods first then the base content,
+		/// Depending on the virtual path you are trying to get. 
+		/// </summary>
 		public static string GetPath( string path )
 		{
 			if ( !path.Contains( "://" ) )

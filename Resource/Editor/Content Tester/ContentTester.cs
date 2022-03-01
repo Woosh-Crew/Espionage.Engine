@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 
 namespace Espionage.Engine.Tools.Editor
 {
-	[Title( "Content Tester" ), Help( "Test Assets such as Maps and Models" ), Icon( EditorIcons.Game )]
+	[Title( "Content Tester" ), Help( "Test Resources such as Maps, Models, Textures, etc." ), Icon( EditorIcons.Game )]
 	public class ContentTester : EditorTool
 	{
 		// Menu Items
@@ -40,6 +40,12 @@ namespace Espionage.Engine.Tools.Editor
 			}
 
 			new Map( Files.Load<IFile<Map, Scene>>( path ).Provider() ).Load();
+		}
+
+		[Function, Menu( "Maps/Test Open Map" )]
+		private void TestOpenMap()
+		{
+			Debugging.Log.Info( "This would do something" );
 		}
 
 		[Function, Menu( "Maps/Compile Map" )]

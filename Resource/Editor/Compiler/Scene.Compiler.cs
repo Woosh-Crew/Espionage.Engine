@@ -10,7 +10,7 @@ using UnityEngine.SceneManagement;
 
 namespace Espionage.Engine.Resources.Editor
 {
-	[Title( "Map Compiler" ), Help( "Compile your maps" ), Group( "Compiler" )]
+	[Title( "Map Compiler" ), Help( "Compile your maps, to the .umap format." ), Group( "Compiler" )]
 	public class SceneCompiler : EditorTool, IHasCustomMenu
 	{
 		protected override void OnCreateGUI()
@@ -87,7 +87,7 @@ namespace Espionage.Engine.Resources.Editor
 						Directory.CreateDirectory( Path.GetFullPath( exportPath ) );
 					}
 
-					var extension = Library.Database.Get<AssetBundleMapProvider>().Components.Get<FileAttribute>().Extension ?? "map";
+					var extension = Library.Database.Get<UMAP>().Components.Get<FileAttribute>().Extension;
 
 					var builds = new[]
 					{
@@ -109,8 +109,6 @@ namespace Espionage.Engine.Resources.Editor
 							return;
 						}
 					}
-
-					// Shove Meta Data In
 				}
 				catch ( Exception e )
 				{
