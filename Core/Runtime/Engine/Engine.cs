@@ -139,6 +139,12 @@ namespace Espionage.Engine
 				{
 					loop.subSystemList[i].updateDelegate += OnPhysicsUpdate;
 				}
+
+				// Physics Update
+				if ( loop.subSystemList[i].type == typeof( PostLateUpdate ) )
+				{
+					loop.subSystemList[i].updateDelegate += OnLateUpdate;
+				}
 			}
 
 			PlayerLoop.SetPlayerLoop( loop );
@@ -178,6 +184,21 @@ namespace Espionage.Engine
 			// More temp - this should 
 			// Be called at an engine level
 			Game.Simulate( Local.Client );
+		}
+
+		private static void OnLateUpdate()
+		{
+			if ( !Application.isPlaying )
+			{
+				return;
+			}
+
+			foreach ( var service in Services.All )
+			{
+				service.OnLateUpdate();
+			}
+
+			Callback.Run( "application.late_frame" );
 		}
 
 		private static void OnPhysicsUpdate()

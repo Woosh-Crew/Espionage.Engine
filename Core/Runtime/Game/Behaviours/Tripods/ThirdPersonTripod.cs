@@ -10,7 +10,7 @@ namespace Espionage.Engine.Cameras
 			camSetup.Rotation = Local.Pawn.EyeRot;
 		}
 
-		private Vector3 _smoothedPosition;
+		private Quaternion _smoothedRotation;
 
 		protected override void OnBuildTripod( ref ITripod.Setup camSetup )
 		{
@@ -20,18 +20,18 @@ namespace Espionage.Engine.Cameras
 			}
 
 			var offseted = camSetup.Rotation * Vector3.left * offset.x + camSetup.Rotation * Vector3.up * offset.y + camSetup.Rotation * Vector3.forward * offset.z;
-			_smoothedPosition = Vector3.Slerp( _smoothedPosition, Local.Pawn.EyePos + camSetup.Rotation * Vector3.back * distance + offseted, smoothing * Time.deltaTime );
-			camSetup.Position = _smoothedPosition;
+			camSetup.Position = Local.Pawn.EyePos + camSetup.Rotation * Vector3.back * distance + offseted;
 
 			// Offset
 
-			camSetup.Rotation = Local.Pawn.EyeRot;
+			_smoothedRotation = Quaternion.Slerp( _smoothedRotation, Quaternion.LookRotation( Local.Client.Pawn.EyeRot * Vector3.forward, Vector3.up ), smoothing * Time.deltaTime );
+			camSetup.Rotation = _smoothedRotation;
 		}
 
 		// Fields
 
 		[SerializeField]
-		private float smoothing = 15;
+		private float smoothing = 10;
 
 		[SerializeField]
 		private float distance = 5;

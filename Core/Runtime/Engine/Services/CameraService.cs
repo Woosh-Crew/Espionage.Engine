@@ -31,7 +31,7 @@ namespace Espionage.Engine.Services
 			Position = Vector3.zero
 		};
 
-		public override void OnUpdate()
+		public override void OnLateUpdate()
 		{
 			if ( Engine.Game == null || !Application.isPlaying )
 			{

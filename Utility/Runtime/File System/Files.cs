@@ -48,7 +48,7 @@ namespace Espionage.Engine
 
 			if ( !File.Exists( path ) )
 			{
-				throw new FileLoadException( "Directory doesn't exist" );
+				throw new FileLoadException( "File doesn't exist" );
 			}
 
 			var fileInfo = new FileInfo( path );

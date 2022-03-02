@@ -13,6 +13,7 @@
 		public virtual void OnReady() { }
 		public virtual void OnUpdate() { }
 		public virtual void OnShutdown() { }
+		public virtual void OnLateUpdate() { }
 
 		public virtual void Dispose()
 		{
