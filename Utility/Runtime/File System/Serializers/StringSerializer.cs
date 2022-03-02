@@ -6,6 +6,7 @@ namespace Espionage.Engine.Serializers
 	[Group( "Serializers" )]
 	internal class StringSerializer : ISerializer<char>, ISerializer<string>, IDeserializer<string>
 	{
+		// BOMLess UTF8 Encoding
 		internal static readonly UTF8Encoding UTF8 = new();
 		public Library ClassInfo { get; } = Library.Database[typeof( StringSerializer )];
 

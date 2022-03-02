@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using UnityEditor;
 using UnityEngine;
 
 namespace Espionage.Engine
@@ -15,8 +13,6 @@ namespace Espionage.Engine
 	[Library, Group( "Files" ), Title( "File System" )]
 	public static class Files
 	{
-		// BOMless UTF-8 encoder
-
 		public static readonly Dictionary<string, string> Paths = new()
 		{
 			// using our own path methods rather than the dubious unity ones
@@ -25,13 +21,6 @@ namespace Espionage.Engine
 			["cache"] = CachePath(),
 			["game"] = Application.dataPath
 		};
-
-
-		[MenuItem( "Tools/Espionage.Engine/Debug/Save File" )]
-		private static void testing()
-		{
-			Save( "fuck yea", "game://awesome.txt" );
-		}
 
 		//
 		// Pathing
@@ -161,6 +150,11 @@ namespace Espionage.Engine
 			return file;
 		}
 
+		/// <summary>
+		/// Deserializes data at the given path. Will
+		/// automatically deserialize it to the target
+		/// format.
+		/// </summary>
 		public static T Deserialize<T>( string path )
 		{
 			path = GetPath( path );
@@ -170,8 +164,7 @@ namespace Espionage.Engine
 		}
 
 		/// <summary>
-		/// Just gives us the raw data
-		/// from a file at a path
+		/// Just gives us the raw data from a file at a path
 		/// </summary>
 		public static byte[] Deserialize( string path )
 		{
@@ -201,28 +194,25 @@ namespace Espionage.Engine
 		// Serialization
 		//
 
+		/// <summary>
+		/// Saves anything you want, (provided theres a
+		/// serializer for it) to the given path
+		/// </summary>
 		public static void Save<T>( T item, string path )
 		{
 			var serializer = GrabSerializer<T>();
 			Serialize( serializer.Serialize( item ), path );
 		}
 
+		/// <summary>
+		/// Saves an array of anything you want,
+		/// (provided theres a serializer for it)
+		/// to the given path
+		/// </summary>
 		public static void Save<T>( T[] item, string path )
 		{
 			var serializer = GrabSerializer<T>();
 			Serialize( serializer.Serialize( item ), path );
-		}
-
-		private static ISerializer<T> GrabSerializer<T>()
-		{
-			var library = Library.Database.Find<ISerializer<T>>();
-
-			if ( library == null )
-			{
-				throw new FileLoadException( "No Valid Serializers for this File" );
-			}
-
-			return Library.Database.Create<ISerializer<T>>( library.Class );
 		}
 
 		/// <summary>
@@ -243,6 +233,18 @@ namespace Espionage.Engine
 
 			using var stream = File.Create( path );
 			stream.Write( data );
+		}
+
+		private static ISerializer<T> GrabSerializer<T>()
+		{
+			var library = Library.Database.Find<ISerializer<T>>();
+
+			if ( library == null )
+			{
+				throw new FileLoadException( "No Valid Serializers for this File" );
+			}
+
+			return Library.Database.Create<ISerializer<T>>( library.Class );
 		}
 
 		//
