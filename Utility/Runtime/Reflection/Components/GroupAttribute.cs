@@ -7,7 +7,7 @@ namespace Espionage.Engine
 	/// Reflection Component for storing what group does this class belong too.
 	/// Will override the Library.Group value.
 	/// </summary>
-	[AttributeUsage( AttributeTargets.Class | AttributeTargets.Property | AttributeTargets.Method | AttributeTargets.Interface )]
+	[AttributeUsage( AttributeTargets.Class | AttributeTargets.Property | AttributeTargets.Method | AttributeTargets.Interface, Inherited = true )]
 	public sealed class GroupAttribute : Attribute, IComponent<Library>, IComponent<Property>, IComponent<Function>
 	{
 		private readonly string _group;
