@@ -14,10 +14,7 @@ namespace Espionage.Engine
 	[Library, Group( "Files" ), Title( "File System" )]
 	public static class Files
 	{
-		// Sarah: Microsoft is evil and wants everyone to use BOMs by default.
-		// Their excuse is the BOM acts as an "I'm UTF-8" marker, even though
-		// the vast majority of UTF-8 encoded files have no BOM because they
-		// are deprecated, obsolete vestiges inherited from UTF-16 and UTF-32.
+		// BOMless UTF-8 encoder
 		private static readonly UTF8Encoding UTF8 = new();
 
 		public static readonly Dictionary<string, string> Paths = new()
@@ -57,11 +54,13 @@ namespace Espionage.Engine
 		}
 
 		/// <summary>
-		/// On Linux at least, Unity's Application.persistentDataPath
-		/// dumps all user and config files into $HOME/.config/unity3d.
 		/// This method returns the correct platform-specific path for
 		/// non-roaming user data files.
 		/// </summary>
+		/// <remarks>
+		/// On Linux at least, Unity's Application.persistentDataPath
+		/// dumps all user and config files into $HOME/.config/unity3d.
+		/// </remarks>
 		private static string UserDataPath()
 		{
 			var game = Application.productName;
@@ -86,10 +85,12 @@ namespace Espionage.Engine
 		}
 
 		/// <summary>
-		/// Unity's Application.persistentDataPath uses directories designed
-		/// for large user data, rather than config files. This method
-		/// returns the correct platform-specific directory for user config files.
+		/// Returns the platform-specific directory for user config files.
 		/// </summary>
+		/// <remarks>
+		/// Unity's Application.persistentDataPath uses directories designed
+		/// for large user data, rather than config files.
+		/// </remarks>
 		private static string UserConfigPath()
 		{
 			var game = Application.productName;
