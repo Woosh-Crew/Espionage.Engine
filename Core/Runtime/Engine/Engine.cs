@@ -29,7 +29,7 @@ namespace Espionage.Engine
 
 				Debugging.Log.Info( $"Using {Game?.ClassInfo.Title} as the Game" );
 				CreateEngineLayer();
-				Services = new ServiceDatabase();
+				Services = new Database();
 
 				// TODO: THIS IS TEMP
 				Local.Client = Client.Create( "Local" );
@@ -66,15 +66,15 @@ namespace Espionage.Engine
 		// Services
 		//
 
-		public static IDatabase<IService> Services { get; private set; }
+		public static Database Services { get; private set; }
 
-		private class ServiceDatabase : IDatabase<IService>
+		public class Database : IDatabase<IService>
 		{
 			public IEnumerable<IService> All => _services;
 
 			private readonly List<IService> _services = new();
 
-			public ServiceDatabase()
+			public Database()
 			{
 				foreach ( var service in Library.Database.GetAll<IService>().Where( e => !e.Class.IsAbstract ) )
 				{
@@ -109,6 +109,16 @@ namespace Espionage.Engine
 
 				_services.Clear();
 			}
+
+			public T Get<T>() where T : class, IService
+			{
+				return All.FirstOrDefault( e => e is T ) as T;
+			}
+
+			public bool Has<T>() where T : class, IService
+			{
+				return All.OfType<T>().Any();
+			}
 		}
 
 		//
@@ -138,12 +148,6 @@ namespace Espionage.Engine
 				if ( loop.subSystemList[i].type == typeof( FixedUpdate ) )
 				{
 					loop.subSystemList[i].updateDelegate += OnPhysicsUpdate;
-				}
-
-				// Physics Update
-				if ( loop.subSystemList[i].type == typeof( PostLateUpdate ) )
-				{
-					loop.subSystemList[i].updateDelegate += OnLateUpdate;
 				}
 			}
 
@@ -184,21 +188,6 @@ namespace Espionage.Engine
 			// More temp - this should 
 			// Be called at an engine level
 			Game.Simulate( Local.Client );
-		}
-
-		private static void OnLateUpdate()
-		{
-			if ( !Application.isPlaying )
-			{
-				return;
-			}
-
-			foreach ( var service in Services.All )
-			{
-				service.OnLateUpdate();
-			}
-
-			Callback.Run( "application.late_frame" );
 		}
 
 		private static void OnPhysicsUpdate()

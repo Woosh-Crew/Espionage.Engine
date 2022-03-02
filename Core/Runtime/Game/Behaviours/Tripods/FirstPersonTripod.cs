@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace Espionage.Engine.Cameras
+﻿namespace Espionage.Engine.Cameras
 {
 	public class FirstPersonTripod : Tripod
 	{
@@ -19,10 +17,7 @@ namespace Espionage.Engine.Cameras
 
 			camSetup.Position = Local.Pawn.EyePos;
 			camSetup.Rotation = Local.Pawn.EyeRot;
-			camSetup.Viewer = visuals;
+			camSetup.Viewer = Visuals;
 		}
-
-		[SerializeField]
-		private Transform visuals;
 	}
 }

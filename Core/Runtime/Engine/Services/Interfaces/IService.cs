@@ -8,7 +8,5 @@ namespace Espionage.Engine.Services
 		void OnReady();
 		void OnShutdown();
 		void OnUpdate();
-
-		void OnLateUpdate() { }
 	}
 }

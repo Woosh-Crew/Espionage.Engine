@@ -19,7 +19,6 @@ namespace Espionage.Engine
 
 			Pawn.EyeRot = Quaternion.Euler( input.ViewAngles );
 			Pawn.EyePos = transform.position + Vector3.Scale( Vector3.up, Pawn.transform.lossyScale ) * eyeHeight;
-
 			transform.localRotation = Quaternion.AngleAxis( Pawn.EyeRot.eulerAngles.y, Vector3.up );
 		}
 

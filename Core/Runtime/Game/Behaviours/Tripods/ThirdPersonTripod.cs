@@ -11,6 +11,8 @@ namespace Espionage.Engine.Cameras
 		}
 
 		private Quaternion _smoothedRotation;
+		private Quaternion _smoothedRotation2;
+		private Vector3 _smoothPos;
 
 		protected override void OnBuildTripod( ref ITripod.Setup camSetup )
 		{
@@ -24,8 +26,11 @@ namespace Espionage.Engine.Cameras
 
 			// Offset
 
-			_smoothedRotation = Quaternion.Slerp( _smoothedRotation, Quaternion.LookRotation( Local.Client.Pawn.EyeRot * Vector3.forward, Vector3.up ), smoothing * Time.deltaTime );
+			_smoothedRotation = Quaternion.Slerp( _smoothedRotation, Local.Client.Pawn.EyeRot, smoothing * Time.deltaTime );
 			camSetup.Rotation = _smoothedRotation;
+
+			_smoothedRotation2 = Quaternion.Lerp( _smoothedRotation2, Visuals.transform.parent.rotation, 10 * Time.deltaTime );
+			Visuals.transform.rotation = _smoothedRotation2;
 		}
 
 		// Fields
