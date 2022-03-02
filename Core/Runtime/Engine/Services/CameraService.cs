@@ -1,4 +1,5 @@
-﻿using Espionage.Engine.Cameras;
+﻿using System.Linq;
+using Espionage.Engine.Cameras;
 using UnityEngine;
 
 namespace Espionage.Engine.Services
@@ -18,6 +19,8 @@ namespace Espionage.Engine.Services
 
 			// Setup Camera
 			_camera = obj.AddComponent<CameraController>();
+
+			Callback.Run( "camera.created", _camera );
 		}
 
 		// Frame
