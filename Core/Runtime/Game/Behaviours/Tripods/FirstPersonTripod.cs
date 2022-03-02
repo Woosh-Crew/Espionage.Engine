@@ -4,8 +4,8 @@
 	{
 		public override void Activated( ref ITripod.Setup camSetup )
 		{
-			camSetup.Position = Local.Pawn.EyePos;
 			camSetup.Rotation = Local.Pawn.EyeRot;
+			camSetup.Position = Local.Pawn.EyePos;
 		}
 
 		protected override void OnBuildTripod( ref ITripod.Setup camSetup )
@@ -15,8 +15,8 @@
 				return;
 			}
 
-			camSetup.Position = Local.Pawn.EyePos;
 			camSetup.Rotation = Local.Pawn.EyeRot;
+			camSetup.Position = Local.Pawn.EyePos;
 			camSetup.Viewer = Visuals;
 		}
 	}

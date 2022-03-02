@@ -21,27 +21,22 @@ namespace Espionage.Engine.Cameras
 				return;
 			}
 
-			var offseted = camSetup.Rotation * Vector3.left * offset.x + camSetup.Rotation * Vector3.up * offset.y + camSetup.Rotation * Vector3.forward * offset.z;
-			camSetup.Position = Local.Pawn.EyePos + camSetup.Rotation * Vector3.back * distance + offseted;
+			// Set Rot first cause we use it below
+			camSetup.Rotation = Local.Client.Pawn.EyeRot;
 
-			// Offset
+			var ray = Physics.Raycast( new Ray( Local.Pawn.EyePos, camSetup.Rotation * Vector3.back ), out var hitInfo, distance );
 
-			_smoothedRotation = Quaternion.Slerp( _smoothedRotation, Local.Client.Pawn.EyeRot, smoothing * Time.deltaTime );
-			camSetup.Rotation = _smoothedRotation;
+			if ( ray )
+			{
+				Debug.DrawLine( Local.Pawn.EyePos, hitInfo.point );
+			}
 
-			_smoothedRotation2 = Quaternion.Lerp( _smoothedRotation2, Visuals.transform.parent.rotation, 10 * Time.deltaTime );
-			Visuals.transform.rotation = _smoothedRotation2;
+			camSetup.Position = Local.Pawn.EyePos + camSetup.Rotation * Vector3.back * (ray ? hitInfo.distance : distance);
 		}
 
 		// Fields
 
 		[SerializeField]
-		private float smoothing = 10;
-
-		[SerializeField]
 		private float distance = 5;
-
-		[SerializeField]
-		private Vector3 offset;
 	}
 }
