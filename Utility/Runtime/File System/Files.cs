@@ -200,8 +200,7 @@ namespace Espionage.Engine
 		/// </summary>
 		public static void Save<T>( T item, string path )
 		{
-			var serializer = GrabSerializer<T>();
-			Serialize( serializer.Serialize( item ), path );
+			Save( Serialize( item ), path );
 		}
 
 		/// <summary>
@@ -211,8 +210,7 @@ namespace Espionage.Engine
 		/// </summary>
 		public static void Save<T>( T[] item, string path )
 		{
-			var serializer = GrabSerializer<T>();
-			Serialize( serializer.Serialize( item ), path );
+			Save( Serialize( item ), path );
 		}
 
 		/// <summary>
@@ -220,7 +218,7 @@ namespace Espionage.Engine
 		/// it will overwrite if the file at that
 		/// path already exists.
 		/// </summary>
-		public static void Serialize( byte[] data, string path )
+		public static void Save( byte[] data, string path )
 		{
 			path = GetPath( path );
 
@@ -233,6 +231,24 @@ namespace Espionage.Engine
 
 			using var stream = File.Create( path );
 			stream.Write( data );
+		}
+
+		/// <summary>
+		/// Serialize type of T to a byte array.
+		/// </summary>
+		public static byte[] Serialize<T>( T data )
+		{
+			var serializer = GrabSerializer<T>();
+			return serializer.Serialize( data );
+		}
+
+		/// <summary>
+		/// Serialize an type array of T to a byte array.
+		/// </summary>
+		public static byte[] Serialize<T>( T[] data )
+		{
+			var serializer = GrabSerializer<T>();
+			return serializer.Serialize( data );
 		}
 
 		private static ISerializer<T> GrabSerializer<T>()
