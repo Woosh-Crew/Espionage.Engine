@@ -15,7 +15,7 @@ namespace Espionage.Engine
 	public static class Files
 	{
 		// BOMless UTF-8 encoder
-		private static readonly UTF8Encoding UTF8 = new();
+		internal static readonly UTF8Encoding UTF8 = new();
 
 		public static readonly Dictionary<string, string> Paths = new()
 		{
@@ -177,15 +177,7 @@ namespace Espionage.Engine
 			return file;
 		}
 
-		/// <summary>
-		/// Saves a string value to a path,
-		/// it will overwrite if the file at that
-		/// path already exists.
-		/// </summary>
-		public static void Save( string text, string path )
-		{
-			Save( UTF8.GetBytes( text ), path );
-		}
+		public static void Save<T>( T item, string path ) { }
 
 		/// <summary>
 		/// Saves a byte buffer to a path,
