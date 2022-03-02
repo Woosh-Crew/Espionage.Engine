@@ -6,9 +6,8 @@ namespace Espionage.Engine.Serializers
 	[Group( "Serializers" )]
 	internal class StringSerializer : ISerializer<char>, ISerializer<string>, IDeserializer<string>, IDeserializer<char>
 	{
-		// BOMLess UTF8 Encoding
+		public Library ClassInfo => null;
 		internal static readonly UTF8Encoding UTF8 = new();
-		public Library ClassInfo { get; } = Library.Database[typeof( StringSerializer )];
 
 		// Char
 
@@ -26,7 +25,6 @@ namespace Espionage.Engine.Serializers
 		{
 			throw new InvalidOperationException( "Why?" );
 		}
-
 
 		// String
 
