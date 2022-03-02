@@ -177,7 +177,19 @@ namespace Espionage.Engine
 			return file;
 		}
 
-		public static void Save<T>( T item, string path ) { }
+		public static void Save<T>( T[] item, string path )
+		{
+			var library = Library.Database.Find<ISerializer<T>>();
+
+			if ( library == null )
+			{
+				throw new FileLoadException( "No Valid Serializers for this File" );
+			}
+
+			var serializer = Library.Database.Create<ISerializer<T>>( library.Class );
+
+			Save( serializer.Serialize( item ), path );
+		}
 
 		/// <summary>
 		/// Saves a byte buffer to a path,
@@ -196,11 +208,6 @@ namespace Espionage.Engine
 			using var stream = File.Create( path );
 			stream.Write( data );
 		}
-
-		// TODO: Create a generic Load method for value types such
-		// as string, int[], float[], etc. if we can
-		// TODO: Generic version of Save for saving arbitrary data other
-		// than just string or byte[]
 
 		/// <summary>
 		/// Opens a FileStream to the designated path.
