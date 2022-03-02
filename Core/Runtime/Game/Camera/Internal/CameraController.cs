@@ -18,40 +18,47 @@ namespace Espionage.Engine
 			Engine.Game.OnCameraCreated( _cam );
 		}
 
-		private Transform _lastViewer;
 
-		public void Finalise( ITripod.Setup camSetup )
+		public void Finalise( in ITripod.Setup camSetup )
 		{
 			var trans = transform;
 			trans.localPosition = camSetup.Position;
 			trans.localRotation = camSetup.Rotation;
 
 			_cam.fieldOfView = camSetup.Damping > 0 ? Mathf.Lerp( _cam.fieldOfView, camSetup.FieldOfView, camSetup.Damping * Time.deltaTime ) : camSetup.FieldOfView;
+			HandleViewer( camSetup );
+		}
 
-			if ( _lastViewer != camSetup.Viewer )
+		private Transform _lastViewer;
+
+		private void HandleViewer( in ITripod.Setup camSetup )
+		{
+			if ( _lastViewer == camSetup.Viewer )
 			{
-				Debugging.Log.Info( "New Viewer" );
-
-				if ( _lastViewer != null )
-				{
-					foreach ( var meshRenderer in _lastViewer.GetComponentsInChildren<Renderer>() )
-					{
-						meshRenderer.shadowCastingMode = ShadowCastingMode.On;
-					}
-				}
-
-				_lastViewer = camSetup.Viewer;
-
-				if ( _lastViewer != null )
-				{
-					foreach ( var meshRenderer in _lastViewer.GetComponentsInChildren<Renderer>() )
-					{
-						meshRenderer.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
-					}
-				}
-
-				Viewmodel.Show( _lastViewer != null );
+				return;
 			}
+
+			Debugging.Log.Info( "New Viewer" );
+
+			if ( _lastViewer != null )
+			{
+				foreach ( var meshRenderer in _lastViewer.GetComponentsInChildren<Renderer>() )
+				{
+					meshRenderer.shadowCastingMode = ShadowCastingMode.On;
+				}
+			}
+
+			_lastViewer = camSetup.Viewer;
+
+			if ( _lastViewer != null )
+			{
+				foreach ( var meshRenderer in _lastViewer.GetComponentsInChildren<Renderer>() )
+				{
+					meshRenderer.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+				}
+			}
+
+			Viewmodel.Show( _lastViewer != null );
 		}
 
 		private void OnDrawGizmos()
