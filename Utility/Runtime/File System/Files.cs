@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 namespace Espionage.Engine
 {
 	/// <summary>
@@ -21,6 +25,18 @@ namespace Espionage.Engine
 			["cache"] = CachePath(),
 			["game"] = Application.dataPath
 		};
+
+	#if UNITY_EDITOR
+
+		[MenuItem( "Tools/Espionage.Engine/Debug/Report Random File" )]
+		private static void Testing()
+		{
+			Save( "Testing", "game://test.txt" );
+			Debugging.Log.Info( Deserialize<string>( "game://test.txt" ) );
+			Delete( "game://test.txt" );
+		}
+
+	#endif
 
 		//
 		// Pathing
@@ -296,6 +312,66 @@ namespace Espionage.Engine
 			splitPath[0] = GetPath( Paths[splitPath[0]] );
 
 			return Path.Combine( splitPath[0], splitPath[1] );
+		}
+
+		//
+		// Utility
+		//
+
+		/// <summary>
+		/// Deletes the file at the given path
+		/// </summary>
+		public static void Delete( string path )
+		{
+			path = GetPath( path );
+
+			var fileInfo = new FileInfo( path );
+
+			if ( !File.Exists( path ) )
+			{
+				throw new FileNotFoundException();
+			}
+
+			fileInfo.Delete();
+		}
+
+		/// <summary>
+		/// Copies the source file to the target path
+		/// </summary>
+		public static void Copy( string file, string path )
+		{
+			file = GetPath( file );
+			path = GetPath( path );
+
+			var fileInfo = new FileInfo( file );
+
+			if ( !File.Exists( file ) )
+			{
+				throw new FileNotFoundException();
+			}
+
+			if ( !Directory.Exists( path ) )
+			{
+				Directory.CreateDirectory( path );
+			}
+
+			fileInfo.CopyTo( path );
+		}
+
+		/// <summary>
+		/// Moves the source file to the target destination
+		/// </summary>
+		public static void Move( string source, string destination, bool overwrite = true )
+		{
+			source = GetPath( source );
+			destination = GetPath( destination );
+
+			if ( !File.Exists( source ) )
+			{
+				throw new FileNotFoundException();
+			}
+
+			File.Move( source, destination );
 		}
 	}
 }
