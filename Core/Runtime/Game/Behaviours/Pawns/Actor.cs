@@ -1,4 +1,5 @@
 ﻿using System;
+using Espionage.Engine.Cameras;
 using UnityEngine;
 
 namespace Espionage.Engine
@@ -32,6 +33,16 @@ namespace Espionage.Engine
 			{
 				// Tell the Gamemode, we want to respawn
 				Engine.Game.Gamemode.OnPawnRespawned( this );
+			}
+		}
+
+		public override void Simulate( Client client )
+		{
+			base.Simulate( client );
+
+			if ( Input.GetKeyDown( KeyCode.C ) )
+			{
+				Tripod = Tripod is FirstPersonTripod ? GetComponent<ThirdPersonTripod>() : GetComponent<FirstPersonTripod>();
 			}
 		}
 
