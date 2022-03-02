@@ -16,7 +16,6 @@ namespace Espionage.Engine
 	public static class Files
 	{
 		// BOMless UTF-8 encoder
-		internal static readonly UTF8Encoding UTF8 = new();
 
 		public static readonly Dictionary<string, string> Paths = new()
 		{
@@ -126,27 +125,12 @@ namespace Espionage.Engine
 		}
 
 		//
-		// Loading
+		// Deserializing
 		//
 
 		/// <summary>
-		/// Just gives us the raw data
-		/// from a file at a path
-		/// </summary>
-		public static byte[] Load( string path )
-		{
-			path = GetPath( path );
-
-			if ( !File.Exists( path ) )
-			{
-				throw new FileNotFoundException();
-			}
-
-			return File.ReadAllBytes( path );
-		}
-
-		/// <summary>
-		/// Load and deserialize the data for us.
+		/// Load and deserialize the data for us. Will try and find
+		/// the IFile that contains the respective extension.
 		/// </summary>
 		public static T Load<T>( string path ) where T : class, IFile
 		{
@@ -177,6 +161,42 @@ namespace Espionage.Engine
 			return file;
 		}
 
+		public static T Deserialize<T>( string path )
+		{
+			path = GetPath( path );
+
+			var deserializer = GrabDeserializer<T>();
+			return deserializer.Deserialize( Deserialize( path ) );
+		}
+
+		/// <summary>
+		/// Just gives us the raw data
+		/// from a file at a path
+		/// </summary>
+		public static byte[] Deserialize( string path )
+		{
+			path = GetPath( path );
+
+			if ( !File.Exists( path ) )
+			{
+				throw new FileNotFoundException();
+			}
+
+			return File.ReadAllBytes( path );
+		}
+
+		private static IDeserializer<T> GrabDeserializer<T>()
+		{
+			var library = Library.Database.Find<IDeserializer<T>>();
+
+			if ( library == null )
+			{
+				throw new FileLoadException( "No Valid Deserializers for this File" );
+			}
+
+			return Library.Database.Create<IDeserializer<T>>( library.Class );
+		}
+
 		//
 		// Serialization
 		//
@@ -184,13 +204,13 @@ namespace Espionage.Engine
 		public static void Save<T>( T item, string path )
 		{
 			var serializer = GrabSerializer<T>();
-			Save( serializer.Serialize( item ), path );
+			Serialize( serializer.Serialize( item ), path );
 		}
 
 		public static void Save<T>( T[] item, string path )
 		{
 			var serializer = GrabSerializer<T>();
-			Save( serializer.Serialize( item ), path );
+			Serialize( serializer.Serialize( item ), path );
 		}
 
 		private static ISerializer<T> GrabSerializer<T>()
@@ -210,7 +230,7 @@ namespace Espionage.Engine
 		/// it will overwrite if the file at that
 		/// path already exists.
 		/// </summary>
-		public static void Save( byte[] data, string path )
+		public static void Serialize( byte[] data, string path )
 		{
 			path = GetPath( path );
 

@@ -4,8 +4,9 @@ using System.Text;
 namespace Espionage.Engine.Serializers
 {
 	[Group( "Serializers" )]
-	internal class StringSerializer : ISerializer<char>, ISerializer<string>
+	internal class StringSerializer : ISerializer<char>, ISerializer<string>, IDeserializer<string>
 	{
+		internal static readonly UTF8Encoding UTF8 = new();
 		public Library ClassInfo { get; } = Library.Database[typeof( StringSerializer )];
 
 		// Char
@@ -17,14 +18,19 @@ namespace Espionage.Engine.Serializers
 
 		public byte[] Serialize( char[] item )
 		{
-			return Files.UTF8.GetBytes( item );
+			return UTF8.GetBytes( item );
 		}
 
 		// String
 
 		public byte[] Serialize( string item )
 		{
-			return Files.UTF8.GetBytes( item );
+			return UTF8.GetBytes( item );
+		}
+
+		public string Deserialize( byte[] item )
+		{
+			return UTF8.GetString( item );
 		}
 
 		public byte[] Serialize( string[] item )
