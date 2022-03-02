@@ -4,7 +4,7 @@ using System.Text;
 namespace Espionage.Engine.Serializers
 {
 	[Group( "Serializers" )]
-	internal class StringSerializer : ISerializer<char>, ISerializer<string>, IDeserializer<string>
+	internal class StringSerializer : ISerializer<char>, ISerializer<string>, IDeserializer<string>, IDeserializer<char>
 	{
 		// BOMLess UTF8 Encoding
 		internal static readonly UTF8Encoding UTF8 = new();
@@ -22,6 +22,12 @@ namespace Espionage.Engine.Serializers
 			return UTF8.GetBytes( item );
 		}
 
+		char IDeserializer<char>.Deserialize( byte[] item )
+		{
+			throw new InvalidOperationException( "Why?" );
+		}
+
+
 		// String
 
 		public byte[] Serialize( string item )
@@ -29,14 +35,14 @@ namespace Espionage.Engine.Serializers
 			return UTF8.GetBytes( item );
 		}
 
-		public string Deserialize( byte[] item )
-		{
-			return UTF8.GetString( item );
-		}
-
 		public byte[] Serialize( string[] item )
 		{
-			throw new NotImplementedException();
+			return UTF8.GetBytes( string.Join( '\n', item ) );
+		}
+
+		string IDeserializer<string>.Deserialize( byte[] item )
+		{
+			return UTF8.GetString( item );
 		}
 	}
 }
