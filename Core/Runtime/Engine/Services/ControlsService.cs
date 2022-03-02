@@ -7,6 +7,9 @@ namespace Espionage.Engine.Services
 	{
 		private IControls.Setup _setup = new();
 
+		[Property( "controls.ms_sensitivity" ), ConVar]
+		private static float MouseSensitivity { get; set; } = 2;
+
 		public override void OnUpdate()
 		{
 			if ( Engine.Game == null || !Application.isPlaying )
@@ -15,12 +18,10 @@ namespace Espionage.Engine.Services
 			}
 
 			// Setup ViewAngles,
-			// We should be multiplying the 
-			// mouse sensitivity here.
 			_setup.MouseDelta = new Vector2
 			{
-				x = Input.GetAxis( "Mouse X" ) * 2,
-				y = Input.GetAxis( "Mouse Y" ) * 2
+				x = Input.GetAxis( "Mouse X" ) * MouseSensitivity,
+				y = Input.GetAxis( "Mouse Y" ) * MouseSensitivity
 			};
 
 			_setup.MouseWheel = Input.GetAxisRaw( "Mouse ScrollWheel" );
