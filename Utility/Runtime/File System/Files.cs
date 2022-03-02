@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using UnityEditor;
 using UnityEngine;
 
 namespace Espionage.Engine
@@ -26,6 +27,16 @@ namespace Espionage.Engine
 			["game"] = Application.dataPath
 		};
 
+
+		[MenuItem( "Tools/Espionage.Engine/Debug/Save File" )]
+		private static void testing()
+		{
+			Save( "fuck yea", "game://awesome.txt" );
+		}
+
+		//
+		// Pathing
+		//
 
 		/// <summary>
 		/// Returns a platform-specific cache and temp. data directory path.
@@ -114,6 +125,10 @@ namespace Espionage.Engine
 		#endif
 		}
 
+		//
+		// Loading
+		//
+
 		/// <summary>
 		/// Just gives us the raw data
 		/// from a file at a path
@@ -128,21 +143,6 @@ namespace Espionage.Engine
 			}
 
 			return File.ReadAllBytes( path );
-		}
-
-		/// <summary>
-		/// Reads a file as one big UTF-8 string.
-		/// </summary>
-		public static string LoadString( string path )
-		{
-			path = GetPath( path );
-
-			if ( !File.Exists( path ) )
-			{
-				throw new FileNotFoundException();
-			}
-
-			return UTF8.GetString( File.ReadAllBytes( path ) );
 		}
 
 		/// <summary>
@@ -177,7 +177,23 @@ namespace Espionage.Engine
 			return file;
 		}
 
+		//
+		// Serialization
+		//
+
+		public static void Save<T>( T item, string path )
+		{
+			var serializer = GrabSerializer<T>();
+			Save( serializer.Serialize( item ), path );
+		}
+
 		public static void Save<T>( T[] item, string path )
+		{
+			var serializer = GrabSerializer<T>();
+			Save( serializer.Serialize( item ), path );
+		}
+
+		private static ISerializer<T> GrabSerializer<T>()
 		{
 			var library = Library.Database.Find<ISerializer<T>>();
 
@@ -186,9 +202,7 @@ namespace Espionage.Engine
 				throw new FileLoadException( "No Valid Serializers for this File" );
 			}
 
-			var serializer = Library.Database.Create<ISerializer<T>>( library.Class );
-
-			Save( serializer.Serialize( item ), path );
+			return Library.Database.Create<ISerializer<T>>( library.Class );
 		}
 
 		/// <summary>
@@ -200,14 +214,20 @@ namespace Espionage.Engine
 		{
 			path = GetPath( path );
 
-			if ( !Directory.Exists( path ) )
+			var fileInfo = new FileInfo( path );
+
+			if ( !Directory.Exists( fileInfo.DirectoryName ) )
 			{
-				Directory.CreateDirectory( path );
+				Directory.CreateDirectory( fileInfo.DirectoryName );
 			}
 
 			using var stream = File.Create( path );
 			stream.Write( data );
 		}
+
+		//
+		// Reading
+		//
 
 		/// <summary>
 		/// Opens a FileStream to the designated path.
