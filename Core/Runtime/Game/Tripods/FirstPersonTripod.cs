@@ -1,4 +1,4 @@
-﻿namespace Espionage.Engine.Cameras
+﻿namespace Espionage.Engine.Tripods
 {
 	public class FirstPersonTripod : Tripod
 	{
@@ -17,7 +17,6 @@
 
 			camSetup.Rotation = Local.Pawn.EyeRot;
 			camSetup.Position = Local.Pawn.EyePos;
-			camSetup.Viewer = Visuals;
 		}
 	}
 }

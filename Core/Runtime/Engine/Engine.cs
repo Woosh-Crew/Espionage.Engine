@@ -12,7 +12,7 @@ namespace Espionage.Engine
 	/// Espionage.Engine Entry Point.
 	/// Initializes all its services, and sets up the Game.
 	/// </summary>
-	[Manager( nameof( Initialize_Runtime ), Layer = Layer.Runtime, Order = 600 )]
+	[Library, Group( "Engine" ), Manager( nameof( Initialize_Runtime ), Layer = Layer.Runtime, Order = 600 )]
 	public static class Engine
 	{
 		public static Game Game { get; private set; }

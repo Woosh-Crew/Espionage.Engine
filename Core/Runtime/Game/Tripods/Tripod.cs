@@ -1,12 +1,10 @@
 ﻿using UnityEngine;
 
-namespace Espionage.Engine.Cameras
+namespace Espionage.Engine.Tripods
 {
 	[Group( "Tripods" )]
-	public class Tripod : Behaviour, ITripod, IControls
+	public class Tripod : ITripod, IControls
 	{
-		public Transform Visuals => visuals;
-
 		// Tripod
 
 		public virtual void Activated( ref ITripod.Setup camSetup ) { }
@@ -31,10 +29,5 @@ namespace Espionage.Engine.Cameras
 			setup.ViewAngles += new Vector3( -setup.MouseDelta.y, setup.MouseDelta.x, 0 );
 			setup.ViewAngles.x = Mathf.Clamp( setup.ViewAngles.x, -88, 88 );
 		}
-
-		// Fields
-
-		[SerializeField]
-		private Transform visuals;
 	}
 }

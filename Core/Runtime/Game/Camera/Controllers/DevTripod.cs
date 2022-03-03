@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Espionage.Engine.Cameras
+namespace Espionage.Engine.Tripods
 {
 	[Library( "tripod.dev" ), Group( "Tripods" ), Title( "Dev Cam" )]
 	public class DevTripod : ITripod, IControls
