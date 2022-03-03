@@ -3,8 +3,20 @@
 namespace Espionage.Engine.Tripods
 {
 	[Group( "Tripods" )]
-	public class Tripod : ITripod, IControls
+	public class Tripod : ILibrary, ITripod, IControls
 	{
+		public Library ClassInfo { get; }
+
+		public Tripod()
+		{
+			ClassInfo = Library.Register( this );
+		}
+
+		~Tripod()
+		{
+			Library.Unregister( this );
+		}
+
 		// Tripod
 
 		public virtual void Activated( ref ITripod.Setup camSetup ) { }

@@ -36,16 +36,6 @@ namespace Espionage.Engine
 			}
 		}
 
-		public override void Simulate( Client client )
-		{
-			base.Simulate( client );
-
-			if ( Input.GetKeyDown( KeyCode.C ) )
-			{
-				Tripod = Tripod is FirstPersonTripod ? GetComponent<ThirdPersonTripod>() : GetComponent<FirstPersonTripod>();
-			}
-		}
-
 		void IControls.Build( ref IControls.Setup setup ) { }
 
 		//

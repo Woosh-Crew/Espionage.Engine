@@ -1,5 +1,6 @@
 ﻿namespace Espionage.Engine.Tripods
 {
+	[Library( "tripod.first_person" )]
 	public class FirstPersonTripod : Tripod
 	{
 		public override void Activated( ref ITripod.Setup camSetup )
