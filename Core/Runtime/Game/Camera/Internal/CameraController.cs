@@ -38,8 +38,6 @@ namespace Espionage.Engine
 				return;
 			}
 
-			Debugging.Log.Info( "New Viewer" );
-
 			if ( _lastViewer != null )
 			{
 				foreach ( var meshRenderer in _lastViewer.GetComponentsInChildren<Renderer>() )

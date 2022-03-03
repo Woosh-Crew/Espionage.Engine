@@ -27,7 +27,7 @@ namespace Espionage.Engine.Internal
 						}
 
 						var attribute = type.GetCustomAttribute<ManagerAttribute>();
-						if ( attribute.Layer == (Layer.Runtime | Layer.Editor) )
+						if ( attribute.Layer == (Layer.Runtime | Layer.Editor) && Application.isEditor )
 						{
 							return layer == Layer.Editor;
 						}
