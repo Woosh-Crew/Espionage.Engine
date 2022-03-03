@@ -8,7 +8,7 @@ namespace Espionage.Engine
 	/// Use this as your "GameManager".
 	/// </summary>
 	[Spawnable, Group( "Engine" )]
-	public abstract class Game : ILibrary
+	public abstract class Game : IPackage
 	{
 		public Loader Loader { get; protected set; }
 		public Splash Splash { get; protected set; }
@@ -27,7 +27,8 @@ namespace Espionage.Engine
 			Library.Unregister( this );
 		}
 
-		// Required
+		// IPackage
+
 		public abstract void OnReady();
 		public abstract void OnShutdown();
 
