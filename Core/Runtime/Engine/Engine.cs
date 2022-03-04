@@ -110,7 +110,7 @@ namespace Espionage.Engine
 				_services.Clear();
 			}
 
-			public int Count => _services.Count;
+			public int Length => _services.Count;
 
 			public T Get<T>() where T : class, IService
 			{

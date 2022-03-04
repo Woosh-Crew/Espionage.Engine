@@ -70,7 +70,7 @@ namespace Espionage.Engine
 				_records.Remove( item.Name );
 			}
 
-			public int Count => _records.Count;
+			public int Length => _records.Count;
 		}
 	}
 }
