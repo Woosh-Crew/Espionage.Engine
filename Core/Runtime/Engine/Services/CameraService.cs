@@ -14,8 +14,7 @@ namespace Espionage.Engine.Services
 				return;
 			}
 
-			var obj = new GameObject( "Main Camera" );
-			Engine.AddToLayer( obj );
+			var obj = new GameObject( "Main Camera" ).MoveTo( Engine.Scene );
 
 			// Setup Camera
 			_camera = obj.AddComponent<CameraController>();

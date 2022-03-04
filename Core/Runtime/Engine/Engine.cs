@@ -16,6 +16,12 @@ namespace Espionage.Engine
 	[Library, Group( "Engine" ), Manager( nameof( Initialize_Runtime ), Layer = Layer.Runtime, Order = 600 )]
 	public static class Engine
 	{
+		/// <summary>
+		/// The Current Game that is in Session, this will
+		/// be automatically created when the game launches, and
+		/// will be based off the game you exported from
+		/// the packager.
+		/// </summary>
 		public static Game Game { get; private set; }
 
 		private static void Initialize_Runtime()
@@ -42,6 +48,8 @@ namespace Espionage.Engine
 				}
 
 				Game?.OnReady();
+
+				Application.quitting += OnShutdown;
 
 				Callback.Run( "engine.ready" );
 			}
@@ -134,7 +142,9 @@ namespace Espionage.Engine
 		//
 
 		/// <summary>
-		/// The Engine Layer scene. This should never be unloaded.
+		/// The Engine Layer scene. Use this scene
+		/// for persisting objects across map changes.
+		/// This scene should never be unloaded.
 		/// </summary>
 		public static Scene Scene { get; private set; }
 
@@ -171,15 +181,6 @@ namespace Espionage.Engine
 			// Create engine layer scene
 			Scene = SceneManager.CreateScene( "Engine Layer" );
 			Callback.Run( "engine.layer_created" );
-		}
-
-		/// <summary>
-		/// Adds an Object to the Engine Layer scene.
-		/// </summary>
-		/// <param name="gameObject">The GameObject to add</param>
-		public static void AddToLayer( GameObject gameObject )
-		{
-			SceneManager.MoveGameObjectToScene( gameObject, Scene );
 		}
 
 		//

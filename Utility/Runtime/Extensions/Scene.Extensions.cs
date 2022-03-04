@@ -10,5 +10,11 @@ namespace Espionage.Engine
 		{
 			return self.isLoaded && self.IsValid() ? SceneManager.UnloadSceneAsync( self.name ) : null;
 		}
+
+		public static GameObject Move( this Scene self, GameObject gameObject )
+		{
+			SceneManager.MoveGameObjectToScene( gameObject, self );
+			return gameObject;
+		}
 	}
 }
