@@ -99,10 +99,7 @@ namespace Espionage.Engine.Resources
 				_records.Remove( item.Identifier );
 			}
 
-			public int Count()
-			{
-				return _records.Count;
-			}
+			public int Count => _records.Count;
 		}
 	}
 }

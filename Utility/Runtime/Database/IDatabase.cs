@@ -7,12 +7,12 @@ namespace Espionage.Engine
 	public interface IDatabase<T>
 	{
 		IEnumerable<T> All { get; }
+		int Count { get; }
 
 		void Add( T item );
 		bool Contains( T item );
 		void Remove( T item );
 		void Clear();
-		int Count();
 
 		// Utility
 
