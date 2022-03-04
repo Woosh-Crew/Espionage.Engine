@@ -43,7 +43,7 @@ namespace Espionage.Engine.Components
 			_components.Clear();
 		}
 
-		public int Length => _components.Count;
+		public int Count => _components.Count;
 
 		//
 		// Accessors

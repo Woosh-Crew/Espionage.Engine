@@ -7,7 +7,7 @@ namespace Espionage.Engine
 	public interface IDatabase<T>
 	{
 		IEnumerable<T> All { get; }
-		int Length { get; }
+		int Count { get; }
 
 		void Add( T item );
 		bool Contains( T item );

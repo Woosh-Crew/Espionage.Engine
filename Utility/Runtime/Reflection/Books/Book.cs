@@ -18,7 +18,7 @@ namespace Espionage.Engine
 			// If only unity's de / serialization
 			// Wasn't ass, I wouldn't have to do this
 
-			for ( var i = 0; i < classInfo.Properties.Length; i++ )
+			for ( var i = 0; i < classInfo.Properties.Count; i++ )
 			{
 				var key = keys[i];
 				var value = values[i];

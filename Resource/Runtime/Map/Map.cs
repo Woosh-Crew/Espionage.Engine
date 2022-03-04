@@ -171,7 +171,7 @@ namespace Espionage.Engine.Resources
 				_records.Remove( item.Identifier );
 			}
 
-			public int Length => _records.Count;
+			public int Count => _records.Count;
 		}
 	}
 }

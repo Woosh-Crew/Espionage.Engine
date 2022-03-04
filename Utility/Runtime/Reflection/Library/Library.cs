@@ -157,7 +157,7 @@ namespace Espionage.Engine
 				_all.Clear();
 			}
 
-			public int Length => _all.Count;
+			public int Count => _all.Count;
 		}
 	}
 }
