@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Espionage.Engine.Converters
 {
-	public sealed class UnityConverter : IConverter<Vector2>, IConverter<Vector3>, IConverter<Vector4>, IConverter<Quaternion>
+	public sealed class UnityConverter : IConverter<Vector2>, IConverter<Vector3>, IConverter<Vector4>, IConverter<Quaternion>, IConverter<Color>
 	{
 		public Library ClassInfo { get; } = Library.Database[typeof( UnityConverter )];
 
@@ -76,6 +76,26 @@ namespace Espionage.Engine.Converters
 				float.Parse( split[1] ),
 				float.Parse( split[2] ),
 				float.Parse( split[3] )
+			);
+		}
+
+		//
+		// Color
+		//
+
+		Color IConverter<Color>.Convert( string value )
+		{
+			var split = value.Split( " " );
+
+			if ( split.Length < 3 )
+			{
+				throw new InvalidCastException();
+			}
+
+			return new Color(
+				float.Parse( split[0] ),
+				float.Parse( split[1] ),
+				float.Parse( split[2] )
 			);
 		}
 	}

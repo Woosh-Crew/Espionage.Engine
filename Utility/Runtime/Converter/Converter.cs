@@ -13,7 +13,15 @@ namespace Espionage.Engine
 			var library = Library.Database.Find<IConverter<T>>();
 			var converter = Library.Database.Create<IConverter<T>>( library.Class );
 
-			return converter.Convert( value );
+			try
+			{
+				return converter.Convert( value );
+			}
+			catch ( Exception e )
+			{
+				Debugging.Log.Exception( e );
+				return default;
+			}
 		}
 	}
 }
