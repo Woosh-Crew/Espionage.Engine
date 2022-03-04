@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Espionage.Engine.Services;
@@ -29,7 +30,7 @@ namespace Espionage.Engine
 
 				Debugging.Log.Info( $"Using {Game?.ClassInfo.Title} as the Game" );
 				CreateEngineLayer();
-				Services = new Database();
+				Services = new();
 
 				// TODO: THIS IS TEMP
 				Local.Client = Client.Create( "Local" );
@@ -68,17 +69,22 @@ namespace Espionage.Engine
 
 		public static Database Services { get; private set; }
 
-		public class Database : IDatabase<IService>
+		public class Database : IDatabase<IService, int>
 		{
 			public IEnumerable<IService> All => _services;
 
 			private readonly List<IService> _services = new();
 
+			public IService this[ int key ] => _services[key];
+
 			public Database()
 			{
-				foreach ( var service in Library.Database.GetAll<IService>().Where( e => !e.Class.IsAbstract ) )
+				foreach ( var service in Library.Database.GetAll<IService>() )
 				{
-					Add( Library.Database.Create<IService>( service.Class ) );
+					if ( !service.Class.IsAbstract )
+					{
+						Add( Library.Database.Create<IService>( service.Class ) );
+					}
 				}
 
 				_services = _services.OrderBy( e => e.ClassInfo.Components.Get<OrderAttribute>()?.Order ?? 10 ).ToList();
@@ -149,7 +155,14 @@ namespace Espionage.Engine
 				// Physics Update
 				if ( loop.subSystemList[i].type == typeof( FixedUpdate ) )
 				{
+					Debugging.Log.Info( "Hooking Fixed Update" );
 					loop.subSystemList[i].updateDelegate += OnPhysicsUpdate;
+				}
+
+				if ( loop.subSystemList[i].type == typeof( PostLateUpdate ) )
+				{
+					Debugging.Log.Info( "Hooking Camera Update" );
+					loop.subSystemList[i].updateDelegate += OnCameraUpdate;
 				}
 			}
 
@@ -180,9 +193,9 @@ namespace Espionage.Engine
 				return;
 			}
 
-			foreach ( var service in Services.All )
+			for ( var i = 0; i < Services.Count; i++ )
 			{
-				service.OnUpdate();
+				Services[i].OnUpdate();
 			}
 
 			Callback.Run( "application.frame" );
@@ -197,11 +210,17 @@ namespace Espionage.Engine
 			Callback.Run( "physics.frame" );
 		}
 
+		private static void OnCameraUpdate()
+		{
+			Services.Get<CameraService>().OnCameraUpdate();
+			Callback.Run( "application.late_frame" );
+		}
+
 		private static void OnShutdown()
 		{
-			foreach ( var service in Services.All )
+			for ( var i = 0; i < Services.Count; i++ )
 			{
-				service.OnShutdown();
+				Services[i].OnShutdown();
 			}
 
 			Game?.OnShutdown();
