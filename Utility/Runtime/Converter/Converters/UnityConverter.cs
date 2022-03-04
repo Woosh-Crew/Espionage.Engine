@@ -3,7 +3,8 @@ using UnityEngine;
 
 namespace Espionage.Engine.Converters
 {
-	public sealed class UnityConverter : IConverter<Vector2>, IConverter<Vector3>, IConverter<Vector4>, IConverter<Quaternion>, IConverter<Color>
+	[Library( "converter.unity" ), Group( "Converters" )]
+	internal sealed class UnityConverter : IConverter<Vector2>, IConverter<Vector3>, IConverter<Vector4>, IConverter<Quaternion>, IConverter<Color>
 	{
 		public Library ClassInfo { get; } = Library.Database[typeof( UnityConverter )];
 

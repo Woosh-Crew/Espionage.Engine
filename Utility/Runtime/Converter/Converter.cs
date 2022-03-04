@@ -9,8 +9,8 @@ using UnityEngine;
 namespace Espionage.Engine
 {
 	/// <summary>
-	/// Espionage.Engine's string to object
-	/// converter.
+	/// Espionage.Engine's string to object converter.
+	/// We sometimes use this for deserializing Properties.
 	/// </summary>
 	public static class Converter
 	{
@@ -47,6 +47,9 @@ namespace Espionage.Engine
 	#endif
 
 
+		/// <summary>
+		/// Converts a string to the type of T. 
+		/// </summary>
 		public static T Convert<T>( string value )
 		{
 			var library = Library.Database.Find<IConverter<T>>();
@@ -69,6 +72,14 @@ namespace Espionage.Engine
 			}
 		}
 
+		/// <summary>
+		/// Converts a string to an object. Based off the
+		/// inputted type. 
+		/// </summary>
+		/// <remarks>
+		/// This uses reflection, and is pretty slow..
+		/// Be careful where you put this method.
+		/// </remarks>
 		public static object Convert( string value, Type type )
 		{
 			// JAKE: This is so aids.... But can't do much about that.
