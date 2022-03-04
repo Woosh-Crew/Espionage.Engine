@@ -90,28 +90,31 @@ public static class LibraryDatabaseExtensions
 	// Get All
 	//
 
+	public static Library Find( this IDatabase<Library> database, Type type )
+	{
+		return type.IsInterface
+			? database.All.FirstOrDefault( e => e.Class.HasInterface( type ) && !e.Class.IsAbstract )
+			: database.All.FirstOrDefault( e =>
+				(type == e.Class || e.Class.IsSubclassOf( type )) && !e.Class.IsAbstract );
+	}
+
+	public static Library Find( this IDatabase<Library> database, Type type, Func<Library, bool> search )
+	{
+		return type.IsInterface
+			? database.All.FirstOrDefault( e =>
+				e.Class.HasInterface( type ) && !e.Class.IsAbstract && search.Invoke( e ) )
+			: database.All.FirstOrDefault( e =>
+				(type == e.Class || e.Class.IsSubclassOf( type )) && !e.Class.IsAbstract && search.Invoke( e ) );
+	}
+
 	public static Library Find<T>( this IDatabase<Library> database ) where T : class
 	{
-		var type = typeof( T );
-
-		if ( type.IsInterface )
-		{
-			return database.All.FirstOrDefault( e => e.Class.HasInterface<T>() && !e.Class.IsAbstract );
-		}
-
-		return database.All.FirstOrDefault( e => (type == e.Class || e.Class.IsSubclassOf( type )) && !e.Class.IsAbstract );
+		return database.Find( typeof( T ) );
 	}
 
 	public static Library Find<T>( this IDatabase<Library> database, Func<Library, bool> search ) where T : class
 	{
-		var type = typeof( T );
-
-		if ( type.IsInterface )
-		{
-			return database.All.FirstOrDefault( e => e.Class.HasInterface<T>() && !e.Class.IsAbstract && search.Invoke( e ) );
-		}
-
-		return database.All.FirstOrDefault( e => (type == e.Class || e.Class.IsSubclassOf( type )) && !e.Class.IsAbstract && search.Invoke( e ) );
+		return database.Find( typeof( T ), search );
 	}
 
 	public static IEnumerable<Library> GetAll<T>( this IDatabase<Library> database ) where T : class

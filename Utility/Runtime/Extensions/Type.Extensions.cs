@@ -7,4 +7,9 @@ public static class TypeExtensions
 	{
 		return type.GetInterfaces().Contains( typeof( T ) );
 	}
+
+	public static bool HasInterface( this Type type, Type interfaceType )
+	{
+		return type.GetInterfaces().Contains( interfaceType );
+	}
 }
