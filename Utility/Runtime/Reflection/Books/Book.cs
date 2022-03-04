@@ -7,6 +7,15 @@ namespace Espionage.Engine
 	[Serializable]
 	public class Book<T> where T : class, ILibrary, new()
 	{
+		public Dictionary<string, object> Properties { get; private set; }
+
+		public Book() { }
+
+		public Book( string target )
+		{
+			this.target = target;
+		}
+
 		public T Create()
 		{
 			var classInfo = Library.Database.Get( target );
@@ -18,13 +27,28 @@ namespace Espionage.Engine
 			// If only unity's de / serialization
 			// Wasn't ass, I wouldn't have to do this
 
-			for ( var i = 0; i < classInfo.Properties.Count; i++ )
+			if ( Properties == null )
 			{
-				var key = keys[i];
-				var value = values[i];
+				Properties = new Dictionary<string, object>();
 
-				var obj = Converter.Convert( value, classInfo.Properties[key].Type );
-				classInfo.Properties[key][lib] = obj;
+				for ( var i = 0; i < classInfo.Properties.Count; i++ )
+				{
+					var key = keys[i];
+					var value = values[i];
+
+					var obj = Converter.Convert( value, classInfo.Properties[key].Type );
+					Properties.Add( key, obj );
+
+					classInfo.Properties[key][lib] = obj;
+				}
+			}
+			else
+			{
+				for ( var i = 0; i < classInfo.Properties.Count; i++ )
+				{
+					var key = keys[i];
+					classInfo.Properties[key][lib] = Properties[key];
+				}
 			}
 
 			return lib;

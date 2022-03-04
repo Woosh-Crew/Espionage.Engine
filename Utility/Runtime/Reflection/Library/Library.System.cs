@@ -71,6 +71,8 @@ namespace Espionage.Engine
 		// Manager
 		//
 
+		public static bool Initialized { get; private set; } = false;
+
 		private static void Cache()
 		{
 			Database ??= new InternalDatabase();
@@ -104,6 +106,8 @@ namespace Espionage.Engine
 					}
 				}
 			}
+
+			Initialized = true;
 
 			Callback.Run( "library.ready" );
 		}

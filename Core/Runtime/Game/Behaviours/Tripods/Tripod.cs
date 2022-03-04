@@ -3,19 +3,9 @@
 namespace Espionage.Engine.Tripods
 {
 	[Group( "Tripods" )]
-	public class Tripod : ILibrary, ITripod, IControls
+	public class Tripod : Behaviour, ITripod, IControls
 	{
-		public Library ClassInfo { get; }
-
-		public Tripod()
-		{
-			ClassInfo = Library.Register( this );
-		}
-
-		~Tripod()
-		{
-			Library.Unregister( this );
-		}
+		public Transform Visuals => visuals;
 
 		// Tripod
 
@@ -24,6 +14,8 @@ namespace Espionage.Engine.Tripods
 
 		void ITripod.Build( ref ITripod.Setup camSetup )
 		{
+			camSetup.Viewer = Visuals;
+
 			OnBuildTripod( ref camSetup );
 		}
 
@@ -41,5 +33,9 @@ namespace Espionage.Engine.Tripods
 			setup.ViewAngles += new Vector3( -setup.MouseDelta.y, setup.MouseDelta.x, 0 );
 			setup.ViewAngles.x = Mathf.Clamp( setup.ViewAngles.x, -88, 88 );
 		}
+
+		// Fields
+
+		private Transform visuals;
 	}
 }

@@ -6,12 +6,14 @@ namespace Espionage.Engine
 {
 	public sealed class Property : IMember
 	{
+		private Library Owner { get; }
+
 		public PropertyInfo Info { get; }
 		public Components<Property> Components { get; }
 
 		internal Property( Library owner, PropertyInfo info )
 		{
-			ClassInfo = owner;
+			Owner = owner;
 			Info = info;
 
 			Name = info.Name;
@@ -38,10 +40,14 @@ namespace Espionage.Engine
 		public string Help { get; set; }
 		public bool Serialized { get; set; }
 
+		// Helpers
+
 		public bool IsStatic => Info.GetMethod.IsStatic;
 		public Type Type => Info.PropertyType;
 
-		private Library ClassInfo { get; }
+		// Values
+
+		public object Default => Info.GetConstantValue();
 
 		public object this[ object from ]
 		{

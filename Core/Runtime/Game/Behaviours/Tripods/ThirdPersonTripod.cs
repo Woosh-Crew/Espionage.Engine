@@ -21,13 +21,13 @@ namespace Espionage.Engine.Tripods
 			var pawn = Local.Pawn;
 
 			// Set Rot first cause we use it below
-			camSetup.Rotation = Quaternion.Slerp( camSetup.Rotation, pawn.EyeRot, Smoothing * Time.deltaTime );
+			camSetup.Rotation = Quaternion.Slerp( camSetup.Rotation, pawn.EyeRot, smoothing * Time.deltaTime );
 
 			// Do a ray to calculate the distance, so we don't hit shit
-			var ray = Physics.Raycast( new Ray( pawn.EyePos, camSetup.Rotation * Vector3.back ), out var hitInfo, Distance );
-			var relativeOffset = camSetup.Rotation * Vector3.right * Offset.x + camSetup.Rotation * Vector3.up * Offset.y;
+			var ray = Physics.Raycast( new Ray( pawn.EyePos, camSetup.Rotation * Vector3.back ), out var hitInfo, distance );
+			var relativeOffset = camSetup.Rotation * Vector3.right * offset.x + camSetup.Rotation * Vector3.up * offset.y;
 
-			camSetup.Position = Local.Pawn.EyePos + relativeOffset + camSetup.Rotation * Vector3.back * ((ray ? hitInfo.distance : Distance) - Padding);
+			camSetup.Position = Local.Pawn.EyePos + relativeOffset + camSetup.Rotation * Vector3.back * ((ray ? hitInfo.distance : distance) - padding);
 
 			// We're not looking through the eyes of anything
 			// So don't disable its visuals...
@@ -42,12 +42,16 @@ namespace Espionage.Engine.Tripods
 
 		// Properties
 
-		[Property] public Vector2 Offset { get; set; }
+		[SerializeField]
+		private Vector2 offset;
 
-		[Property] public float Smoothing { get; set; } = 20;
+		[SerializeField]
+		private float smoothing = 20;
 
-		[Property] public float Distance { get; set; } = 5;
+		[SerializeField]
+		private float distance = 5;
 
-		[Property] public float Padding { get; set; } = 0.1f;
+		[SerializeField]
+		private float padding = 0.1f;
 	}
 }
