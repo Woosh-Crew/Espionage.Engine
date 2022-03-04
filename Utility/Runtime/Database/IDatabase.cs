@@ -12,6 +12,7 @@ namespace Espionage.Engine
 		bool Contains( T item );
 		void Remove( T item );
 		void Clear();
+		int Count();
 
 		// Utility
 

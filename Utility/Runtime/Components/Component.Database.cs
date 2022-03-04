@@ -3,9 +3,10 @@ using System.Linq;
 
 namespace Espionage.Engine.Components
 {
-	public class Components<T> : IDatabase<IComponent<T>> where T : class
+	public class Components<T> : IDatabase<IComponent<T>, int> where T : class
 	{
 		public IEnumerable<IComponent<T>> All => _components;
+		public IComponent<T> this[ int key ] => _components[key];
 
 		public Components( T item )
 		{
@@ -40,6 +41,11 @@ namespace Espionage.Engine.Components
 			}
 
 			_components.Clear();
+		}
+
+		public int Count()
+		{
+			return _components.Count;
 		}
 
 		//

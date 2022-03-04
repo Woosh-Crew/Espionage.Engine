@@ -69,6 +69,11 @@ namespace Espionage.Engine
 			{
 				_records.Remove( item.Name );
 			}
+
+			public int Count()
+			{
+				return _records.Count;
+			}
 		}
 	}
 }

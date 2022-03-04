@@ -110,6 +110,11 @@ namespace Espionage.Engine
 				_services.Clear();
 			}
 
+			public int Count()
+			{
+				return _services.Count;
+			}
+
 			public T Get<T>() where T : class, IService
 			{
 				return All.FirstOrDefault( e => e is T ) as T;

@@ -2,24 +2,24 @@
 
 namespace Espionage.Engine.Tripods
 {
-	[Group( "Tripods" )]
+	[Group( "Tripods" ), Title( "Virtual Tripod" )]
 	public class TripodBehaviour : Behaviour, ITripod, IControls
 	{
-		public ITripod Active { get; set; }
+		public ITripod Active { get; protected set; }
 
 		protected override void OnAwake()
 		{
-			Active = Library.Database.Create<Tripod>( tripod );
+			Active = tripod.Create();
 		}
 
 		public void Activated( ref ITripod.Setup camSetup )
 		{
-			Active.Activated( ref camSetup );
+			Active?.Activated( ref camSetup );
 		}
 
 		public void Deactivated()
 		{
-			Active.Deactivated();
+			Active?.Deactivated();
 		}
 
 		// Tripod
@@ -33,17 +33,22 @@ namespace Espionage.Engine.Tripods
 			Active?.Build( ref setup );
 		}
 
+		protected virtual void OnBuildTripod( ref ITripod.Setup setup ) { }
+
 		// Controls
 
 		void IControls.Build( ref IControls.Setup setup )
 		{
 			(Active as IControls)?.Build( ref setup );
+			OnBuildControls( ref setup );
 		}
+
+		protected virtual void OnBuildControls( ref IControls.Setup setup ) { }
 
 		// Fields
 
 		[SerializeField]
-		private string tripod;
+		private Book<Tripod> tripod;
 
 		[SerializeField]
 		private Transform visuals;

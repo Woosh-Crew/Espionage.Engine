@@ -64,5 +64,10 @@ namespace Espionage.Engine
 		{
 			return Items.Contains( item );
 		}
+
+		public int Count()
+		{
+			return Items.Count;
+		}
 	}
 }
