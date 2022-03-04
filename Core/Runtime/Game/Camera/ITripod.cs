@@ -13,14 +13,22 @@ namespace Espionage.Engine
 		public struct Setup
 		{
 			// Camera
+
+			///< summary> Camera's FOV </summary>
 			public float FieldOfView;
+
+			///< summary> FieldOfView Damping </summary>
 			public float Damping;
 
+			/// <summary> Will hide nested Renderers if set </summary>
 			public Transform Viewer;
 
 			// Transform
 			public Vector3 Position;
 			public Quaternion Rotation;
+
+			/// <summary> Clipping Planes, X = Near, Y = Far </summary>
+			public Vector2 Clipping;
 		}
 
 		public abstract class Modifier

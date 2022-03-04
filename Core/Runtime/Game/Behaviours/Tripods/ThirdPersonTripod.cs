@@ -28,10 +28,6 @@ namespace Espionage.Engine.Tripods
 			var relativeOffset = camSetup.Rotation * Vector3.right * offset.x + camSetup.Rotation * Vector3.up * offset.y;
 
 			camSetup.Position = Local.Pawn.EyePos + relativeOffset + camSetup.Rotation * Vector3.back * ((ray ? hitInfo.distance : distance) - padding);
-
-			// We're not looking through the eyes of anything
-			// So don't disable its visuals...
-			camSetup.Viewer = null;
 		}
 
 		protected override void OnBuildControls( ref IControls.Setup setup )

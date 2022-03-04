@@ -14,8 +14,6 @@ namespace Espionage.Engine.Tripods
 
 		void ITripod.Build( ref ITripod.Setup camSetup )
 		{
-			camSetup.Viewer = Visuals;
-
 			OnBuildTripod( ref camSetup );
 		}
 
@@ -36,6 +34,7 @@ namespace Espionage.Engine.Tripods
 
 		// Fields
 
+		[SerializeField]
 		private Transform visuals;
 	}
 }

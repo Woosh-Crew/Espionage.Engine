@@ -26,6 +26,10 @@ namespace Espionage.Engine
 			trans.localRotation = camSetup.Rotation;
 
 			_cam.fieldOfView = camSetup.Damping > 0 ? Mathf.Lerp( _cam.fieldOfView, camSetup.FieldOfView, camSetup.Damping * Time.deltaTime ) : camSetup.FieldOfView;
+
+			_cam.farClipPlane = camSetup.Clipping.y;
+			_cam.nearClipPlane = camSetup.Clipping.x;
+
 			HandleViewer( camSetup );
 		}
 

@@ -1,4 +1,6 @@
-﻿namespace Espionage.Engine.Tripods
+﻿using UnityEngine;
+
+namespace Espionage.Engine.Tripods
 {
 	[Library( "tripod.first_person" )]
 	public class FirstPersonTripod : Tripod
@@ -16,8 +18,12 @@
 				return;
 			}
 
+			camSetup.Viewer = Visuals;
+
 			camSetup.Rotation = Local.Pawn.EyeRot;
 			camSetup.Position = Local.Pawn.EyePos;
+
+			camSetup.Clipping = new Vector2( 0.1f, 700 );
 		}
 	}
 }
