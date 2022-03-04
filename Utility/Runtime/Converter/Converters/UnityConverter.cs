@@ -13,7 +13,9 @@ namespace Espionage.Engine.Converters
 
 		Quaternion IConverter<Quaternion>.Convert( string value )
 		{
-			var split = value.Split( " " );
+			value = value[1..^1];
+
+			var split = value.Split( "," );
 
 			if ( split.Length < 3 )
 			{
@@ -33,7 +35,7 @@ namespace Espionage.Engine.Converters
 
 		Vector2 IConverter<Vector2>.Convert( string value )
 		{
-			var split = value.Split( " " );
+			var split = value.Split( "," );
 
 			if ( split.Length < 2 )
 			{
@@ -48,7 +50,9 @@ namespace Espionage.Engine.Converters
 
 		Vector3 IConverter<Vector3>.Convert( string value )
 		{
-			var split = value.Split( " " );
+			value = value[1..^1];
+
+			var split = value.Split( "," );
 
 			if ( split.Length < 3 )
 			{
@@ -64,7 +68,7 @@ namespace Espionage.Engine.Converters
 
 		Vector4 IConverter<Vector4>.Convert( string value )
 		{
-			var split = value.Split( " " );
+			var split = value.Split( "," );
 
 			if ( split.Length < 4 )
 			{
@@ -85,7 +89,7 @@ namespace Espionage.Engine.Converters
 
 		Color IConverter<Color>.Convert( string value )
 		{
-			var split = value.Split( " " );
+			var split = value.Split( "," );
 
 			if ( split.Length < 3 )
 			{

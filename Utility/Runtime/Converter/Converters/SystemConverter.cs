@@ -13,7 +13,7 @@ namespace Espionage.Engine.Converters
 		// Bool
 		//
 
-		public readonly string[] Pass = new[]
+		public static readonly string[] Pass = new[]
 		{
 			"true",
 			"accept",
@@ -25,7 +25,7 @@ namespace Espionage.Engine.Converters
 			"y"
 		};
 
-		public readonly string[] Block = new[]
+		public static readonly string[] Block = new[]
 		{
 			"false",
 			"wrong",
@@ -37,11 +37,6 @@ namespace Espionage.Engine.Converters
 
 		bool IConverter<bool>.Convert( string value )
 		{
-			if ( value.Length == 1 )
-			{
-				return int.Parse( value ) == 1;
-			}
-
 			// If Pass Matches
 			if ( Pass.Any( e => e == value ) )
 			{
