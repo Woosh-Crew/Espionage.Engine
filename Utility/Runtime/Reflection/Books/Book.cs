@@ -4,6 +4,10 @@ using UnityEngine;
 
 namespace Espionage.Engine
 {
+	/// <summary>
+	/// A Book is a Spawnable Reference to a Library.
+	/// That is chosen in Editor.
+	/// </summary>
 	[Serializable]
 	public class Book<T> where T : class, ILibrary, new()
 	{

@@ -2,6 +2,9 @@
 {
 	public interface IMember
 	{
+		Library Owner { get; }
+
+
 		string Name { get; }
 		string Title { get; }
 		string Group { get; }

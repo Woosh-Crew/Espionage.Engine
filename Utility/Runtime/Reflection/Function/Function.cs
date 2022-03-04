@@ -5,12 +5,14 @@ namespace Espionage.Engine
 {
 	public sealed class Function : IMember
 	{
+		public Library Owner { get; }
+
 		public MethodInfo Info { get; }
 		public Components<Function> Components { get; }
 
 		internal Function( Library owner, MethodInfo info )
 		{
-			ClassInfo = owner;
+			Owner = owner;
 			Info = info;
 
 			Name = info.Name;
@@ -31,11 +33,6 @@ namespace Espionage.Engine
 			}
 		}
 
-		public object Invoke( object target, params object[] parameters )
-		{
-			return Info.Invoke( target, parameters );
-		}
-
 		public string Name { get; set; }
 		public string Title { get; set; }
 		public string Group { get; set; }
@@ -43,6 +40,28 @@ namespace Espionage.Engine
 
 		public bool IsStatic => Info.IsStatic;
 
-		private Library ClassInfo { get; }
+		//
+		// Invokers
+		//
+
+		public object Invoke( object target )
+		{
+			return Info.Invoke( target, null );
+		}
+
+		public T Invoke<T>( object target )
+		{
+			return (T)Info.Invoke( target, null );
+		}
+
+		public object Invoke( object target, params object[] parameters )
+		{
+			return Info.Invoke( target, parameters );
+		}
+
+		public T Invoke<T>( object target, params object[] parameters )
+		{
+			return (T)Info.Invoke( target, parameters );
+		}
 	}
 }
