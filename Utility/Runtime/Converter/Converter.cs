@@ -44,7 +44,7 @@ namespace Espionage.Engine
 			}
 
 			var converter = Library.Database.Create( library.Class );
-			var method = interfaceType.GetMethod( "Convert", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic );
+			var method = interfaceType.GetMethod( "Convert" );
 
 			try
 			{
