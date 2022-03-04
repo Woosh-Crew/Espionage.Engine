@@ -1,5 +1,4 @@
 ﻿using Espionage.Engine.Components;
-using Espionage.Engine.Activators;
 using UnityEngine;
 
 namespace Espionage.Engine.Gamemodes
@@ -36,7 +35,7 @@ namespace Espionage.Engine.Gamemodes
 			Debugging.Log.Info( $"Starting Gamemode - [{ClassInfo.Title}]" );
 			OnBegin();
 
-			Started.Invoke();
+			started.Invoke();
 		}
 
 		protected virtual void OnBegin() { }
@@ -46,17 +45,11 @@ namespace Espionage.Engine.Gamemodes
 			Debugging.Log.Info( $"Finishing Gamemode - [{ClassInfo.Title}]" );
 			OnFinish();
 
-			Finished.Invoke();
+			finished.Invoke();
 		}
 
 		protected virtual void OnFinish() { }
 
-		//
-		// Callbacks
-		//
-
-		public Output Started { get; set; }
-		public Output Finished { get; set; }
 
 		// Client
 
@@ -67,5 +60,15 @@ namespace Espionage.Engine.Gamemodes
 		public bool OnPawnDamaged( Pawn pawn ) { return true; }
 		public void OnPawnRespawned( Pawn pawn ) { }
 		public void OnPawnKilled( Pawn pawn ) { }
+
+		//
+		// Callbacks
+		//
+
+		[SerializeField]
+		private Output started;
+
+		[SerializeField]
+		private Output finished;
 	}
 }

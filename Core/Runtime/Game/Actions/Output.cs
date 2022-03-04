@@ -1,8 +1,9 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Espionage.Engine.Activators
+namespace Espionage.Engine
 {
+	[Serializable]
 	public struct Output
 	{
 		public string function;
@@ -27,6 +28,7 @@ namespace Espionage.Engine.Activators
 		}
 	}
 
+	[Serializable]
 	public struct Output<T1, T2>
 	{
 		public string function;

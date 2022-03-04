@@ -1,9 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Espionage.Engine.Components;
-using UnityEngine;
-
 namespace Espionage.Engine
 {
 	/// <summary>
