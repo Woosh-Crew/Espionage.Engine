@@ -23,7 +23,7 @@ namespace Espionage.Engine
 				var key = keys[i];
 				var value = values[i];
 
-				var obj = Convert.ChangeType( value, classInfo.Properties[key].Type );
+				var obj = Converter.Convert( value, classInfo.Properties[key].Type );
 				classInfo.Properties[key][lib] = obj;
 			}
 

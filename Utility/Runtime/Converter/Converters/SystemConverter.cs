@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Espionage.Engine.Converters
 {
-	public sealed class SystemConverter : IConverter<bool>, IConverter<int>, IConverter<float>, IConverter<double>, IConverter<long>, IConverter<decimal>, IConverter<string>
+	public sealed class SystemConverter : IConverter<bool>, IConverter<int>, IConverter<float>, IConverter<double>, IConverter<long>, IConverter<string>
 	{
 		public Library ClassInfo { get; } = Library.Database[typeof( SystemConverter )];
 
@@ -65,6 +65,5 @@ namespace Espionage.Engine.Converters
 		float IConverter<float>.Convert( string value ) { return float.Parse( value ); }
 		double IConverter<double>.Convert( string value ) { return double.Parse( value ); }
 		long IConverter<long>.Convert( string value ) { return long.Parse( value ); }
-		decimal IConverter<decimal>.Convert( string value ) { return decimal.Parse( value ); }
 	}
 }
