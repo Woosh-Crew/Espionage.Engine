@@ -40,6 +40,9 @@ Here is a table that contains an overview of all features, and their current sta
 | Nodes System                 |    Planned     | Easy to use extendable node graph                                                                                                                      | Tools / Nodes |
 | AI Behaviour Trees           |    Planned     | Based off the Nodes System, Easily create AI behaviour.                                                                                                |  Game / Core  |
     
+# Installing
+Simply just install through the package manager. Using the GIT Install type.
+
 # Publicly Released Extensions
 Here are a list of our extensions and third party extensions, some are still in early development.
 
