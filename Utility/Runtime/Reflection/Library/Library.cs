@@ -28,13 +28,13 @@ namespace Espionage.Engine
 		/// </summary>
 		public Components<Library> Components { get; }
 
-		public Library( [NotNull] Type type )
+		internal Library( [NotNull] Type type )
 		{
 			Class = type;
 			Name = type.FullName;
 
 			// Components
-			Components = new Components<Library>( this );
+			Components = new( this );
 
 			// This is really expensive (6ms)...
 			// Get Components attached to type

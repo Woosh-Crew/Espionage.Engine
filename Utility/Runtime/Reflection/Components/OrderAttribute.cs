@@ -6,7 +6,7 @@ namespace Espionage.Engine
 	/// <summary>
 	/// Reflection Component that stores an order of operation.
 	/// </summary>
-	[AttributeUsage( AttributeTargets.Class | AttributeTargets.Property | AttributeTargets.Method)]
+	[AttributeUsage( AttributeTargets.Class | AttributeTargets.Property | AttributeTargets.Method | AttributeTargets.Assembly )]
 	public sealed class OrderAttribute : Attribute, IComponent<Library>, IComponent<Property>, IComponent<Function>
 	{
 		public int Order { get; }

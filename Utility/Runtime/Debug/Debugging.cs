@@ -124,7 +124,7 @@ namespace Espionage.Engine
 		[ConVar, Property( "application.sys_language" ), Editable( false )]
 		private static string SystemLang => Application.systemLanguage.ToString();
 
-		[ConVar, Property( "application.target_fps" ), Editable( false )]
+		[ConVar, Property( "application.target_fps" ), Cookie]
 		private static int TargetFramerate { get => Application.targetFrameRate; set => Application.targetFrameRate = value; }
 
 		// Debug

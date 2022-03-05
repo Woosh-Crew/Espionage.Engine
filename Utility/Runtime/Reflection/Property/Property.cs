@@ -11,17 +11,17 @@ namespace Espionage.Engine
 		public PropertyInfo Info { get; }
 		public Components<Property> Components { get; }
 
-		internal Property( Library owner, PropertyInfo info )
+		internal Property( Library owner, PropertyInfo info, string name )
 		{
 			Owner = owner;
 			Info = info;
 
-			Name = info.Name;
+			Name = name;
 			Title = info.Name;
 			Group = owner.Title;
 
 			// Components
-			Components = new Components<Property>( this );
+			Components = new( this );
 
 			// This is really expensive (6ms)...
 			// Get Components attached to type

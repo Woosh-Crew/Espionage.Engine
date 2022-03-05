@@ -9,7 +9,7 @@ namespace Espionage.Engine
 	[AttributeUsage( AttributeTargets.Property, Inherited = true, AllowMultiple = false )]
 	public sealed class PropertyAttribute : Attribute
 	{
-		public string Name { get; set; }
+		public string Name { get; }
 		public PropertyAttribute() { }
 
 		public PropertyAttribute( string name )
@@ -19,7 +19,7 @@ namespace Espionage.Engine
 
 		public Property CreateRecord( Library library, PropertyInfo info )
 		{
-			return new Property( library, info ) { Name = string.IsNullOrEmpty( Name ) ? info.Name : Name };
+			return new( library, info, !string.IsNullOrEmpty( Name ) ? Name : info.Name );
 		}
 	}
 }
