@@ -9,8 +9,8 @@ namespace Espionage.Engine.Viewmodels
 		public void PostCameraSetup( ref ITripod.Setup setup )
 		{
 			var mouse = new Vector2(
-				Input.GetAxisRaw( "Mouse X" ),
-				Input.GetAxisRaw( "Mouse Y" )
+				Input.GetAxis( "Mouse X" ),
+				Input.GetAxis( "Mouse Y" )
 			);
 
 			_lastMouseDelta = Vector2.Lerp( _lastMouseDelta, mouse, smoothing * Time.deltaTime );
