@@ -16,8 +16,6 @@ namespace Espionage.Engine
 			{
 				throw new InvalidOperationException( $"Property {item.Name} from {item.Owner.Name} can't be instanced" );
 			}
-
-			Debugging.Log.Info( item.Name );
 		}
 	}
 }

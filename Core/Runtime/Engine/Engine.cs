@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Espionage.Engine.Services;
@@ -6,6 +5,10 @@ using UnityEngine;
 using UnityEngine.LowLevel;
 using UnityEngine.PlayerLoop;
 using UnityEngine.SceneManagement;
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace Espionage.Engine
 {
@@ -35,7 +38,7 @@ namespace Espionage.Engine
 				}
 
 				Debugging.Log.Info( $"Using {Game?.ClassInfo.Title} as the Game" );
-				CreateEngineLayer();
+				HookUnity();
 				Services = new();
 
 				// TODO: THIS IS TEMP
@@ -50,6 +53,19 @@ namespace Espionage.Engine
 				Game?.OnReady();
 
 				Application.quitting += OnShutdown;
+
+				#if UNITY_EDITOR
+
+				// Why does this just not work?
+				EditorApplication.playModeStateChanged += change =>
+				{
+					if ( change == PlayModeStateChange.ExitingPlayMode )
+					{
+						OnShutdown();
+					}
+				};
+
+				#endif
 
 				Callback.Run( "engine.ready" );
 			}
@@ -148,7 +164,7 @@ namespace Espionage.Engine
 		/// </summary>
 		public static Scene Scene { get; private set; }
 
-		private static void CreateEngineLayer()
+		private static void HookUnity()
 		{
 			// Create Update Loop
 			// Jake: I think this is stupid?
@@ -224,6 +240,7 @@ namespace Espionage.Engine
 				Services[i].OnShutdown();
 			}
 
+			Debugging.Log.Info( "Shutting Down" );
 			Game?.OnShutdown();
 
 			Callback.Run( "application.quit" );
