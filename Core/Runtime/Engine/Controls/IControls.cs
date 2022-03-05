@@ -22,7 +22,6 @@ namespace Espionage.Engine
 		/// allows us to do cool shit like disabling all input
 		/// while using a camera ( We use this on <see cref="Tripods.DevTripod"/>
 		/// </summary>
-		/// <param name="setup"></param>
 		void Build( ref Setup setup );
 
 		/// <summary> Controls the raw values of Input. </summary>

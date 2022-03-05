@@ -14,7 +14,7 @@ namespace Espionage.Engine.Resources
 
 		private Texture( IProvider<Texture, Texture2D> provider )
 		{
-			Components = new Components<Texture>( this );
+			Components = new( this );
 			Provider = provider;
 		}
 
