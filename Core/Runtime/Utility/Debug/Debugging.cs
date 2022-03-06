@@ -112,16 +112,16 @@ namespace Espionage.Engine
 
 		// App
 
-		[ConVar, Property( "application.product_name" ), Editable( false )]
+		[ConVar, Property( "application.product_name" )]
 		private static string ProductName => Application.productName;
 
-		[ConVar, Property( "application.company_name" ), Editable( false )]
+		[ConVar, Property( "application.company_name" )]
 		private static string CompanyName => Application.companyName;
 
-		[ConVar, Property( "application.unity_version" ), Editable( false )]
+		[ConVar, Property( "application.unity_version" )]
 		private static string UnityVersion => Application.unityVersion;
 
-		[ConVar, Property( "application.sys_language" ), Editable( false )]
+		[ConVar, Property( "application.sys_language" )]
 		private static string SystemLang => Application.systemLanguage.ToString();
 
 		[ConVar, Property( "application.target_fps" ), Cookie]

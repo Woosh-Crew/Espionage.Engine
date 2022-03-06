@@ -17,6 +17,10 @@ namespace Espionage.Engine
 		}
 
 		public void OnAttached( Library library ) { }
-		public void OnAttached( Property property ) { }
+
+		public void OnAttached( Property property )
+		{
+			property.Editable = Editable;
+		}
 	}
 }

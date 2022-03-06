@@ -19,6 +19,7 @@ namespace Espionage.Engine
 			Name = name;
 			Title = info.Name;
 			Group = owner.Title;
+			Editable = info.SetMethod != null;
 
 			// Components
 			Components = new( this );
@@ -38,6 +39,7 @@ namespace Espionage.Engine
 		public string Title { get; set; }
 		public string Group { get; set; }
 		public string Help { get; set; }
+		public bool Editable { get; set; }
 		public bool Serialized { get; set; }
 
 		// Helpers
@@ -52,7 +54,16 @@ namespace Espionage.Engine
 		public object this[ object from ]
 		{
 			get => Info.GetValue( from );
-			set => Info.SetValue( from, value );
+			set
+			{
+				if ( !Editable )
+				{
+					Debugging.Log.Error( $"Can't edit {Name}" );
+					return;
+				}
+
+				Info.SetValue( @from, value );
+			}
 		}
 	}
 }
