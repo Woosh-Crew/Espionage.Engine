@@ -1,5 +1,6 @@
 ﻿using System;
 using Espionage.Engine.Components;
+using Espionage.Engine.Services;
 
 namespace Espionage.Engine
 {
@@ -16,6 +17,8 @@ namespace Espionage.Engine
 			{
 				throw new InvalidOperationException( $"Property {item.Name} from {item.Owner.Name} can't be instanced" );
 			}
+
+			CookieServices.Register( item );
 		}
 	}
 }

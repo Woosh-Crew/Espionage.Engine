@@ -6,22 +6,22 @@ namespace Espionage.Engine.Services
 {
 	/// <summary>
 	/// Cookies are responsible for saving
-	/// global variables.
+	/// global variables. Use this for storing
+	/// the value of preferences or ConVars
 	/// </summary>
 	public class CookieServices : Service
 	{
-		public Dictionary<string, Property> Registry { get; } = new();
+		private static Dictionary<string, Property> Registry { get; } = new();
+
+		public static void Register( Property prop )
+		{
+			Registry.Add( prop.Name, prop );
+		}
 
 		// States
 
 		public override void OnReady()
 		{
-			// Get all Cookies
-			foreach ( var item in Library.Database.All.SelectMany( e => e.Properties.All.Where( property => property.Components.Has<CookieAttribute>() ) ) )
-			{
-				Registry.Add( item.Name, item );
-			}
-
 			Load();
 		}
 
@@ -41,7 +41,6 @@ namespace Espionage.Engine.Services
 			}
 
 			using var _ = Debugging.Stopwatch( "Loading Cookies" );
-
 			var sheet = Files.Deserialize<string>( "config://.cookies" ).Split( '\n' );
 
 			foreach ( var item in sheet )
@@ -51,7 +50,6 @@ namespace Espionage.Engine.Services
 				// This is aids
 				var prop = Registry[split[0]];
 				prop[null] = Converter.Convert( split[1], prop.Type );
-				Debugging.Log.Info( $"Property [{prop.Name}] = {prop[null]}" );
 			}
 		}
 

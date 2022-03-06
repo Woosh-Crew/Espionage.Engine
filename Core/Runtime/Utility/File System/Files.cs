@@ -318,6 +318,9 @@ namespace Espionage.Engine
 		// Utility
 		//
 
+		/// <summary>
+		/// Will check if the File or Directory exists
+		/// </summary>
 		public static bool Exists( string path )
 		{
 			path = GetPath( path );

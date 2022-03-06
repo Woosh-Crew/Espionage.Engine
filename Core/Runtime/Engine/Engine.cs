@@ -161,20 +161,17 @@ namespace Espionage.Engine
 				// Frame Update
 				if ( loop.subSystemList[i].type == typeof( Update ) )
 				{
-					Debugging.Log.Info( "Hooking Update" );
 					loop.subSystemList[i].updateDelegate += OnUpdate;
 				}
 
 				// Physics Update
 				if ( loop.subSystemList[i].type == typeof( FixedUpdate ) )
 				{
-					Debugging.Log.Info( "Hooking Fixed Update" );
 					loop.subSystemList[i].updateDelegate += OnPhysicsUpdate;
 				}
 
 				if ( loop.subSystemList[i].type == typeof( PostLateUpdate ) )
 				{
-					Debugging.Log.Info( "Hooking Camera Update" );
 					loop.subSystemList[i].updateDelegate += OnCameraUpdate;
 				}
 			}
@@ -227,7 +224,6 @@ namespace Espionage.Engine
 				Services[i].OnShutdown();
 			}
 
-			Debugging.Log.Info( "Shutting Down" );
 			Game?.OnShutdown();
 
 			Callback.Run( "application.quit" );

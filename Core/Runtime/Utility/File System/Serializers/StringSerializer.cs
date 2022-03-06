@@ -8,7 +8,7 @@ namespace Espionage.Engine.Serializers
 	internal class StringSerializer : ISerializer<char>, ISerializer<string>, IDeserializer<string>, IDeserializer<char>, ISerializer<List<string>>
 	{
 		public Library ClassInfo => null;
-		internal static readonly UTF8Encoding UTF8 = new();
+		private static readonly UTF8Encoding UTF8 = new();
 
 		// Char
 
