@@ -12,7 +12,7 @@ namespace Espionage.Engine
 	/// inherited from <see cref="Component{T}"/>. Entities
 	/// also contain IO / Actions logic.
 	/// </summary>
-	[DisallowMultipleComponent, Group( "Entities" ), Constructor( nameof( Constructor ) )]
+	[DisallowMultipleComponent, Group( "Entities" ), Constructor( nameof( Constructor ) ), Spawnable]
 	public abstract class Entity : Behaviour
 	{
 		public static List<Entity> All { get; } = new();

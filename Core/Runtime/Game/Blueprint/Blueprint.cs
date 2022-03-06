@@ -8,7 +8,7 @@ namespace Espionage.Engine
 	/// <summary>
 	/// Blueprints are used for spawning prefabs at runtime using C#
 	/// </summary>
-	[Group( "Blueprints" ), Spawnable( false )]
+	[Group( "Blueprints" ), Spawnable]
 	public abstract class Blueprint : ILibrary
 	{
 		public Library ClassInfo { get; private set; }

@@ -20,7 +20,7 @@ namespace Espionage.Engine
 
 		public static void Show( bool value )
 		{
-			foreach ( var viewmodel in All )
+			foreach ( var viewmodel in All.OfType<Viewmodel>() )
 			{
 				viewmodel.gameObject.SetActive( value );
 			}
@@ -36,11 +36,6 @@ namespace Espionage.Engine
 				render.receiveShadows = receiveShadows;
 				render.gameObject.layer = LayerMask.NameToLayer( "Viewmodel" );
 			}
-		}
-
-		protected override void OnDelete()
-		{
-			All.Remove( this );
 		}
 
 		public void PostCameraSetup( ref ITripod.Setup setup )
