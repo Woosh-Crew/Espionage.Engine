@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Espionage.Engine.Components;
 using UnityEngine;
 
@@ -39,12 +38,19 @@ namespace Espionage.Engine
 			base.OnDelete();
 		}
 
-
 		// Constructor
 
 		public static object Constructor( Library library )
 		{
 			return new GameObject( library.Name ).AddComponent( library.Class );
+		}
+
+		// Helpers
+
+		public bool Enabled
+		{
+			get => gameObject.activeSelf;
+			set => gameObject.SetActive( value );
 		}
 
 		// Components

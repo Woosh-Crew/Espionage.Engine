@@ -6,6 +6,11 @@ namespace Espionage.Engine
 	public abstract class Component<T> : Component where T : Entity
 	{
 		public new T Entity => base.Entity as T;
+
+		public override bool CanAttach( Entity item )
+		{
+			return item is T;
+		}
 	}
 
 	/// <summary>
@@ -19,6 +24,11 @@ namespace Espionage.Engine
 		public virtual void OnAttached( Entity item )
 		{
 			Entity = item;
+		}
+
+		public virtual bool CanAttach( Entity item )
+		{
+			return true;
 		}
 	}
 }

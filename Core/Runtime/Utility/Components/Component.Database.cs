@@ -18,6 +18,11 @@ namespace Espionage.Engine.Components
 
 		public void Add( IComponent<T> item )
 		{
+			if ( !item.CanAttach( _target ) )
+			{
+				return;
+			}
+
 			_components.Add( item );
 			item.OnAttached( _target );
 		}
