@@ -32,6 +32,7 @@ namespace Espionage.Engine
 		{
 			Class = type;
 			Name = type.FullName;
+			Spawnable = true;
 
 			// Components
 			Components = new( this );
@@ -99,7 +100,7 @@ namespace Espionage.Engine
 		public string Help { get; set; }
 
 		[field : SerializeField]
-		public bool Spawnable { get; set; } = true;
+		public bool Spawnable { get; set; }
 
 		// Owner & Identification
 		public Type Class { get; }

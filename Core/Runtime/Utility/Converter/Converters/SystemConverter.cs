@@ -14,7 +14,7 @@ namespace Espionage.Engine.Converters
 		// Bool
 		//
 
-		public static readonly string[] Pass = new[]
+		private static readonly string[] Pass =
 		{
 			"true",
 			"accept",
@@ -26,7 +26,7 @@ namespace Espionage.Engine.Converters
 			"y"
 		};
 
-		public static readonly string[] Block = new[]
+		private static readonly string[] Block =
 		{
 			"false",
 			"wrong",
@@ -38,6 +38,8 @@ namespace Espionage.Engine.Converters
 
 		bool IConverter<bool>.Convert( string value )
 		{
+			value = value.ToLower();
+
 			// If Pass Matches
 			if ( Pass.Any( e => e == value ) )
 			{
@@ -50,7 +52,7 @@ namespace Espionage.Engine.Converters
 				return false;
 			}
 
-			throw new InvalidCastException();
+			throw new InvalidCastException( $"No Valid casting for input \"{value}\"" );
 		}
 
 		//

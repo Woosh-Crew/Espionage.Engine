@@ -56,7 +56,7 @@ namespace Espionage.Engine
 
 			if ( library == null )
 			{
-				throw new Exception( "No Valid Converters for this Type" );
+				throw new( "No Valid Converters for this Type" );
 			}
 
 			var converter = Library.Database.Create<IConverter<T>>( library.Class );
@@ -89,7 +89,7 @@ namespace Espionage.Engine
 
 			if ( library == null )
 			{
-				throw new Exception( "No Valid Converters for this Type" );
+				throw new( "No Valid Converters for this Type" );
 			}
 
 			var converter = Library.Database.Create( library.Class );
@@ -97,7 +97,10 @@ namespace Espionage.Engine
 
 			try
 			{
-				return method?.Invoke( converter, new object[] { value } );
+				return method?.Invoke( converter, new object[]
+				{
+					value
+				} );
 			}
 			catch ( Exception e )
 			{
