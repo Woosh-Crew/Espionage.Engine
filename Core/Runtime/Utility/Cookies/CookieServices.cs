@@ -47,9 +47,16 @@ namespace Espionage.Engine.Services
 			{
 				var split = item.Split( '=' );
 
-				// This is aids
-				var prop = Registry[split[0]];
-				prop[null] = Converter.Convert( split[1], prop.Type );
+				try
+				{
+					// This is aids
+					var prop = Registry[split[0]];
+					prop[null] = Converter.Convert( split[1], prop.Type );
+				}
+				catch ( Exception e )
+				{
+					Debugging.Log.Exception( e );
+				}
 			}
 		}
 
