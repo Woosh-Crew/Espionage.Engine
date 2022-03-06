@@ -183,7 +183,7 @@ public static class LibraryDatabaseExtensions
 		return null;
 	}
 
-	public static T Create<T>( this IDatabase<Library> database, string name, bool assertMissing = false ) where T : class, ILibrary, new()
+	public static T Create<T>( this IDatabase<Library> database, string name, bool assertMissing = false ) where T : class, ILibrary
 	{
 		return database.Create( name, assertMissing ) as T;
 	}

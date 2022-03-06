@@ -9,7 +9,7 @@ namespace Espionage.Engine
 	/// That is chosen in Editor.
 	/// </summary>
 	[Serializable]
-	public class Book<T> where T : class, ILibrary, new()
+	public class Book<T> where T : class, ILibrary
 	{
 		public Dictionary<string, object> Properties { get; private set; }
 
@@ -27,13 +27,19 @@ namespace Espionage.Engine
 			using var _ = Debugging.Stopwatch( $"Created Book - {classInfo.Name}" );
 			var lib = Library.Database.Create<T>( target );
 
+			// Don't do any deserialization, since we got no props
+			if ( classInfo.Properties.Count == 0 )
+			{
+				return lib;
+			}
+
 			// Deserialize Properties
 			// If only unity's de / serialization
 			// Wasn't ass, I wouldn't have to do this
 
 			if ( Properties == null )
 			{
-				Properties = new Dictionary<string, object>();
+				Properties = new();
 
 				for ( var i = 0; i < classInfo.Properties.Count; i++ )
 				{
