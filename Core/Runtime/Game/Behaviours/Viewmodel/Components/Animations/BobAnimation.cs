@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Espionage.Engine.Pickups.Viewmodels
 {
-	public class BobAnimation : Component, Viewmodel.IEffect
+	public class BobAnimation : Viewmodel.Effect
 	{
 		private Vector3 Velocity { get; set; }
 		private Vector3 _lastPosition;
@@ -13,7 +13,7 @@ namespace Espionage.Engine.Pickups.Viewmodels
 		private float _dampedSpeed;
 		private Vector3 _lastWalkBob;
 
-		public void PostCameraSetup( ref ITripod.Setup camSetup )
+		public override void PostCameraSetup( ref ITripod.Setup camSetup )
 		{
 			//Set our velocity to the vector between our last position and this position
 			var position = Local.Pawn.transform.position;

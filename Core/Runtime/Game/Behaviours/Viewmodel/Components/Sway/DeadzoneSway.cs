@@ -2,12 +2,12 @@ using UnityEngine;
 
 namespace Espionage.Engine.Viewmodels
 {
-	public class DeadzoneSway : Component, Viewmodel.IEffect
+	public class DeadzoneSway : Viewmodel.Effect
 	{
 		private Vector2 _savedDeadzoneAxis;
 		private Quaternion _lastDeadzoneRotation;
 
-		public void PostCameraSetup( ref ITripod.Setup setup )
+		public override void PostCameraSetup( ref ITripod.Setup setup )
 		{
 			DeadzoneAxis();
 

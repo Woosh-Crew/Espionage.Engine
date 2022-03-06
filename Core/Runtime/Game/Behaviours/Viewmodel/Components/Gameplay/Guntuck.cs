@@ -2,11 +2,11 @@ using UnityEngine;
 
 namespace Espionage.Engine.Viewmodels
 {
-	public sealed class Guntuck : Component, Viewmodel.IEffect
+	public sealed class Guntuck : Viewmodel.Effect
 	{
 		private float _lastGuntuckOffset;
 
-		public void PostCameraSetup( ref ITripod.Setup setup )
+		public override void PostCameraSetup( ref ITripod.Setup setup )
 		{
 			// Get girth
 			float girth = 1;

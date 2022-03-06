@@ -2,12 +2,12 @@ using UnityEngine;
 
 namespace Espionage.Engine.Pickups.Viewmodels
 {
-	public class PitchOffset : Component, Viewmodel.IEffect
+	public class PitchOffset : Viewmodel.Effect
 	{
 		protected Quaternion lastOffsetRot;
 		protected Vector3 lastOffsetPos;
 
-		public void PostCameraSetup( ref ITripod.Setup setup )
+		public override void PostCameraSetup( ref ITripod.Setup setup )
 		{
 			var offset = setup.Rotation.eulerAngles.x.Remap( -90, 90, -1, 1 );
 

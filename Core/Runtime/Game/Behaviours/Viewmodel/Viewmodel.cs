@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -8,12 +6,10 @@ namespace Espionage.Engine
 {
 	public sealed class Viewmodel : Entity
 	{
-		public static List<Viewmodel> All { get; } = new();
-
 		public static void Apply( ref ITripod.Setup setup )
 		{
 			// Build Viewmodels...
-			foreach ( var viewmodel in All )
+			foreach ( var viewmodel in All.OfType<Viewmodel>() )
 			{
 				if ( viewmodel.gameObject.activeInHierarchy )
 				{
@@ -34,9 +30,6 @@ namespace Espionage.Engine
 
 		protected override void OnAwake()
 		{
-			All.Add( this );
-			Effects = GetComponents<IEffect>().ToList();
-
 			foreach ( var render in GetComponentsInChildren<Renderer>() )
 			{
 				render.shadowCastingMode = castShadows ? ShadowCastingMode.On : ShadowCastingMode.Off;
@@ -49,8 +42,6 @@ namespace Espionage.Engine
 		{
 			All.Remove( this );
 		}
-
-		public List<IEffect> Effects { get; private set; }
 
 		public void PostCameraSetup( ref ITripod.Setup setup )
 		{
@@ -65,15 +56,15 @@ namespace Espionage.Engine
 			trans.localPosition = setup.Position;
 			trans.localRotation = setup.Rotation;
 
-			foreach ( var effect in Effects )
+			foreach ( var effect in Components.GetAll<Effect>() )
 			{
 				effect.PostCameraSetup( ref setup );
 			}
 		}
 
-		public interface IEffect
+		public abstract class Effect : Component<Viewmodel>
 		{
-			void PostCameraSetup( ref ITripod.Setup setup );
+			public abstract void PostCameraSetup( ref ITripod.Setup setup );
 		}
 
 		// Fields

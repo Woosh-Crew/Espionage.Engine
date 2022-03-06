@@ -49,25 +49,25 @@ namespace Espionage.Engine.Components
 		// Accessors
 		//
 
-		public TComponent Get<TComponent>() where TComponent : class, IComponent<T>
+		public TComp Get<TComp>() where TComp : class, IComponent<T>
 		{
-			return All.FirstOrDefault( e => e is TComponent ) as TComponent;
+			return All.FirstOrDefault( e => e is TComp ) as TComp;
 		}
 
-		public IEnumerable<TComponent> GetAll<TComponent>() where TComponent : class, IComponent<T>
+		public IEnumerable<TComp> GetAll<TComp>() where TComp : class, IComponent<T>
 		{
-			return All.OfType<TComponent>();
+			return All.OfType<TComp>();
 		}
 
-		public bool TryGet<TComponent>( out TComponent output ) where TComponent : class, IComponent<T>
+		public bool TryGet<TComp>( out TComp output ) where TComp : class, IComponent<T>
 		{
-			output = Get<TComponent>();
+			output = Get<TComp>();
 			return output != null;
 		}
 
-		public bool Has<TComponent>() where TComponent : class, IComponent<T>
+		public bool Has<TComp>() where TComp : class, IComponent<T>
 		{
-			return All.OfType<TComponent>().Any();
+			return All.OfType<TComp>().Any();
 		}
 	}
 }

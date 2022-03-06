@@ -16,7 +16,7 @@ namespace Espionage.Engine
 
 		// Creation
 
-		private void Awake()
+		protected virtual void Awake()
 		{
 			ClassInfo = Library.Register( this );
 			OnAwake();
@@ -26,17 +26,13 @@ namespace Espionage.Engine
 
 		// Destroy
 
-		private void OnDestroy()
+		protected virtual void OnDestroy()
 		{
 			Library.Unregister( this );
 			OnDelete();
 		}
 
 		protected virtual void OnDelete() { }
-
-		// Simulate
-
-		public virtual void Simulate( Client client ) { }
 
 		// Constructor
 

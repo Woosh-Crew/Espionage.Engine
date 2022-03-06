@@ -10,7 +10,7 @@ namespace Espionage.Engine
 	/// Tripod.
 	/// </summary>
 	[Group( "Pawns" )]
-	public class Pawn : Entity
+	public class Pawn : Entity, ISimulated
 	{
 		protected override void OnAwake()
 		{
@@ -20,7 +20,7 @@ namespace Espionage.Engine
 			Tripod = GetComponent<ITripod>();
 		}
 
-		public override void Simulate( Client client )
+		public void Simulate( Client client )
 		{
 			GetActiveController()?.Simulate( client );
 		}

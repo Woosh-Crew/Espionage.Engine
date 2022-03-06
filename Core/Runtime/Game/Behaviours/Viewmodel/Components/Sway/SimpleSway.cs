@@ -2,11 +2,11 @@ using UnityEngine;
 
 namespace Espionage.Engine.Viewmodels
 {
-	public sealed class SimpleSway : Component, Viewmodel.IEffect
+	public sealed class SimpleSway : Viewmodel.Effect
 	{
 		private Vector2 _lastMouseDelta;
 
-		public void PostCameraSetup( ref ITripod.Setup setup )
+		public override void PostCameraSetup( ref ITripod.Setup setup )
 		{
 			var mouse = new Vector2(
 				Input.GetAxis( "Mouse X" ),

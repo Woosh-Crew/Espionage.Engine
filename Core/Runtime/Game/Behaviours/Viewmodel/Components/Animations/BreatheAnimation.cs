@@ -3,12 +3,12 @@ using UnityEngine;
 
 namespace Espionage.Engine.Viewmodels
 {
-	public class BreatheAnimation : Component, Viewmodel.IEffect
+	public class BreatheAnimation : Viewmodel.Effect
 	{
 		private Vector3 _lastEnergyBreatheScale;
 		private float _breatheBobDelta;
 
-		public void PostCameraSetup( ref ITripod.Setup setup )
+		public override void PostCameraSetup( ref ITripod.Setup setup )
 		{
 			_breatheBobDelta += Time.deltaTime * breatheSpeed;
 
