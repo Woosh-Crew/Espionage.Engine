@@ -1,60 +1,76 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Espionage.Engine.Services
 {
-	internal class CookieServices : Service
+	/// <summary>
+	/// Cookies are responsible for saving
+	/// global variables.
+	/// </summary>
+	public class CookieServices : Service
 	{
-		public List<Property> Registry { get; } = new();
-
-		public void Register( Property property )
-		{
-			if ( Values.ContainsKey( property.Name ) )
-			{
-				property[null] = Values[property.Name];
-			}
-
-			Registry.Add( property );
-		}
+		public Dictionary<string, Property> Registry { get; } = new();
 
 		// States
 
 		public override void OnReady()
 		{
-			Load();
-
-			// Set Object Values.
+			// Get all Cookies
 			foreach ( var item in Library.Database.All.SelectMany( e => e.Properties.All.Where( property => property.Components.Has<CookieAttribute>() ) ) )
 			{
-				Register( item );
+				Registry.Add( item.Name, item );
 			}
 
-			Values = null;
+			Load();
 		}
 
 		public override void OnShutdown()
 		{
-			// Serialize Registry
 			Save();
 		}
 
 		// Serialization
 
-		private Dictionary<string, object> Values { get; set; } = new();
-
 		private void Load()
 		{
-			if ( Files.Exists( "config://.cookies" ) )
+			if ( !Files.Exists( "config://.cookies" ) )
 			{
-				var sheet = Files.Deserialize<string>( "config://.cookies" );
-				Debugging.Log.Info( sheet );
+				// Nothing to load.
+				return;
+			}
+
+			using var _ = Debugging.Stopwatch( "Loading Cookies" );
+
+			var sheet = Files.Deserialize<string>( "config://.cookies" ).Split( '\n' );
+
+			foreach ( var item in sheet )
+			{
+				var split = item.Split( '=' );
+
+				// This is aids
+				var prop = Registry[split[0]];
+				prop[null] = Converter.Convert( split[1], prop.Type );
+				Debugging.Log.Info( $"Property [{prop.Name}] = {prop[null]}" );
 			}
 		}
 
 		public void Save()
 		{
-			Files.Save( "penis", "config://.cookies" );
-			Debugging.Log.Info( Files.GetPath( "config://.cookies" ) );
+			if ( Registry.Count == 0 )
+			{
+				// Nothing to save.
+				return;
+			}
+
+			var serialized = new List<string>( Registry.Count );
+
+			foreach ( var (key, value) in Registry )
+			{
+				serialized.Add( $"{key}={value[null]}" );
+			}
+
+			Files.Save( serialized, "config://.cookies" );
 		}
 	}
 }
