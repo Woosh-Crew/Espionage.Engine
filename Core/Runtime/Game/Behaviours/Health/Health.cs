@@ -7,7 +7,7 @@ namespace Espionage.Engine
 	/// Allows a GameObject to have Health, which means
 	/// it can be healed or take damage.
 	/// </summary>
-	public class Health : Behaviour, IDamageable, IHealable
+	public class Health : Component<Entity>, IDamageable, IHealable
 	{
 		public int Current { get; private set; }
 		public int Max => max;

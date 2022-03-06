@@ -11,7 +11,7 @@ namespace Espionage.Engine.Tripods
 	/// declared on it.
 	/// </summary>
 	[Group( "Tripods" )]
-	public abstract class Tripod : Behaviour, ITripod, IControls
+	public abstract class Tripod : Component<Pawn>, ITripod, IControls
 	{
 		/// <summary>
 		/// The Visuals is what gets assigned to on the Viewer

@@ -1,9 +1,9 @@
 ﻿namespace Espionage.Engine
 {
-	public class Pickup : Behaviour
+	public class Pickup : Entity
 	{
 		public Pawn Owner { get; private set; }
-		
+
 		public virtual bool Droppable => true;
 
 		public virtual void OnPickup( Pawn carrier )

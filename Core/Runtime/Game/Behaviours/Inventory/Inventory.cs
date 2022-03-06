@@ -4,15 +4,9 @@ using Espionage.Engine.Components;
 
 namespace Espionage.Engine
 {
-	public class Inventory : Behaviour, IComponent<Pawn>, IDatabase<Pickup>
+	public class Inventory : Component<Pawn>, IDatabase<Pickup>
 	{
 		public IEnumerable<Pickup> All => Items;
-		public Pawn Pawn { get; private set; }
-
-		void IComponent<Pawn>.OnAttached( Pawn item )
-		{
-			Pawn = item;
-		}
 
 		private List<Pickup> Items { get; } = new();
 
@@ -26,17 +20,17 @@ namespace Espionage.Engine
 			}
 
 			Items.Add( item );
-			item.OnPickup( Pawn );
+			item.OnPickup( Entity );
 		}
 
 		public virtual void Drop( Pickup item )
 		{
 			if ( !Contains( item ) )
 			{
-				throw new Exception( $"Item [{item.ClassInfo.Name}] isn't in Inventory" );
+				throw new( $"Item [{item.ClassInfo.Name}] isn't in Inventory" );
 			}
 
-			item.OnDrop( Pawn );
+			item.OnDrop( Entity );
 			Items.Remove( item );
 		}
 

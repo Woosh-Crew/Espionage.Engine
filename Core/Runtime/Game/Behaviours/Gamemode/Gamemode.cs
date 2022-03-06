@@ -7,15 +7,9 @@ namespace Espionage.Engine.Gamemodes
 	/// A Gamemode is where your game-flow happens. It controls how a game
 	/// functions in a SOLID way.
 	/// </summary>
-	[Group( "Gamemodes" ), RequireComponent( typeof( World ) )]
-	public abstract class Gamemode : Entity, IComponent<World>
+	[Group( "Gamemodes" )]
+	public abstract class Gamemode : Entity
 	{
-		void IComponent<World>.OnAttached( World item ) { }
-
-		//
-		// Validation
-		//
-
 		public bool Validate()
 		{
 			return OnValidation();
@@ -49,7 +43,6 @@ namespace Espionage.Engine.Gamemodes
 		}
 
 		protected virtual void OnFinish() { }
-
 
 		// Client
 
