@@ -54,19 +54,6 @@ namespace Espionage.Engine
 
 				Application.quitting += OnShutdown;
 
-				#if UNITY_EDITOR
-
-				// Why does this just not work?
-				EditorApplication.playModeStateChanged += change =>
-				{
-					if ( change == PlayModeStateChange.ExitingPlayMode )
-					{
-						OnShutdown();
-					}
-				};
-
-				#endif
-
 				Callback.Run( "engine.ready" );
 			}
 		}

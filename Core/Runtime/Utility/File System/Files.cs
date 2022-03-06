@@ -293,7 +293,7 @@ namespace Espionage.Engine
 		public static FileStream Read( string path )
 		{
 			path = GetPath( path );
-			return new FileStream( path, FileMode.Open, FileAccess.Read );
+			return new( path, FileMode.Open, FileAccess.Read );
 		}
 
 		/// <summary>
@@ -317,6 +317,13 @@ namespace Espionage.Engine
 		//
 		// Utility
 		//
+
+		public static bool Exists( string path )
+		{
+			path = GetPath( path );
+			return File.Exists( path ) || Directory.Exists( path );
+
+		}
 
 		/// <summary>
 		/// Deletes the file at the given path

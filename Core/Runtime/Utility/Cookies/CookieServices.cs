@@ -40,17 +40,21 @@ namespace Espionage.Engine.Services
 
 		// Serialization
 
-		public Dictionary<string, object> Values { get; private set; } = new();
+		private Dictionary<string, object> Values { get; set; } = new();
 
-		public void Load()
+		private void Load()
 		{
-			var sheet = Files.Deserialize<string>( "config://.cookies" );
-			Debugging.Log.Info( sheet );
+			if ( Files.Exists( "config://.cookies" ) )
+			{
+				var sheet = Files.Deserialize<string>( "config://.cookies" );
+				Debugging.Log.Info( sheet );
+			}
 		}
 
 		public void Save()
 		{
 			Files.Save( "penis", "config://.cookies" );
+			Debugging.Log.Info( Files.GetPath( "config://.cookies" ) );
 		}
 	}
 }
