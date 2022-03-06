@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Espionage.Engine.Pickups.Viewmodels
 {
-	public class PitchOffset : Behaviour, Viewmodel.IEffect
+	public class PitchOffset : Component, Viewmodel.IEffect
 	{
 		protected Quaternion lastOffsetRot;
 		protected Vector3 lastOffsetPos;

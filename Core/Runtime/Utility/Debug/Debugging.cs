@@ -125,12 +125,20 @@ namespace Espionage.Engine
 		private static string SystemLang => Application.systemLanguage.ToString();
 
 		[ConVar, Property( "application.target_fps" ), Cookie]
-		private static int TargetFramerate { get => Application.targetFrameRate; set => Application.targetFrameRate = value; }
+		private static int TargetFramerate
+		{
+			get => Application.targetFrameRate;
+			set => Application.targetFrameRate = value;
+		}
 
 		// Debug
 
 		[ConVar, Property( "debug.overlay" )]
-		private static bool ShowOverlays { get => Overlay.Show; set => Overlay.Show = value; }
+		private static bool ShowOverlays
+		{
+			get => Overlay.Show;
+			set => Overlay.Show = value;
+		}
 
 		[ConVar, Property( "debug.report_stopwatch" )]
 		private static bool ReportStopwatch { get; set; } = true;

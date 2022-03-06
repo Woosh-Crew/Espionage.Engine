@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Espionage.Engine
 {
-	public abstract class PawnController : Behaviour, IComponent<Pawn>
+	public abstract class PawnController : Component, IComponent<Pawn>
 	{
 		void IComponent<Pawn>.OnAttached( Pawn item )
 		{

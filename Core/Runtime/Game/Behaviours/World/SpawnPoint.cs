@@ -4,5 +4,5 @@ using UnityEngine;
 namespace Espionage.Engine
 {
 	[Library( "info.player_start" )]
-	public class SpawnPoint : Behaviour { }
+	public class SpawnPoint : Entity { }
 }

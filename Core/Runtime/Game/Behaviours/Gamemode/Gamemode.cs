@@ -8,7 +8,7 @@ namespace Espionage.Engine.Gamemodes
 	/// functions in a SOLID way.
 	/// </summary>
 	[Group( "Gamemodes" ), RequireComponent( typeof( World ) )]
-	public abstract class Gamemode : Behaviour, IComponent<World>
+	public abstract class Gamemode : Entity, IComponent<World>
 	{
 		void IComponent<World>.OnAttached( World item ) { }
 

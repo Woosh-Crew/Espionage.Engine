@@ -6,7 +6,7 @@ using UnityEngine.Rendering;
 
 namespace Espionage.Engine
 {
-	public sealed class Viewmodel : Behaviour
+	public sealed class Viewmodel : Entity
 	{
 		public static List<Viewmodel> All { get; } = new();
 
@@ -39,7 +39,8 @@ namespace Espionage.Engine
 
 			foreach ( var render in GetComponentsInChildren<Renderer>() )
 			{
-				render.shadowCastingMode = ShadowCastingMode.Off;
+				render.shadowCastingMode = castShadows ? ShadowCastingMode.On : ShadowCastingMode.Off;
+				render.receiveShadows = receiveShadows;
 				render.gameObject.layer = LayerMask.NameToLayer( "Viewmodel" );
 			}
 		}
@@ -74,5 +75,13 @@ namespace Espionage.Engine
 		{
 			void PostCameraSetup( ref ITripod.Setup setup );
 		}
+
+		// Fields
+
+		[SerializeField]
+		private bool castShadows = false;
+
+		[SerializeField]
+		private bool receiveShadows = false;
 	}
 }

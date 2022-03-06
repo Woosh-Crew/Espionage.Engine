@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Espionage.Engine.Viewmodels
 {
-	public sealed class Guntuck : Behaviour, Viewmodel.IEffect
+	public sealed class Guntuck : Component, Viewmodel.IEffect
 	{
 		private float _lastGuntuckOffset;
 

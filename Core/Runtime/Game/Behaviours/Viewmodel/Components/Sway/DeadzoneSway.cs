@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Espionage.Engine.Viewmodels
 {
-	public class DeadzoneSway : Behaviour, Viewmodel.IEffect
+	public class DeadzoneSway : Component, Viewmodel.IEffect
 	{
 		private Vector2 _savedDeadzoneAxis;
 		private Quaternion _lastDeadzoneRotation;

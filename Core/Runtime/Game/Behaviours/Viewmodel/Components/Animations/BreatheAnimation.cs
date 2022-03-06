@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Espionage.Engine.Viewmodels
 {
-	public class BreatheAnimation : Behaviour, Viewmodel.IEffect
+	public class BreatheAnimation : Component, Viewmodel.IEffect
 	{
 		private Vector3 _lastEnergyBreatheScale;
 		private float _breatheBobDelta;

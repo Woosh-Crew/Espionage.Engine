@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Espionage.Engine.Pickups.Viewmodels
 {
-	public class BobAnimation : Behaviour, Viewmodel.IEffect
+	public class BobAnimation : Component, Viewmodel.IEffect
 	{
 		private Vector3 Velocity { get; set; }
 		private Vector3 _lastPosition;

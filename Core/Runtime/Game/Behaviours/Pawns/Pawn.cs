@@ -10,7 +10,7 @@ namespace Espionage.Engine
 	/// Tripod.
 	/// </summary>
 	[Group( "Pawns" )]
-	public class Pawn : Behaviour
+	public class Pawn : Entity
 	{
 		protected override void OnAwake()
 		{

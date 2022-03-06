@@ -4,7 +4,7 @@ namespace Espionage.Engine
 	/// Central point of a map.
 	/// </summary>
 	[Library( "env.world" ), Group( "Environment" )]
-	public class World : Behaviour
+	public class World : Entity
 	{
 		// Singleton
 		private static World _instance;

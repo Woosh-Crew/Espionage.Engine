@@ -2,7 +2,7 @@
 
 namespace Espionage.Engine.Services
 {
-	public class LoaderService : Service
+	internal class LoaderService : Service
 	{
 		public Loader Loader => Engine.Game.Loader;
 		private Scene _scene;
