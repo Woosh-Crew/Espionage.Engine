@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Espionage.Engine.Components;
+using UnityEngine;
 
 namespace Espionage.Engine
 {
@@ -10,6 +12,7 @@ namespace Espionage.Engine
 	/// inherited from <see cref="Component{T}"/>. Entities
 	/// also contain IO / Actions logic.
 	/// </summary>
+	[DisallowMultipleComponent, Group( "Entities" ), Constructor( nameof( Constructor ) )]
 	public abstract class Entity : Behaviour
 	{
 		public static List<Entity> All { get; } = new();
@@ -34,6 +37,14 @@ namespace Espionage.Engine
 			Components = null;
 
 			base.OnDelete();
+		}
+
+
+		// Constructor
+
+		public static object Constructor( Library library )
+		{
+			return new GameObject( library.Name ).AddComponent( library.Class );
 		}
 
 		// Components

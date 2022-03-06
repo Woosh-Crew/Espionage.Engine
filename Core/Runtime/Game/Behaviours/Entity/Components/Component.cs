@@ -2,11 +2,16 @@
 
 namespace Espionage.Engine
 {
+	/// <summary> <inheritdoc cref="Component"/> </summary>
 	public abstract class Component<T> : Component where T : Entity
 	{
 		public new T Entity => base.Entity as T;
 	}
 
+	/// <summary>
+	/// A Component is a MonoBehaviour that
+	/// gets attached to an Entity
+	/// </summary>
 	public abstract class Component : Behaviour, IComponent<Entity>
 	{
 		public Entity Entity { get; private set; }
