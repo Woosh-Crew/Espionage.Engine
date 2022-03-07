@@ -24,7 +24,7 @@ namespace Espionage.Engine.Tripods
 			camSetup.Rotation = Quaternion.Slerp( camSetup.Rotation, pawn.EyeRot, smoothing * Time.deltaTime );
 
 			// Do a ray to calculate the distance, so we don't hit shit
-			var ray = Physics.Raycast( new Ray( pawn.EyePos, camSetup.Rotation * Vector3.back ), out var hitInfo, distance );
+			var ray = Physics.Raycast( new( pawn.EyePos, camSetup.Rotation * Vector3.back ), out var hitInfo, distance );
 			var relativeOffset = camSetup.Rotation * Vector3.right * offset.x + camSetup.Rotation * Vector3.up * offset.y;
 
 			camSetup.Position = Local.Pawn.EyePos + relativeOffset + camSetup.Rotation * Vector3.back * ((ray ? hitInfo.distance : distance) - padding);
@@ -45,7 +45,7 @@ namespace Espionage.Engine.Tripods
 		private float smoothing = 20;
 
 		[SerializeField]
-		private float distance = 5;
+		protected float distance = 5;
 
 		[SerializeField]
 		private float padding = 0.1f;
