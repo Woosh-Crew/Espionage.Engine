@@ -22,6 +22,7 @@ namespace Espionage.Engine.Editor
 			if ( ClassInfo.Components.Get<EditableAttribute>()?.Editable ?? true )
 			{
 				DrawPropertiesExcluding( serializedObject, "m_Script" );
+				serializedObject.ApplyModifiedProperties();
 			}
 			else
 			{
