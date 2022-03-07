@@ -4,16 +4,17 @@ using Espionage.Engine.Components;
 
 namespace Espionage.Engine
 {
-	public class Inventory : Component<Pawn>, IDatabase<Pickup>
+	public class Inventory : Component<Actor>, IDatabase<Pickup>
 	{
 		public IEnumerable<Pickup> All => Items;
+		public int Count => Items.Count;
 
 		private List<Pickup> Items { get; } = new();
 
 		public virtual void Add( Pickup item )
 		{
 			// If we dont own this and if we cant carry it, ignore
-			if ( Contains( item ) || item.Owner is not null )
+			if ( Contains( item ) || item.Carrier is not null )
 			{
 				Debugging.Log.Info( $"Can't pickup item {item}" );
 				return;
@@ -58,7 +59,5 @@ namespace Espionage.Engine
 		{
 			return Items.Contains( item );
 		}
-
-		public int Count => Items.Count;
 	}
 }

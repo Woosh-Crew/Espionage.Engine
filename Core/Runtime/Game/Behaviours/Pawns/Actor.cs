@@ -11,23 +11,18 @@ namespace Espionage.Engine
 	/// Also have Health, Respawning, Inventory
 	/// and other gameplay specific things.
 	/// </summary>
-	[Group( "Pawns" ), RequireComponent( typeof( Health ) )]
+	[Group( "Pawns" )]
 	public class Actor : Pawn, IControls
 	{
-		public Health Health { get; private set; }
-		public Inventory Inventory { get; private set; }
-
-		protected override void OnAwake()
-		{
-			base.OnAwake();
-
-			Health = GetComponent<Health>();
-			Inventory = GetComponent<Inventory>();
-		}
+		public Health Health => Components.Get<Health>();
+		public Inventory Inventory => Components.Get<Inventory>();
 
 		public virtual void Respawn()
 		{
-			Health.Heal( 100 );
+			if ( Health != null )
+			{
+				Health.Heal( 100 );
+			}
 
 			if ( Engine.Game.Gamemode != null )
 			{

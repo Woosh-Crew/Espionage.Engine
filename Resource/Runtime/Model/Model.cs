@@ -14,7 +14,7 @@ namespace Espionage.Engine.Resources
 
 		private Model( IProvider<Model, GameObject> provider )
 		{
-			Components = new Components<Model>( this );
+			Components = new( this );
 			Provider = provider;
 		}
 

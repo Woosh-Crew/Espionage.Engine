@@ -64,13 +64,13 @@ namespace Espionage.Engine.Components
 			return All.OfType<TComp>();
 		}
 
-		public bool TryGet<TComp>( out TComp output ) where TComp : class, IComponent<T>
+		public bool TryGet<TComp>( out TComp output )
 		{
 			output = Get<TComp>();
 			return output != null;
 		}
 
-		public bool Has<TComp>() where TComp : class, IComponent<T>
+		public bool Has<TComp>()
 		{
 			return All.OfType<TComp>().Any();
 		}

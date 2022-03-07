@@ -1,19 +1,20 @@
 ﻿namespace Espionage.Engine
 {
+	[Group( "Pickups" )]
 	public class Pickup : Entity
 	{
-		public Pawn Owner { get; private set; }
+		public Actor Carrier { get; private set; }
 
 		public virtual bool Droppable => true;
 
-		public virtual void OnPickup( Pawn carrier )
+		public virtual void OnPickup( Actor carrier )
 		{
-			Owner = carrier;
+			Carrier = carrier;
 		}
 
-		public virtual void OnDrop( Pawn dropper )
+		public virtual void OnDrop( Actor dropper )
 		{
-			Owner = null;
+			Carrier = null;
 		}
 	}
 }

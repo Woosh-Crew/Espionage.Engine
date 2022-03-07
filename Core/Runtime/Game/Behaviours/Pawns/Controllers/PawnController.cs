@@ -5,8 +5,6 @@ namespace Espionage.Engine
 {
 	public abstract class PawnController : Component<Pawn>, ISimulated
 	{
-		public Vector3 Velocity { get; set; }
-
 		public virtual void Simulate( Client client )
 		{
 			var input = client.Input;

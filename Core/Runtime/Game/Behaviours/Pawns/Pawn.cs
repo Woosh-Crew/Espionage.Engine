@@ -17,6 +17,7 @@ namespace Espionage.Engine
 		{
 			// Lets find a tripod on the object
 			Tripod = GetComponent<ITripod>();
+			Controller = GetComponent<PawnController>();
 		}
 
 		public void Simulate( Client client )
@@ -54,47 +55,11 @@ namespace Espionage.Engine
 			return DevController ? DevController : Controller;
 		}
 
-		private PawnController _controller;
-
 		/// <summary>
-		/// The controller that is used for controlling this pawn.
+		/// The controller that is used
+		/// for controlling this pawn.
 		/// </summary>
-		public PawnController Controller
-		{
-			get
-			{
-				if ( _controller != null )
-				{
-					return _controller;
-				}
-
-				var comp = GetComponent<PawnController>();
-				if ( comp == null )
-				{
-					return null;
-				}
-
-				_controller = comp;
-				((IComponent<Pawn>)comp)?.OnAttached( this );
-				return _controller;
-			}
-			set
-			{
-				if ( _controller != null )
-				{
-					Destroy( _controller );
-				}
-
-				if ( value.gameObject != gameObject )
-				{
-					Debugging.Log.Error( "New Controller GameObject isn't on Pawn GameObject" );
-					return;
-				}
-
-				((IComponent<Pawn>)value)?.OnAttached( this );
-				_controller = value;
-			}
-		}
+		public PawnController Controller { get; set; }
 
 		/// <summary>
 		/// This controller will override the normal controller.
