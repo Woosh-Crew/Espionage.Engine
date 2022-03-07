@@ -9,7 +9,7 @@ public static class BinaryReaderExtensions
 		var y = reader.ReadSingle();
 		var z = reader.ReadSingle();
 
-		return new Vector3( x, y, z );
+		return new( x, y, z );
 	}
 
 	public static Vector3 ReadSourceVec3( this BinaryReader reader )
@@ -18,6 +18,6 @@ public static class BinaryReaderExtensions
 		var z = reader.ReadSingle();
 		var y = reader.ReadSingle();
 
-		return new Vector3( x, y, z );
+		return new( x, y, z );
 	}
 }
