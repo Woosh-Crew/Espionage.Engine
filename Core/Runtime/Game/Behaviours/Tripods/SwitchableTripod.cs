@@ -9,7 +9,6 @@ namespace Espionage.Engine.Tripods
 		public override void OnAttached( Entity item )
 		{
 			base.OnAttached( item );
-
 			Entity.Tripod = tripods[0];
 		}
 

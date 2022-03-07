@@ -18,16 +18,18 @@ namespace Espionage.Engine
 
 		protected sealed override void Awake()
 		{
+			ClassInfo = Library.Register( this );
+
 			All.Add( this );
 			Components = new( this );
+
+			OnAwake();
 
 			// Cache Components
 			foreach ( var item in GetComponents<IComponent<Entity>>() )
 			{
 				Components.Add( item );
 			}
-
-			base.Awake();
 		}
 
 		protected sealed override void OnDestroy()

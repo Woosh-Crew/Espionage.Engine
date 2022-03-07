@@ -16,7 +16,7 @@ namespace Espionage.Engine
 		protected override void OnAwake()
 		{
 			// Lets find a tripod on the object
-			// Tripod = GetComponent<ITripod>();
+			Tripod = GetComponent<ITripod>();
 		}
 
 		public void Simulate( Client client )

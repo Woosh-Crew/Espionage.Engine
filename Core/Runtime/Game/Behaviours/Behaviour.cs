@@ -9,7 +9,7 @@ namespace Espionage.Engine
 	[Group( "Behaviours" ), Spawnable( false )]
 	public abstract class Behaviour : MonoBehaviour, ILibrary
 	{
-		public Library ClassInfo { get; private set; }
+		public Library ClassInfo { get; internal set; }
 
 		// Creation
 
