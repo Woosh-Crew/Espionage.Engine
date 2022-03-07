@@ -24,6 +24,15 @@ namespace Espionage.Engine
 
 		protected virtual void OnAwake() { }
 
+		// Ready
+
+		private void Start()
+		{
+			OnReady();
+		}
+
+		protected virtual void OnReady() { }
+
 		// Destroy
 
 		protected virtual void OnDestroy()
