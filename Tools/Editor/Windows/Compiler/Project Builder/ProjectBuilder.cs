@@ -22,7 +22,10 @@ namespace Espionage.Engine.Tools.Editor
 		protected override void OnCreateGUI()
 		{
 			// Header
-			rootVisualElement.Add( new HeaderBar( "Project Builder", "Builds the project to the target platform.", new Image() { image = ClassInfo.Components.Get<IconAttribute>().Icon }, "Header-Bottom-Border" ) );
+			rootVisualElement.Add( new HeaderBar( "Project Builder", "Builds the project to the target platform.", new()
+			{
+				image = ClassInfo.Components.Get<IconAttribute>().Icon
+			}, "Header-Bottom-Border" ) );
 
 			// Build Preset
 			{
@@ -99,7 +102,10 @@ namespace Espionage.Engine.Tools.Editor
 				box.AddToClassList( "Box" );
 				rootVisualElement.Add( box );
 
-				box.Add( new Button( () => Build( BuildTarget.StandaloneWindows, BuildOptions.Development ) ) { text = "Build Game" } );
+				box.Add( new Button( () => Build( BuildTarget.StandaloneWindows, BuildOptions.Development ) )
+				{
+					text = "Build Game"
+				} );
 			}
 		}
 
@@ -111,8 +117,8 @@ namespace Espionage.Engine.Tools.Editor
 				{
 					var blueprintBuild = new AssetBundleBuild
 					{
-						assetNames = Library.Database.GetAll<Blueprint>().Select( e => e.Components.Get<FileAttribute>()?.Path ).ToArray(),
-						assetBundleName = $"{Library.Database.Get<Blueprint>().Title}.pak"
+						assetNames = Library.Database.GetAll<Prefab>().Select( e => e.Components.Get<FileAttribute>()?.Path ).ToArray(),
+						assetBundleName = $"{Library.Database.Get<Prefab>().Title}.pak"
 					};
 
 					// Setup BuildPipeline

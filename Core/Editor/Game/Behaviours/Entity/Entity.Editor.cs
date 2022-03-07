@@ -9,16 +9,16 @@ namespace Espionage.Engine.Editor
 	public class EntityEditor : UnityEditor.Editor
 	{
 		private Library ClassInfo { get; set; }
-		
+
 		private void OnEnable()
 		{
 			ClassInfo = Library.Database[target.GetType()];
-			EditorInjection.Titles[target.GetType()] =$"{ClassInfo.Title}  -  [ Entity ]";
+			EditorInjection.Titles[target.GetType()] = $"{ClassInfo.Title} (Entity)";
 		}
 
 		public override void OnInspectorGUI()
 		{
-			
+
 			base.OnInspectorGUI();
 		}
 	}

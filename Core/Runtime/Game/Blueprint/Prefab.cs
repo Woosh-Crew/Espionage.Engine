@@ -6,15 +6,15 @@ using UnityEngine;
 namespace Espionage.Engine
 {
 	/// <summary>
-	/// Blueprints are used for spawning prefabs at runtime using C#
+	/// Prefabs are used for spawning unity prefabs at runtime using C#
 	/// </summary>
-	[Group( "Blueprints" ), Spawnable]
-	public abstract class Blueprint : ILibrary
+	[Group( "Prefabs" ), Spawnable]
+	public abstract class Prefab : ILibrary
 	{
 		public Library ClassInfo { get; private set; }
 		public string Path { get; }
 
-		public Blueprint()
+		public Prefab()
 		{
 			ClassInfo = Library.Database[GetType()];
 

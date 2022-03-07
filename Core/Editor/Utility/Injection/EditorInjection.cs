@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEditor;
+using UnityEngine;
 
 namespace Espionage.Engine.Internal
 {
@@ -16,7 +17,9 @@ namespace Espionage.Engine.Internal
 			get
 			{
 				if ( _titles != null )
+				{
 					return _titles;
+				}
 
 				_titles = TitlesCache();
 
@@ -26,9 +29,9 @@ namespace Espionage.Engine.Internal
 
 		private static Dictionary<Type, string> TitlesCache()
 		{
-			var inspectorTitlesType = typeof( ObjectNames ).GetNestedType( "InspectorTitles", BindingFlags.Static | BindingFlags.NonPublic );
-			var inspectorTitlesField = inspectorTitlesType.GetField( "s_InspectorTitles", BindingFlags.Static | BindingFlags.NonPublic );
-			return (Dictionary<Type, string>)inspectorTitlesField.GetValue( null );
+			var type = typeof( ObjectNames ).GetNestedType( "InspectorTitles", BindingFlags.Static | BindingFlags.NonPublic );
+			var titles = type.GetField( "s_InspectorTitles", BindingFlags.Static | BindingFlags.NonPublic );
+			return (Dictionary<Type, string>)titles?.GetValue( null );
 		}
 	}
 }
