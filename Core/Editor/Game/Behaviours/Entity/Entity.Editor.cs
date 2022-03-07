@@ -1,7 +1,6 @@
-﻿using System;
-using Espionage.Engine.Internal;
-using NUnit.Framework.Internal.Filters;
+﻿using Espionage.Engine.Internal;
 using UnityEditor;
+using UnityEngine;
 
 namespace Espionage.Engine.Editor
 {
@@ -18,8 +17,14 @@ namespace Espionage.Engine.Editor
 
 		public override void OnInspectorGUI()
 		{
-
-			base.OnInspectorGUI();
+			if ( ClassInfo.Components.Get<EditableAttribute>().Editable )
+			{
+				base.OnInspectorGUI();
+			}
+			else
+			{
+				GUILayout.Label( "Not Editable", EditorStyles.miniBoldLabel );
+			}
 		}
 	}
 }

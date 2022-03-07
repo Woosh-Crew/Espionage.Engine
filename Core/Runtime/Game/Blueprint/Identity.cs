@@ -2,8 +2,8 @@
 
 namespace Espionage.Engine
 {
-	[AddComponentMenu("")]
-	public class Identity : MonoBehaviour
+	[AddComponentMenu( "" ), Editable( false )]
+	public class Identity : Behaviour
 	{
 		public Library Library { get; internal set; }
 	}

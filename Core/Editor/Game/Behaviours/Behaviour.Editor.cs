@@ -2,19 +2,20 @@
 using Espionage.Engine.Internal;
 using NUnit.Framework.Internal.Filters;
 using UnityEditor;
+using UnityEditorInternal;
 using UnityEngine;
 
 namespace Espionage.Engine.Editor
 {
-	[CustomEditor( typeof( Component ), true )]
-	public class ComponentEditor : UnityEditor.Editor
+	[CustomEditor( typeof( Behaviour ), true )]
+	public class BehaviourEditor : UnityEditor.Editor
 	{
 		private Library ClassInfo { get; set; }
 
 		private void OnEnable()
 		{
 			ClassInfo = Library.Database[target.GetType()];
-			EditorInjection.Titles[target.GetType()] = $"{ClassInfo.Title} (Component)";
+			EditorInjection.Titles[target.GetType()] = $"{ClassInfo.Title} (Behaviour)";
 		}
 
 		public override void OnInspectorGUI()
@@ -25,7 +26,7 @@ namespace Espionage.Engine.Editor
 			}
 			else
 			{
-				GUILayout.Label( "Not Editable", EditorStyles.miniBoldLabel );
+				GUILayout.Label("Not Editable", EditorStyles.miniBoldLabel);
 			}
 		}
 	}
