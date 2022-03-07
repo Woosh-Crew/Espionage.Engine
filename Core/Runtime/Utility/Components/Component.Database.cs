@@ -54,12 +54,12 @@ namespace Espionage.Engine.Components
 		// Accessors
 		//
 
-		public TComp Get<TComp>() where TComp : class, IComponent<T>
+		public TComp Get<TComp>()
 		{
-			return All.FirstOrDefault( e => e is TComp ) as TComp;
+			return (TComp)All.FirstOrDefault( e => e is TComp );
 		}
 
-		public IEnumerable<TComp> GetAll<TComp>() where TComp : class, IComponent<T>
+		public IEnumerable<TComp> GetAll<TComp>()
 		{
 			return All.OfType<TComp>();
 		}

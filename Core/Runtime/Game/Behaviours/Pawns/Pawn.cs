@@ -1,3 +1,4 @@
+using System.Linq;
 using Espionage.Engine.Components;
 using UnityEngine;
 
@@ -14,15 +15,24 @@ namespace Espionage.Engine
 	{
 		protected override void OnAwake()
 		{
-			base.OnAwake();
-
 			// Lets find a tripod on the object
-			Tripod = GetComponent<ITripod>();
+			// Tripod = GetComponent<ITripod>();
 		}
 
 		public void Simulate( Client client )
 		{
 			GetActiveController()?.Simulate( client );
+
+			foreach ( var item in Components.GetAll<ISimulated>() )
+			{
+				// Don't simulate Pawn Controllers, we do that above.
+				if ( item is PawnController )
+				{
+					continue;
+				}
+
+				item.Simulate( client );
+			}
 		}
 
 		//

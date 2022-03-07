@@ -13,6 +13,7 @@ namespace Espionage.Engine
 
 			Entity.EyeRot = Quaternion.Euler( input.ViewAngles );
 			Entity.EyePos = transform.position + Vector3.Scale( Vector3.up, Entity.transform.lossyScale ) * eyeHeight;
+
 			transform.localRotation = Quaternion.AngleAxis( Entity.EyeRot.eulerAngles.y, Vector3.up );
 		}
 
