@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Reflection;
 using Espionage.Engine.Components;
 using UnityEngine;
@@ -30,9 +31,18 @@ namespace Espionage.Engine
 
 		internal Library( [NotNull] Type type )
 		{
+			string BuildName( Type type )
+			{
+				var prefix = type.Namespace?.Split( '.' )[^1] ?? "";
+				var name = string.Concat( type.Name!.Select( x => char.IsUpper( x ) ? "_" + x : x.ToString() ) ).TrimStart( '_' );
+
+				return $"{prefix}.{name}".ToLower();
+			}
+
 			Class = type;
-			Name = type.FullName;
 			Spawnable = true;
+
+			Name = BuildName( type );
 
 			// Components
 			Components = new( this );

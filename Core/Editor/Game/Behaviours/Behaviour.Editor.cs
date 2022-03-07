@@ -20,14 +20,15 @@ namespace Espionage.Engine.Editor
 
 		public override void OnInspectorGUI()
 		{
-			if ( ClassInfo.Components.Get<EditableAttribute>().Editable )
+			if ( ClassInfo.Components.Get<EditableAttribute>()?.Editable ?? true )
 			{
-				base.OnInspectorGUI();
+				DrawPropertiesExcluding( serializedObject, "m_Script" );
 			}
 			else
 			{
-				GUILayout.Label("Not Editable", EditorStyles.miniBoldLabel);
+				GUILayout.Label( "Not Editable", EditorStyles.miniBoldLabel );
 			}
 		}
 	}
+
 }
