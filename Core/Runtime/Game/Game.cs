@@ -101,6 +101,7 @@ namespace Espionage.Engine
 			// Default FOV
 			camSetup.FieldOfView = 68;
 			camSetup.Viewer = null;
+			camSetup.Clipping = new( 0.1f, 700 );
 
 			var cam = FindActiveCamera();
 
