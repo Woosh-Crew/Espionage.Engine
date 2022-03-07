@@ -22,8 +22,6 @@ namespace Espionage.Engine.Tripods
 
 			camSetup.Rotation = Local.Pawn.EyeRot;
 			camSetup.Position = Local.Pawn.EyePos;
-
-			camSetup.Clipping = new Vector2( 0.1f, 700 );
 		}
 	}
 }

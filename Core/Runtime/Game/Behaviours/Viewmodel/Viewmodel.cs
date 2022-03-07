@@ -20,11 +20,15 @@ namespace Espionage.Engine
 
 		public static void Show( bool value )
 		{
+			Showing = value;
+
 			foreach ( var viewmodel in All.OfType<Viewmodel>() )
 			{
 				viewmodel.gameObject.SetActive( value );
 			}
 		}
+
+		private static bool Showing { get; set; }
 
 		// Instance
 
@@ -36,9 +40,11 @@ namespace Espionage.Engine
 				render.receiveShadows = receiveShadows;
 				render.gameObject.layer = LayerMask.NameToLayer( "Viewmodel" );
 			}
+
+			Enabled = Showing;
 		}
 
-		public void PostCameraSetup( ref ITripod.Setup setup )
+		private void PostCameraSetup( ref ITripod.Setup setup )
 		{
 			// Basically if the current tripod is not the 
 			// Pawns one, don't move...
