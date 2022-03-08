@@ -7,15 +7,7 @@ namespace Espionage.Engine.Resources
 	{
 		public Model Model
 		{
-			get
-			{
-				if ( _model.Instances == 0 )
-				{
-					return null;
-				}
-
-				return _model;
-			}
+			get => _model.Instances == 0 ? null : _model;
 			set
 			{
 				_model?.Despawn( _modelOutput );
@@ -27,6 +19,8 @@ namespace Espionage.Engine.Resources
 				}
 			}
 		}
+
+		// Private
 
 		private Model _model;
 		private GameObject _modelOutput;

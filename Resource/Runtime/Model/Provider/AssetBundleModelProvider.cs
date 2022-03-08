@@ -42,17 +42,10 @@ namespace Espionage.Engine.Resources
 			_bundleRequestOperation = AssetBundle.LoadFromFileAsync( File.FullName );
 			_bundleRequestOperation.completed += ( _ ) =>
 			{
-				// When we've finished loading the asset
-				// bundle, go onto loading the scene itself
 				_bundle = _bundleRequestOperation.assetBundle;
-				Debugging.Log.Info( "Finished Loading Bundle" );
-
-				// Load the scene by getting all scene
-				// paths from a bundle, and getting the first index
 				_modelLoadOperation = _bundle.LoadAssetAsync<ModelAsset>( _bundle.GetAllAssetNames()[0] );
 				_modelLoadOperation.completed += ( _ ) =>
 				{
-					Debugging.Log.Info( "Finished Loading Model" );
 					IsLoading = false;
 					Output = (_modelLoadOperation.asset as ModelAsset)?.model;
 					onLoad?.Invoke();
@@ -65,7 +58,6 @@ namespace Espionage.Engine.Resources
 			var request = _bundle.UnloadAsync( true );
 			request.completed += ( e ) =>
 			{
-				Debugging.Log.Info( "Finished Unloading Bundle" );
 				IsLoading = false;
 				onUnload?.Invoke();
 			};
