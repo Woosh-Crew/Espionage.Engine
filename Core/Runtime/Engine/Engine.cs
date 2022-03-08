@@ -31,6 +31,9 @@ namespace Espionage.Engine
 		{
 			using ( Debugging.Stopwatch( "Engine / Game Ready", true ) )
 			{
+				// Flush Bundles
+				AssetBundle.UnloadAllAssetBundles( true );
+
 				if ( Game == null && !SetupGame() )
 				{
 					Debugging.Log.Error( "Game couldn't be found. Make sure to make a class inherited from Game" );

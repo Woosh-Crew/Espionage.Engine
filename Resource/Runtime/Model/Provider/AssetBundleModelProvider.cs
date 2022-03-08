@@ -38,19 +38,26 @@ namespace Espionage.Engine.Resources
 		{
 			IsLoading = true;
 
+			// This should be async...
+			_bundle = AssetBundle.LoadFromFile( File.FullName );
+			Output = _bundle.LoadAsset<ModelAsset>( _bundle.GetAllAssetNames()[0] ).model;
+
+			IsLoading = false;
+			onLoad?.Invoke();
+
 			// Load Bundle
-			_bundleRequestOperation = AssetBundle.LoadFromFileAsync( File.FullName );
-			_bundleRequestOperation.completed += ( _ ) =>
-			{
-				_bundle = _bundleRequestOperation.assetBundle;
-				_modelLoadOperation = _bundle.LoadAssetAsync<ModelAsset>( _bundle.GetAllAssetNames()[0] );
-				_modelLoadOperation.completed += ( _ ) =>
-				{
-					IsLoading = false;
-					Output = (_modelLoadOperation.asset as ModelAsset)?.model;
-					onLoad?.Invoke();
-				};
-			};
+			// _bundleRequestOperation = AssetBundle.LoadFromFileAsync( File.FullName );
+			// _bundleRequestOperation.completed += ( _ ) =>
+			// {
+			// 	_bundle = _bundleRequestOperation.assetBundle;
+			// 	_modelLoadOperation = _bundle.LoadAssetAsync<ModelAsset>( _bundle.GetAllAssetNames()[0] );
+			// 	_modelLoadOperation.completed += ( _ ) =>
+			// 	{
+			// 		IsLoading = false;
+			// 		Output = (_modelLoadOperation.asset as ModelAsset)?.model;
+			// 		onLoad?.Invoke();
+			// 	};
+			// };
 		}
 
 		public void Unload( Action onUnload = null )
@@ -58,6 +65,7 @@ namespace Espionage.Engine.Resources
 			var request = _bundle.UnloadAsync( true );
 			request.completed += ( e ) =>
 			{
+				Debugging.Log.Info( "Unloaded Model Bundle" );
 				IsLoading = false;
 				onUnload?.Invoke();
 			};

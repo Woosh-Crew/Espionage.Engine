@@ -24,6 +24,11 @@ namespace Espionage.Engine.Resources
 		{
 			path = Files.GetPath( path );
 
+			if ( !Files.Exists( path ) )
+			{
+				return Load( "models://error.umdl", onLoad );
+			}
+
 			if ( Database[path] is Model databaseModel )
 			{
 				((IResource)databaseModel).Load();
@@ -49,11 +54,19 @@ namespace Espionage.Engine.Resources
 			return go;
 		}
 
-		public void Despawn( GameObject gameObject )
+		public void Destroy( GameObject gameObject )
 		{
 			_spawned.Remove( gameObject );
 			((IResource)this).Unload();
-			Object.Destroy( gameObject );
+
+			if ( Application.isEditor )
+			{
+				Object.DestroyImmediate( gameObject );
+			}
+			else
+			{
+				Object.Destroy( gameObject );
+			}
 		}
 
 		// Resource

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Espionage.Engine.Resources
 {
@@ -7,10 +8,11 @@ namespace Espionage.Engine.Resources
 	{
 		public Model Model
 		{
-			get => _model.Instances == 0 ? null : _model;
+			get => _model?.Instances == 0 ? null : _model;
 			set
 			{
-				_model?.Despawn( _modelOutput );
+
+				_model?.Destroy( _modelOutput );
 				_model = value;
 
 				if ( _model != null )
@@ -20,27 +22,23 @@ namespace Espionage.Engine.Resources
 			}
 		}
 
+		public Transform Container => container;
+		public string Path => modelPath;
+
 		// Private
 
-		private Model _model;
 		private GameObject _modelOutput;
+		private Model _model;
 
 		public override void OnAttached( Entity item )
 		{
 			base.OnAttached( item );
-
-			if ( !Files.Exists( modelPath ) )
-			{
-				Debugging.Log.Error( $"File [{Files.GetPath( modelPath )}], doesn't exist" );
-				return;
-			}
-
-			_model = Model.Load( modelPath, () => Model.Spawn( container ) );
+			Model = Model.Load( modelPath );
 		}
 
 		protected override void OnDelete()
 		{
-			_model.Despawn( _modelOutput );
+			_model?.Destroy( _modelOutput );
 		}
 
 		// Fields

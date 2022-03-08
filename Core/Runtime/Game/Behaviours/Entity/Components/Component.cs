@@ -21,6 +21,14 @@ namespace Espionage.Engine
 	{
 		public Entity Entity { get; private set; }
 
+		protected override void OnReady()
+		{
+			if ( Entity == null )
+			{
+				Debugging.Log.Error( "No Entity found on component" );
+			}
+		}
+
 		public virtual void OnAttached( Entity item )
 		{
 			Entity = item;

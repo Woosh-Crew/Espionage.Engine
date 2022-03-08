@@ -1,6 +1,4 @@
-﻿using System;
-using Espionage.Engine.Internal;
-using NUnit.Framework.Internal.Filters;
+﻿using Espionage.Engine.Internal;
 using UnityEditor;
 using UnityEngine;
 
