@@ -15,19 +15,31 @@ namespace Espionage.Engine
 	{
 		protected override void OnAwake()
 		{
-			// Lets find a tripod on the object
 			Tripod = GetComponent<ITripod>();
-			Controller = GetComponent<PawnController>();
+			Controller = GetComponent<IController>();
 		}
 
 		public void Simulate( Client client )
 		{
+			// EyePos & EyeRot
+
+			var input = client.Input;
+
+			EyeRot = Quaternion.Euler( input.ViewAngles );
+			EyePos = transform.position + Vector3.Scale( Vector3.up, transform.lossyScale ) * eyeHeight;
+
+			transform.localRotation = Quaternion.AngleAxis( EyeRot.eulerAngles.y, Vector3.up );
+
+			// Controller
+
 			GetActiveController()?.Simulate( client );
+
+			// Components
 
 			foreach ( var item in Components.GetAll<ISimulated>() )
 			{
 				// Don't simulate Pawn Controllers, we do that above.
-				if ( item is PawnController )
+				if ( item is IController )
 				{
 					continue;
 				}
@@ -50,22 +62,24 @@ namespace Espionage.Engine
 		// Controller
 		//
 
-		private PawnController GetActiveController()
+		public interface IController : ISimulated { }
+
+		private IController GetActiveController()
 		{
-			return DevController ? DevController : Controller;
+			return DevController ?? Controller;
 		}
 
 		/// <summary>
 		/// The controller that is used
 		/// for controlling this pawn.
 		/// </summary>
-		public PawnController Controller { get; set; }
+		public IController Controller { get; set; }
 
 		/// <summary>
 		/// This controller will override the normal controller.
 		/// Is used for dev shit like no clip.
 		/// </summary>
-		public PawnController DevController { get; set; }
+		public IController DevController { get; set; }
 
 		//
 		// Camera
@@ -74,5 +88,11 @@ namespace Espionage.Engine
 		public ITripod Tripod { get; set; }
 
 		public void PostCameraSetup( ref ITripod.Setup setup ) { }
+
+
+		// Fields
+
+		[SerializeField]
+		private float eyeHeight = 1.65f;
 	}
 }
