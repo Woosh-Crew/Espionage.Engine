@@ -11,9 +11,9 @@ namespace Espionage.Engine.Services
 	/// </summary>
 	public class CookieServices : Service
 	{
-		private static Dictionary<string, Property> Registry { get; } = new();
+		private Dictionary<string, Property> Registry { get; } = new();
 
-		public static void Register( Property prop )
+		public void Register( Property prop )
 		{
 			Registry.Add( prop.Name, prop );
 		}
@@ -22,6 +22,11 @@ namespace Espionage.Engine.Services
 
 		public override void OnReady()
 		{
+			foreach ( var property in Library.Global.Properties.All.Where( e => e.Components.Has<CookieAttribute>() ) )
+			{
+				Register( property );
+			}
+
 			Load();
 		}
 

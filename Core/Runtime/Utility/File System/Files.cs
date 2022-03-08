@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using UnityEngine;
 
@@ -386,6 +387,27 @@ namespace Espionage.Engine
 			}
 
 			File.Move( source, destination );
+		}
+
+		/// <summary>
+		/// Opens the given file in the OS's File Explorer 
+		/// </summary>
+		public static void OpenInExplorer( string path )
+		{
+			path = GetPath( path );
+
+			if ( !Exists( path ) )
+			{
+				Debugging.Log.Warning( $"Path [{path}], doesn't exist" );
+			}
+
+			var startInfo = new ProcessStartInfo
+			{
+				Arguments = path,
+				FileName = "explorer.exe"
+			};
+
+			Process.Start( startInfo );
 		}
 	}
 }
