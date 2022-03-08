@@ -39,7 +39,7 @@ namespace Espionage.Engine
 		/// Use this for logic that must be
 		/// done when the object has started.
 		/// </summary>
-		internal virtual void OnReady() { }
+		protected virtual void OnReady() { }
 
 		// Destroy
 

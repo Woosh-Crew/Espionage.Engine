@@ -50,7 +50,7 @@ namespace Espionage.Engine
 		/// <summary> The Entity this Component is attached too. </summary>
 		public Entity Entity { get; private set; }
 
-		internal override void OnReady()
+		protected override void OnReady()
 		{
 			if ( Entity == null )
 			{
