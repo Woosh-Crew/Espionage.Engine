@@ -22,7 +22,7 @@ namespace Espionage.Engine
 			public Vector3 Impact { get; set; }
 			public Vector3 Normal { get; set; }
 
-			public Actor Attacker { get; set; }
+			public Entity Attacker { get; set; }
 		}
 	}
 }

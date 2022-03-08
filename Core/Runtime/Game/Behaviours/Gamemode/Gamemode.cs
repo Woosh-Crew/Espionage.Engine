@@ -50,9 +50,9 @@ namespace Espionage.Engine.Gamemodes
 
 		// Pawn
 
-		public bool OnPawnDamaged( Pawn pawn ) { return true; }
-		public void OnPawnRespawned( Pawn pawn ) { }
-		public void OnPawnKilled( Pawn pawn ) { }
+		public bool OnActorDamaged( Actor pawn ) { return true; }
+		public void OnActorRespawned( Actor pawn ) { }
+		public void OnActorKilled( Actor pawn ) { }
 
 		//
 		// Callbacks

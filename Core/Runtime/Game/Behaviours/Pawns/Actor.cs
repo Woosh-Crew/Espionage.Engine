@@ -20,6 +20,7 @@ namespace Espionage.Engine
 			base.OnAwake();
 
 			Health.OnKilled += OnKilled;
+			Health.OnDamaged += OnDamaged;
 		}
 
 		protected override void OnDelete()
@@ -27,24 +28,24 @@ namespace Espionage.Engine
 			base.OnDelete();
 
 			Health.OnKilled -= OnKilled;
+			Health.OnDamaged -= OnDamaged;
 		}
 
 		public virtual void Respawn()
 		{
-			if ( Health != null )
-			{
-				var health = Health;
-				health.Heal( health.Max - health.Current );
-			}
+			var health = Health;
+			health.Heal( health.Max - health.Current );
 
 			if ( Engine.Game.Gamemode != null )
 			{
 				// Tell the Gamemode, we want to respawn
-				Engine.Game.Gamemode.OnPawnRespawned( this );
+				Engine.Game.Gamemode.OnActorRespawned( this );
 			}
 		}
 
-		protected virtual void OnKilled() { }
+		protected virtual void OnKilled( IDamageable.Info info ) { }
+		protected virtual bool OnDamaged( IDamageable.Info info ) { return true; }
+
 
 		void IControls.Build( ref IControls.Setup setup ) { }
 
