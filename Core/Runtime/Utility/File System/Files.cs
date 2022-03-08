@@ -23,7 +23,9 @@ namespace Espionage.Engine
 			["config"] = UserConfigPath(),
 			["user"] = UserDataPath(),
 			["cache"] = CachePath(),
-			["game"] = Application.dataPath
+			["game"] = Application.dataPath,
+			["assets"] = Application.isEditor ? $"{Application.dataPath}/../Exports/" : Application.dataPath
+
 		};
 
 	#if UNITY_EDITOR
@@ -311,7 +313,9 @@ namespace Espionage.Engine
 			var splitPath = path.Split( "://" );
 			splitPath[0] = GetPath( Paths[splitPath[0]] );
 
-			return Path.Combine( splitPath[0], splitPath[1] );
+			var newPath = Path.Combine( splitPath[0], splitPath[1] );
+
+			return Path.GetFullPath( newPath );
 		}
 
 		//

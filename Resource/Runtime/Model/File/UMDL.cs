@@ -1,22 +1,12 @@
 ﻿using System.IO;
-using Espionage.Engine.Resources.Provider;
 using UnityEngine;
-
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
 namespace Espionage.Engine.Resources
 {
-	[Group( "Models" ), Title( "UMDL File" ), File( Extension = "umdl" )]
+	[Library( "resources.umdl" ), Group( "Models" ), Title( "UMDL File" ), File( Extension = "umdl" )]
 	public sealed class UMDL : IFile<Model, GameObject>, IAsset
 	{
-		public Library ClassInfo { get; }
-
-
-		public UMDL() { ClassInfo = Library.Register( this ); }
-
-		~UMDL() { Library.Unregister( this ); }
+		public Library ClassInfo { get; } = Library.Database[typeof( UMDL )];
 
 		// Resource
 
@@ -29,13 +19,5 @@ namespace Espionage.Engine.Resources
 		{
 			return new AssetBundleModelProvider( File );
 		}
-
-		// Compiler
-
-	#if UNITY_EDITOR
-
-		public static void Compile( string assetPath ) { }
-
-	#endif
 	}
 }

@@ -14,7 +14,7 @@ namespace Espionage.Engine.Resources
 	/// <remarks>
 	/// You should be using this instead of UnityEngine.SceneManager.
 	/// </remarks>
-	[Group( "Maps" ), Path( "maps", "game://Maps/" )]
+	[Group( "Maps" ), Path( "maps", "assets://Maps/" )]
 	public sealed class Map : IResource, ILibrary, ILoadable
 	{
 		public static Map Current { get; internal set; }

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
-namespace Espionage.Engine.Resources.Provider
+namespace Espionage.Engine.Resources
 {
 	[Library, Title( "Asset Bundle Model" ), Group( "Models" )]
 	public class AssetBundleModelProvider : Resource.IProvider<Model, GameObject>
@@ -49,23 +49,19 @@ namespace Espionage.Engine.Resources.Provider
 
 				// Load the scene by getting all scene
 				// paths from a bundle, and getting the first index
-				_modelLoadOperation = _bundle.LoadAllAssetsAsync<Model>();
+				_modelLoadOperation = _bundle.LoadAssetAsync<ModelAsset>( _bundle.GetAllAssetNames()[0] );
 				_modelLoadOperation.completed += ( _ ) =>
 				{
 					Debugging.Log.Info( "Finished Loading Model" );
 					IsLoading = false;
-					Output = _modelLoadOperation.allAssets[0] as GameObject;
+					Output = (_modelLoadOperation.asset as ModelAsset)?.model;
 					onLoad?.Invoke();
 				};
-
-				onLoad?.Invoke();
 			};
 		}
 
 		public void Unload( Action onUnload = null )
 		{
-			Object.Destroy( Output );
-
 			var request = _bundle.UnloadAsync( true );
 			request.completed += ( e ) =>
 			{

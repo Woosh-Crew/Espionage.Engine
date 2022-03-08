@@ -35,7 +35,7 @@ namespace Espionage.Engine.Resources
 
 		public virtual void Compile( params BuildTarget[] targets )
 		{
-			var exportPath = $"Exports/{ClassInfo.Group}/{name}/";
+			var exportPath = $"Exports/{ClassInfo.Group}/";
 			var extension = ClassInfo.Components.Get<FileAttribute>()?.Extension;
 
 			if ( string.IsNullOrEmpty( extension ) )
@@ -57,7 +57,10 @@ namespace Espionage.Engine.Resources
 					{
 						new AssetBundleBuild()
 						{
-							assetNames = new[] { AssetDatabase.GetAssetPath( this ) },
+							assetNames = new[]
+							{
+								AssetDatabase.GetAssetPath( this )
+							},
 							assetBundleName = $"{name}.{extension}"
 						}
 					};
@@ -66,7 +69,7 @@ namespace Espionage.Engine.Resources
 
 					if ( bundle is null )
 					{
-						EditorUtility.DisplayDialog( "ERROR", $"Map asset bundle compile failed.", "Okay" );
+						EditorUtility.DisplayDialog( "ERROR", $"Asset bundle compile failed.", "Okay" );
 						return;
 					}
 				}

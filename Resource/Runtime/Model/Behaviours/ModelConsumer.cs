@@ -7,30 +7,47 @@ namespace Espionage.Engine.Resources
 	{
 		public Model Model
 		{
-			get => _model;
+			get
+			{
+				if ( _model.Instances == 0 )
+				{
+					return null;
+				}
+
+				return _model;
+			}
 			set
 			{
-				_model.Despawn( _modelOutput );
+				_model?.Despawn( _modelOutput );
 				_model = value;
-				_modelOutput  = _model.Spawn( container );
+
+				if ( _model != null )
+				{
+					_modelOutput = _model.Spawn( container );
+				}
 			}
 		}
-		
+
+		private Model _model;
+		private GameObject _modelOutput;
+
 		public override void OnAttached( Entity item )
 		{
 			base.OnAttached( item );
 
 			if ( !Files.Exists( modelPath ) )
 			{
-				Debugging.Log.Error($"File [{modelPath}], doesn't exist");
+				Debugging.Log.Error( $"File [{Files.GetPath( modelPath )}], doesn't exist" );
 				return;
 			}
 
-			Model = Model.Load( modelPath );
+			_model = Model.Load( modelPath, () => Model.Spawn( container ) );
 		}
 
-		private Model _model;
-		private GameObject _modelOutput;
+		protected override void OnDelete()
+		{
+			_model.Despawn( _modelOutput );
+		}
 
 		// Fields
 

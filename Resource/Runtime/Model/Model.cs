@@ -6,7 +6,7 @@ using Object = UnityEngine.Object;
 
 namespace Espionage.Engine.Resources
 {
-	[Group( "Models" ), Path( "models", "game://Models/" )]
+	[Group( "Models" ), Path( "models", "assets://Models/" )]
 	public sealed class Model : Resource
 	{
 		private IProvider<Model, GameObject> Provider { get; }
@@ -22,11 +22,15 @@ namespace Espionage.Engine.Resources
 
 		public static Model Load( string path, Action onLoad = null )
 		{
+			path = Files.GetPath( path );
+
 			if ( Database[path] is Model databaseModel )
 			{
 				((IResource)databaseModel).Load();
 				return databaseModel;
 			}
+
+			using var _ = Debugging.Stopwatch( $"Loading Model [{Files.GetPath( path )}]" );
 
 			var model = new Model( Files.Load<IFile<Model, GameObject>>( path ).Provider() );
 			((IResource)model).Load( onLoad );
@@ -35,19 +39,20 @@ namespace Espionage.Engine.Resources
 
 		// Spawning
 
-		private List<GameObject> _spawned;
+		private List<GameObject> _spawned = new();
 
 		public GameObject Spawn( Transform container )
 		{
-			var go = Object.Instantiate( Provider.Output, Vector3.zero, Quaternion.identity, container );
+			var go = Object.Instantiate( Provider.Output, container );
+			go.transform.localPosition = Vector3.zero;
 			_spawned.Add( go );
 			return go;
 		}
 
 		public void Despawn( GameObject gameObject )
 		{
-			((IResource)this).Unload();
 			_spawned.Remove( gameObject );
+			((IResource)this).Unload();
 			Object.Destroy( gameObject );
 		}
 
@@ -62,6 +67,8 @@ namespace Espionage.Engine.Resources
 
 		protected override void OnUnload( Action onUnload )
 		{
+			using var _ = Debugging.Stopwatch( $"Unloading Model [{Files.GetPath( Identifier )}]" );
+
 			// Clear Spawned Models
 			foreach ( var instance in _spawned )
 			{
