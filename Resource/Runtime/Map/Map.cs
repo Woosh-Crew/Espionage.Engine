@@ -7,9 +7,7 @@ using UnityEngine.SceneManagement;
 namespace Espionage.Engine.Resources
 {
 	/// <summary>
-	/// <para>
 	/// Allows the loading and unloading of maps at runtime.
-	/// </para>
 	/// </summary>
 	/// <remarks>
 	/// You should be using this instead of UnityEngine.SceneManager.
@@ -20,7 +18,7 @@ namespace Espionage.Engine.Resources
 		public static Map Current { get; internal set; }
 
 		// Provider
-		public Resource.IProvider<Map, Scene> Provider { get; }
+		private Resource.IProvider<Map, Scene> Provider { get; }
 		public Components<Map> Components { get; }
 
 		// Meta Data
@@ -38,13 +36,13 @@ namespace Espionage.Engine.Resources
 
 		public Library ClassInfo { get; }
 
-		/// <summary>Make a reference to a map, using a provider.</summary>
-		/// <param name="provider">What provider should we use for loading and unloading maps?</param>
+		/// <summary> Make a reference to a map, using a provider. </summary>
+		/// <param name="provider"> What provider should we use for loading and unloading maps? </param>
 		public Map( Resource.IProvider<Map, Scene> provider )
 		{
 			ClassInfo = Library.Register( this );
 
-			Components = new Components<Map>( this );
+			Components = new( this );
 			Provider = provider;
 
 			Database.Add( this );
@@ -73,7 +71,7 @@ namespace Espionage.Engine.Resources
 		{
 			if ( IsLoading )
 			{
-				throw new Exception( "Already performing an operation action this map" );
+				throw new( "Already performing an operation action this map" );
 			}
 
 			onLoad += Loaded;
@@ -109,7 +107,7 @@ namespace Espionage.Engine.Resources
 		{
 			if ( IsLoading )
 			{
-				throw new Exception( "Already performing an operation action this map" );
+				throw new( "Already performing an operation action this map" );
 			}
 
 			// Add Callback

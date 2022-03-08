@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
-
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
 namespace Espionage.Engine.Resources
 {
@@ -117,19 +112,5 @@ namespace Espionage.Engine.Resources
 
 			public int Count => _records.Count;
 		}
-
-		//
-		// Debug
-		//
-
-		#if UNITY_EDITOR
-
-		[MenuItem( "Tools/Espionage.Engine/Debug/Flush Asset Bundles" )]
-		private static void Flush()
-		{
-			AssetBundle.UnloadAllAssetBundles( true );
-		}
-
-		#endif
 	}
 }

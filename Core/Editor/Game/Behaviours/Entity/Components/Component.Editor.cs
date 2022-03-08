@@ -9,7 +9,7 @@ namespace Espionage.Engine.Editor
 	{
 		private Library ClassInfo { get; set; }
 
-		private void OnEnable()
+		protected virtual void OnEnable()
 		{
 			ClassInfo = Library.Database[target.GetType()];
 			EditorInjection.Titles[target.GetType()] = $"{ClassInfo.Title} (Component)";

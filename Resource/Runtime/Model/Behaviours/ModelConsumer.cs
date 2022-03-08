@@ -6,18 +6,20 @@ namespace Espionage.Engine.Resources
 	[DisallowMultipleComponent, Title( "Model" )]
 	public class ModelConsumer : Component<Entity>
 	{
+		public GameObject Object { get; private set; }
+
 		public Model Model
 		{
 			get => _model?.Instances == 0 ? null : _model;
 			set
 			{
 
-				_model?.Destroy( _modelOutput );
+				_model?.Remove( Object );
 				_model = value;
 
-				if ( _model != null )
+				if ( _model != null && Application.isPlaying )
 				{
-					_modelOutput = _model.Spawn( container );
+					Object = _model.Spawn( container );
 				}
 			}
 		}
@@ -27,7 +29,6 @@ namespace Espionage.Engine.Resources
 
 		// Private
 
-		private GameObject _modelOutput;
 		private Model _model;
 
 		public override void OnAttached( Entity item )
@@ -38,7 +39,7 @@ namespace Espionage.Engine.Resources
 
 		protected override void OnDelete()
 		{
-			_model?.Destroy( _modelOutput );
+			_model?.Remove( Object );
 		}
 
 		// Fields
