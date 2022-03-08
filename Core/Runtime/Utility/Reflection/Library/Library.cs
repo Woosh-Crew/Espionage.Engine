@@ -23,6 +23,12 @@ namespace Espionage.Engine
 	public sealed partial class Library
 	{
 		/// <summary>
+		/// All static Properties and Functions can be found in the Globals Library
+		/// database index. It is here for easy viewing
+		/// </summary>
+		public static Library Global => Database[typeof( Global )];
+
+		/// <summary>
 		/// Components are added meta data onto that library, this can
 		/// include icons, company, stylesheet, etc. They allow us
 		/// to do some really crazy cool shit
@@ -73,10 +79,18 @@ namespace Espionage.Engine
 					continue;
 				}
 
-
-				// Only add property if it has the attribute
+				var isStatic = propertyInfo.GetMethod.IsStatic;
 				var attribute = propertyInfo.GetCustomAttribute<PropertyAttribute>();
-				Properties.Add( attribute.CreateRecord( this, propertyInfo ) );
+
+				if ( isStatic )
+				{
+					Global.Properties.Add( attribute.CreateRecord( Global, propertyInfo ) );
+				}
+				else
+				{
+					// Only add property if it has the attribute
+					Properties.Add( attribute.CreateRecord( this, propertyInfo ) );
+				}
 			}
 
 			// Functions
@@ -92,7 +106,15 @@ namespace Espionage.Engine
 
 				// Only add property if it has the attribute
 				var attribute = methodInfo.GetCustomAttribute<FunctionAttribute>();
-				Functions.Add( attribute.CreateRecord( this, methodInfo ) );
+
+				if ( methodInfo.IsStatic )
+				{
+					Global.Functions.Add( attribute.CreateRecord( Global, methodInfo ) );
+				}
+				else
+				{
+					Functions.Add( attribute.CreateRecord( this, methodInfo ) );
+				}
 			}
 		}
 

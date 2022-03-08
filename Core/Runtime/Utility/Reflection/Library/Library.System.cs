@@ -78,6 +78,8 @@ namespace Espionage.Engine
 			Database ??= new InternalDatabase();
 			Database.Clear();
 
+			Database.Add( new( typeof( Global ) ) );
+
 			using ( Debugging.Stopwatch( "Library Initialized", 0 ) )
 			{
 				// Select all types where ILibrary exists or if it has the correct attribute
@@ -108,7 +110,6 @@ namespace Espionage.Engine
 			}
 
 			Initialized = true;
-
 			Callback.Run( "library.ready" );
 		}
 
@@ -116,7 +117,7 @@ namespace Espionage.Engine
 		{
 			if ( !type.IsDefined( typeof( LibraryAttribute ), false ) )
 			{
-				return new Library( type );
+				return new( type );
 			}
 
 			// If we have meta present, use it
@@ -135,7 +136,7 @@ namespace Espionage.Engine
 			var guid = new byte[16];
 			random.NextBytes( guid );
 
-			return new Guid( guid );
+			return new( guid );
 		}
 	}
 }
