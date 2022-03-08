@@ -1,7 +1,9 @@
 {
     "name": "Espionage.Engine.Editor",
     "rootNamespace": "Espionage.Engine.Editor",
-    "references": [],
+    "references": [
+        "GUID:b479bc809753b2141a4f58843671b904"
+    ],
     "includePlatforms": [
         "Editor"
     ],
