@@ -18,7 +18,7 @@ namespace Espionage.Engine
 			Controller = GetComponent<IController>();
 		}
 
-		public Vector3 Velocity { get; private set; }
+		public Vector3 Velocity { get; set; }
 
 		public void Simulate( Client client )
 		{
@@ -105,6 +105,10 @@ namespace Espionage.Engine
 
 		private Vector3 CalculateVelocity()
 		{
+			// Usually the Pawn Controller will override this
+			// through its own Velocity shit, but its here just
+			// in case it isn't.
+
 			var position = transform.position;
 
 			var velocity = (position - _previous) / Time.deltaTime;
