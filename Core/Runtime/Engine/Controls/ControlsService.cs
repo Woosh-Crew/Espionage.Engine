@@ -7,7 +7,7 @@ namespace Espionage.Engine.Services
 	{
 		private IControls.Setup _setup = new();
 
-		[Property( "controls.ms_sensitivity" ), ConVar]
+		[Property( "controls.ms_sensitivity" ), ConVar, Cookie]
 		private static float MouseSensitivity { get; set; } = 2;
 
 		public override void OnUpdate()
@@ -18,7 +18,7 @@ namespace Espionage.Engine.Services
 			}
 
 			// Setup ViewAngles,
-			_setup.MouseDelta = new Vector2
+			_setup.MouseDelta = new()
 			{
 				x = Input.GetAxis( "Mouse X" ) * MouseSensitivity,
 				y = Input.GetAxis( "Mouse Y" ) * MouseSensitivity

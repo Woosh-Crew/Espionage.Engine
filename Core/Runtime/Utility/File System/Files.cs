@@ -31,12 +31,42 @@ namespace Espionage.Engine
 
 	#if UNITY_EDITOR
 
-		[MenuItem( "Tools/Espionage.Engine/Debug/Report Random File" )]
+		[MenuItem( "Tools/Espionage.Engine/Debug/Files/Report Random File" )]
 		private static void Testing()
 		{
 			Save( "Testing", "game://test.txt" );
 			Debugging.Log.Info( Deserialize<string>( "game://test.txt" ) );
 			Delete( "game://test.txt" );
+		}
+
+		[MenuItem( "Tools/Espionage.Engine/Debug/Files/Show Cookies File" )]
+		private static void Testing2()
+		{
+			OpenInExplorer( "config://.cookies" );
+		}
+
+		[MenuItem( "Tools/Espionage.Engine/Debug/Files/Show Config Dir" )]
+		private static void Testing3()
+		{
+			OpenInExplorer( "config://" );
+		}
+
+		[MenuItem( "Tools/Espionage.Engine/Debug/Files/Show User Dir" )]
+		private static void Testing4()
+		{
+			OpenInExplorer( "user://" );
+		}
+
+		[MenuItem( "Tools/Espionage.Engine/Debug/Files/Show Cache Dir" )]
+		private static void Testing5()
+		{
+			OpenInExplorer( "cache://" );
+		}
+
+		[MenuItem( "Tools/Espionage.Engine/Debug/Files/Show Game Dir" )]
+		private static void Testing6()
+		{
+			OpenInExplorer( "game://" );
 		}
 
 	#endif
