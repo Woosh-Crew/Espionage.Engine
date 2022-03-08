@@ -20,22 +20,21 @@ namespace Espionage.Engine.Viewmodels
 			_lastDeadzoneRotation = Quaternion.Slerp( _lastDeadzoneRotation, Quaternion.Euler( _savedDeadzoneAxis.x, _savedDeadzoneAxis.y, 0 ), damping * Time.deltaTime );
 
 			var trans = transform;
-			var rotation = trans.rotation;
+			trans.rotation *= _lastDeadzoneRotation;
 
-			rotation *= _lastDeadzoneRotation;
-			trans.position += rotation * Vector3.up * _lastDeadzoneRotation.x + rotation * Vector3.right * _lastDeadzoneRotation.y;
-
-			trans.rotation = rotation;
+			trans.position += trans.rotation * Vector3.up * (_lastDeadzoneRotation.x / 100) + trans.rotation * Vector3.right * (_lastDeadzoneRotation.y / 100);
 		}
 
-		protected void DeadzoneAxis()
+		private void DeadzoneAxis()
 		{
-			var mouse = new Vector2( Input.GetAxis( "Mouse X" ), Input.GetAxis( "Mouse Y" ) ) / 500 / Time.deltaTime;
+			var mouse = new Vector2(
+				Input.GetAxis( "Mouse X" ), Input.GetAxis( "Mouse Y" )
+			) / Time.deltaTime;
 
-			_savedDeadzoneAxis.x += mouse.y * 20 * multiplier * Time.deltaTime;
+			_savedDeadzoneAxis.x += -mouse.y * multiplier * Time.deltaTime;
 			_savedDeadzoneAxis.x = Mathf.Clamp( _savedDeadzoneAxis.x, -deadzone.x, deadzone.x );
 
-			_savedDeadzoneAxis.y += mouse.x * 20 * multiplier * Time.deltaTime;
+			_savedDeadzoneAxis.y += mouse.x * multiplier * Time.deltaTime;
 			_savedDeadzoneAxis.y = Mathf.Clamp( _savedDeadzoneAxis.y, -deadzone.y, deadzone.y );
 		}
 

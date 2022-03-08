@@ -16,13 +16,13 @@ namespace Espionage.Engine.Viewmodels
 			_lastMouseDelta = Vector2.Lerp( _lastMouseDelta, mouse / 500 / Time.deltaTime, smoothing * Time.deltaTime );
 
 			var trans = transform;
-			var rotationX = Quaternion.AngleAxis( _lastMouseDelta.y * scale, Vector3.left );
-			var rotationY = Quaternion.AngleAxis( _lastMouseDelta.x * scale, Vector3.up );
+			var rotationX = Quaternion.AngleAxis( _lastMouseDelta.y * scale.y, Vector3.left );
+			var rotationY = Quaternion.AngleAxis( _lastMouseDelta.x * scale.x, Vector3.up );
 
 			trans.rotation *= rotationX * rotationY * Quaternion.AngleAxis( _lastMouseDelta.x * tilting, Vector3.forward );
 
 			var localRotation = trans.localRotation;
-			trans.position += localRotation * Vector3.down * _lastMouseDelta.y * (scale / 100) + localRotation * Vector3.left * _lastMouseDelta.x * (scale / 100);
+			trans.position += localRotation * Vector3.down * _lastMouseDelta.y * (scale.y / 100) + localRotation * Vector3.left * _lastMouseDelta.x * (scale.x / 100);
 		}
 
 		// Fields
@@ -31,7 +31,7 @@ namespace Espionage.Engine.Viewmodels
 		private float tilting = 1;
 
 		[SerializeField]
-		private float scale = 10;
+		private Vector2 scale = new( 10, 10 );
 
 		[SerializeField]
 		private float smoothing = 10;
