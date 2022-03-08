@@ -80,7 +80,7 @@ namespace Espionage.Engine
 		/// </summary>
 		private static string CachePath()
 		{
-			var game = Engine.Game.ClassInfo.Title;
+			var game = Application.productName;
 
 			// First check if any of the platforms has XDG_CACHE_HOME defined
 			var xdg = Environment.GetEnvironmentVariable( "XDG_CACHE_HOME" );
@@ -111,7 +111,7 @@ namespace Espionage.Engine
 		/// </remarks>
 		private static string UserDataPath()
 		{
-			var game = Engine.Game.ClassInfo.Title;
+			var game = Application.productName;
 
 			// First check if any of the platforms has XDG_DATA_HOME defined
 			var xdg = Environment.GetEnvironmentVariable( "XDG_DATA_HOME" );
@@ -141,7 +141,7 @@ namespace Espionage.Engine
 		/// </remarks>
 		private static string UserConfigPath()
 		{
-			var game = Engine.Game.ClassInfo.Title;
+			var game = Application.productName;
 
 			// First check if any of the platforms has XDG_CONFIG_HOME defined
 			var xdg = Environment.GetEnvironmentVariable( "XDG_CONFIG_HOME" );
