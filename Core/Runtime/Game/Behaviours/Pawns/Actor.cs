@@ -5,10 +5,8 @@ using UnityEngine;
 namespace Espionage.Engine
 {
 	/// <summary>
-	/// Actor is the gameplay pawn, where AI
-	/// and Clients can Posses. AI will look
-	/// for Actors instead of Pawns. Actors
-	/// Also have Health, Respawning, Inventory
+	/// Actor is the gameplay pawn, where AI and Clients can Posses. AI will look
+	/// for Actors instead of Pawns. Actors Also have Health, Respawning, Inventory
 	/// and other gameplay specific things.
 	/// </summary>
 	[Group( "Pawns" )]
@@ -35,7 +33,8 @@ namespace Espionage.Engine
 		{
 			if ( Health != null )
 			{
-				Health.Heal( 100 );
+				var health = Health;
+				health.Heal( health.Max - health.Current );
 			}
 
 			if ( Engine.Game.Gamemode != null )

@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Espionage.Engine.Resources
 {
 	[DisallowMultipleComponent, Title( "Model" )]
-	public class ModelConsumer : Component<Entity>
+	public class ModelConsumer : Component
 	{
 		public GameObject Object { get; private set; }
 

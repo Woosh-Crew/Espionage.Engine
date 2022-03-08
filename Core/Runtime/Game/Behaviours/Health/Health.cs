@@ -4,19 +4,19 @@ using UnityEngine;
 namespace Espionage.Engine
 {
 	/// <summary>
-	/// Allows a GameObject to have Health, which means
+	/// Allows an Entity to have Health, which means
 	/// it can be healed or take damage.
 	/// </summary>
-	public class Health : Component<Entity>, IDamageable, IHealable
+	public class Health : Component, IDamageable, IHealable
 	{
 		public int Current { get; private set; }
 		public int Max => max;
 
-		public void Damage() { }
+		public void Damage( IDamageable.Info info ) { }
 
-		public void Heal( int amount )
+		public void Heal( IHealable.Info info )
 		{
-			Current += amount;
+			Current += info.Amount;
 			Current = Mathf.Clamp( Current, 0, 100 );
 		}
 

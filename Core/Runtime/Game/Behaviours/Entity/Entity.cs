@@ -14,9 +14,15 @@ namespace Espionage.Engine
 	[DisallowMultipleComponent, Group( "Entities" ), Constructor( nameof( Constructor ) ), Spawnable]
 	public abstract class Entity : Behaviour
 	{
+		/// <summary>
+		/// All of the Entities that currently exists in
+		/// the game world. This is great for finding
+		/// entities from any class. Such as spawn
+		/// points, gamemodes, map meta data, etc.
+		/// </summary>
 		public static List<Entity> All { get; } = new();
 
-		protected sealed override void Awake()
+		internal sealed override void Awake()
 		{
 			ClassInfo = Library.Register( this );
 
@@ -42,21 +48,23 @@ namespace Espionage.Engine
 
 		// Constructor
 
-		public static object Constructor( Library library )
+		private static Entity Constructor( Library library )
 		{
-			return new GameObject( library.Name ).AddComponent( library.Class );
+			return new GameObject( library.Name ).AddComponent( library.Class ) as Entity;
 		}
 
 		// Helpers
 
+		/// <summary> Is this Entity currently Enabled? </summary>
 		public bool Enabled
 		{
-			get => gameObject.activeSelf;
+			get => gameObject.activeInHierarchy;
 			set => gameObject.SetActive( value );
 		}
 
 		// Components
 
+		/// <summary> Components that are currently attached to this Entity </summary>
 		public Components<Entity> Components { get; private set; }
 	}
 }

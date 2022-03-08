@@ -3,6 +3,10 @@ using System.Collections.Generic;
 
 namespace Espionage.Engine.Resources
 {
+	/// <summary>
+	/// A Resource is a loadable asset, that is loaded in editor or at runtime.
+	/// Resources will keep references to the instances and the assets identifier.
+	/// </summary>
 	[Group( "Resources" )]
 	public abstract class Resource : IResource, IDisposable, ILibrary
 	{
@@ -20,9 +24,17 @@ namespace Espionage.Engine.Resources
 
 		// Resource
 
+		/// <summary> How many instances of this Resource are currently being used. </summary>
 		public int Instances { get; private set; }
+
+		/// <summary> The path / database entry to this resource. </summary>
 		public abstract string Identifier { get; }
+
+		/// <summary> Is this resource currently being loaded into memory </summary>
 		public virtual bool IsLoading { get; protected set; }
+
+		/// <summary> Should we destroy / unload this resource after there are no more instances? </summary>
+		public bool Persistant { get; internal set; }
 
 		void IResource.Load( Action onLoad )
 		{
@@ -35,10 +47,17 @@ namespace Espionage.Engine.Resources
 			Instances++;
 		}
 
+		/// <summary> What should we do when this resource is loaded </summary>
 		protected virtual void OnLoad( Action onLoad ) { }
 
 		void IResource.Unload( Action onUnload )
 		{
+			if ( Persistant )
+			{
+				Debugging.Log.Warning( "Can't Unload Resource, It is persistant." );
+				return;
+			}
+
 			Instances--;
 
 			if ( Instances == 0 )
@@ -48,11 +67,14 @@ namespace Espionage.Engine.Resources
 			}
 		}
 
+		/// <summary> What should we do when this resource is unloaded </summary>
 		protected virtual void OnUnload( Action onUnload ) { }
 
+		/// <summary> Forcefully Unload this Resource </summary>
 		public void Dispose()
 		{
-			(this as IResource).Unload();
+			Persistant = false;
+			((IResource)this).Unload();
 		}
 
 		public interface IProvider<T, out TOutput> where T : IResource

@@ -3,8 +3,9 @@
 namespace Espionage.Engine
 {
 	/// <summary>
-	/// Behaviour is a Networked Class that at its core is just a
-	/// <see cref="MonoBehaviour"/> with Espionage.Engine Functionality
+	/// Behaviour is a Network-able Class (Planned) that at its core is just a 
+	/// <see cref="MonoBehaviour"/> with Espionage.Engine Functionality, e.g,
+	/// library cache and callbacks.
 	/// </summary>
 	[Group( "Behaviours" ), Spawnable( false )]
 	public abstract class Behaviour : MonoBehaviour, ILibrary
@@ -13,22 +14,32 @@ namespace Espionage.Engine
 
 		// Creation
 
-		protected virtual void Awake()
+		internal virtual void Awake()
 		{
 			ClassInfo = Library.Register( this );
 			OnAwake();
 		}
 
+		/// <summary>
+		/// This Behaviour is now Awake.
+		/// Use this for any initialization.
+		/// </summary>
 		protected virtual void OnAwake() { }
 
 		// Ready
 
-		private void Start()
+		internal virtual void Start()
 		{
 			OnReady();
 		}
 
-		protected virtual void OnReady() { }
+
+		/// <summary>
+		/// The Behaviour is now ready to use.
+		/// Use this for logic that must be
+		/// done when the object has started.
+		/// </summary>
+		internal virtual void OnReady() { }
 
 		// Destroy
 
@@ -38,6 +49,11 @@ namespace Espionage.Engine
 			OnDelete();
 		}
 
+		/// <summary>
+		/// This object is being deleted.
+		/// Use this for cleaning up your
+		/// behaviours variables.
+		/// </summary>
 		protected virtual void OnDelete() { }
 
 	}

@@ -12,6 +12,7 @@ namespace Espionage.Engine.Resources
 	{
 		// Provider
 		private IProvider<Model, GameObject> Provider { get; }
+
 		public override string Identifier => Provider.Identifier;
 
 		//
