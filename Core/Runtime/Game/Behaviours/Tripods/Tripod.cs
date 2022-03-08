@@ -3,12 +3,9 @@
 namespace Espionage.Engine.Tripods
 {
 	/// <summary>
-	/// A Tripod is just an <see cref="ITripod"/>
-	/// inherited from MonoBehaviour. This allows you
-	/// to control parameters in editor, and use Unity's
-	/// components workflow. The <see cref="Pawn"/> will
-	/// ask for a Tripod Component too if none has been previously
-	/// declared on it.
+	/// A Tripod is just an <see cref="ITripod"/> inherited from <see cref="Component{Pawn}"/>. This allows you
+	/// to control parameters in editor, and use Unity's components workflow. The <see cref="Pawn"/> will
+	/// ask for a Tripod Component too if none has been previously declared on it.
 	/// </summary>
 	[Group( "Tripods" )]
 	public abstract class Tripod : Component<Pawn>, ITripod, IControls
