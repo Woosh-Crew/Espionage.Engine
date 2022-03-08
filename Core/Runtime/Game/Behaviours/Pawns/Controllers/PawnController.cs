@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Espionage.Engine
 {
+	[Group( "Pawn Controllers" )]
 	public abstract class PawnController : Component<Pawn>, ISimulated
 	{
 		public virtual void Simulate( Client client )

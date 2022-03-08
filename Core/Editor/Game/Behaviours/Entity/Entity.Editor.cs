@@ -21,6 +21,8 @@ namespace Espionage.Engine.Editor
 			{
 				DrawPropertiesExcluding( serializedObject, "m_Script" );
 				serializedObject.ApplyModifiedProperties();
+
+				GUILayout.Label( "Root Entity", EditorStyles.centeredGreyMiniLabel );
 			}
 			else
 			{

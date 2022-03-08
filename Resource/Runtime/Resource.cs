@@ -8,7 +8,7 @@ namespace Espionage.Engine.Resources
 	{
 		public Library ClassInfo { get; }
 
-		public Resource()
+		protected Resource()
 		{
 			ClassInfo = Library.Register( this );
 		}
@@ -20,21 +20,32 @@ namespace Espionage.Engine.Resources
 
 		// Resource
 
+		public int Instances { get; private set; }
 		public abstract string Identifier { get; }
 		public virtual bool IsLoading { get; protected set; }
 
 		void IResource.Load( Action onLoad )
 		{
-			Database.Add( this );
-			OnLoad( onLoad );
+			if ( !Database.Contains( this ) )
+			{
+				Database.Add( this );
+				OnLoad( onLoad );
+			}
+
+			Instances++;
 		}
 
 		protected virtual void OnLoad( Action onLoad ) { }
 
 		void IResource.Unload( Action onUnload )
 		{
-			Database.Remove( this );
-			OnUnload( onUnload );
+			Instances--;
+
+			if ( Instances == 0 )
+			{
+				Database.Remove( this );
+				OnUnload( onUnload );
+			}
 		}
 
 		protected virtual void OnUnload( Action onUnload ) { }

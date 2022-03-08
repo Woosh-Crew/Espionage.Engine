@@ -13,11 +13,11 @@ namespace Espionage.Engine.Resources
 	{
 		public Library ClassInfo { get; }
 
-		
+
 		public UMDL() { ClassInfo = Library.Register( this ); }
 
 		~UMDL() { Library.Unregister( this ); }
-		
+
 		// Resource
 
 		public FileInfo File { get; set; }
@@ -27,16 +27,14 @@ namespace Espionage.Engine.Resources
 
 		public Resource.IProvider<Model, GameObject> Provider()
 		{
-			return new AssetBundleModelProvider();
+			return new AssetBundleModelProvider( File );
 		}
-		
+
 		// Compiler
 
 	#if UNITY_EDITOR
 
-		public static void Compile( string assetPath )
-		{
-		}
+		public static void Compile( string assetPath ) { }
 
 	#endif
 	}

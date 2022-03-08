@@ -4,6 +4,7 @@ using UnityEngine.Rendering;
 
 namespace Espionage.Engine
 {
+	[Group( "Viewmodels" )]
 	public sealed class Viewmodel : Entity
 	{
 		public static void Apply( ref ITripod.Setup setup )
@@ -63,6 +64,7 @@ namespace Espionage.Engine
 			}
 		}
 
+		[Group( "Viewmodels" )]
 		public abstract class Effect : Component<Viewmodel>
 		{
 			public abstract void PostCameraSetup( ref ITripod.Setup setup );
