@@ -12,6 +12,7 @@ namespace Espionage.Engine
 		public int Current { get; private set; }
 		public int Max => max;
 
+		/// <summary> Damage this Entity, using some useful meta data. </summary>
 		public void Damage( IDamageable.Info info )
 		{
 			if ( State == Mode.Dead && (!OnDamaged?.Invoke( info ) ?? false) )
@@ -30,6 +31,7 @@ namespace Espionage.Engine
 			}
 		}
 
+		/// <summary> Heal this Entity, using some useful meta data. </summary>
 		public void Heal( IHealable.Info info )
 		{
 			Current += info.Amount;

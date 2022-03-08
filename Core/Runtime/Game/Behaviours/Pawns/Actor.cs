@@ -12,7 +12,6 @@ namespace Espionage.Engine
 	[Group( "Pawns" )]
 	public class Actor : Pawn, IControls
 	{
-		public Health Health => Components.GetOrCreate( () => gameObject.AddComponent<Health>() );
 		public Inventory Inventory => Components.Get<Inventory>();
 
 		protected override void OnAwake()
@@ -30,6 +29,12 @@ namespace Espionage.Engine
 			Health.OnKilled -= OnKilled;
 			Health.OnDamaged -= OnDamaged;
 		}
+
+		//
+		// Health
+		//
+
+		public Health Health => Components.GetOrCreate( () => gameObject.AddComponent<Health>() );
 
 		public virtual void Respawn()
 		{
