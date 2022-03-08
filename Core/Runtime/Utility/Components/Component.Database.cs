@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Espionage.Engine.Components
@@ -57,6 +58,16 @@ namespace Espionage.Engine.Components
 		public TComp Get<TComp>()
 		{
 			return (TComp)All.FirstOrDefault( e => e is TComp );
+		}
+
+		public TComp GetOrCreate<TComp>( Func<TComp> creation )
+		{
+			if ( TryGet<TComp>( out var comp ) )
+			{
+				return comp;
+			}
+
+			return creation.Invoke();
 		}
 
 		public IEnumerable<TComp> GetAll<TComp>()

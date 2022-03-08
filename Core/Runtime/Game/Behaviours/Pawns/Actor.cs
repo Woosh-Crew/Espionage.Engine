@@ -14,8 +14,22 @@ namespace Espionage.Engine
 	[Group( "Pawns" )]
 	public class Actor : Pawn, IControls
 	{
-		public Health Health => Components.Get<Health>();
+		public Health Health => Components.GetOrCreate( () => gameObject.AddComponent<Health>() );
 		public Inventory Inventory => Components.Get<Inventory>();
+
+		protected override void OnAwake()
+		{
+			base.OnAwake();
+
+			Health.OnKilled += OnKilled;
+		}
+
+		protected override void OnDelete()
+		{
+			base.OnDelete();
+
+			Health.OnKilled -= OnKilled;
+		}
 
 		public virtual void Respawn()
 		{
@@ -30,6 +44,8 @@ namespace Espionage.Engine
 				Engine.Game.Gamemode.OnPawnRespawned( this );
 			}
 		}
+
+		protected virtual void OnKilled() { }
 
 		void IControls.Build( ref IControls.Setup setup ) { }
 
