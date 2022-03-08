@@ -40,7 +40,6 @@ namespace Espionage.Engine
 					return;
 				}
 
-				Debugging.Log.Info( $"Using {Game?.ClassInfo.Title} as the Game" );
 				HookUnity();
 				Services = new();
 
@@ -67,6 +66,12 @@ namespace Espionage.Engine
 		private static void Initialize_Editor()
 		{
 			Library.Initialize();
+
+			if ( Game == null && !SetupGame() )
+			{
+				Debugging.Log.Error( "Game couldn't be found. Make sure to make a class inherited from Game" );
+			}
+
 		}
 
 		#endif
@@ -83,6 +88,8 @@ namespace Espionage.Engine
 
 			Game = Library.Database.Create<Game>( target.Class );
 			Callback.Run( "game.ready" );
+
+			Debugging.Log.Info( $"Using {Game?.ClassInfo.Title} as the Game" );
 
 			return true;
 		}
