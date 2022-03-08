@@ -11,7 +11,7 @@ namespace Espionage.Engine
 	/// logging, commands, overlays, and other utility features.
 	/// You should be using this over Unity's debug library.
 	/// </summary>
-	[Library, Group( "Debug" ), Manager( nameof( Initialize ), Layer = Layer.Runtime | Layer.Editor, Order = -200 )]
+	[Library, Group( "Debug" )]
 	public static class Debugging
 	{
 		// Providers
@@ -63,47 +63,46 @@ namespace Espionage.Engine
 		// Initialize
 		//
 
-		private static void Initialize()
+		static Debugging()
 		{
-			using ( Stopwatch( "Debugging Initialized" ) )
-			{
-				Log ??= new SimpleLoggingProvider();
-				Console ??= new SimpleCommandProvider();
+			using var _ = Stopwatch( "Debugging Initialized" );
 
-				// Setup Default Commands
+			Log = new SimpleLoggingProvider();
+			Console = new SimpleCommandProvider();
 
-				// Quit
-				Console.Add( new Command()
+			// Setup Default Commands
+
+			// Quit
+			Console.Add( new Command()
+				{
+					Name = "quit",
+					Help = "Quits the application"
+				}.WithAction( _ => Application.Quit() )
+			);
+
+			// Clear
+			Console.Add( new Command()
+				{
+					Name = "clear",
+					Help = "Clears everything in the log"
+				}.WithAction( _ => Log.Clear() )
+			);
+
+			// Help
+			Console.Add( new Command()
+				{
+					Name = "help",
+					Help = "Returns Help Message on all commands"
+				}.WithAction( _ =>
+				{
+					Log.Info( "Dumping All" );
+
+					foreach ( var command in Console.All )
 					{
-						Name = "quit",
-						Help = "Quits the application"
-					}.WithAction( _ => Application.Quit() )
-				);
-
-				// Clear
-				Console.Add( new Command()
-					{
-						Name = "clear",
-						Help = "Clears everything in the log"
-					}.WithAction( _ => Log.Clear() )
-				);
-
-				// Help
-				Console.Add( new Command()
-					{
-						Name = "help",
-						Help = "Returns Help Message on all commands"
-					}.WithAction( _ =>
-					{
-						Log.Info( "Dumping All" );
-
-						foreach ( var command in Console.All )
-						{
-							Log.Info( $"{command.Name} = {command.Help}" );
-						}
-					} )
-				);
-			}
+						Log.Info( $"{command.Name} = {command.Help}" );
+					}
+				} )
+			);
 		}
 
 		//

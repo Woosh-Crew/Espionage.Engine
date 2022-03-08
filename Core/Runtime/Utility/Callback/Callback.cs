@@ -5,15 +5,14 @@ using Espionage.Engine.Internal.Callbacks;
 
 namespace Espionage.Engine
 {
-	[Manager( nameof( Initialize ), Layer = Layer.Editor | Layer.Runtime, Order = -100 )]
 	public static class Callback
 	{
 		public static ICallbackProvider Provider { get; set; }
 
-		internal static void Initialize()
+		static Callback()
 		{
 			// AttributeCallbackProvider is the default provider
-			Provider ??= new AttributeCallbackProvider();
+			Provider = new AttributeCallbackProvider();
 		}
 
 		/// <summary> Runs a callback with an array of args. </summary>

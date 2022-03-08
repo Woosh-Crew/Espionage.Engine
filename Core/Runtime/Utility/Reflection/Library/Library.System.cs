@@ -1,17 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
-using Espionage.Engine.Internal;
-using Espionage.Engine.Components;
-using Steamworks.Data;
-using UnityEngine;
-using Random = System.Random;
 
 namespace Espionage.Engine
 {
-	[Manager( nameof( Cache ), Layer = Layer.Editor | Layer.Runtime, Order = -10 )]
 	public partial class Library
 	{
 		/// <summary>
@@ -71,13 +63,16 @@ namespace Espionage.Engine
 		// Manager
 		//
 
-		public static bool Initialized { get; private set; } = false;
+		public static bool Initialized { get; private set; }
 
-		private static void Cache()
+		public static void Initialize()
 		{
-			Database ??= new InternalDatabase();
-			Database.Clear();
+			if ( Initialized )
+			{
+				return;
+			}
 
+			Database = new InternalDatabase();
 			Database.Add( new( typeof( Global ) ) );
 
 			using ( Debugging.Stopwatch( "Library Initialized", 0 ) )
@@ -101,7 +96,7 @@ namespace Espionage.Engine
 					{
 						var type = types[typeIndex];
 
-						if ( type.HasInterface<ILibrary>() || type.IsDefined( typeof( LibraryAttribute ) ) )
+						if ( type.HasInterface<ILibrary>() || type.IsDefined( typeof( LibraryAttribute ), true ) )
 						{
 							Database.Add( CreateRecord( type ) );
 						}

@@ -16,7 +16,7 @@ namespace Espionage.Engine
 	/// Espionage.Engine Entry Point.
 	/// Initializes all its services, and sets up the Game.
 	/// </summary>
-	[Library, Group( "Engine" ), Manager( nameof( Initialize_Runtime ), Layer = Layer.Runtime, Order = 600 )]
+	[Library, Group( "Engine" )]
 	public static class Engine
 	{
 		/// <summary>
@@ -27,10 +27,13 @@ namespace Espionage.Engine
 		/// </summary>
 		public static Game Game { get; private set; }
 
+		[RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.BeforeSceneLoad )]
 		private static void Initialize_Runtime()
 		{
 			using ( Debugging.Stopwatch( "Engine / Game Ready", true ) )
 			{
+				Library.Initialize();
+
 				if ( Game == null && !SetupGame() )
 				{
 					Debugging.Log.Error( "Game couldn't be found. Make sure to make a class inherited from Game" );
@@ -57,6 +60,16 @@ namespace Espionage.Engine
 				Callback.Run( "engine.ready" );
 			}
 		}
+
+		#if UNITY_EDITOR
+
+		[InitializeOnLoadMethod]
+		private static void Initialize_Editor()
+		{
+			Library.Initialize();
+		}
+
+		#endif
 
 		private static bool SetupGame()
 		{
