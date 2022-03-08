@@ -6,16 +6,16 @@ namespace Espionage.Engine
 	public class NoclipController : Pawn.IController
 	{
 		private Vector3 _targetPos;
-		
+
 		public void Simulate( Client cl, Pawn pawn )
 		{
 			var direction = new Vector2( cl.Input.Forward, cl.Input.Horizontal );
 
-			if ( _targetPos == default )	
+			if ( _targetPos == default )
 			{
 				_targetPos = pawn.transform.position;
 			}
-			
+
 			// Movement
 
 			var vel = pawn.EyeRot * Vector3.forward * direction.x + pawn.EyeRot * Vector3.right * direction.y;
@@ -43,7 +43,9 @@ namespace Espionage.Engine
 			}
 
 			_targetPos += vel * Time.deltaTime;
-
+			
+			pawn.Velocity = vel;
+			
 			pawn.transform.position = Vector3.Lerp( pawn.transform.position, _targetPos, 5 * Time.deltaTime );
 		}
 	}
