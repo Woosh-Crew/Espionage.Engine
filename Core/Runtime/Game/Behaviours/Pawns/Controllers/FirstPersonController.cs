@@ -12,7 +12,7 @@ namespace Espionage.Engine
 			_characterController = GetComponent<CharacterController>();
 		}
 
-		public void Simulate( Client client )
+		public void Simulate( Client client, Pawn pawn )
 		{
 			// player movement - forward, backward, left, right
 			Vector2 input = new( client.Input.Horizontal, client.Input.Forward );

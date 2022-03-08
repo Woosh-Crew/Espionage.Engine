@@ -37,7 +37,7 @@ namespace Espionage.Engine
 
 			// Controller
 
-			GetActiveController()?.Simulate( client );
+			GetActiveController()?.Simulate( client, this );
 
 			// Components
 
@@ -67,7 +67,10 @@ namespace Espionage.Engine
 		// Controller
 		//
 
-		public interface IController : ISimulated { }
+		public interface IController
+		{
+			void Simulate( Client client, Pawn pawn );
+		}
 
 		private IController GetActiveController()
 		{

@@ -67,7 +67,9 @@ namespace Espionage.Engine.Components
 				return comp;
 			}
 
-			return creation.Invoke();
+			var newComp = creation.Invoke();
+			Add( newComp as IComponent<T> );
+			return newComp;
 		}
 
 		public IEnumerable<TComp> GetAll<TComp>()
