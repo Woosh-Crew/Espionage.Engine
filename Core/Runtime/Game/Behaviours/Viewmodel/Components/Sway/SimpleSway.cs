@@ -13,7 +13,7 @@ namespace Espionage.Engine.Viewmodels
 				Input.GetAxis( "Mouse Y" )
 			);
 
-			_lastMouseDelta = Vector2.Lerp( _lastMouseDelta, mouse, smoothing * Time.deltaTime );
+			_lastMouseDelta = Vector2.Lerp( _lastMouseDelta, mouse / 500 / Time.deltaTime, smoothing * Time.deltaTime );
 
 			var trans = transform;
 			var rotationX = Quaternion.AngleAxis( _lastMouseDelta.y * scale, Vector3.left );
