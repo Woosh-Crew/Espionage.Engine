@@ -14,13 +14,12 @@ namespace Espionage.Engine
 	[DisallowMultipleComponent, Group( "Entities" ), Constructor( nameof( Constructor ) ), Spawnable]
 	public abstract class Entity : Behaviour
 	{
-		/// <summary>
-		/// All of the Entities that currently exists in
-		/// the game world. This is great for finding
-		/// entities from any class. Such as spawn
-		/// points, gamemodes, map meta data, etc.
-		/// </summary>
+		/// <summary> All the entities that exists in the game world. </summary>
 		public static List<Entity> All { get; } = new();
+
+		// 
+		// Instance
+		//
 
 		internal sealed override void Awake()
 		{
@@ -38,22 +37,39 @@ namespace Espionage.Engine
 			}
 		}
 
+		protected override void OnAwake() { }
+
 		protected sealed override void OnDestroy()
 		{
 			All.Remove( this );
 			Components = null;
 
-			base.OnDelete();
+			base.OnDestroy();
 		}
 
-		// Constructor
+		protected override void OnDelete() { }
 
-		public static Entity Constructor( Library library )
+		//
+		// Think
+		//
+
+		internal TimeSince timeSinceLastThink;
+		internal float nextThink;
+
+		public float Delay
 		{
-			return new GameObject( library.Name ).AddComponent( library.Class ) as Entity;
+			set
+			{
+				timeSinceLastThink = 0;
+				nextThink = value;
+			}
 		}
 
+		public virtual void Think( float delta ) { }
+
+		//
 		// Helpers
+		//
 
 		/// <summary> Is this Entity currently Enabled? </summary>
 		public bool Enabled
@@ -62,7 +78,16 @@ namespace Espionage.Engine
 			set => gameObject.SetActive( value );
 		}
 
+		/// <summary> Constructs the Entity, based off the Library </summary>
+		public static Entity Constructor( Library library )
+		{
+			return new GameObject( library.Name ).AddComponent( library.Class ) as Entity;
+		}
+
+
+		//
 		// Components
+		//
 
 		/// <summary> Components that are currently attached to this Entity </summary>
 		public Components<Entity> Components { get; private set; }

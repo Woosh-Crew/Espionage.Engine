@@ -10,6 +10,8 @@ namespace Espionage.Engine.Gamemodes
 	[Group( "Gamemodes" )]
 	public abstract class Gamemode : Entity
 	{
+		public bool Persistant { get; set; }
+
 		public bool Validate()
 		{
 			return OnValidation();

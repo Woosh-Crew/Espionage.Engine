@@ -9,7 +9,6 @@ namespace Espionage.Engine
 	/// for Actors instead of Pawns. Actors Also have Health, Respawning, Inventory
 	/// and other gameplay specific things.
 	/// </summary>
-	[Group( "Pawns" )]
 	public class Actor : Pawn, IControls
 	{
 		public Inventory Inventory => Components.Get<Inventory>();
@@ -64,10 +63,5 @@ namespace Espionage.Engine
 		/// </summary>
 		public bool IsBot => throw new NotImplementedException();
 
-		/// <summary>
-		/// Sees if it has an controller that can be used by a client,
-		/// and returns true or false depending on if it is null or active 
-		/// </summary>
-		public bool IsClient => throw new NotImplementedException();
 	}
 }

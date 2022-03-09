@@ -33,7 +33,6 @@ namespace Espionage.Engine
 			OnReady();
 		}
 
-
 		/// <summary>
 		/// The Behaviour is now ready to use.
 		/// Use this for logic that must be

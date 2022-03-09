@@ -1,4 +1,5 @@
-﻿using Espionage.Engine.Gamemodes;
+﻿using Espionage.Engine.Components;
+using Espionage.Engine.Gamemodes;
 using UnityEngine;
 
 namespace Espionage.Engine
@@ -79,6 +80,7 @@ namespace Espionage.Engine
 		//
 		// Build Camera
 		//
+
 		private ITripod LastTripod { get; set; }
 
 		protected virtual ITripod FindActiveCamera()
@@ -150,5 +152,12 @@ namespace Espionage.Engine
 
 			return builder;
 		}
+
+		//
+		// Callbacks
+		//
+
+		[Function, Callback( "map.loaded" )]
+		public virtual void OnMapLoaded() { }
 	}
 }

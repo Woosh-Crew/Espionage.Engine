@@ -18,6 +18,7 @@ namespace Espionage.Engine
 			Controller = GetComponent<IController>();
 		}
 
+		public Client Owner { get; set; }
 		public Vector3 Velocity { get; set; }
 
 		public void Simulate( Client client )
@@ -30,10 +31,6 @@ namespace Espionage.Engine
 			EyePos = transform.position + Vector3.Scale( Vector3.up, transform.lossyScale ) * eyeHeight;
 
 			transform.localRotation = Quaternion.AngleAxis( EyeRot.eulerAngles.y, Vector3.up );
-
-			// Velocity
-
-			Velocity = CalculateVelocity();
 
 			// Controller
 
@@ -98,24 +95,14 @@ namespace Espionage.Engine
 		public void PostCameraSetup( ref ITripod.Setup setup ) { }
 
 		//
-		// Velocity
+		// Helpers
 		//
 
-		private Vector3 _previous;
-
-		private Vector3 CalculateVelocity()
-		{
-			// Usually the Pawn Controller will override this
-			// through its own Velocity shit, but its here just
-			// in case it isn't.
-
-			var position = transform.position;
-
-			var velocity = (position - _previous) / Time.deltaTime;
-			_previous = position;
-
-			return velocity;
-		}
+		/// <summary>
+		/// Sees if it has an controller that can be used by a client,
+		/// and returns true or false depending on if it is null or active 
+		/// </summary>
+		public bool IsClient => Owner != null;
 
 		// Fields
 
