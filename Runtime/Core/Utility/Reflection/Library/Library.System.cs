@@ -77,18 +77,19 @@ namespace Espionage.Engine
 
 			using ( Debugging.Stopwatch( "Library Initialized", 0 ) )
 			{
-				// Select all types where ILibrary exists or if it has the correct attribute
-				for ( var assemblyIndex = 0; assemblyIndex < AppDomain.CurrentDomain.GetAssemblies().Length; assemblyIndex++ )
-				{
-					var assembly = AppDomain.CurrentDomain.GetAssemblies()[assemblyIndex];
+				var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-					if ( assembly != typeof( Library ).Assembly )
+				// Select all types where ILibrary exists or if it has the correct attribute
+				for ( var assemblyIndex = 0; assemblyIndex < assemblies.Length; assemblyIndex++ )
+				{
+					var assembly = assemblies[assemblyIndex];
+
+					// Some fully awesome code  - maybe stupid? i dont care its awesome, basically checks if the assembly references library
+					// and if it doesn't skip it. Resulting in crazy fast init
+					var libAssembly = typeof( Library ).Assembly;
+					if ( assembly != libAssembly && assembly.GetReferencedAssemblies().All( e => e.FullName != libAssembly.FullName ) )
 					{
-						// Some fully awesome code  - maybe stupid? i dont care its awesome
-						if ( assembly.GetReferencedAssemblies().All( e => e.Name != typeof( Library ).Assembly.GetName().Name ) )
-						{
-							continue;
-						}
+						continue;
 					}
 
 					var types = assembly.GetTypes();
@@ -96,7 +97,7 @@ namespace Espionage.Engine
 					{
 						var type = types[typeIndex];
 
-						if ( type.HasInterface<ILibrary>() || type.IsDefined( typeof( LibraryAttribute ), true ) )
+						if ( type.HasInterface( typeof( ILibrary ) ) || type.IsDefined( typeof( LibraryAttribute ), true ) )
 						{
 							Database.Add( CreateRecord( type ) );
 						}
