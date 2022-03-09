@@ -5,10 +5,8 @@ using UnityEngine;
 namespace Espionage.Engine
 {
 	/// <summary>
-	/// An Entity is the Root of a MonoBehaviour tree.
-	/// Entity will cache all Components that implement
-	/// the <see cref="IComponent{Entity}"/> interface or
-	/// inherited from <see cref="Component{T}"/>. Entities
+	/// An Entity is the Root of a MonoBehaviour tree. Entity will cache all Components that implement
+	/// the <see cref="IComponent{Entity}"/> interface or inherited from <see cref="Component{T}"/>. Entities
 	/// also contain IO / Actions logic.
 	/// </summary>
 	[DisallowMultipleComponent, Group( "Entities" ), Constructor( nameof( Constructor ) ), Spawnable]
@@ -20,6 +18,9 @@ namespace Espionage.Engine
 		// 
 		// Instance
 		//
+
+		/// <summary> Components that are currently attached to this Entity </summary>
+		public Components<Entity> Components { get; private set; }
 
 		internal sealed override void Awake()
 		{
@@ -56,7 +57,11 @@ namespace Espionage.Engine
 		internal TimeSince timeSinceLastThink;
 		internal float nextThink;
 
-		public float Delay
+		/// <summary>
+		/// Tick is the time it takes (in seconds), to call <see cref="Think"/>.
+		/// Gets reset when think is called, so make sure to reset it. 
+		/// </summary>
+		public float Tick
 		{
 			set
 			{
@@ -65,7 +70,13 @@ namespace Espionage.Engine
 			}
 		}
 
-		public virtual void Think( float delta ) { }
+		/// <summary>
+		/// Think gets called every tick, (which is in seconds). Use this for updating
+		/// state logic on the entity in a super performant way. Since its not being called
+		/// every frame, (AI, Particles, etc).
+		/// </summary>
+		/// <param name="delta"> Time taken between the last Tick </param>
+		public virtual void Think( float delta ) { Debugging.Log.Info( "Thinking!" ); }
 
 		//
 		// Helpers
@@ -83,13 +94,5 @@ namespace Espionage.Engine
 		{
 			return new GameObject( library.Name ).AddComponent( library.Class ) as Entity;
 		}
-
-
-		//
-		// Components
-		//
-
-		/// <summary> Components that are currently attached to this Entity </summary>
-		public Components<Entity> Components { get; private set; }
 	}
 }
