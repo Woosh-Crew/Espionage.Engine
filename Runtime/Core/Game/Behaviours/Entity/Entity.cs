@@ -42,10 +42,10 @@ namespace Espionage.Engine
 
 		protected sealed override void OnDestroy()
 		{
+			base.OnDestroy();
+
 			All.Remove( this );
 			Components = null;
-
-			base.OnDestroy();
 		}
 
 		protected override void OnDelete() { }
@@ -76,7 +76,7 @@ namespace Espionage.Engine
 		/// every frame, (AI, Particles, etc).
 		/// </summary>
 		/// <param name="delta"> Time taken between the last Tick </param>
-		public virtual void Think( float delta ) { Debugging.Log.Info( "Thinking!" ); }
+		public virtual void Think( float delta ) { }
 
 		//
 		// Helpers
