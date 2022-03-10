@@ -45,25 +45,25 @@ namespace Espionage.Engine
 			OpenInExplorer( "config://.cookies" );
 		}
 
-		[MenuItem( "Tools/Espionage.Engine/Debug/Files/Show Config Dir" )]
+		[MenuItem( "Tools/Espionage.Engine/Debug/Files/Open Config Directory" )]
 		private static void Testing3()
 		{
 			OpenInExplorer( "config://" );
 		}
 
-		[MenuItem( "Tools/Espionage.Engine/Debug/Files/Show User Dir" )]
+		[MenuItem( "Tools/Espionage.Engine/Debug/Files/Open User Directory" )]
 		private static void Testing4()
 		{
 			OpenInExplorer( "user://" );
 		}
 
-		[MenuItem( "Tools/Espionage.Engine/Debug/Files/Show Cache Dir" )]
+		[MenuItem( "Tools/Espionage.Engine/Debug/Files/Open Cache Directory" )]
 		private static void Testing5()
 		{
 			OpenInExplorer( "cache://" );
 		}
 
-		[MenuItem( "Tools/Espionage.Engine/Debug/Files/Show Game Dir" )]
+		[MenuItem( "Tools/Espionage.Engine/Debug/Files/Open Game Directory" )]
 		private static void Testing6()
 		{
 			OpenInExplorer( "game://" );

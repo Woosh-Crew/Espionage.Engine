@@ -7,5 +7,5 @@ namespace Espionage.Engine
 	/// has a UI element representing it.
 	/// </summary>
 	[AttributeUsage( AttributeTargets.Property, Inherited = false )]
-	public class PrefVar : CookieAttribute { }
+	public class PrefVarAttribute : CookieAttribute { }
 }

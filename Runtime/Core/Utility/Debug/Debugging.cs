@@ -123,14 +123,14 @@ namespace Espionage.Engine
 		[ConVar, Property( "application.sys_language" )]
 		private static string SystemLang => Application.systemLanguage.ToString();
 
-		[ConVar, Property( "application.target_fps" ), Cookie]
+		[ConVar, Property( "application.target_fps" ), Title( "Framerate Cap" ), PrefVar]
 		private static int TargetFramerate
 		{
 			get => Application.targetFrameRate;
 			set => Application.targetFrameRate = value;
 		}
 
-		[ConVar, Property( "application.vsync" ), Cookie]
+		[ConVar, Property( "application.vsync" ), Title( "VSync" ), PrefVar]
 		private static bool EnableVsync
 		{
 			get => QualitySettings.vSyncCount == 1;

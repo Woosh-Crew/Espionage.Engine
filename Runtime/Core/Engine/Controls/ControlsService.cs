@@ -7,7 +7,7 @@ namespace Espionage.Engine.Services
 	{
 		private IControls.Setup _setup = new();
 
-		[Property( "controls.ms_sensitivity" ), ConVar, Cookie]
+		[Property( "controls.ms_sensitivity" ), Title( "Mouse Sensitivity" ), ConVar, PrefVar]
 		private static float MouseSensitivity { get; set; } = 2;
 
 		public override void OnUpdate()
