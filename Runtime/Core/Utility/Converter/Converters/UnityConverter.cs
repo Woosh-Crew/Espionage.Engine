@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Espionage.Engine.Converters
 {
-	[Library( "converter.unity" ), Group( "Converters" )]
+	[Library( "converter.unity" ), Group( "Converters" ), Singleton]
 	internal sealed class UnityConverter : IConverter<Vector2>, IConverter<Vector3>, IConverter<Vector4>, IConverter<Quaternion>, IConverter<Color>
 	{
 		public Library ClassInfo { get; } = Library.Database[typeof( UnityConverter )];
@@ -43,7 +43,7 @@ namespace Espionage.Engine.Converters
 				throw new InvalidCastException();
 			}
 
-			return new Vector2(
+			return new(
 				float.Parse( split[0] ),
 				float.Parse( split[1] )
 			);
@@ -60,7 +60,7 @@ namespace Espionage.Engine.Converters
 				throw new InvalidCastException();
 			}
 
-			return new Vector3(
+			return new(
 				float.Parse( split[0] ),
 				float.Parse( split[1] ),
 				float.Parse( split[2] )
@@ -76,7 +76,7 @@ namespace Espionage.Engine.Converters
 				throw new InvalidCastException();
 			}
 
-			return new Vector4(
+			return new(
 				float.Parse( split[0] ),
 				float.Parse( split[1] ),
 				float.Parse( split[2] ),
@@ -97,7 +97,7 @@ namespace Espionage.Engine.Converters
 				throw new InvalidCastException();
 			}
 
-			return new Color(
+			return new(
 				float.Parse( split[0] ),
 				float.Parse( split[1] ),
 				float.Parse( split[2] )

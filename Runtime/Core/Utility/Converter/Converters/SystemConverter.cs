@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Espionage.Engine.Converters
 {
-	[Library( "converter.system" ), Group( "Converters" )]
+	[Library( "converter.system" ), Group( "Converters" ), Singleton]
 	internal sealed class SystemConverter : IConverter<bool>, IConverter<int>, IConverter<float>, IConverter<double>, IConverter<long>, IConverter<string>
 	{
 		public Library ClassInfo { get; } = Library.Database[typeof( SystemConverter )];

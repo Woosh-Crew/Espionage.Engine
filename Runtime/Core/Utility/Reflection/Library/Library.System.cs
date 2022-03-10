@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace Espionage.Engine
 {
@@ -31,7 +33,7 @@ namespace Espionage.Engine
 		/// Constructs ILibrary, if it it has a custom constructor
 		/// it'll use that to create the ILibrary
 		/// </summary>
-		internal static ILibrary Construct( Library library )
+		public static ILibrary Create( Library library )
 		{
 			if ( library is null )
 			{
@@ -45,6 +47,27 @@ namespace Espionage.Engine
 				return null;
 			}
 
+			// If we are a singleton, Check if an instance already exists 
+			if ( library.Components.TryGet<SingletonAttribute>( out var singleton ) )
+			{
+				if ( _singletons.ContainsKey( library.Class ) )
+				{
+					Debugging.Log.Info( $"Using Singleton [{library.Name}]" );
+					return _singletons[library.Class];
+				}
+
+				Debugging.Log.Info( $"Creating Singleton [{library.Name}]" );
+				var newSingleton = Construct( library );
+				_singletons.Add( library.Class, newSingleton );
+				return newSingleton;
+			}
+
+			return Construct( library );
+		}
+
+		private static ILibrary Construct( Library library )
+		{
+			// Check if we have a custom Constructor
 			if ( library.Components.TryGet<ConstructorAttribute>( out var constructor ) )
 			{
 				return constructor.Invoke() as ILibrary;
@@ -134,5 +157,11 @@ namespace Espionage.Engine
 
 			return new( guid );
 		}
+
+		//
+		// Singletons
+		//
+
+		private static Dictionary<Type, ILibrary> _singletons = new();
 	}
 }

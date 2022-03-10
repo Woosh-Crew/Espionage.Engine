@@ -150,17 +150,17 @@ public static class LibraryDatabaseExtensions
 
 	public static T Create<T>( this IDatabase<Library> database ) where T : class, new()
 	{
-		return Library.Construct( database.Get<T>() ) as T;
+		return Library.Create( database.Get<T>() ) as T;
 	}
 
 	public static T Create<T>( this IDatabase<Library> database, Library library ) where T : class, ILibrary
 	{
-		return Library.Construct( library ) as T;
+		return Library.Create( library ) as T;
 	}
 
 	public static ILibrary Create( this IDatabase<Library> database, Type type )
 	{
-		return Library.Construct( database.Get( type ) );
+		return Library.Create( database.Get( type ) );
 	}
 
 	public static T Create<T>( this IDatabase<Library> database, Type type ) where T : class, ILibrary
@@ -172,7 +172,7 @@ public static class LibraryDatabaseExtensions
 	{
 		if ( database.TryGet( name, out var library ) )
 		{
-			return Library.Construct( library );
+			return Library.Create( library );
 		}
 
 		if ( assertMissing )
@@ -194,7 +194,7 @@ public static class LibraryDatabaseExtensions
 
 		if ( id != default )
 		{
-			return Library.Construct( library );
+			return Library.Create( library );
 		}
 
 		Debugging.Log.Error( "Invalid ID" );
