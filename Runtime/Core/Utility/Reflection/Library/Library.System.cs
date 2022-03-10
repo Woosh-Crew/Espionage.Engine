@@ -48,15 +48,13 @@ namespace Espionage.Engine
 			}
 
 			// If we are a singleton, Check if an instance already exists 
-			if ( library.Components.TryGet<SingletonAttribute>( out var singleton ) )
+			if ( library.Components.Has<SingletonAttribute>() )
 			{
 				if ( _singletons.ContainsKey( library.Class ) )
 				{
-					Debugging.Log.Info( $"Using Singleton [{library.Name}]" );
 					return _singletons[library.Class];
 				}
 
-				Debugging.Log.Info( $"Creating Singleton [{library.Name}]" );
 				var newSingleton = Construct( library );
 				_singletons.Add( library.Class, newSingleton );
 				return newSingleton;
