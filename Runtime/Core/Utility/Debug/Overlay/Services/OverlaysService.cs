@@ -11,16 +11,28 @@ namespace Espionage.Engine.Services
 			Debugging.Overlay = new UnityOverlayProvider( this );
 		}
 
-		private List<string> _stack = new();
+		private List<GUIBlock> _stack = new();
 
-		public void Add( string text )
+		public void Add( string text, Vector2 size )
 		{
-			_stack.Add( text );
+			_stack.Add( new( text, size ) );
 		}
 
 		public override void OnUpdate()
 		{
 			_stack.Clear();
+		}
+
+		public struct GUIBlock
+		{
+			public GUIBlock( string text, Vector2 size )
+			{
+				this.text = text;
+				this.size = size;
+			}
+
+			public string text;
+			public Vector2 size;
 		}
 
 
@@ -32,18 +44,22 @@ namespace Espionage.Engine.Services
 				return;
 			}
 
-			const float scale = 2;
+			var scale = Screen.width / 1920 * 2;
+			var currentOffset = 16f * scale;
 
 			for ( var i = 0; i < _stack.Count; i++ )
 			{
 				var current = _stack[i];
-				var height = 16;
 
-				GUI.Box( new( 32,
-						32 + i * (height * 2 + 8),
-						64 * scale,
-						height * scale ),
-					current );
+				var style = new GUIStyle( GUI.skin.box )
+				{
+					fontSize = 8 * scale,
+					alignment = TextAnchor.MiddleCenter
+				};
+
+				GUI.Box( new( 16 * scale, currentOffset, current.size.x * scale, current.size.y * scale ), current.text, style );
+
+				currentOffset += current.size.y * scale + 4;
 			}
 		}
 	}

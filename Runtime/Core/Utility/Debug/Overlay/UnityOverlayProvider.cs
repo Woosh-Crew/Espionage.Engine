@@ -42,7 +42,8 @@ namespace Espionage.Engine.Overlay
 				return;
 			}
 
-			Service.Add( text );
+
+			Service.Add( text, size );
 		}
 	}
 }
