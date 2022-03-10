@@ -19,6 +19,8 @@
 			}
 		}
 
+
+		/// <summary> Precache a Map. With a Title and Description. </summary>
 		public static void Add( params (string path, string title, string description)[] maps )
 		{
 			// This is so fucking stupid....

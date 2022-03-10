@@ -382,6 +382,36 @@ namespace Espionage.Engine
 		}
 
 		/// <summary>
+		/// Deletes all files with the given extension at the path
+		/// </summary>
+		public static void Delete( string path, string extension )
+		{
+			path = GetPath( path );
+
+			var files = Directory.GetFiles( path, $"*.{extension}" );
+			foreach ( var item in files )
+			{
+				File.Delete( item );
+			}
+		}
+
+		/// <inheritdoc cref="Delete(string, string)"/> 
+		public static void Delete( string path, params string[] extension )
+		{
+			if ( !Exists( path ) )
+			{
+				Debugging.Log.Error( $"Path [{path}], doesn't exist" );
+				return;
+			}
+
+			foreach ( var item in extension )
+			{
+				Delete( path, item );
+			}
+		}
+
+
+		/// <summary>
 		/// Copies the source file to the target path
 		/// </summary>
 		public static void Copy( string file, string path )

@@ -41,14 +41,17 @@ namespace Espionage.Engine.Resources
 			var activeScene = SceneManager.GetActiveScene();
 			var originalPath = activeScene.path;
 
-			if ( activeScene.path == scenePath && !EditorSceneManager.SaveModifiedScenesIfUserWantsTo( new[] { SceneManager.GetActiveScene() } ) )
+			if ( activeScene.path == scenePath && !EditorSceneManager.SaveModifiedScenesIfUserWantsTo( new[]
+			    {
+				    SceneManager.GetActiveScene()
+			    } ) )
 			{
 				return;
 			}
 
 			var scene = EditorSceneManager.OpenScene( scenePath, OpenSceneMode.Single );
 
-			var exportPath = $"Exports/{Library.Database.Get<Map>().Group}/{scene.name}/";
+			var exportPath = $"Exports/{Library.Database.Get<Map>().Group}/";
 
 			// Track how long exporting took
 			using ( Debugging.Stopwatch( "Map Compiled", true ) )
@@ -83,7 +86,10 @@ namespace Espionage.Engine.Resources
 					{
 						new AssetBundleBuild()
 						{
-							assetNames = new[] { "Assets/Map.unity" },
+							assetNames = new[]
+							{
+								"Assets/Map.unity"
+							},
 							assetBundleName = $"{scene.name}.{extension}"
 						}
 					};
@@ -99,6 +105,8 @@ namespace Espionage.Engine.Resources
 							return;
 						}
 					}
+
+					Files.Delete( $"assets://{Library.Database.Get<Map>().Group}", "manifest", "" );
 				}
 				catch ( Exception e )
 				{
