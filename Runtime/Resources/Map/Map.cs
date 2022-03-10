@@ -55,6 +55,12 @@ namespace Espionage.Engine.Resources
 
 		public static Map Find( string path )
 		{
+			if ( !Files.Exists( path ) )
+			{
+				Debugging.Log.Error( $"Map Path [{Files.GetPath( path )}], couldn't be found." );
+				return null;
+			}
+
 			return Database[path] ?? new Map( Files.Load<IFile<Map, Scene>>( path ).Provider() );
 		}
 

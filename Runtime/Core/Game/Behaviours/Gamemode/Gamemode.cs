@@ -52,9 +52,9 @@ namespace Espionage.Engine.Gamemodes
 
 		// Pawn
 
-		public virtual bool OnActorDamaged( Actor pawn ) { return true; }
 		public virtual void OnActorRespawned( Actor pawn ) { }
-		public virtual void OnActorKilled( Actor pawn ) { }
+		public virtual bool OnActorDamaged( Actor pawn, ref IDamageable.Info info ) { return true; }
+		public virtual void OnActorKilled( Actor pawn, IDamageable.Info info ) { }
 
 		//
 		// Callbacks

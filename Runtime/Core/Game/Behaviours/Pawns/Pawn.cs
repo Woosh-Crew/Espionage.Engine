@@ -21,11 +21,10 @@ namespace Espionage.Engine
 		{
 			// EyePos & EyeRot
 
-			var input = client.Input;
-			EyeRot = Quaternion.Euler( input.ViewAngles );
-			EyePos = transform.position + Vector3.Scale( Vector3.up, transform.lossyScale ) * eyeHeight;
+			EyeRot = Quaternion.Euler( client.Input.ViewAngles );
+			EyePos = Position + Vector3.Scale( Vector3.up, Scale ) * eyeHeight;
 
-			transform.localRotation = Quaternion.AngleAxis( EyeRot.eulerAngles.y, Vector3.up );
+			Rotation = Quaternion.AngleAxis( EyeRot.eulerAngles.y, Vector3.up );
 
 			// Controller
 
@@ -48,8 +47,6 @@ namespace Espionage.Engine
 		//
 		// Pawn
 		//
-
-		public Client Client { get; set; }
 
 		public Vector3 EyePos { get; set; }
 		public Quaternion EyeRot { get; set; }
@@ -78,6 +75,11 @@ namespace Espionage.Engine
 		// Controller
 		//
 
+		public interface IController
+		{
+			void Simulate( Client client, Pawn pawn );
+		}
+
 		private IController GetActiveController()
 		{
 			return DevController ?? Controller;
@@ -104,21 +106,6 @@ namespace Espionage.Engine
 		public void PostCameraSetup( ref ITripod.Setup setup ) { }
 
 		//
-		// Callbacks
-		//
-
-		public interface IController
-		{
-			void Simulate( Client client, Pawn pawn );
-		}
-
-		public interface ICallbacks
-		{
-			void Possess( Client client );
-			void UnPossess();
-		}
-
-		//
 		// Controls
 		//
 
@@ -133,17 +120,20 @@ namespace Espionage.Engine
 		// Helpers
 		//
 
-		/// <summary> The Position of this Entity. </summary>
-		public Vector3 Position { get => transform.position; set => transform.position = value; }
-
-		/// <summary> The Rotation of this Entity. </summary>
-		public Quaternion Rotation { get => transform.rotation; set => transform.rotation = value; }
-
-		/// <summary> The Local Scale of this Entity. </summary>
-		public Vector3 Scale { get => transform.localScale; set => transform.localScale = value; }
 
 		/// <summary> Is this currently being possessed? </summary>
 		public bool IsClient => Client != null;
+
+		/// <summary>
+		/// Component Callbacks Specific for this Entity.
+		/// Use this interface on a Pawn component if you
+		/// wanna have pawn specific callbacks.
+		/// </summary>
+		public interface ICallbacks
+		{
+			void Possess( Client client );
+			void UnPossess();
+		}
 
 		// Fields
 

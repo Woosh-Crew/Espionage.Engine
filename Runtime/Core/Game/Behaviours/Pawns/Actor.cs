@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace Espionage.Engine
+﻿namespace Espionage.Engine
 {
 	/// <summary>
 	/// Actor is the gameplay pawn, where AI and Clients can Posses. AI will look
@@ -21,8 +19,6 @@ namespace Espionage.Engine
 
 		protected override void OnDelete()
 		{
-			base.OnDelete();
-
 			Health.OnKilled -= OnKilled;
 			Health.OnDamaged -= OnDamaged;
 		}
@@ -63,6 +59,13 @@ namespace Espionage.Engine
 		/// </summary>
 		protected virtual bool OnDamaged( ref IDamageable.Info info )
 		{
+			// Ask Gamemode if we can Damage
+			if ( Engine.Game.Gamemode != null && !Engine.Game.Gamemode.OnActorDamaged( this, ref info ) )
+			{
+				return false;
+			}
+
+			// Ask Components if we can Damage
 			foreach ( var item in Components.GetAll<ICallbacks>() )
 			{
 				// Can this be damaged?
@@ -81,26 +84,23 @@ namespace Espionage.Engine
 		/// </summary>
 		protected virtual void OnKilled( IDamageable.Info info )
 		{
+			if ( Engine.Game.Gamemode != null )
+			{
+				// Tell the Gamemode, we want to respawn
+				Engine.Game.Gamemode.OnActorKilled( this, info );
+			}
+
 			foreach ( var item in Components.GetAll<ICallbacks>() )
 			{
 				item.OnKilled( info );
 			}
 		}
 
-		//
-		// AI
-		//
-
 		/// <summary>
-		/// Sees if it has an AI Controller Attached to the actor
-		/// and returns true or false depending on if it is null or active 
+		/// Component Callbacks Specific for this Entity.
+		/// Use this interface on an Actor component if you
+		/// wanna have actor specific callbacks.
 		/// </summary>
-		public bool IsBot => !IsClient && Components.Has<AI.Brain>();
-
-		//
-		// Callbacks
-		//
-
 		public new interface ICallbacks
 		{
 			/// <inheritdoc cref="Actor.Respawn"/>

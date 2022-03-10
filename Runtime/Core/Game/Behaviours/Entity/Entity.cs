@@ -26,6 +26,9 @@ namespace Espionage.Engine
 		// Instance
 		//
 
+		/// <summary> The client that has authority over this Entity </summary>
+		public Client Client { get; internal set; }
+
 		/// <summary> Components that are currently attached to this Entity </summary>
 		public Components<Entity> Components { get; private set; }
 
@@ -94,6 +97,27 @@ namespace Espionage.Engine
 		//
 		// Helpers
 		//
+
+		/// <summary> The Position of this Entity. </summary>
+		public Vector3 Position
+		{
+			get => transform.position;
+			set => transform.position = value;
+		}
+
+		/// <summary> The Rotation of this Entity. </summary>
+		public Quaternion Rotation
+		{
+			get => transform.rotation;
+			set => transform.rotation = value;
+		}
+
+		/// <summary> The Local Scale of this Entity. </summary>
+		public Vector3 Scale
+		{
+			get => transform.lossyScale;
+			set => transform.localScale = value;
+		}
 
 		/// <summary> Is this Entity currently Enabled? </summary>
 		public bool Enabled
