@@ -10,12 +10,21 @@
 		{
 			model.Persistant = true;
 		}
-		
+
 		public static void Add( params Resource[] models )
 		{
 			foreach ( var model in models )
 			{
 				model.Persistant = true;
+			}
+		}
+
+		public static void Add( params (string path, string title, string description)[] maps )
+		{
+			// This is so fucking stupid....
+			foreach ( var (path, title, description) in maps )
+			{
+				Map.Find( path, title, description );
 			}
 		}
 	}
