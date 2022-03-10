@@ -33,7 +33,7 @@ namespace Espionage.Engine.Services
 			Position = Vector3.zero
 		};
 
-		public void OnCameraUpdate()
+		public override void OnPostUpdate()
 		{
 			if ( Engine.Game == null || !Application.isPlaying )
 			{

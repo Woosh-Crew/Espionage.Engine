@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using Espionage.Engine.Internal.Logging;
 using Espionage.Engine.Internal.Commands;
+using Espionage.Engine.Overlay;
 using UnityEngine;
 
 namespace Espionage.Engine
@@ -22,19 +23,19 @@ namespace Espionage.Engine
 		/// It also provides a SOLID way of handling it. Your game can have its own
 		/// Console provider.
 		/// </summary>
-		public static ICommandProvider Console { get; private set; }
+		public static ICommandProvider Console { get; set; }
 
 		/// <summary>
 		/// Logging in a SOLID way. Add your own extension methods if need be,
 		/// since this is an instanced class.
 		/// </summary>
-		public static ILoggingProvider Log { get; private set; }
+		public static ILoggingProvider Log { get; set; }
 
 		/// <summary>
 		/// Draw Debug Overlays on the Viewport, such as spheres, cubes, etc.
 		/// Very useful for debugging volumes and collisions.
 		/// </summary>
-		public static IDebugOverlayProvider Overlay => throw new NotImplementedException();
+		public static IDebugOverlayProvider Overlay { get; set; }
 
 		// Stopwatch
 
@@ -63,8 +64,15 @@ namespace Espionage.Engine
 		// Initialize
 		//
 
-		static Debugging()
+		public static bool Initialized { get; private set; }
+
+		internal static void Initialize()
 		{
+			if ( Initialized )
+			{
+				return;
+			}
+
 			using var _ = Stopwatch( "Debugging Initialized" );
 
 			Log = new SimpleLoggingProvider();

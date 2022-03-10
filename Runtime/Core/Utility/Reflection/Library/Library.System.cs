@@ -15,8 +15,13 @@ namespace Espionage.Engine
 		/// </summary>
 		public static Library Register( ILibrary value )
 		{
-			Callback.Register( value );
 			var lib = Database[value.GetType()];
+
+			if ( lib == null )
+			{
+				Debugging.Log.Error( $"[FATAL] {value} was null in library database." );
+				return null;
+			}
 
 			// Check if Library is Singleton
 			if ( lib.Components.Has<SingletonAttribute>() )
@@ -24,10 +29,13 @@ namespace Espionage.Engine
 				if ( _singletons.ContainsKey( lib.Class ) )
 				{
 					Debugging.Log.Error( "You are trying to register another Singleton? How????" );
+					return null;
 				}
 
 				_singletons.Add( lib.Class, value );
 			}
+
+			Callback.Register( value );
 
 			return lib;
 		}

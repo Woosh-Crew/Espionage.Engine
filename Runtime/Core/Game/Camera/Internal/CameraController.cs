@@ -4,12 +4,12 @@ using UnityEngine.Rendering;
 
 namespace Espionage.Engine
 {
-	[RequireComponent( typeof( Camera ), typeof( AudioListener ), typeof( FlareLayer ) )]
-	internal class CameraController : MonoBehaviour
+	[Group( "Engine" ), Singleton, RequireComponent( typeof( Camera ), typeof( AudioListener ), typeof( FlareLayer ) )]
+	internal class CameraController : Behaviour
 	{
 		private Camera _cam;
 
-		private void Awake()
+		protected override void OnAwake()
 		{
 			gameObject.tag = "MainCamera";
 			_cam = GetComponent<Camera>();
@@ -17,7 +17,6 @@ namespace Espionage.Engine
 
 			Engine.Game.OnCameraCreated( _cam );
 		}
-
 
 		public void Finalise( in ITripod.Setup camSetup )
 		{
@@ -80,6 +79,11 @@ namespace Espionage.Engine
 
 			// This is hacky.. But who cares
 			Callback.Run( "debug.gizmos" );
+		}
+
+		private void OnGUI()
+		{
+			Callback.Run( "imgui.draw" );
 		}
 	}
 }

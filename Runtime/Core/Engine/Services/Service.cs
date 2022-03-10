@@ -12,6 +12,8 @@
 
 		public virtual void OnReady() { }
 		public virtual void OnUpdate() { }
+		public virtual void OnPostUpdate() { }
+
 		public virtual void OnShutdown() { }
 
 		public virtual void Dispose()

@@ -36,6 +36,7 @@ namespace Espionage.Engine
 		{
 			using ( Debugging.Stopwatch( "Engine / Game Ready", true ) )
 			{
+				Debugging.Initialize();
 				Library.Initialize();
 
 				if ( Game == null && !SetupGame() )
@@ -69,6 +70,7 @@ namespace Espionage.Engine
 		[InitializeOnLoadMethod]
 		private static void Initialize_Editor()
 		{
+			Debugging.Initialize();
 			Library.Initialize();
 
 			if ( Game == null && !SetupGame() )
@@ -196,7 +198,7 @@ namespace Espionage.Engine
 
 				if ( loop.subSystemList[i].type == typeof( PostLateUpdate ) )
 				{
-					loop.subSystemList[i].updateDelegate += OnCameraUpdate;
+					loop.subSystemList[i].updateDelegate += OnPostUpdate;
 				}
 			}
 
@@ -235,12 +237,26 @@ namespace Espionage.Engine
 
 		private static void OnPhysicsUpdate()
 		{
+			if ( !Application.isPlaying )
+			{
+				return;
+			}
+
 			Callback.Run( "physics.frame" );
 		}
 
-		private static void OnCameraUpdate()
+		private static void OnPostUpdate()
 		{
-			Services.Get<CameraService>().OnCameraUpdate();
+			if ( !Application.isPlaying )
+			{
+				return;
+			}
+
+			for ( var i = 0; i < Services.Count; i++ )
+			{
+				Services[i].OnPostUpdate();
+			}
+
 			Callback.Run( "application.late_frame" );
 		}
 
