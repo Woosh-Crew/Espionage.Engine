@@ -9,7 +9,12 @@ namespace Espionage.Engine
 
 		protected override void OnAwake()
 		{
-			_characterController = GetComponent<CharacterController>();
+			if ( !TryGetComponent( out _characterController ) )
+			{
+				_characterController = gameObject.AddComponent<CharacterController>();
+				_characterController.height = 1.8f;
+				_characterController.center = _characterController.center.WithY( 1.8f / 2 );
+			}
 		}
 
 		public void Simulate( Client client, Pawn pawn )

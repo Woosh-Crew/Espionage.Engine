@@ -22,7 +22,9 @@ namespace Espionage.Engine.Resources
 			Library.Unregister( this );
 		}
 
+		//
 		// Resource
+		//
 
 		/// <summary> How many instances of this Resource are currently being used. </summary>
 		public int Instances { get; private set; }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Espionage.Engine.Components;
 using UnityEngine;
 
@@ -14,6 +15,12 @@ namespace Espionage.Engine
 	{
 		/// <summary> All the entities that exists in the game world. </summary>
 		public static List<Entity> All { get; } = new();
+
+		/// <summary> Constructs the Entity, based off the Library </summary>
+		public static object Constructor( Library library )
+		{
+			return new GameObject( library.Name ).AddComponent( library.Class );
+		}
 
 		// 
 		// Instance
@@ -76,7 +83,13 @@ namespace Espionage.Engine
 		/// every frame, (AI, Particles, etc).
 		/// </summary>
 		/// <param name="delta"> Time taken between the last Tick </param>
-		public virtual void Think( float delta ) { }
+		public virtual void Think( float delta )
+		{
+			foreach ( var component in Components.All.OfType<IThinkable>() )
+			{
+				component.Think( delta );
+			}
+		}
 
 		//
 		// Helpers
@@ -87,12 +100,6 @@ namespace Espionage.Engine
 		{
 			get => gameObject.activeInHierarchy;
 			set => gameObject.SetActive( value );
-		}
-
-		/// <summary> Constructs the Entity, based off the Library </summary>
-		public static Entity Constructor( Library library )
-		{
-			return new GameObject( library.Name ).AddComponent( library.Class ) as Entity;
 		}
 	}
 }

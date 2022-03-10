@@ -35,16 +35,16 @@ namespace Espionage.Engine.Tripods
 
 		// Controls
 
-		void IControls.Build( ref IControls.Setup setup )
+		void IControls.Build( IControls.Setup setup )
 		{
-			OnBuildControls( ref setup );
+			OnBuildControls( setup );
 		}
 
 		/// <summary> <inheritdoc cref="IControls.Build"/> </summary>
-		protected virtual void OnBuildControls( ref IControls.Setup setup )
+		protected virtual void OnBuildControls( IControls.Setup setup )
 		{
 			setup.ViewAngles += new Vector3( -setup.MouseDelta.y, setup.MouseDelta.x, 0 );
-			setup.ViewAngles.x = Mathf.Clamp( setup.ViewAngles.x, -88, 88 );
+			setup.ViewAngles = setup.ViewAngles.WithX( Mathf.Clamp( setup.ViewAngles.x, -88, 88 ) );
 		}
 
 		// Fields

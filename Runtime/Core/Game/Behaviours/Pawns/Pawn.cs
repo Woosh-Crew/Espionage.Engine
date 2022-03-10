@@ -1,6 +1,4 @@
-using System;
 using System.Linq;
-using Espionage.Engine.Components;
 using UnityEngine;
 
 namespace Espionage.Engine
@@ -10,12 +8,11 @@ namespace Espionage.Engine
 	/// default Pawns have a Controller and Tripod.
 	/// </summary>
 	[Group( "Pawns" )]
-	public class Pawn : Entity, ISimulated
+	public class Pawn : Entity, ISimulated, IControls
 	{
 		protected override void OnAwake()
 		{
 			Tripod = GetComponent<ITripod>();
-			Controller = GetComponent<IController>();
 		}
 
 		public Vector3 Velocity { get; set; }
@@ -25,7 +22,6 @@ namespace Espionage.Engine
 			// EyePos & EyeRot
 
 			var input = client.Input;
-
 			EyeRot = Quaternion.Euler( input.ViewAngles );
 			EyePos = transform.position + Vector3.Scale( Vector3.up, transform.lossyScale ) * eyeHeight;
 
@@ -58,17 +54,29 @@ namespace Espionage.Engine
 		public Vector3 EyePos { get; set; }
 		public Quaternion EyeRot { get; set; }
 
-		public virtual void Posses( Client client ) { }
-		public virtual void UnPosses() { }
+		public virtual void Posses( Client client )
+		{
+			Controller ??= GetComponent<IController>();
+
+			foreach ( var item in Components.All.OfType<ICallbacks>() )
+			{
+				item.Possess( client );
+			}
+		}
+
+		public virtual void UnPosses()
+		{
+			Controller = null;
+
+			foreach ( var item in Components.All.OfType<ICallbacks>() )
+			{
+				item.UnPossess();
+			}
+		}
 
 		//
 		// Controller
 		//
-
-		public interface IController
-		{
-			void Simulate( Client client, Pawn pawn );
-		}
 
 		private IController GetActiveController()
 		{
@@ -96,13 +104,45 @@ namespace Espionage.Engine
 		public void PostCameraSetup( ref ITripod.Setup setup ) { }
 
 		//
+		// Callbacks
+		//
+
+		public interface IController
+		{
+			void Simulate( Client client, Pawn pawn );
+		}
+
+		public interface ICallbacks
+		{
+			void Possess( Client client );
+			void UnPossess();
+		}
+
+		//
+		// Controls
+		//
+
+		void IControls.Build( IControls.Setup setup )
+		{
+			OnBuildControls( setup );
+		}
+
+		protected virtual void OnBuildControls( IControls.Setup setup ) { }
+
+		//
 		// Helpers
 		//
 
-		/// <summary>
-		/// Sees if it has an controller that can be used by a client,
-		/// and returns true or false depending on if it is null or active 
-		/// </summary>
+		/// <summary> The Position of this Entity. </summary>
+		public Vector3 Position { get => transform.position; set => transform.position = value; }
+
+		/// <summary> The Rotation of this Entity. </summary>
+		public Quaternion Rotation { get => transform.rotation; set => transform.rotation = value; }
+
+		/// <summary> The Local Scale of this Entity. </summary>
+		public Vector3 Scale { get => transform.localScale; set => transform.localScale = value; }
+
+		/// <summary> Is this currently being possessed? </summary>
 		public bool IsClient => Client != null;
 
 		// Fields

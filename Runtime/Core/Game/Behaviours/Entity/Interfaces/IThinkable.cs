@@ -1,6 +1,6 @@
 ﻿namespace Espionage.Engine
 {
-	public interface IThinked
+	public interface IThinkable
 	{
 		void Think( float delta );
 	}

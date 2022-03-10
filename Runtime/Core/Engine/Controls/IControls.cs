@@ -22,25 +22,25 @@ namespace Espionage.Engine
 		/// allows us to do cool shit like disabling all input
 		/// while using a camera ( We use this on <see cref="Tripods.DevTripod"/>
 		/// </summary>
-		void Build( ref Setup setup );
+		void Build( Setup setup );
 
 		/// <summary> Controls the raw values of Input. </summary>
-		public struct Setup
+		public class Setup
 		{
 			/// <summary> The Current Mouse Delta </summary>
-			public Vector2 MouseDelta;
+			public Vector2 MouseDelta { get; internal set; }
 
 			/// <summary> The Current Mouse Delta </summary>
-			public float MouseWheel;
-
-			/// <summary> Where a pawns Eyes should be facing (Angles) </summary>
-			public Vector3 ViewAngles;
+			public float MouseWheel { get; internal set; }
 
 			/// <summary> Forward Direction </summary>
-			public float Forward;
+			public float Forward { get; internal set; }
 
 			/// <summary> Horizontal Direction </summary>
-			public float Horizontal;
+			public float Horizontal { get; internal set; }
+
+			/// <summary> Where a pawns Eyes should be facing (Angles) </summary>
+			public Vector3 ViewAngles { get; set; }
 
 			/// <summary> Clears the Input Setup </summary>
 			public void Clear()

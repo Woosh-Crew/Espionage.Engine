@@ -34,7 +34,15 @@ namespace Espionage.Engine.Resources
 
 			if ( !Files.Exists( path ) )
 			{
-				return Load( "models://error.umdl" );
+				const string error = "models://error.umdl";
+
+				if ( Files.Exists( error ) )
+				{
+					return Load( error );
+				}
+
+				Debugging.Log.Error( $"Man... how do you not have [{error}]? We cant even find that model too?" );
+				return null;
 			}
 
 			if ( Database[path] is Model databaseModel )

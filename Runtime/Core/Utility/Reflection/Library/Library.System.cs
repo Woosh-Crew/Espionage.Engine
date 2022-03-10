@@ -16,7 +16,20 @@ namespace Espionage.Engine
 		public static Library Register( ILibrary value )
 		{
 			Callback.Register( value );
-			return Database[value.GetType()];
+			var lib = Database[value.GetType()];
+
+			// Check if Library is Singleton
+			if ( lib.Components.Has<SingletonAttribute>() )
+			{
+				if ( _singletons.ContainsKey( lib.Class ) )
+				{
+					Debugging.Log.Error( "You are trying to register another Singleton? How????" );
+				}
+
+				_singletons.Add( lib.Class, value );
+			}
+
+			return lib;
 		}
 
 		/// <summary>

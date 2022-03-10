@@ -229,7 +229,7 @@ namespace Espionage.Engine
 			// Be called at an engine level
 			foreach ( var client in Client.All )
 			{
-				Local.Client.Simulate();
+				client.Simulate();
 			}
 		}
 

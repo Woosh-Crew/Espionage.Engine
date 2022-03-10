@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -22,7 +20,9 @@ namespace Espionage.Engine
 			return obj;
 		}
 
+		//
 		// Instance
+		//
 
 		/// <summary> A Nice name for the Client. </summary>
 		public string Name { get; set; }
@@ -43,7 +43,9 @@ namespace Espionage.Engine
 		/// </summary>
 		public ITripod Tripod { get; set; }
 
+		//
 		// Input
+		//
 
 		/// <summary>
 		/// The clients current input buffer.
@@ -52,9 +54,11 @@ namespace Espionage.Engine
 		/// input system.
 		/// </remarks>
 		/// </summary>
-		public IControls.Setup Input { get; internal set; }
+		public IControls.Setup Input { get; set; }
 
+		//
 		// Pawn
+		//
 
 		private Pawn _pawn;
 
@@ -74,6 +78,8 @@ namespace Espionage.Engine
 
 				if ( _pawn != null )
 				{
+					Input.ViewAngles = _pawn.transform.rotation.eulerAngles;
+
 					_pawn.Client = this;
 					_pawn.Posses( this );
 				}

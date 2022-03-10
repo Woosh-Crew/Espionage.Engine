@@ -15,7 +15,7 @@ namespace Espionage.Engine
 		/// <summary> Damage this Entity, using some useful meta data. </summary>
 		public void Damage( IDamageable.Info info )
 		{
-			if ( State == Mode.Dead && (!OnDamaged?.Invoke( info ) ?? false) )
+			if ( State == Mode.Dead && (!OnDamaged?.Invoke( ref info ) ?? false) )
 			{
 				return;
 			}
@@ -34,19 +34,25 @@ namespace Espionage.Engine
 		/// <summary> Heal this Entity, using some useful meta data. </summary>
 		public void Heal( IHealable.Info info )
 		{
+			OnHealed?.Invoke( ref info );
+
 			Current += info.Amount;
 			Current = Mathf.Clamp( Current, 0, 100 );
 
-			OnHealed?.Invoke( info );
 			TimeSinceHealed = 0;
 		}
 
 		// Callbacks
 
-		public event Func<IDamageable.Info, bool> OnDamaged;
+		public event Damaged OnDamaged;
+		public event Healed OnHealed;
+		public event Killed OnKilled;
 
-		public event Action<IHealable.Info> OnHealed;
-		public event Action<IDamageable.Info> OnKilled;
+		public delegate void Healed( ref IHealable.Info info );
+
+		public delegate bool Damaged( ref IDamageable.Info info );
+
+		public delegate void Killed( IDamageable.Info info );
 
 		// Helpers
 

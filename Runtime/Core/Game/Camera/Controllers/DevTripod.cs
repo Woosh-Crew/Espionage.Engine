@@ -58,6 +58,14 @@ namespace Espionage.Engine.Tripods
 			_targetPos += vel * Time.deltaTime;
 
 			camSetup.Position = _interpolate ? Vector3.Lerp( camSetup.Position, _targetPos, 2 * Time.deltaTime ) : Vector3.Lerp( camSetup.Position, _targetPos, 5 * Time.deltaTime );
+
+			if ( Input.GetKeyDown( KeyCode.E ) && Physics.Raycast( camSetup.Position, camSetup.Rotation * Vector3.forward, out var hit, 20 ) )
+			{
+				if ( hit.collider.TryGetComponent<Pawn>( out var pawn ) )
+				{
+					Local.Client.Pawn = pawn;
+				}
+			}
 		}
 
 		public void Activated( ref ITripod.Setup camSetup )
@@ -71,7 +79,7 @@ namespace Espionage.Engine.Tripods
 
 		// Input
 
-		void IControls.Build( ref IControls.Setup setup )
+		void IControls.Build( IControls.Setup setup )
 		{
 			try
 			{

@@ -142,12 +142,12 @@ namespace Espionage.Engine
 		public virtual IControls.Setup BuildControls( IControls.Setup builder )
 		{
 			// If the Current Tripod can BuildInput, let it
-			(LastTripod as IControls)?.Build( ref builder );
+			(LastTripod as IControls)?.Build( builder );
 
 			// Now if the pawn can change input, let it.
 			if ( Local.Pawn != null && Local.Pawn is IControls controls )
 			{
-				controls.Build( ref builder );
+				controls.Build( builder );
 			}
 
 			return builder;

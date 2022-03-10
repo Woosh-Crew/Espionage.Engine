@@ -30,10 +30,10 @@ namespace Espionage.Engine.Tripods
 			camSetup.Position = Local.Pawn.EyePos + relativeOffset + camSetup.Rotation * Vector3.back * ((ray ? hitInfo.distance : distance) - padding);
 		}
 
-		protected override void OnBuildControls( ref IControls.Setup setup )
+		protected override void OnBuildControls( IControls.Setup setup )
 		{
-			base.OnBuildControls( ref setup );
-			setup.ViewAngles.x = Mathf.Clamp( setup.ViewAngles.x, -60, 88 );
+			base.OnBuildControls( setup );
+			setup.ViewAngles = setup.ViewAngles.WithX( Mathf.Clamp( setup.ViewAngles.x, -60, 88 ) );
 		}
 
 		// Properties

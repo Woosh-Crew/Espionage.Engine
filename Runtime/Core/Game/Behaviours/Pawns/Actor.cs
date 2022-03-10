@@ -1,6 +1,4 @@
-﻿using System;
-using Espionage.Engine.Tripods;
-using UnityEngine;
+﻿using System.Linq;
 
 namespace Espionage.Engine
 {
@@ -9,7 +7,7 @@ namespace Espionage.Engine
 	/// for Actors instead of Pawns. Actors Also have Health, Respawning, Inventory
 	/// and other gameplay specific things.
 	/// </summary>
-	public class Actor : Pawn, IControls
+	public class Actor : Pawn
 	{
 		public Inventory Inventory => Components.Get<Inventory>();
 
@@ -35,6 +33,11 @@ namespace Espionage.Engine
 
 		public Health Health => Components.GetOrCreate( () => gameObject.AddComponent<Health>() );
 
+		/// <summary>
+		/// Respawns this Actor, and gives it max health. Use 
+		/// this after you have possessed the pawn to make
+		/// sure it spawns at a Spawn Point.
+		/// </summary>
 		public virtual void Respawn()
 		{
 			var health = Health;
@@ -45,13 +48,44 @@ namespace Espionage.Engine
 				// Tell the Gamemode, we want to respawn
 				Engine.Game.Gamemode.OnActorRespawned( this );
 			}
+
+			foreach ( var item in Components.GetAll<ICallbacks>() )
+			{
+				item.Respawn();
+			}
 		}
 
-		protected virtual void OnKilled( IDamageable.Info info ) { }
-		protected virtual bool OnDamaged( IDamageable.Info info ) { return true; }
 
+		/// <summary>
+		/// Called from the Health component when this Actor
+		/// receives damaged. Return false, if you don't want to
+		/// damage this actor.
+		/// </summary>
+		protected virtual bool OnDamaged( ref IDamageable.Info info )
+		{
+			foreach ( var item in Components.GetAll<ICallbacks>() )
+			{
+				// Can this be damaged?
+				if ( !item.OnDamaged( ref info ) )
+				{
+					return false;
+				}
+			}
 
-		void IControls.Build( ref IControls.Setup setup ) { }
+			return true;
+		}
+
+		/// <summary>
+		/// Called from the Health component when this Actor
+		/// is killed.
+		/// </summary>
+		protected virtual void OnKilled( IDamageable.Info info )
+		{
+			foreach ( var item in Components.GetAll<ICallbacks>() )
+			{
+				item.OnKilled( info );
+			}
+		}
 
 		//
 		// AI
@@ -61,7 +95,23 @@ namespace Espionage.Engine
 		/// Sees if it has an AI Controller Attached to the actor
 		/// and returns true or false depending on if it is null or active 
 		/// </summary>
-		public bool IsBot => throw new NotImplementedException();
+		public bool IsBot => !IsClient && Components.Has<AI.Brain>();
+
+		//
+		// Callbacks
+		//
+
+		public new interface ICallbacks
+		{
+			/// <inheritdoc cref="Actor.Respawn"/>
+			void Respawn();
+
+			/// <inheritdoc cref="Actor.OnDamaged"/>
+			bool OnDamaged( ref IDamageable.Info info );
+
+			/// <inheritdoc cref="Actor.OnKilled"/>
+			void OnKilled( IDamageable.Info info );
+		}
 
 	}
 }

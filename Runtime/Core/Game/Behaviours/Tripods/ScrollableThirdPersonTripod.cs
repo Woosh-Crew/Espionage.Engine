@@ -16,9 +16,9 @@ namespace Espionage.Engine.Tripods
 			_smoothedDistance = distance;
 		}
 
-		protected override void OnBuildControls( ref IControls.Setup setup )
+		protected override void OnBuildControls( IControls.Setup setup )
 		{
-			base.OnBuildControls( ref setup );
+			base.OnBuildControls( setup );
 
 			_targetDistance -= setup.MouseWheel * 4;
 			_targetDistance = Mathf.Clamp( _targetDistance, minDistance, maxDistance );

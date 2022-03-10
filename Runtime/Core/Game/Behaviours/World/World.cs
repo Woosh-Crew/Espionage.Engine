@@ -1,9 +1,12 @@
+using System.Linq;
+
 namespace Espionage.Engine
 {
 	/// <summary>
-	/// Central point of a map.
+	/// Central point of a map. Holds meta data about the map
+	/// such as Custom NavMeshes, Environment Lighting, etc. 
 	/// </summary>
-	[Library( "env.world" ), Group( "Environment" )]
+	[Library( "env.world" ), Group( "Environment" ), Singleton]
 	public class World : Entity
 	{
 		// Singleton
@@ -20,7 +23,7 @@ namespace Espionage.Engine
 				}
 
 				// Find the instance
-				_instance = FindObjectOfType<World>();
+				_instance = All.OfType<World>().FirstOrDefault();
 				return _instance != null ? _instance : null;
 			}
 		}
@@ -30,12 +33,11 @@ namespace Espionage.Engine
 			if ( _instance == null )
 			{
 				_instance = this;
+				return;
 			}
-			else
-			{
-				Debugging.Log.Warning( "More than one world was present in scene" );
-				Destroy( gameObject );
-			}
+
+			Debugging.Log.Warning( "More than one world was present in scene" );
+			Destroy( gameObject );
 		}
 
 		protected override void OnDelete()
