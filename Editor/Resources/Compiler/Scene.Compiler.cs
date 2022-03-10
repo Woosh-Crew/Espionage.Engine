@@ -1,11 +1,6 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using Espionage.Engine.Editor;
+﻿using Espionage.Engine.Editor;
 using Espionage.Engine.Tools.Editor;
 using UnityEditor;
-using UnityEditor.SceneManagement;
-using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Espionage.Engine.Resources.Editor
@@ -20,7 +15,7 @@ namespace Espionage.Engine.Resources.Editor
 
 		public void AddItemsToMenu( GenericMenu menu )
 		{
-			menu.AddItem( new GUIContent( "Quick Compile Map" ), false, CompileActiveScene );
+			menu.AddItem( new( "Quick Compile Map" ), false, CompileActiveScene );
 		}
 
 		// Menu Items

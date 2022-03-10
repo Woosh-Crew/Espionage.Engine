@@ -5,7 +5,6 @@ namespace Espionage.Engine
 	public class FirstPersonController : Component<Pawn>, Pawn.IController
 	{
 		private CharacterController _characterController;
-		private float _velocity = 0;
 
 		protected override void OnAwake()
 		{
@@ -24,17 +23,17 @@ namespace Espionage.Engine
 			input = input.normalized;
 			input *= movementSpeed;
 
-			_characterController.Move( transform.rotation * (Vector3.right * input.x + Vector3.forward * input.y) * Time.deltaTime );
+			Entity.Velocity = transform.rotation * (Vector3.right * input.x + Vector3.forward * input.y) * Time.deltaTime;
 
-			_velocity -= gravity * Time.deltaTime;
+			Entity.Velocity = Entity.Velocity.WithY( Mathf.Sqrt( Entity.Velocity.y ) + -gravity * 2 * Time.deltaTime );
 
 			// Gravity
 			if ( _characterController.isGrounded )
 			{
-				_velocity = 0;
+				Entity.Velocity = Entity.Velocity.WithY( 0 );
 			}
 
-			_characterController.Move( new( 0, _velocity, 0 ) );
+			_characterController.Move( Entity.Velocity );
 		}
 
 		// Fields
@@ -44,5 +43,8 @@ namespace Espionage.Engine
 
 		[SerializeField]
 		private float gravity = 9.8f;
+
+		[SerializeField]
+		private float jumpHeight = 1f;
 	}
 }
