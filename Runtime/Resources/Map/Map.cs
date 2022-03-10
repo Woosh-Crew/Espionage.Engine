@@ -53,7 +53,13 @@ namespace Espionage.Engine.Resources
 			Library.Unregister( this );
 		}
 
-		public static Map Find( string path )
+		/// <summary>
+		/// Trys to find the map by path. If it couldn't find the map in the database,
+		/// it'll create a new reference to that map.
+		/// </summary>
+		/// <param name="title"> Create a reference with this title </param>
+		/// <param name="description"> Create a reference with this description </param>
+		public static Map Find( string path, string title = null, string description = null )
 		{
 			if ( !Files.Exists( path ) )
 			{
@@ -61,7 +67,11 @@ namespace Espionage.Engine.Resources
 				return null;
 			}
 
-			return Database[path] ?? new Map( Files.Load<IFile<Map, Scene>>( path ).Provider() );
+			return Database[path] ?? new Map( Files.Load<IFile<Map, Scene>>( path ).Provider() )
+			{
+				Title = title,
+				Description = description
+			};
 		}
 
 		//
