@@ -227,7 +227,10 @@ namespace Espionage.Engine
 
 			// More temp - this should 
 			// Be called at an engine level
-			Game.Simulate( Local.Client );
+			foreach ( var client in Client.All )
+			{
+				Local.Client.Simulate();
+			}
 		}
 
 		private static void OnPhysicsUpdate()

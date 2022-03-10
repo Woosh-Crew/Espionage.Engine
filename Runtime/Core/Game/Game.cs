@@ -38,9 +38,9 @@ namespace Espionage.Engine
 		public virtual void Simulate( Client cl )
 		{
 			// Temp simulator.
-			if ( Local.Pawn != null )
+			if ( cl.Pawn != null )
 			{
-				Local.Pawn.Simulate( cl );
+				cl.Pawn.Simulate( cl );
 			}
 		}
 

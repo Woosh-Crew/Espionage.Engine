@@ -1,14 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Espionage.Engine
 {
 	[Group( "Networking" )]
-	public class Client : Behaviour
+	public class Client : Entity
 	{
-		public string Name { get; set; }
+		public new static IEnumerable<Client> All => Entity.All.OfType<Client>();
 
 		// Constructor
 
@@ -17,6 +18,15 @@ namespace Espionage.Engine
 			var obj = new GameObject( $"[id=0]{name}" ).AddComponent<Client>();
 			Engine.Scene.Move( obj.gameObject );
 			return obj;
+		}
+
+		public string Name { get; set; }
+
+		// Simulate
+
+		internal virtual void Simulate()
+		{
+			Engine.Game.Simulate( this );
 		}
 
 		// Camera
@@ -38,6 +48,7 @@ namespace Espionage.Engine
 			{
 				if ( _pawn != null )
 				{
+					_pawn.Client = null;
 					_pawn.UnPosses();
 				}
 
@@ -45,6 +56,7 @@ namespace Espionage.Engine
 
 				if ( _pawn != null )
 				{
+					_pawn.Client = this;
 					_pawn.Posses( this );
 				}
 			}
