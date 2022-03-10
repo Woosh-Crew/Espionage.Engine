@@ -12,15 +12,14 @@ namespace Espionage.Engine.Services
 		}
 
 		private List<string> _stack = new();
-		
-		public override void OnUpdate()
+
+		public void Add( string text )
 		{
-			// Check stack
+			_stack.Add( text );
 		}
 
-		public override void OnPostUpdate()
+		public override void OnUpdate()
 		{
-			// Clear Stack
 			_stack.Clear();
 		}
 
@@ -35,11 +34,16 @@ namespace Espionage.Engine.Services
 
 			const float scale = 2;
 
-			for ( int i = 0; i < _stack.Count; i++ )
+			for ( var i = 0; i < _stack.Count; i++ )
 			{
 				var current = _stack[i];
-				
-				GUI.Box( new( 32 , Screen.height - ((64 * scale) + (32 * i ) + 8), 128 * scale, 64 * scale ) , current );
+				var height = 16;
+
+				GUI.Box( new( 32,
+						32 + i * (height * 2 + 8),
+						64 * scale,
+						height * scale ),
+					current );
 			}
 		}
 	}

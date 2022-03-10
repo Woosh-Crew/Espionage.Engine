@@ -9,6 +9,6 @@ namespace Espionage.Engine
 		void Text( Vector2 pos, string text );
 		void Text( Vector3 pos, string text );
 
-		void Box( Rect rect, string text );
+		void Box( Vector2 size, string text );
 	}
 }

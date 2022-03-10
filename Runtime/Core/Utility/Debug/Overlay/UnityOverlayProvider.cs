@@ -16,7 +16,7 @@ namespace Espionage.Engine.Overlay
 		//
 		// Overlay
 		//
-		
+
 		public bool Show { get; set; } = true;
 
 		public void Text( Vector2 pos, string text )
@@ -35,12 +35,14 @@ namespace Espionage.Engine.Overlay
 			}
 		}
 
-		public void Box( Rect rect, string text )
+		public void Box( Vector2 size, string text )
 		{
 			if ( !Show )
 			{
 				return;
 			}
+
+			Service.Add( text );
 		}
 	}
 }

@@ -59,9 +59,12 @@ namespace Espionage.Engine.Tripods
 
 			camSetup.Position = _interpolate ? Vector3.Lerp( camSetup.Position, _targetPos, 2 * Time.deltaTime ) : Vector3.Lerp( camSetup.Position, _targetPos, 5 * Time.deltaTime );
 
-			if ( Input.GetKeyDown( KeyCode.E ) && Physics.Raycast( camSetup.Position, camSetup.Rotation * Vector3.forward, out var hit, 20 ) )
+			// Do shit in front of us
+			if ( Physics.Raycast( camSetup.Position, camSetup.Rotation * Vector3.forward, out var hit, 20 ) && hit.collider.TryGetComponent<Entity>( out var entity ) )
 			{
-				if ( hit.collider.TryGetComponent<Pawn>( out var pawn ) )
+				Debugging.Overlay.Box( Vector2.zero, $"{entity.ClassInfo.Title}\n[{entity.ClassInfo.Group}]" );
+
+				if ( entity is Pawn pawn && Input.GetKeyDown( KeyCode.F ) )
 				{
 					Local.Client.Pawn = pawn;
 				}
