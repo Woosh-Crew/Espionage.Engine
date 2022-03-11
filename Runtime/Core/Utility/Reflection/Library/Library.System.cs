@@ -117,7 +117,7 @@ namespace Espionage.Engine
 			Database = new InternalDatabase();
 			Database.Add( new( typeof( Global ) ) );
 
-			using ( Debugging.Stopwatch( "Library Initialized", 0 ) )
+			using ( Debugging.Stopwatch( "Library Initialized" ) )
 			{
 				var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 

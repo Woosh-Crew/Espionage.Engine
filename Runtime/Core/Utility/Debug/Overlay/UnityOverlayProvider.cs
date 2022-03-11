@@ -2,7 +2,7 @@
 using Espionage.Engine.Services;
 using UnityEngine;
 
-namespace Espionage.Engine.Overlay
+namespace Espionage.Engine.Internal.Overlay
 {
 	internal class UnityOverlayProvider : IDebugOverlayProvider
 	{

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Espionage.Engine.Overlay;
+using Espionage.Engine.Internal.Overlay;
 using UnityEngine;
 
 namespace Espionage.Engine.Services

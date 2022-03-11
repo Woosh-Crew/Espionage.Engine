@@ -6,5 +6,6 @@
 		Resource.IProvider<T, TOutput> Provider();
 	}
 
+	[Group( "Files" )]
 	public interface IFile<T> : IFile where T : IResource { }
 }

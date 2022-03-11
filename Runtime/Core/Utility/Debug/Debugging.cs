@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using Espionage.Engine.Internal.Logging;
 using Espionage.Engine.Internal.Commands;
-using Espionage.Engine.Overlay;
+using Espionage.Engine.Internal.Overlay;
 using UnityEngine;
 
 namespace Espionage.Engine
@@ -47,17 +47,7 @@ namespace Espionage.Engine
 		/// <param name="alwaysReport">Should we always report? or only report if the Var is set.</param>
 		public static IDisposable Stopwatch( string message = null, bool alwaysReport = false )
 		{
-			return ReportStopwatch || alwaysReport ? new TimedScope( message, 0 ) : null;
-		}
-
-		/// <summary>
-		/// <inheritdoc cref="Stopwatch(string,bool)"/>
-		/// </summary>
-		/// <param name="message"><inheritdoc cref="Stopwatch(string,bool)"/></param>
-		/// <param name="reportIfOverTime">If the stopwatch goes past this time, we will report it.</param>
-		public static IDisposable Stopwatch( string message, int reportIfOverTime )
-		{
-			return new TimedScope( message, reportIfOverTime );
+			return ReportStopwatch || alwaysReport ? new TimedScope( message ) : null;
 		}
 
 		//
@@ -72,6 +62,8 @@ namespace Espionage.Engine
 			{
 				return;
 			}
+
+			Initialized = true;
 
 			using var _ = Stopwatch( "Debugging Initialized" );
 
@@ -157,16 +149,15 @@ namespace Espionage.Engine
 		[ConVar, Property( "debug.report_stopwatch" )]
 		private static bool ReportStopwatch { get; set; } = true;
 
-		internal class TimedScope : IDisposable
+		private class TimedScope : IDisposable
 		{
 			private readonly Stopwatch _stopwatch;
 			private readonly string _message;
-			private readonly int _reportTime;
 
-			public TimedScope( string message, int reportTime )
+			public TimedScope( string message )
 			{
 				_message = message;
-				_reportTime = reportTime;
+
 				_stopwatch = System.Diagnostics.Stopwatch.StartNew();
 			}
 
@@ -174,12 +165,8 @@ namespace Espionage.Engine
 			{
 				_stopwatch.Stop();
 
-				if ( _reportTime != 0 && _stopwatch.ElapsedMilliseconds <= _reportTime )
-				{
-					return;
-				}
+				var time = _stopwatch.Elapsed.Seconds > 0 ? $"{_stopwatch.Elapsed.TotalSeconds} seconds" : $"{_stopwatch.Elapsed.TotalMilliseconds} ms";
 
-				var time = _stopwatch.ElapsedMilliseconds > 0 ? $"{_stopwatch.ElapsedMilliseconds}ms" : $"{_stopwatch.ElapsedTicks / System.Diagnostics.Stopwatch.Frequency * 1000000000}ns";
 				if ( string.IsNullOrEmpty( _message ) )
 				{
 					Log.Info( time );
