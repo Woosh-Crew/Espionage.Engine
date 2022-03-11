@@ -46,40 +46,19 @@ namespace Espionage.Engine
 			Delete( "game://test.txt" );
 		}
 
-		[MenuItem( "Tools/Espionage.Engine/Debug/Files/Show Cookies File" )]
+		[MenuItem( "Tools/Espionage.Engine/Debug/Files/Debug All Virtual Locations" )]
 		private static void Testing2()
 		{
-			OpenInExplorer( "config://.cookies" );
+			foreach ( var (key, value) in Paths )
+			{
+				Debugging.Log.Info( $"{key} - [{Path( value )}]" );
+			}
 		}
 
-		[MenuItem( "Tools/Espionage.Engine/Debug/Files/Open Config Directory" )]
+		[MenuItem( "Tools/Espionage.Engine/Debug/Files/Open Cookies" )]
 		private static void Testing3()
 		{
-			OpenInExplorer( "config://" );
-		}
-
-		[MenuItem( "Tools/Espionage.Engine/Debug/Files/Open User Directory" )]
-		private static void Testing4()
-		{
-			OpenInExplorer( "user://" );
-		}
-
-		[MenuItem( "Tools/Espionage.Engine/Debug/Files/Open Cache Directory" )]
-		private static void Testing5()
-		{
-			OpenInExplorer( "cache://" );
-		}
-
-		[MenuItem( "Tools/Espionage.Engine/Debug/Files/Open Game Directory" )]
-		private static void Testing6()
-		{
-			OpenInExplorer( "game://" );
-		}
-
-		[MenuItem( "Tools/Espionage.Engine/Debug/Files/Open Package Directory" )]
-		private static void Testing7()
-		{
-			OpenInExplorer( "package://" );
+			Open( "config://.cookies" );
 		}
 
 	#endif
@@ -400,9 +379,7 @@ namespace Espionage.Engine
 		public static bool Exists( string path )
 		{
 			path = Path( path );
-
 			return System.IO.Path.HasExtension( path ) ? File.Exists( path ) : Directory.Exists( path );
-
 		}
 
 		/// <summary>
@@ -412,14 +389,12 @@ namespace Espionage.Engine
 		{
 			path = Path( path );
 
-			var fileInfo = new FileInfo( path );
-
-			if ( !File.Exists( path ) )
+			if ( File.Exists( path ) )
 			{
-				throw new FileNotFoundException();
+				File.Delete( path );
 			}
 
-			fileInfo.Delete();
+			Debugging.Log.Error( $"File [{path}], couldn't be deleted." );
 		}
 
 		/// <summary>
@@ -492,24 +467,19 @@ namespace Espionage.Engine
 		}
 
 		/// <summary>
-		/// Opens the given file in the OS's File Explorer 
+		/// Opens the given directory in the OS's File Explorer,
+		/// or opens the given file in the default application
 		/// </summary>
-		public static void OpenInExplorer( string path )
+		public static void Open( string path )
 		{
 			path = Path( path );
 
 			if ( !Exists( path ) )
 			{
-				Debugging.Log.Warning( $"Path [{path}], doesn't exist" );
+				Debugging.Log.Warning( $"Path or File [{path}], doesn't exist" );
 			}
 
-			var startInfo = new ProcessStartInfo
-			{
-				Arguments = path,
-				FileName = "explorer.exe"
-			};
-
-			Process.Start( startInfo );
+			Process.Start( $"file://{path}" );
 		}
 	}
 }
