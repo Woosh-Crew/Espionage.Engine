@@ -9,7 +9,7 @@ namespace Espionage.Engine
 			public void Simulate( Client client )
 			{
 				Client = client;
-				
+
 				Grab( Entity );
 				Simulate();
 				Finalise( Entity );
@@ -24,9 +24,9 @@ namespace Espionage.Engine
 			{
 				pawn.Velocity = Velocity;
 			}
-			
+
 			// Client
-			
+
 			protected Client Client { get; set; }
 
 			// Controller

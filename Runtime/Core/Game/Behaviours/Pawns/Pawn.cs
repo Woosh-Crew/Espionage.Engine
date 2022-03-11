@@ -53,7 +53,7 @@ namespace Espionage.Engine
 
 		public virtual void Posses( Client client )
 		{
-			CurrentController ??= GetComponent<Controller>();
+			CurrentController ??= Components.Get<Controller>();
 
 			foreach ( var item in Components.All.OfType<ICallbacks>() )
 			{
