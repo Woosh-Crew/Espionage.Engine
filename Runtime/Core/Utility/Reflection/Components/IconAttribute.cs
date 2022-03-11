@@ -1,9 +1,11 @@
 using System;
+using System.IO;
 using Espionage.Engine.Components;
 using UnityEngine;
 
 #if UNITY_EDITOR
 using UnityEditor;
+using UnityEngine.Networking;
 #endif
 
 namespace Espionage.Engine
@@ -15,13 +17,16 @@ namespace Espionage.Engine
 	public sealed class IconAttribute : Attribute, IComponent<Library>, IComponent<Property>, IComponent<Function>
 	{
 		public string Path { get; set; }
-		public string GUID { get; set; }
 
-	#if UNITY_EDITOR
-		public Texture2D Icon => AssetDatabase.LoadAssetAtPath<Texture2D>( !string.IsNullOrEmpty( GUID ) ? AssetDatabase.GUIDToAssetPath( GUID ) : Path );
-	#else
-		public Texture2D Icon => throw new NotImplementedException();
-	#endif
+		public Texture2D Icon
+		{
+			get
+			{
+				var path = Files.Path( Path, "project://" );
+				Debugging.Log.Info( path );
+				return AssetDatabase.LoadAssetAtPath<Texture2D>( path );
+			}
+		}
 
 		public void OnAttached( Library library ) { }
 		public void OnAttached( Property property ) { }

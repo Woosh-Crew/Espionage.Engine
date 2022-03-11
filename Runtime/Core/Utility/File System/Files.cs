@@ -30,6 +30,7 @@ namespace Espionage.Engine
 			["assets"] = Application.isEditor ? $"{Application.dataPath}/../Exports/" : Application.dataPath,
 
 	#if UNITY_EDITOR
+			["project"] = Application.dataPath + "/../",
 			["package"] = PackageInfo.FindForAssembly( Assembly.GetExecutingAssembly() )?.assetPath ?? "game://Espionage.Engine/"
 	#endif
 
@@ -185,7 +186,7 @@ namespace Espionage.Engine
 		public static T Load<T>( string path ) where T : class, IFile
 		{
 			// Get the actual path
-			path = GetPath( path );
+			path = Path( path );
 
 			if ( !File.Exists( path ) )
 			{
@@ -218,7 +219,7 @@ namespace Espionage.Engine
 		/// </summary>
 		public static T Deserialize<T>( string path )
 		{
-			path = GetPath( path );
+			path = Path( path );
 
 			var deserializer = GrabDeserializer<T>();
 			return deserializer.Deserialize( Deserialize( path ) );
@@ -229,7 +230,7 @@ namespace Espionage.Engine
 		/// </summary>
 		public static byte[] Deserialize( string path )
 		{
-			path = GetPath( path );
+			path = Path( path );
 
 			if ( !File.Exists( path ) )
 			{
@@ -281,7 +282,7 @@ namespace Espionage.Engine
 		/// </summary>
 		public static void Save( byte[] data, string path )
 		{
-			path = GetPath( path );
+			path = Path( path );
 
 			var fileInfo = new FileInfo( path );
 
@@ -314,8 +315,6 @@ namespace Espionage.Engine
 
 		private static ISerializer<T> GrabSerializer<T>()
 		{
-			// TODO: We should be caching the results.. so we can reuse it without garbage collection 
-
 			var library = Library.Database.Find<ISerializer<T>>();
 
 			if ( library == null )
@@ -335,7 +334,7 @@ namespace Espionage.Engine
 		/// </summary>
 		public static FileStream Read( string path )
 		{
-			path = GetPath( path );
+			path = Path( path );
 			return new( path, FileMode.Open, FileAccess.Read );
 		}
 
@@ -344,7 +343,7 @@ namespace Espionage.Engine
 		/// It'll search loaded mods first then the base content,
 		/// Depending on the virtual path you are trying to get.
 		/// </summary>
-		public static string GetPath( string path )
+		public static string Path( string path )
 		{
 			if ( !path.Contains( "://" ) )
 			{
@@ -352,11 +351,19 @@ namespace Espionage.Engine
 			}
 
 			var splitPath = path.Split( "://" );
-			splitPath[0] = GetPath( Paths[splitPath[0]] );
+			splitPath[0] = Path( Paths[splitPath[0]] );
 
-			var newPath = Path.Combine( splitPath[0], splitPath[1] );
+			var newPath = System.IO.Path.Combine( splitPath[0], splitPath[1] );
 
-			return Path.GetFullPath( newPath );
+			return System.IO.Path.GetFullPath( newPath );
+		}
+
+		public static string Path( string path, string relative )
+		{
+			path = Path( path );
+			relative = Path( relative );
+
+			return System.IO.Path.GetRelativePath( relative, path );
 		}
 
 		//
@@ -368,9 +375,9 @@ namespace Espionage.Engine
 		/// </summary>
 		public static bool Exists( string path )
 		{
-			path = GetPath( path );
+			path = Path( path );
 
-			return Path.HasExtension( path ) ? File.Exists( path ) : Directory.Exists( path );
+			return System.IO.Path.HasExtension( path ) ? File.Exists( path ) : Directory.Exists( path );
 
 		}
 
@@ -379,7 +386,7 @@ namespace Espionage.Engine
 		/// </summary>
 		public static void Delete( string path )
 		{
-			path = GetPath( path );
+			path = Path( path );
 
 			var fileInfo = new FileInfo( path );
 
@@ -396,7 +403,7 @@ namespace Espionage.Engine
 		/// </summary>
 		public static void Delete( string path, string extension )
 		{
-			path = GetPath( path );
+			path = Path( path );
 
 			var files = Directory.GetFiles( path, $"*.{extension}" );
 			foreach ( var item in files )
@@ -426,8 +433,8 @@ namespace Espionage.Engine
 		/// </summary>
 		public static void Copy( string file, string path )
 		{
-			file = GetPath( file );
-			path = GetPath( path );
+			file = Path( file );
+			path = Path( path );
 
 			var fileInfo = new FileInfo( file );
 
@@ -449,8 +456,8 @@ namespace Espionage.Engine
 		/// </summary>
 		public static void Move( string source, string destination, bool overwrite = true )
 		{
-			source = GetPath( source );
-			destination = GetPath( destination );
+			source = Path( source );
+			destination = Path( destination );
 
 			if ( !File.Exists( source ) )
 			{
@@ -465,7 +472,7 @@ namespace Espionage.Engine
 		/// </summary>
 		public static void OpenInExplorer( string path )
 		{
-			path = GetPath( path );
+			path = Path( path );
 
 			if ( !Exists( path ) )
 			{

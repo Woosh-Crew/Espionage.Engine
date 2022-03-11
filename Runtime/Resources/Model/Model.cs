@@ -29,7 +29,7 @@ namespace Espionage.Engine.Resources
 		/// <returns> The new model that has been loaded. </returns>
 		public static Model Load( string path )
 		{
-			path = Files.GetPath( path );
+			path = Files.Path( path );
 
 			if ( !Files.Exists( path ) )
 			{
@@ -50,7 +50,7 @@ namespace Espionage.Engine.Resources
 				return databaseModel;
 			}
 
-			using var _ = Debugging.Stopwatch( $"Loading Model [{Files.GetPath( path )}]" );
+			using var _ = Debugging.Stopwatch( $"Loading Model [{Files.Path( path )}]" );
 
 			var model = new Model( Files.Load<IFile<Model, GameObject>>( path ).Provider() );
 			((IResource)model).Load();
@@ -101,7 +101,7 @@ namespace Espionage.Engine.Resources
 
 		protected override void OnUnload( Action onUnload )
 		{
-			using var _ = Debugging.Stopwatch( $"Unloading Model [{Files.GetPath( Identifier )}]" );
+			using var _ = Debugging.Stopwatch( $"Unloading Model [{Files.Path( Identifier )}]" );
 
 			// Clear Spawned Models
 			foreach ( var instance in Spawned )

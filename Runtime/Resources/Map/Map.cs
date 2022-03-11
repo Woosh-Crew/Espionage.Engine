@@ -62,7 +62,7 @@ namespace Espionage.Engine.Resources
 		{
 			if ( !Files.Exists( path ) )
 			{
-				Debugging.Log.Error( $"Map Path [{Files.GetPath( path )}], couldn't be found." );
+				Debugging.Log.Error( $"Map Path [{Files.Path( path )}], couldn't be found." );
 				return null;
 			}
 
