@@ -21,6 +21,7 @@ namespace Espionage.Engine
 		{
 			// player movement - forward, backward, left, right
 			var input = new Vector2( Client.Input.Horizontal, Client.Input.Forward );
+			input = input.normalized;
 			input *= moveSpeed;
 
 			var wishDirection = transform.rotation * (Vector3.right * input.x + Vector3.forward * input.y) * Time.deltaTime;

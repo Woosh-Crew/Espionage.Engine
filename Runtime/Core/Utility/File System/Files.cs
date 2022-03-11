@@ -229,8 +229,6 @@ namespace Espionage.Engine
 
 		private static IDeserializer<T> GrabDeserializer<T>()
 		{
-			// TODO: We should be caching the results.. so we can reuse it without garbage collection 
-
 			var library = Library.Database.Find<IDeserializer<T>>();
 
 			if ( library == null )
