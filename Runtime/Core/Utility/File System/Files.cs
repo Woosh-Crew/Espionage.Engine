@@ -31,7 +31,7 @@ namespace Espionage.Engine
 
 	#if UNITY_EDITOR
 			["project"] = Application.dataPath + "/../",
-			["package"] = PackageInfo.FindForAssembly( Assembly.GetExecutingAssembly() )?.assetPath ?? "game://Espionage.Engine/"
+			["package"] = PackageInfo.FindForAssembly( Assembly.GetExecutingAssembly() ) != null ? "Packages/Espionage.Engine/" : "game://Espionage.Engine/"
 	#endif
 
 		};
