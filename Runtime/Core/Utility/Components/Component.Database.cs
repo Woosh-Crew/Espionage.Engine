@@ -62,11 +62,12 @@ namespace Espionage.Engine.Components
 
 		public TComp GetOrCreate<TComp>( Func<TComp> creation )
 		{
-			if ( TryGet<TComp>( out var comp ) )
-			{
-				return comp;
-			}
+			return TryGet<TComp>( out var comp ) ? comp : Create( creation );
 
+		}
+
+		public TComp Create<TComp>( Func<TComp> creation )
+		{
 			var newComp = creation.Invoke();
 			Add( newComp as IComponent<T> );
 			return newComp;

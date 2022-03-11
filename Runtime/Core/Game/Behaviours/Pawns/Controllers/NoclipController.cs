@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Espionage.Engine
 {
-	public class NoclipController : Pawn.IController
+	public class NoclipController : Pawn.Controller
 	{
 		private Vector3 _targetPos;
 
@@ -43,10 +43,12 @@ namespace Espionage.Engine
 			}
 
 			_targetPos += vel * Time.deltaTime;
-			
+
 			pawn.Velocity = vel;
-			
+
 			pawn.transform.position = Vector3.Lerp( pawn.transform.position, _targetPos, 5 * Time.deltaTime );
 		}
+
+		protected override void Simulate() { }
 	}
 }

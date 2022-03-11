@@ -8,7 +8,7 @@ namespace Espionage.Engine
 	/// default Pawns have a Controller and Tripod.
 	/// </summary>
 	[Group( "Pawns" )]
-	public class Pawn : Entity, ISimulated, IControls
+	public partial class Pawn : Entity, ISimulated, IControls
 	{
 		protected override void OnAwake()
 		{
@@ -28,14 +28,14 @@ namespace Espionage.Engine
 
 			// Controller
 
-			GetActiveController()?.Simulate( client, this );
+			GetActiveController()?.Simulate( client );
 
 			// Components
 
 			foreach ( var item in Components.GetAll<ISimulated>() )
 			{
 				// Don't simulate Pawn Controllers, we do that above.
-				if ( item is IController )
+				if ( item is Controller )
 				{
 					continue;
 				}
@@ -53,7 +53,7 @@ namespace Espionage.Engine
 
 		public virtual void Posses( Client client )
 		{
-			Controller ??= GetComponent<IController>();
+			CurrentController ??= GetComponent<Controller>();
 
 			foreach ( var item in Components.All.OfType<ICallbacks>() )
 			{
@@ -63,7 +63,7 @@ namespace Espionage.Engine
 
 		public virtual void UnPosses()
 		{
-			Controller = null;
+			CurrentController = null;
 
 			foreach ( var item in Components.All.OfType<ICallbacks>() )
 			{
@@ -75,27 +75,22 @@ namespace Espionage.Engine
 		// Controller
 		//
 
-		public interface IController
+		private Controller GetActiveController()
 		{
-			void Simulate( Client client, Pawn pawn );
-		}
-
-		private IController GetActiveController()
-		{
-			return DevController ?? Controller;
+			return DevController ? DevController : CurrentController;
 		}
 
 		/// <summary>
 		/// The controller that is used
 		/// for controlling this pawn.
 		/// </summary>
-		public IController Controller { get; set; }
+		public Controller CurrentController { get; set; }
 
 		/// <summary>
 		/// This controller will override the normal controller.
 		/// Is used for dev shit like no clip.
 		/// </summary>
-		public IController DevController { get; set; }
+		public Controller DevController { get; set; }
 
 		//
 		// Camera

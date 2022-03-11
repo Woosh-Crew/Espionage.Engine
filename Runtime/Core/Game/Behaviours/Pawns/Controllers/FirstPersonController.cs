@@ -2,11 +2,11 @@
 
 namespace Espionage.Engine
 {
-	public class FirstPersonController : Component<Pawn>, Pawn.IController
+	public class FirstPersonController : Pawn.Controller
 	{
 		private CharacterController _characterController;
 
-		protected override void OnAwake()
+		protected override void OnAttached( Pawn item )
 		{
 			if ( !TryGetComponent( out _characterController ) )
 			{
@@ -16,24 +16,22 @@ namespace Espionage.Engine
 			}
 		}
 
-		public void Simulate( Client client, Pawn pawn )
+		protected override void Simulate()
 		{
 			// player movement - forward, backward, left, right
-			Vector2 input = new( client.Input.Horizontal, client.Input.Forward );
-			input = input.normalized;
+			var input = new Vector2( Client.Input.Horizontal, Client.Input.Forward ).normalized;
 			input *= movementSpeed;
 
-			Entity.Velocity = transform.rotation * (Vector3.right * input.x + Vector3.forward * input.y) * Time.deltaTime;
-
-			Entity.Velocity = Entity.Velocity.WithY( Mathf.Sqrt( Entity.Velocity.y ) + -gravity * 2 * Time.deltaTime );
+			Velocity = transform.rotation * (Vector3.right * input.x + Vector3.forward * input.y) * Time.deltaTime;
+			Velocity = Entity.Velocity.WithY( Velocity.y - gravity * 2 * Time.deltaTime );
 
 			// Gravity
 			if ( _characterController.isGrounded )
 			{
-				Entity.Velocity = Entity.Velocity.WithY( 0 );
+				Velocity = Velocity.WithY( 0 );
 			}
 
-			_characterController.Move( Entity.Velocity );
+			_characterController.Move( Velocity );
 		}
 
 		// Fields
