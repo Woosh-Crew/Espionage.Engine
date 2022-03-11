@@ -8,11 +8,11 @@ using UnityEngine;
 namespace Espionage.Engine.Editor
 {
 	[CustomEditor( typeof( Behaviour ), true )]
-	public class BehaviourEditor : UnityEditor.Editor
+	internal class BehaviourEditor : UnityEditor.Editor
 	{
-		private Library ClassInfo { get; set; }
+		public Library ClassInfo { get; set; }
 
-		private void OnEnable()
+		protected virtual void OnEnable()
 		{
 			ClassInfo = Library.Database[target.GetType()];
 			EditorInjection.Titles[target.GetType()] = $"{ClassInfo.Title} (Behaviour)";

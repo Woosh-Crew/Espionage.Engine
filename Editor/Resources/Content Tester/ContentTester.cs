@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 
 namespace Espionage.Engine.Tools.Editor
 {
-	[Title( "Content Tester" ), Help( "Test Resources such as Maps, Models, Textures, etc." ), Icon( EditorIcons.Game )]
+	[Title( "Content Tester" ), Help( "Test Resources such as Maps, Models, Textures, etc." )]
 	public class ContentTester : EditorTool
 	{
 		// Menu Items

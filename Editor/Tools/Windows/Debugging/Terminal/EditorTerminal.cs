@@ -5,7 +5,7 @@ using Espionage.Engine.Editor;
 
 namespace Espionage.Engine.Tools.Editor
 {
-	[Title( "Terminal" ), Icon( EditorIcons.Terminal ), Group( "Debug" )]
+	[Title( "Terminal" ), Group( "Debug" )]
 	public class EditorTerminal : EditorTool
 	{
 		protected override void OnCreateGUI()

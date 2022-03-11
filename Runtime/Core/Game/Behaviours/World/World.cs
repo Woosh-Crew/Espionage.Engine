@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 
 namespace Espionage.Engine
@@ -6,7 +7,7 @@ namespace Espionage.Engine
 	/// Central point of a map. Holds meta data about the map
 	/// such as Custom NavMeshes, Environment Lighting, etc. 
 	/// </summary>
-	[Library( "env.world" ), Group( "Environment" ), Singleton]
+	[Library( "env.world" ), Group( "Environment" ), Singleton, Icon( GUID = "2f8879f7e4220004ab5df68a98c244c3" )]
 	public class World : Entity
 	{
 		// Singleton

@@ -14,17 +14,13 @@ namespace Espionage.Engine
 	[AttributeUsage( AttributeTargets.Class | AttributeTargets.Property | AttributeTargets.Method )]
 	public sealed class IconAttribute : Attribute, IComponent<Library>, IComponent<Property>, IComponent<Function>
 	{
-		public string Path { get; }
-
-		public IconAttribute( string path )
-		{
-			Path = path;
-		}
+		public string Path { get; set; }
+		public string GUID { get; set; }
 
 	#if UNITY_EDITOR
-		public Texture Icon => AssetDatabase.LoadAssetAtPath<Texture>( Path );
+		public Texture2D Icon => AssetDatabase.LoadAssetAtPath<Texture2D>( !string.IsNullOrEmpty( GUID ) ? AssetDatabase.GUIDToAssetPath( GUID ) : Path );
 	#else
-		public Texture Icon => throw new NotImplementedException();
+		public Texture2D Icon => throw new NotImplementedException();
 	#endif
 
 		public void OnAttached( Library library ) { }

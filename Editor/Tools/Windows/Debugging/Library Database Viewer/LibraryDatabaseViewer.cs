@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Espionage.Engine.Tools.Editor
 {
-	[Title( "Library Database Viewer" ), Group( "Debug" ), Icon( EditorIcons.Terminal )]
+	[Title( "Library Database Viewer" ), Group( "Debug" )]
 	public class LibraryDatabaseViewer : EditorTool
 	{
 		// Menu Items
@@ -30,7 +30,13 @@ namespace Espionage.Engine.Tools.Editor
 
 			var treeContainer = new ScrollView( ScrollViewMode.Vertical );
 
-			var titleBar = new TitleBar( "Library Database", null, "Bottom" ) { style = { marginBottom = 8 } };
+			var titleBar = new TitleBar( "Library Database", null, "Bottom" )
+			{
+				style =
+				{
+					marginBottom = 8
+				}
+			};
 			treeContainer.Add( titleBar );
 
 			foreach ( var item in all )
@@ -69,7 +75,7 @@ namespace Espionage.Engine.Tools.Editor
 			var splitView = new TwoPaneSplitView( 0, 300, TwoPaneSplitViewOrientation.Horizontal );
 			splitView.Add( treeContainer );
 
-			_viewerPanel = new VisualElement();
+			_viewerPanel = new();
 			splitView.Add( _viewerPanel );
 
 			rootVisualElement.Add( splitView );
