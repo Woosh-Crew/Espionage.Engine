@@ -23,15 +23,15 @@ namespace Espionage.Engine
 		public static readonly Dictionary<string, string> Paths = new()
 		{
 			// using our own path methods rather than the dubious unity ones
-			["config"] = UserConfigPath(),
-			["user"] = UserDataPath(),
-			["cache"] = CachePath(),
+			["config"] = UserConfigPath,
+			["user"] = UserDataPath,
+			["cache"] = CachePath,
 			["game"] = Application.dataPath,
 			["assets"] = Application.isEditor ? $"{Application.dataPath}/../Exports/" : Application.dataPath,
 
 	#if UNITY_EDITOR
 			["project"] = Application.dataPath + "/../",
-			["package"] = PackageInfo.FindForAssembly( Assembly.GetExecutingAssembly() ) != null ? "Packages/Espionage.Engine/" : "game://Espionage.Engine/"
+			["package"] = PackagePath
 	#endif
 
 		};
@@ -91,20 +91,22 @@ namespace Espionage.Engine
 		/// <summary>
 		/// Returns a platform-specific cache and temp. data directory path.
 		/// </summary>
-		private static string CachePath()
+		private static string CachePath
 		{
-			var game = Application.productName;
-
-			// First check if any of the platforms has XDG_CACHE_HOME defined
-			var xdg = Environment.GetEnvironmentVariable( "XDG_CACHE_HOME" );
-			if ( xdg != null )
+			get
 			{
-				return $"{xdg}/{game}";
-			}
+				var game = Application.productName;
 
-			// Otherwise, it's onto the platform specific mess
+				// First check if any of the platforms has XDG_CACHE_HOME defined
+				var xdg = Environment.GetEnvironmentVariable( "XDG_CACHE_HOME" );
+				if ( xdg != null )
+				{
+					return $"{xdg}/{game}";
+				}
+
+				// Otherwise, it's onto the platform specific mess
 		#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
-			return $"{Environment.GetEnvironmentVariable( "TEMP" )}\\{game}";
+				return $"{Environment.GetEnvironmentVariable( "TEMP" )}\\{game}";
 		#elif UNITY_EDITOR_LINUX || UNITY_STANDALONE_LINUX
 			return $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}/.cache/{game}";
 		#elif UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
@@ -112,6 +114,7 @@ namespace Espionage.Engine
 		#else
 			throw new PlatformNotSupportedException();
 		#endif
+			}
 		}
 
 		/// <summary>
@@ -122,20 +125,22 @@ namespace Espionage.Engine
 		/// On Linux at least, Unity's Application.persistentDataPath
 		/// dumps all user and config files into $HOME/.config/unity3d.
 		/// </remarks>
-		private static string UserDataPath()
+		private static string UserDataPath
 		{
-			var game = Application.productName;
-
-			// First check if any of the platforms has XDG_DATA_HOME defined
-			var xdg = Environment.GetEnvironmentVariable( "XDG_DATA_HOME" );
-			if ( xdg != null )
+			get
 			{
-				return $"{xdg}/{game}";
-			}
+				var game = Application.productName;
 
-			// Otherwise, it's onto the platform specific mess
+				// First check if any of the platforms has XDG_DATA_HOME defined
+				var xdg = Environment.GetEnvironmentVariable( "XDG_DATA_HOME" );
+				if ( xdg != null )
+				{
+					return $"{xdg}/{game}";
+				}
+
+				// Otherwise, it's onto the platform specific mess
 		#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
-			return $"{Environment.GetFolderPath( Environment.SpecialFolder.LocalApplicationData )}\\{game}";
+				return $"{Environment.GetFolderPath( Environment.SpecialFolder.LocalApplicationData )}\\{game}";
 		#elif UNITY_EDITOR_LINUX || UNITY_STANDALONE_LINUX
 			return $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}/.local/share/{game}";
 		#elif UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
@@ -143,6 +148,7 @@ namespace Espionage.Engine
 		#else
 			throw new PlatformNotSupportedException();
 		#endif
+			}
 		}
 
 		/// <summary>
@@ -152,20 +158,22 @@ namespace Espionage.Engine
 		/// Unity's Application.persistentDataPath uses directories designed
 		/// for large user data, rather than config files.
 		/// </remarks>
-		private static string UserConfigPath()
+		private static string UserConfigPath
 		{
-			var game = Application.productName;
-
-			// First check if any of the platforms has XDG_CONFIG_HOME defined
-			var xdg = Environment.GetEnvironmentVariable( "XDG_CONFIG_HOME" );
-			if ( xdg != null )
+			get
 			{
-				return $"{xdg}/{game}";
-			}
+				var game = Application.productName;
 
-			// Otherwise, it's onto the platform specific mess
+				// First check if any of the platforms has XDG_CONFIG_HOME defined
+				var xdg = Environment.GetEnvironmentVariable( "XDG_CONFIG_HOME" );
+				if ( xdg != null )
+				{
+					return $"{xdg}/{game}";
+				}
+
+				// Otherwise, it's onto the platform specific mess
 		#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
-			return $"{Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData )}\\{game}";
+				return $"{Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData )}\\{game}";
 		#elif UNITY_EDITOR_LINUX || UNITY_STANDALONE_LINUX
 			return $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}/.config/{game}";
 		#elif UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
@@ -173,6 +181,22 @@ namespace Espionage.Engine
 		#else
 			throw new PlatformNotSupportedException();
 		#endif
+			}
+		}
+
+		private static string PackagePath
+		{
+			get
+			{
+				var package = PackageInfo.FindForAssembly( Assembly.GetExecutingAssembly() );
+
+				if ( package == null )
+				{
+					return "game://Espionage.Engine/";
+				}
+
+				return $"Packages/{package.name}/";
+			}
 		}
 
 		//
