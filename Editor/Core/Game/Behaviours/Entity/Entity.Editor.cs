@@ -26,7 +26,9 @@ namespace Espionage.Engine.Editor
 
 		public override void OnInspectorGUI()
 		{
-			var rect = EditorGUILayout.GetControlRect( true, 24, GUIStyle.none );
+			var originalRect = EditorGUILayout.GetControlRect( true, 22, GUIStyle.none );
+
+			var rect = originalRect;
 			rect.width = Screen.width;
 			rect.y = 0;
 			rect.x = 0;
@@ -39,13 +41,34 @@ namespace Espionage.Engine.Editor
 			rect.width -= 16;
 			GUI.Label( rect, $"Entity  <size=10>[{ClassInfo.Name} / {ClassInfo.Group}]</size>", Styles.Text );
 
+			// Help
+			if ( ClassInfo.Components.TryGet<HelpAttribute>( out var help ) )
+			{
+				var helpRect = originalRect;
+
+				helpRect.y = 0;
+				helpRect.x = Screen.width - 48 - 16;
+				helpRect.width = 48;
+
+				if ( GUI.Button( helpRect, "Help", Styles.Button ) )
+				{
+					Application.OpenURL( help.URL );
+				}
+			}
+
 			// Underline
-			rect.y += 24;
+
 			rect.height = 1;
 			rect.width += 16;
+			rect.y -= 1;
 			rect.x = 0;
+
+			// Top
 			EditorGUI.DrawRect( rect, new Color32( 25, 25, 25, 255 ) );
 
+			// Bottom
+			rect.y += originalRect.height;
+			EditorGUI.DrawRect( rect, new Color32( 25, 25, 25, 255 ) );
 
 			base.OnInspectorGUI();
 		}
@@ -57,6 +80,14 @@ namespace Espionage.Engine.Editor
 				fontStyle = FontStyle.Bold,
 				alignment = TextAnchor.MiddleLeft,
 				richText = true
+			};
+
+			public static readonly GUIStyle Button = new( EditorStyles.toolbarButton )
+			{
+				alignment = TextAnchor.MiddleCenter,
+				richText = true,
+				stretchHeight = true,
+				fixedHeight = 0
 			};
 		}
 	}
