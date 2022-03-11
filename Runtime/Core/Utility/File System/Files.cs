@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using UnityEngine;
+using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -25,7 +27,11 @@ namespace Espionage.Engine
 			["user"] = UserDataPath(),
 			["cache"] = CachePath(),
 			["game"] = Application.dataPath,
-			["assets"] = Application.isEditor ? $"{Application.dataPath}/../Exports/" : Application.dataPath
+			["assets"] = Application.isEditor ? $"{Application.dataPath}/../Exports/" : Application.dataPath,
+
+	#if UNITY_EDITOR
+			["package"] = PackageInfo.FindForAssembly( Assembly.GetExecutingAssembly() )?.assetPath ?? "game://Espionage.Engine/"
+	#endif
 
 		};
 
@@ -67,6 +73,12 @@ namespace Espionage.Engine
 		private static void Testing6()
 		{
 			OpenInExplorer( "game://" );
+		}
+
+		[MenuItem( "Tools/Espionage.Engine/Debug/Files/Open Package Directory" )]
+		private static void Testing7()
+		{
+			OpenInExplorer( "package://" );
 		}
 
 	#endif

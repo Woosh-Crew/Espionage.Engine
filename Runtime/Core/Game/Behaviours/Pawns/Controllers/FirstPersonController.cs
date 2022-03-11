@@ -22,19 +22,27 @@ namespace Espionage.Engine
 			// player movement - forward, backward, left, right
 			var input = new Vector2( Client.Input.Horizontal, Client.Input.Forward );
 			input = input.normalized;
-			input *= moveSpeed;
+			input *= Speed();
 
 			var wishDirection = transform.rotation * (Vector3.right * input.x + Vector3.forward * input.y) * Time.deltaTime;
 
-			Velocity -= Gravity( gravity / 2 );
+			Velocity -= Gravity( gravity * Time.deltaTime );
 
 			if ( _characterController.isGrounded )
 			{
-				Velocity += Accelerate( wishDirection, moveSpeed, 0.7f );
+				Velocity += Accelerate( wishDirection, Speed(), 0.7f );
 				Velocity *= Decelerate( 8, 5f );
+
+				Velocity = Velocity.WithY( 0 );
+			}
+
+			if ( Input.GetKeyDown( KeyCode.Space ) )
+			{
+				Velocity += new Vector3( 0, 1, 0 );
 			}
 
 			_characterController.Move( Velocity );
+			Debugging.Overlay.Box( Vector2.one * 100, Velocity.ToString() );
 		}
 
 		public Vector3 Accelerate( Vector3 wishDirection, float wishSpeed, float cap )
@@ -99,13 +107,27 @@ namespace Espionage.Engine
 
 		public Vector3 Gravity( float amount )
 		{
-			return new( 0, Velocity.y + amount, 0 );
+			return new( 0, amount, 0 );
 		}
+
+		public float Speed()
+		{
+			if ( Input.GetKey( KeyCode.LeftShift ) )
+			{
+				return sprintSpeed;
+			}
+
+			return walkSpeed;
+		}
+
 
 		// Fields
 
 		[SerializeField]
-		private float moveSpeed = 7;
+		private float walkSpeed = 7;
+
+		[SerializeField]
+		private float sprintSpeed = 12;
 
 		[SerializeField]
 		private float gravity = 9.8f;
