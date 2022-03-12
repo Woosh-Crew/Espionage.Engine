@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Espionage.Engine.Tripods
+namespace Espionage.Engine
 {
 	/// <summary>
 	/// <inheritdoc cref="ITripod"/>

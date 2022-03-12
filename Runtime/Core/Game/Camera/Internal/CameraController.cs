@@ -3,7 +3,7 @@ using Espionage.Engine.Tripods;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace Espionage.Engine
+namespace Espionage.Engine.Internal
 {
 	[Group( "Engine" ), Singleton, RequireComponent( typeof( Camera ), typeof( AudioListener ) )]
 	public class CameraController : Entity
