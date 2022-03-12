@@ -1,6 +1,7 @@
 using System.Linq;
 using Espionage.Engine.Tripods;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Espionage.Engine
 {
@@ -13,8 +14,15 @@ namespace Espionage.Engine
 	{
 		public Vector3 Velocity { get; set; }
 
+		protected override void OnReady()
+		{
+			gameObject.layer = LayerMask.NameToLayer( "Pawn" );
+		}
+
 		public void Simulate( Client client )
 		{
+			Ground = FindGround();
+
 			// Controller
 
 			GetActiveController()?.Simulate( client );
@@ -31,6 +39,20 @@ namespace Espionage.Engine
 
 				item.Simulate( client );
 			}
+		}
+
+		//
+		// Ground
+		// 
+
+		public RaycastHit Ground { get; private set; }
+
+		protected virtual RaycastHit FindGround()
+		{
+			var ray = new Ray( Position, Vector3.down );
+			Physics.Raycast( ray, out var result, 0.1f );
+
+			return result;
 		}
 
 		//
@@ -112,7 +134,10 @@ namespace Espionage.Engine
 		/// </summary>
 		public Transform Visuals => visuals;
 
-		/// <summary> Is this currently being possessed? </summary>
+		/// <summary>
+		/// Is this pawn currently being possessed
+		/// by a client?
+		/// </summary>
 		public bool IsClient => Client != null;
 
 		/// <summary>

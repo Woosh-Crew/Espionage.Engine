@@ -47,7 +47,7 @@ namespace Espionage.Engine
 
 			// Controller
 
-			protected Vector3 Velocity { get; set; }
+			public Vector3 Velocity { get; set; }
 
 			protected virtual void Simulate()
 			{

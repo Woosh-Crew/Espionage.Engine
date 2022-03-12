@@ -102,11 +102,6 @@ namespace Espionage.Engine
 
 		public virtual Tripod.Setup BuildCamera( Tripod.Setup camSetup )
 		{
-			// Default FOV
-			camSetup.FieldOfView = 68;
-			camSetup.Viewer = null;
-			camSetup.Clipping = new( 0.1f, 700 );
-
 			var cam = FindActiveCamera();
 
 			if ( LastTripod != cam )
@@ -145,6 +140,9 @@ namespace Espionage.Engine
 		{
 			// Setup Render Path
 			camera.renderingPath = RenderingPath.DeferredShading;
+
+			// Add support for flares
+			camera.gameObject.AddComponent<FlareLayer>();
 
 			// Setup Post Processing
 			var postProcessLayer = camera.gameObject.AddComponent<PostProcessLayer>();

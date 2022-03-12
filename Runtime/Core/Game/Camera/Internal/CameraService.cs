@@ -29,15 +29,16 @@ namespace Espionage.Engine.Services
 
 		public override void OnPostUpdate()
 		{
-			if ( Engine.Game == null || !Application.isPlaying )
-			{
-				return;
-			}
-
 			if ( Input.GetKeyDown( KeyCode.F1 ) )
 			{
 				Local.Client.Tripod = Local.Client.Tripod == null ? new DevTripod() : null;
 			}
+
+			// Default FOV
+			_lastSetup.FieldOfView = 68;
+			_lastSetup.Viewer = null;
+			_lastSetup.Clipping = new( 0.1f, 700 );
+
 
 			// Build the camSetup, from game.
 			_lastSetup = Engine.Game.BuildCamera( _lastSetup );
