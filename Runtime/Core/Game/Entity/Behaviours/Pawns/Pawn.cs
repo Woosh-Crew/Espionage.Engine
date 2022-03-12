@@ -1,7 +1,4 @@
-using System.Linq;
-using Espionage.Engine.Tripods;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace Espionage.Engine
 {
@@ -93,14 +90,14 @@ namespace Espionage.Engine
 		}
 
 		/// <summary>
-		/// The controller that is used
+		/// The controller that is currently being used
 		/// for controlling this pawn.
 		/// </summary>
 		public Controller PawnController { get; set; }
 
 		/// <summary>
 		/// This controller will override the normal controller.
-		/// Is used for dev shit like no clip.
+		/// Is used for dev shit like no-clip.
 		/// </summary>
 		public Controller DevController { get; set; }
 

@@ -71,10 +71,14 @@ namespace Espionage.Engine.Components
 			return (TComp)All.FirstOrDefault( e => e is TComp );
 		}
 
+		public TComp GetOrCreate<TComp>() where TComp : class, new()
+		{
+			return TryGet<TComp>( out var comp ) ? comp : new();
+		}
+
 		public TComp GetOrCreate<TComp>( Func<TComp> creation )
 		{
 			return TryGet<TComp>( out var comp ) ? comp : Create( creation );
-
 		}
 
 		public TComp Create<TComp>( Func<TComp> creation )

@@ -38,7 +38,12 @@
 		// Health
 		//
 
-		public Health Health => Components.GetOrCreate( () => gameObject.AddComponent<Health>() );
+		public Health Health => Components.GetOrCreate( () =>
+		{
+			var comp = gameObject.AddComponent<Health>();
+			comp.Max = 100;
+			return comp;
+		} );
 
 		/// <summary>
 		/// Respawns this Actor, and gives it max health. Use 

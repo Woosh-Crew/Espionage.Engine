@@ -10,7 +10,12 @@ namespace Espionage.Engine
 	public class Health : Component, IDamageable, IHealable
 	{
 		public int Current { get; private set; }
-		public int Max => max;
+
+		public int Max
+		{
+			get => max;
+			set => max = value;
+		}
 
 		/// <summary> Damage this Entity, using some useful meta data. </summary>
 		public void Damage( IDamageable.Info info )
