@@ -158,6 +158,8 @@ namespace Espionage.Engine
 			}
 		}
 
+		#if UNITY_EDITOR
+
 		private static string PackagePath
 		{
 			get
@@ -166,6 +168,8 @@ namespace Espionage.Engine
 				return package == null ? "game://Espionage.Engine/" : $"Packages/{package.name}/";
 			}
 		}
+
+		#endif
 
 		//
 		// Deserializing

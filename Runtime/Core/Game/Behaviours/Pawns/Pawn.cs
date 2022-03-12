@@ -1,4 +1,5 @@
 using System.Linq;
+using Espionage.Engine.Tripods;
 using UnityEngine;
 
 namespace Espionage.Engine
@@ -10,22 +11,10 @@ namespace Espionage.Engine
 	[Group( "Pawns" )]
 	public partial class Pawn : Entity, ISimulated, IControls
 	{
-		protected override void OnAwake()
-		{
-			Tripod = GetComponent<ITripod>();
-		}
-
 		public Vector3 Velocity { get; set; }
 
 		public void Simulate( Client client )
 		{
-			// EyePos & EyeRot
-
-			EyeRot = Quaternion.Euler( client.Input.ViewAngles );
-			EyePos = Position + Vector3.Scale( Vector3.up, Scale ) * eyeHeight;
-
-			Rotation = Quaternion.AngleAxis( EyeRot.eulerAngles.y, Vector3.up );
-
 			// Controller
 
 			GetActiveController()?.Simulate( client );
@@ -48,14 +37,15 @@ namespace Espionage.Engine
 		// Pawn
 		//
 
-		public Vector3 EyePos { get; set; }
-		public Quaternion EyeRot { get; set; }
+		public Vector3 EyePos { get; internal set; }
+		public Quaternion EyeRot { get; internal set; }
 
 		public virtual void Posses( Client client )
 		{
-			CurrentController ??= Components.Get<Controller>();
+			PawnController ??= Components.Get<Controller>();
+			Tripod ??= Components.Get<Tripod>();
 
-			foreach ( var item in Components.All.OfType<ICallbacks>() )
+			foreach ( var item in Components.GetAll<ICallbacks>() )
 			{
 				item.Possess( client );
 			}
@@ -63,9 +53,9 @@ namespace Espionage.Engine
 
 		public virtual void UnPosses()
 		{
-			CurrentController = null;
+			PawnController = null;
 
-			foreach ( var item in Components.All.OfType<ICallbacks>() )
+			foreach ( var item in Components.GetAll<ICallbacks>() )
 			{
 				item.UnPossess();
 			}
@@ -77,14 +67,14 @@ namespace Espionage.Engine
 
 		private Controller GetActiveController()
 		{
-			return DevController ? DevController : CurrentController;
+			return DevController ? DevController : PawnController;
 		}
 
 		/// <summary>
 		/// The controller that is used
 		/// for controlling this pawn.
 		/// </summary>
-		public Controller CurrentController { get; set; }
+		public Controller PawnController { get; set; }
 
 		/// <summary>
 		/// This controller will override the normal controller.
@@ -98,7 +88,7 @@ namespace Espionage.Engine
 
 		public ITripod Tripod { get; set; }
 
-		public void PostCameraSetup( ref ITripod.Setup setup ) { }
+		public void PostCameraSetup( ref Tripod.Setup setup ) { }
 
 		//
 		// Controls
@@ -115,6 +105,12 @@ namespace Espionage.Engine
 		// Helpers
 		//
 
+		/// <summary>
+		/// The Visuals is what gets assigned to on the Viewer
+		/// on a tripod, when updating the camera. This will just
+		/// disable all Renderers in its children tree.
+		/// </summary>
+		public Transform Visuals => visuals;
 
 		/// <summary> Is this currently being possessed? </summary>
 		public bool IsClient => Client != null;
@@ -133,6 +129,6 @@ namespace Espionage.Engine
 		// Fields
 
 		[SerializeField]
-		private float eyeHeight = 1.65f;
+		private Transform visuals;
 	}
 }

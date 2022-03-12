@@ -18,6 +18,8 @@ namespace Espionage.Engine
 	{
 		public string Path { get; set; }
 
+		#if UNITY_EDITOR
+
 		public Texture2D Icon
 		{
 			get
@@ -27,6 +29,8 @@ namespace Espionage.Engine
 				return AssetDatabase.LoadAssetAtPath<Texture2D>( path );
 			}
 		}
+
+		#endif
 
 		public void OnAttached( Library library ) { }
 		public void OnAttached( Property property ) { }

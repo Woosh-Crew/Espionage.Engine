@@ -21,9 +21,9 @@ namespace Espionage.Engine
 
 		// Detaching
 
-		public sealed override void OnDetached( Entity item )
+		public sealed override void OnDetached()
 		{
-			base.OnDetached( item );
+			base.OnDetached();
 			OnDetached( Entity );
 		}
 
@@ -71,9 +71,22 @@ namespace Espionage.Engine
 		/// What should we do when this component
 		/// is detached to from an Entity.
 		/// </summary>
-		public virtual void OnDetached( Entity item )
+		public virtual void OnDetached()
 		{
 			Entity = null;
+		}
+
+		protected sealed override void OnDelete()
+		{
+			if ( Entity == null || Entity.Components == null )
+			{
+				OnDetached();
+			}
+			else
+			{
+				Entity.Components?.Remove( this );
+			}
+
 		}
 
 		/// <summary>

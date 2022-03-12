@@ -16,7 +16,7 @@ namespace Espionage.Engine.Tripods
 
 		private float _speedMulti = 1;
 
-		void ITripod.Build( ref ITripod.Setup camSetup )
+		void ITripod.Build( ref Tripod.Setup camSetup )
 		{
 			// FOV
 			camSetup.Damping = 15;
@@ -77,7 +77,7 @@ namespace Espionage.Engine.Tripods
 			}
 		}
 
-		public void Activated( ref ITripod.Setup camSetup )
+		public void Activated( ref Tripod.Setup camSetup )
 		{
 			_targetPos = camSetup.Position;
 			_targetRot = camSetup.Rotation.eulerAngles.WithZ( 0 );

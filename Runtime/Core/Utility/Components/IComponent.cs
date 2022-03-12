@@ -5,6 +5,6 @@
 		bool CanAttach( T item ) { return true; }
 
 		void OnAttached( T item );
-		void OnDetached( T item ) { }
+		void OnDetached() { }
 	}
 }

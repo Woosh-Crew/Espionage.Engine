@@ -37,7 +37,7 @@ namespace Espionage.Engine.Resources
 			Model = Model.Load( modelPath );
 		}
 
-		protected override void OnDelete()
+		public override void OnDetached()
 		{
 			_model?.Remove( Object );
 		}

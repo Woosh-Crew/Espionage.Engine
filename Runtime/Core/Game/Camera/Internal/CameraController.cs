@@ -1,4 +1,5 @@
 ﻿using System;
+using Espionage.Engine.Tripods;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -16,7 +17,7 @@ namespace Espionage.Engine
 			Camera.depth = 2;
 		}
 
-		internal void Finalise( in ITripod.Setup camSetup )
+		internal void Finalise( in Tripod.Setup camSetup )
 		{
 			var trans = transform;
 			trans.localPosition = camSetup.Position;
@@ -32,7 +33,7 @@ namespace Espionage.Engine
 
 		private Transform _lastViewer;
 
-		private void HandleViewer( in ITripod.Setup camSetup )
+		private void HandleViewer( in Tripod.Setup camSetup )
 		{
 			if ( _lastViewer == camSetup.Viewer )
 			{

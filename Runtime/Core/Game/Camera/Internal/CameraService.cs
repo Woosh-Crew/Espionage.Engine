@@ -19,7 +19,7 @@ namespace Espionage.Engine.Services
 
 		public CameraController Controller { get; private set; }
 
-		private ITripod.Setup _lastSetup = new()
+		private Tripod.Setup _lastSetup = new()
 		{
 			Rotation = Quaternion.identity,
 			FieldOfView = 60,

@@ -8,7 +8,7 @@ namespace Espionage.Engine.Tripods
 		private float _targetDistance;
 		private float _smoothedDistance;
 
-		public override void Activated( ref ITripod.Setup camSetup )
+		public override void Activated( ref Setup camSetup )
 		{
 			base.Activated( ref camSetup );
 

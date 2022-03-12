@@ -1,4 +1,5 @@
 ﻿using Espionage.Engine.Gamemodes;
+using Espionage.Engine.Tripods;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.PostProcessing;
@@ -99,7 +100,7 @@ namespace Espionage.Engine
 			return null;
 		}
 
-		public virtual ITripod.Setup BuildCamera( ITripod.Setup camSetup )
+		public virtual Tripod.Setup BuildCamera( Tripod.Setup camSetup )
 		{
 			// Default FOV
 			camSetup.FieldOfView = 68;
@@ -121,7 +122,7 @@ namespace Espionage.Engine
 			return camSetup;
 		}
 
-		protected virtual void PostCameraSetup( ref ITripod.Setup camSetup )
+		protected virtual void PostCameraSetup( ref Tripod.Setup camSetup )
 		{
 			if ( Local.Pawn != null )
 			{
@@ -129,7 +130,7 @@ namespace Espionage.Engine
 			}
 
 			Viewmodel.Apply( ref camSetup );
-			ITripod.Modifier.Apply( ref camSetup );
+			Tripod.Modifier.Apply( ref camSetup );
 		}
 
 		/// <summary>

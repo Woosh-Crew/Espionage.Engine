@@ -19,6 +19,8 @@ namespace Espionage.Engine
 
 		protected override void Simulate()
 		{
+			base.Simulate();
+
 			// player movement - forward, backward, left, right
 			var input = new Vector2( Client.Input.Horizontal, Client.Input.Forward );
 			input = input.normalized;

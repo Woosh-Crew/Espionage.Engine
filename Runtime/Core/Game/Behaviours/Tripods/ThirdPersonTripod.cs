@@ -5,13 +5,13 @@ namespace Espionage.Engine.Tripods
 	[Library( "tripod.third_person" )]
 	public class ThirdPersonTripod : Tripod
 	{
-		public override void Activated( ref ITripod.Setup camSetup )
+		public override void Activated( ref Setup camSetup )
 		{
 			camSetup.Position = Local.Pawn.EyePos;
 			camSetup.Rotation = Local.Pawn.EyeRot;
 		}
 
-		protected override void OnBuildTripod( ref ITripod.Setup camSetup )
+		protected override void OnBuildTripod( ref Setup camSetup )
 		{
 			if ( Local.Pawn == null )
 			{

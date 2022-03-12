@@ -1,4 +1,5 @@
 using System.Linq;
+using Espionage.Engine.Tripods;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -7,7 +8,7 @@ namespace Espionage.Engine
 	[Group( "Viewmodels" )]
 	public sealed class Viewmodel : Entity
 	{
-		public static void Apply( ref ITripod.Setup setup )
+		public static void Apply( ref Tripod.Setup setup )
 		{
 			// Build Viewmodels...
 			foreach ( var viewmodel in All.OfType<Viewmodel>() )
@@ -45,7 +46,7 @@ namespace Espionage.Engine
 			Enabled = Showing;
 		}
 
-		private void PostCameraSetup( ref ITripod.Setup setup )
+		private void PostCameraSetup( ref Tripod.Setup setup )
 		{
 			// Basically if the current tripod is not the 
 			// Pawns one, don't move...
@@ -67,7 +68,7 @@ namespace Espionage.Engine
 		[Group( "Viewmodels" )]
 		public abstract class Effect : Component<Viewmodel>
 		{
-			public abstract void PostCameraSetup( ref ITripod.Setup setup );
+			public abstract void PostCameraSetup( ref Tripod.Setup setup );
 		}
 
 		// Fields

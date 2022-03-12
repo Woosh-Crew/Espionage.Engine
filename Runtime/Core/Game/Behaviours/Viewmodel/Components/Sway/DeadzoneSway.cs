@@ -1,3 +1,4 @@
+using Espionage.Engine.Tripods;
 using UnityEngine;
 
 namespace Espionage.Engine.Viewmodels
@@ -7,7 +8,7 @@ namespace Espionage.Engine.Viewmodels
 		private Vector2 _savedDeadzoneAxis;
 		private Quaternion _lastDeadzoneRotation;
 
-		public override void PostCameraSetup( ref ITripod.Setup setup )
+		public override void PostCameraSetup( ref Tripod.Setup setup )
 		{
 			DeadzoneAxis();
 
