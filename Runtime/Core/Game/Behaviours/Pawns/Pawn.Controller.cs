@@ -29,7 +29,7 @@ namespace Espionage.Engine
 			protected void Finalise( Pawn pawn )
 			{
 				pawn.Velocity = Velocity;
-				pawn.Rotation = Rotation;
+				pawn.transform.localRotation = Rotation;
 
 				pawn.EyePos = EyePos;
 				pawn.EyeRot = EyeRot;

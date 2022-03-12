@@ -20,11 +20,10 @@ namespace Espionage.Engine.Services
 			}
 
 			// Setup ViewAngles,
-			_setup.MouseDelta = new()
-			{
-				x = Input.GetAxis( "Mouse X" ) * Options.MouseSensitivity,
-				y = Input.GetAxis( "Mouse Y" ) * Options.MouseSensitivity
-			};
+			Vector2 mouse = new() { x = Input.GetAxis( "Mouse X" ), y = Input.GetAxis( "Mouse Y" ) };
+			mouse *= Options.MouseSensitivity;
+
+			_setup.MouseDelta = mouse;
 
 			_setup.MouseWheel = Input.GetAxisRaw( "Mouse ScrollWheel" );
 
