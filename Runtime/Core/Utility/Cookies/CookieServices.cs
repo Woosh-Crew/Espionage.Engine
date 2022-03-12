@@ -54,9 +54,12 @@ namespace Espionage.Engine.Services
 
 				try
 				{
-					// This is aids
-					var prop = Registry[split[0]];
-					prop[null] = Converter.Convert( split[1], prop.Type );
+					if ( Registry.ContainsKey( split[0] ) )
+					{
+						// This is aids
+						var prop = Registry[split[0]];
+						prop[null] = Converter.Convert( split[1], prop.Type );
+					}
 				}
 				catch ( Exception e )
 				{

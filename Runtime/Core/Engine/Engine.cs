@@ -242,7 +242,7 @@ namespace Espionage.Engine
 				return;
 			}
 
-			Callback.Run( "physics.frame" );
+			Callback.Run( "physics.step" );
 		}
 
 		private static void OnPostUpdate()

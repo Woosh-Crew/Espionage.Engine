@@ -4,10 +4,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using UnityEngine;
-using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 
 #if UNITY_EDITOR
 using UnityEditor;
+using PackageInfo = UnityEditor.PackageManager.PackageInfo;
 #endif
 
 namespace Espionage.Engine
@@ -20,18 +20,19 @@ namespace Espionage.Engine
 	[Library, Group( "Files" ), Title( "File System" )]
 	public static class Files
 	{
-		public static readonly Dictionary<string, string> Paths = new()
+		internal static readonly Dictionary<string, string> Paths = new()
 		{
 			// using our own path methods rather than the dubious unity ones
 			["config"] = UserConfigPath,
 			["user"] = UserDataPath,
 			["cache"] = CachePath,
 			["game"] = Application.dataPath,
-			["assets"] = Application.isEditor ? $"{Application.dataPath}/../Exports/" : Application.dataPath,
+			["assets"] = Application.isEditor ? $"exports://" : Application.dataPath,
 
 	#if UNITY_EDITOR
-			["project"] = Application.dataPath + "/../",
-			["package"] = PackagePath
+			["exports"] = $"{Application.dataPath}/../Exports/",
+			["project"] = $"{Application.dataPath}/../",
+			["package"] = PackagePath,
 	#endif
 
 		};
@@ -83,16 +84,14 @@ namespace Espionage.Engine
 					return $"{xdg}/{game}";
 				}
 
-				// Otherwise, it's onto the platform specific mess
-		#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
-				return $"{Environment.GetEnvironmentVariable( "TEMP" )}\\{game}";
-		#elif UNITY_EDITOR_LINUX || UNITY_STANDALONE_LINUX
-			return $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}/.cache/{game}";
-		#elif UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
-			return $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}/Library/Caches/{game}";
-		#else
-			throw new PlatformNotSupportedException();
-		#endif
+				return SystemInfo.operatingSystemFamily switch
+				{
+					OperatingSystemFamily.Windows => $"{Environment.GetEnvironmentVariable( "TEMP" )}\\{game}",
+					OperatingSystemFamily.Linux => $"{Environment.GetFolderPath( Environment.SpecialFolder.UserProfile )}/.cache/{game}",
+					OperatingSystemFamily.MacOSX => $"{Environment.GetFolderPath( Environment.SpecialFolder.UserProfile )}/Library/Caches/{game}",
+					OperatingSystemFamily.Other => throw new PlatformNotSupportedException(),
+					_ => throw new PlatformNotSupportedException()
+				};
 			}
 		}
 
@@ -117,16 +116,14 @@ namespace Espionage.Engine
 					return $"{xdg}/{game}";
 				}
 
-				// Otherwise, it's onto the platform specific mess
-		#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
-				return $"{Environment.GetFolderPath( Environment.SpecialFolder.LocalApplicationData )}\\{game}";
-		#elif UNITY_EDITOR_LINUX || UNITY_STANDALONE_LINUX
-			return $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}/.local/share/{game}";
-		#elif UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
-			return $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}/Library/Application Support/{game}";
-		#else
-			throw new PlatformNotSupportedException();
-		#endif
+				return SystemInfo.operatingSystemFamily switch
+				{
+					OperatingSystemFamily.MacOSX => $"{Environment.GetFolderPath( Environment.SpecialFolder.UserProfile )}/Library/Application Support/{game}",
+					OperatingSystemFamily.Windows => $"{Environment.GetFolderPath( Environment.SpecialFolder.LocalApplicationData )}\\{game}",
+					OperatingSystemFamily.Linux => $"{Environment.GetFolderPath( Environment.SpecialFolder.UserProfile )}/.local/share/{game}",
+					OperatingSystemFamily.Other => throw new PlatformNotSupportedException(),
+					_ => throw new PlatformNotSupportedException()
+				};
 			}
 		}
 
@@ -150,16 +147,14 @@ namespace Espionage.Engine
 					return $"{xdg}/{game}";
 				}
 
-				// Otherwise, it's onto the platform specific mess
-		#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
-				return $"{Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData )}\\{game}";
-		#elif UNITY_EDITOR_LINUX || UNITY_STANDALONE_LINUX
-			return $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}/.config/{game}";
-		#elif UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
-			return $"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}/Library/Preferences/{game}";
-		#else
-			throw new PlatformNotSupportedException();
-		#endif
+				return SystemInfo.operatingSystemFamily switch
+				{
+					OperatingSystemFamily.MacOSX => $"{Environment.GetFolderPath( Environment.SpecialFolder.UserProfile )}/Library/Preferences/{game}",
+					OperatingSystemFamily.Windows => $"{Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData )}\\{game}",
+					OperatingSystemFamily.Linux => $"{Environment.GetFolderPath( Environment.SpecialFolder.UserProfile )}/.config/{game}",
+					OperatingSystemFamily.Other => throw new PlatformNotSupportedException(),
+					_ => throw new PlatformNotSupportedException()
+				};
 			}
 		}
 
@@ -168,13 +163,7 @@ namespace Espionage.Engine
 			get
 			{
 				var package = PackageInfo.FindForAssembly( Assembly.GetExecutingAssembly() );
-
-				if ( package == null )
-				{
-					return "game://Espionage.Engine/";
-				}
-
-				return $"Packages/{package.name}/";
+				return package == null ? "game://Espionage.Engine/" : $"Packages/{package.name}/";
 			}
 		}
 

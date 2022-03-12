@@ -26,7 +26,7 @@ namespace Espionage.Engine.Editor
 
 		public override void OnInspectorGUI()
 		{
-			var originalRect = EditorGUILayout.GetControlRect( true, 22, GUIStyle.none );
+			var originalRect = EditorGUILayout.GetControlRect( true, 24, GUIStyle.none );
 
 			var rect = originalRect;
 			rect.width = Screen.width;
@@ -62,13 +62,14 @@ namespace Espionage.Engine.Editor
 			rect.width += 16;
 			rect.y -= 1;
 			rect.x = 0;
+			var color = new Color32( 26, 26, 26, 255 );
 
 			// Top
-			EditorGUI.DrawRect( rect, new Color32( 25, 25, 25, 255 ) );
+			EditorGUI.DrawRect( rect, color );
 
 			// Bottom
-			rect.y += originalRect.height;
-			EditorGUI.DrawRect( rect, new Color32( 25, 25, 25, 255 ) );
+			rect.y += originalRect.height + 1;
+			EditorGUI.DrawRect( rect, color );
 
 			base.OnInspectorGUI();
 		}
