@@ -6,7 +6,7 @@
   "unity": "2022.1",
   "unityRelease": "0b1",
   "dependencies": {
-    "postprocessing": "3.2.1"
+    "com.unity.postprocessing": "3.2.1"
   },
   "keywords": [
   ],
