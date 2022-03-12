@@ -4,30 +4,28 @@ using UnityEngine.Rendering;
 
 namespace Espionage.Engine
 {
-	[Group( "Engine" ), Singleton, RequireComponent( typeof( Camera ), typeof( AudioListener ), typeof( FlareLayer ) )]
-	internal class CameraController : Behaviour
+	[Group( "Engine" ), Singleton, RequireComponent( typeof( Camera ), typeof( AudioListener ) )]
+	public class CameraController : Entity
 	{
-		private Camera _cam;
+		internal Camera Camera { get; set; }
 
 		protected override void OnAwake()
 		{
 			gameObject.tag = "MainCamera";
-			_cam = GetComponent<Camera>();
-			_cam.depth = 2;
-
-			Engine.Game.OnCameraCreated( _cam );
+			Camera = GetComponent<Camera>();
+			Camera.depth = 2;
 		}
 
-		public void Finalise( in ITripod.Setup camSetup )
+		internal void Finalise( in ITripod.Setup camSetup )
 		{
 			var trans = transform;
 			trans.localPosition = camSetup.Position;
 			trans.localRotation = camSetup.Rotation;
 
-			_cam.fieldOfView = camSetup.Damping > 0 ? Mathf.Lerp( _cam.fieldOfView, camSetup.FieldOfView, camSetup.Damping * Time.deltaTime ) : camSetup.FieldOfView;
+			Camera.fieldOfView = camSetup.Damping > 0 ? Mathf.Lerp( Camera.fieldOfView, camSetup.FieldOfView, camSetup.Damping * Time.deltaTime ) : camSetup.FieldOfView;
 
-			_cam.farClipPlane = camSetup.Clipping.y;
-			_cam.nearClipPlane = camSetup.Clipping.x;
+			Camera.farClipPlane = camSetup.Clipping.y;
+			Camera.nearClipPlane = camSetup.Clipping.x;
 
 			HandleViewer( camSetup );
 		}

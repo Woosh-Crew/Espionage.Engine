@@ -1,6 +1,7 @@
-﻿using Espionage.Engine.Components;
-using Espionage.Engine.Gamemodes;
+﻿using Espionage.Engine.Gamemodes;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.PostProcessing;
 
 namespace Espionage.Engine
 {
@@ -131,9 +132,30 @@ namespace Espionage.Engine
 			ITripod.Modifier.Apply( ref camSetup );
 		}
 
-		/// <summary> Override this if your camera needs custom components </summary>
-		/// <param name="camera"> The Main Camera </param>
-		public virtual void OnCameraCreated( Camera camera ) { }
+		/// <summary>
+		/// Override this if your camera needs custom components,
+		/// such as Render pipeline specific components. 
+		/// </summary>
+		/// <param name="camera">
+		/// The Main Camera created by Espionage.Engine, which is
+		/// a singleton.
+		/// </param>
+		public virtual void OnCameraCreated( Camera camera )
+		{
+			// Setup Render Path
+			camera.renderingPath = RenderingPath.DeferredShading;
+
+			// Setup Post Processing
+			var postProcessLayer = camera.gameObject.AddComponent<PostProcessLayer>();
+			postProcessLayer.Init( UnityEngine.Resources.Load<PostProcessResources>( "PostProcessResources" ) );
+
+			postProcessLayer.volumeTrigger = camera.transform;
+			postProcessLayer.volumeLayer = LayerMask.GetMask( "TransparentFX" );
+			postProcessLayer.antialiasingMode = PostProcessLayer.Antialiasing.SubpixelMorphologicalAntialiasing;
+
+			var debug = camera.gameObject.AddComponent<PostProcessDebug>();
+			debug.postProcessLayer = postProcessLayer;
+		}
 
 		//
 		// Build Input

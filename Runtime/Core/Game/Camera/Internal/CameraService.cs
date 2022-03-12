@@ -1,30 +1,23 @@
-﻿using System.Linq;
-using Espionage.Engine.Tripods;
+﻿using Espionage.Engine.Tripods;
 using UnityEngine;
 
 namespace Espionage.Engine.Services
 {
 	[Order( -5 )]
-	internal class CameraService : Service
+	public class CameraService : Service
 	{
 		public override void OnReady()
 		{
-			if ( !Application.isPlaying )
-			{
-				return;
-			}
+			Controller = Library.Database.Create<CameraController>();
+			Controller.gameObject.MoveTo( Engine.Scene );
 
-			var obj = new GameObject( "Main Camera" ).MoveTo( Engine.Scene );
-
-			// Setup Camera
-			_camera = obj.AddComponent<CameraController>();
-
-			Callback.Run( "camera.created", _camera );
+			Engine.Game.OnCameraCreated( Controller.Camera );
+			Callback.Run( "camera.created", Controller );
 		}
 
 		// Frame
 
-		private CameraController _camera;
+		public CameraController Controller { get; private set; }
 
 		private ITripod.Setup _lastSetup = new()
 		{
@@ -49,7 +42,7 @@ namespace Espionage.Engine.Services
 			_lastSetup = Engine.Game.BuildCamera( _lastSetup );
 
 			// Finalise
-			_camera.Finalise( _lastSetup );
+			Controller.Finalise( _lastSetup );
 
 			// Set the viewer to null, so its cleared every frame.
 			_lastSetup.Viewer = null;

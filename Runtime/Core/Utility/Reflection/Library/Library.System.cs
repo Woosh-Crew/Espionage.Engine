@@ -77,7 +77,6 @@ namespace Espionage.Engine
 				}
 
 				var newSingleton = Construct( library );
-				_singletons.Add( library.Class, newSingleton );
 				return newSingleton;
 			}
 

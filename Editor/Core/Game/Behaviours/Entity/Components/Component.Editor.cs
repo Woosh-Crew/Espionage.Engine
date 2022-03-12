@@ -7,7 +7,7 @@ namespace Espionage.Engine.Editor
 	[CustomEditor( typeof( Component ), true )]
 	internal class ComponentEditor : BehaviourEditor
 	{
-		protected virtual void OnEnable()
+		protected override void OnEnable()
 		{
 			base.OnEnable();
 			EditorInjection.Titles[target.GetType()] = $"{ClassInfo.Title} (Component)";
