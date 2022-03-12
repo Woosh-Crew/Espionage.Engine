@@ -48,7 +48,7 @@ namespace Espionage.Engine.Internal.Commands
 
 				for ( var i = 0; i < parameters.Length; i++ )
 				{
-					finalArgs[i] = i >= args.Length ? parameters[i].DefaultValue : Convert.ChangeType( args[i], parameters[i].ParameterType );
+					finalArgs[i] = i >= args.Length ? parameters[i].DefaultValue : Converter.Convert( args[i], parameters[i].ParameterType );
 				}
 
 				return finalArgs;

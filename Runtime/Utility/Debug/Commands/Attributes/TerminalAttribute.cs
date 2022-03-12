@@ -14,8 +14,6 @@ namespace Espionage.Engine
 	{
 		public void OnAttached( Function item )
 		{
-			Debugging.Log.Info( "Adding Command" );
-
 			if ( !item.Info.IsStatic )
 			{
 				Debugging.Log.Error( $"Function \"{item.Name}\" Must be Static!" );

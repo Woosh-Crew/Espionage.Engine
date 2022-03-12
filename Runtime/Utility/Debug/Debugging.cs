@@ -69,40 +69,6 @@ namespace Espionage.Engine
 
 			Log = new SimpleLoggingProvider();
 			Console = new SimpleCommandProvider();
-
-			// Setup Default Commands
-
-			// Quit
-			Console.Add( new Command()
-				{
-					Name = "quit",
-					Help = "Quits the application"
-				}.WithAction( _ => Application.Quit() )
-			);
-
-			// Clear
-			Console.Add( new Command()
-				{
-					Name = "clear",
-					Help = "Clears everything in the log"
-				}.WithAction( _ => Log.Clear() )
-			);
-
-			// Help
-			Console.Add( new Command()
-				{
-					Name = "help",
-					Help = "Returns Help Message on all commands"
-				}.WithAction( _ =>
-				{
-					Log.Info( "Dumping All" );
-
-					foreach ( var command in Console.All )
-					{
-						Log.Info( $"{command.Name} = {command.Help}" );
-					}
-				} )
-			);
 		}
 
 		//
