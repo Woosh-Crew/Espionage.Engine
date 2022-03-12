@@ -73,7 +73,7 @@ namespace Espionage.Engine
 			}
 		}
 
-		public virtual void UnPosses()
+		public virtual void UnPossess()
 		{
 			PawnController = null;
 
@@ -110,7 +110,13 @@ namespace Espionage.Engine
 
 		public ITripod Tripod { get; set; }
 
-		public void PostCameraSetup( ref Tripod.Setup setup ) { }
+		public virtual void PostCameraSetup( ref Tripod.Setup setup )
+		{
+			foreach ( var item in Components.GetAll<ICallbacks>() )
+			{
+				item.PostCameraSetup( ref setup );
+			}
+		}
 
 		//
 		// Controls
@@ -119,6 +125,11 @@ namespace Espionage.Engine
 		void IControls.Build( IControls.Setup setup )
 		{
 			OnBuildControls( setup );
+
+			foreach ( var item in Components.GetAll<ICallbacks>() )
+			{
+				item.OnBuildControls( setup );
+			}
 		}
 
 		protected virtual void OnBuildControls( IControls.Setup setup ) { }
@@ -147,8 +158,17 @@ namespace Espionage.Engine
 		/// </summary>
 		public interface ICallbacks
 		{
-			void Possess( Client client );
-			void UnPossess();
+			/// <inheritdoc cref="Pawn.Posses"/>
+			void Possess( Client client ) { }
+
+			/// <inheritdoc cref="Pawn.UnPossess"/>
+			void UnPossess() { }
+
+			/// <inheritdoc cref="Pawn.PostCameraSetup"/>
+			void PostCameraSetup( ref Tripod.Setup setup ) { }
+
+			/// <inheritdoc cref="Pawn.OnBuildControls"/>
+			void OnBuildControls( IControls.Setup setup ) { }
 		}
 
 		// Fields

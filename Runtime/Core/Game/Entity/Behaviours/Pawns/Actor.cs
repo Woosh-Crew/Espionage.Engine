@@ -23,6 +23,17 @@
 			Health.OnDamaged -= OnDamaged;
 		}
 
+		public override void PostCameraSetup( ref Tripod.Setup setup )
+		{
+			var holdable = Inventory as IHasHoldable;
+			if ( holdable != null && holdable.Active != null )
+			{
+				holdable.Active.PostCameraSetup( ref setup );
+			}
+
+			base.PostCameraSetup( ref setup );
+		}
+
 		//
 		// Health
 		//
@@ -50,7 +61,6 @@
 				item.Respawn();
 			}
 		}
-
 
 		/// <summary>
 		/// Called from the Health component when this Actor

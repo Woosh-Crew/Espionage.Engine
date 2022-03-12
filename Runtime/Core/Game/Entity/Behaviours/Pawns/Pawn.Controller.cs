@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
 namespace Espionage.Engine
@@ -47,7 +48,8 @@ namespace Espionage.Engine
 
 			// Controller
 
-			public Vector3 Velocity { get; set; }
+			[SuppressMessage( "ReSharper", "InconsistentNaming" )]
+			protected Vector3 Velocity;
 
 			protected virtual void Simulate()
 			{

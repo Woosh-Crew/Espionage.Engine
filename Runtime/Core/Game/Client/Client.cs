@@ -71,7 +71,7 @@ namespace Espionage.Engine
 				if ( _pawn != null )
 				{
 					_pawn.Client = null;
-					_pawn.UnPosses();
+					_pawn.UnPossess();
 				}
 
 				_pawn = value;

@@ -28,6 +28,8 @@ namespace Espionage.Engine
 			OnHolster = null;
 		}
 
+		public virtual void PostCameraSetup( ref Tripod.Setup setup ) { }
+
 		//
 		// Deploy
 		//
@@ -107,7 +109,7 @@ namespace Espionage.Engine
 
 			IsHolstering = true;
 			timeSinceHolster = 0;
-			
+
 			return true;
 		}
 
@@ -118,7 +120,7 @@ namespace Espionage.Engine
 			OnHolster?.Invoke();
 			OnHolster = null;
 			IsHolstering = false;
-			
+
 			Enabled = false;
 		}
 
