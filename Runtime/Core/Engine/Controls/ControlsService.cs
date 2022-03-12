@@ -2,13 +2,10 @@
 
 namespace Espionage.Engine.Services
 {
-	[Order( -10 )]
 	internal class ControlsService : Service
 	{
 		private IControls.Setup _setup = new();
 
-		[Property( "controls.ms_sensitivity" ), Title( "Mouse Sensitivity" ), ConVar]
-		private static float MouseSensitivity { get; set; } = 2;
 
 		public override void OnReady()
 		{
@@ -25,8 +22,8 @@ namespace Espionage.Engine.Services
 			// Setup ViewAngles,
 			_setup.MouseDelta = new()
 			{
-				x = Input.GetAxis( "Mouse X" ) * MouseSensitivity,
-				y = Input.GetAxis( "Mouse Y" ) * MouseSensitivity
+				x = Input.GetAxis( "Mouse X" ) * Options.MouseSensitivity,
+				y = Input.GetAxis( "Mouse Y" ) * Options.MouseSensitivity
 			};
 
 			_setup.MouseWheel = Input.GetAxisRaw( "Mouse ScrollWheel" );

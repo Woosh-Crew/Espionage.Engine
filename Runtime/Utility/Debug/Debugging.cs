@@ -111,28 +111,22 @@ namespace Espionage.Engine
 
 		// App
 
-		[ConVar, Property( "application.product_name" )]
-		private static string ProductName => Application.productName;
+		[Terminal, Property( "application.unity_version" )]
+		private static string Version => Application.unityVersion;
 
-		[ConVar, Property( "application.company_name" )]
-		private static string CompanyName => Application.companyName;
-
-		[ConVar, Property( "application.unity_version" )]
-		private static string UnityVersion => Application.unityVersion;
-
-		[ConVar, Property( "application.sys_language" )]
-		private static string SystemLang => Application.systemLanguage.ToString();
+		[Terminal, Property( "application.sys_language" )]
+		private static string Language => Application.systemLanguage.ToString();
 
 		// Debug
 
-		[ConVar, Property( "debug.overlay" )]
+		[Terminal, Property( "debug.overlay" )]
 		private static bool ShowOverlays
 		{
 			get => Overlay.Show;
 			set => Overlay.Show = value;
 		}
 
-		[ConVar, Property( "debug.report_stopwatch" )]
+		[Terminal, Property( "debug.report_stopwatch", true )]
 		private static bool ReportStopwatch { get; set; } = true;
 
 		private class TimedScope : IDisposable

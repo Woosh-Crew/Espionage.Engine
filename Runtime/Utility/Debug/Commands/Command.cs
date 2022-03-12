@@ -37,31 +37,24 @@ namespace Espionage.Engine.Internal.Commands
 			// If were a property - Only convert first arg
 			if ( info is PropertyInfo property )
 			{
-				object value = null;
-
-				if ( args.Length > 0 )
-				{
-					value = Convert.ChangeType( args[0], property.PropertyType );
-				}
-
-				return new object[] { value };
+				return args.Length > 0 ? new[] { Converter.Convert( args[0], property.PropertyType ) } : null;
 			}
 
 			// Now if were a method, convert all args
-			if ( info is not MethodInfo method )
+			if ( info is MethodInfo method )
 			{
-				throw new InvalidProgramException( $"Convert Args doesnt support info type, {info.GetType().Name}" );
+				var parameters = method.GetParameters();
+				var finalArgs = new object[parameters.Length];
+
+				for ( var i = 0; i < parameters.Length; i++ )
+				{
+					finalArgs[i] = i >= args.Length ? parameters[i].DefaultValue : Convert.ChangeType( args[i], parameters[i].ParameterType );
+				}
+
+				return finalArgs;
 			}
 
-			var parameters = method.GetParameters();
-			var finalArgs = new object[parameters.Length];
-
-			for ( var i = 0; i < parameters.Length; i++ )
-			{
-				finalArgs[i] = i >= args.Length ? parameters[i].DefaultValue : Convert.ChangeType( args[i], parameters[i].ParameterType );
-			}
-
-			return finalArgs;
+			return null;
 		}
 	}
 }

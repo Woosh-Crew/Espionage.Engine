@@ -109,10 +109,11 @@ namespace Espionage.Engine
 		public class Database : IDatabase<IService, int>
 		{
 			public IEnumerable<IService> All => _services;
-
-			private readonly List<IService> _services = new();
+			public int Count => _services.Count;
 
 			public IService this[ int key ] => _services[key];
+
+			private readonly List<IService> _services = new();
 
 			public Database()
 			{
@@ -123,8 +124,6 @@ namespace Espionage.Engine
 						Add( Library.Database.Create<IService>( service.Class ) );
 					}
 				}
-
-				_services = _services.OrderBy( e => e.ClassInfo.Components.Get<OrderAttribute>()?.Order ?? 10 ).ToList();
 			}
 
 			public void Add( IService item )
@@ -152,8 +151,6 @@ namespace Espionage.Engine
 
 				_services.Clear();
 			}
-
-			public int Count => _services.Count;
 
 			public T Get<T>() where T : class, IService
 			{
