@@ -51,8 +51,5 @@ namespace Espionage.Engine
 
 		[SerializeField]
 		private float sprintSpeed = 12;
-
-		[SerializeField]
-		private float gravity = 9.8f;
 	}
 }

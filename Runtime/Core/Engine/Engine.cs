@@ -95,7 +95,7 @@ namespace Espionage.Engine
 			Game = Library.Database.Create<Game>( target.Class );
 			Callback.Run( "game.ready" );
 
-			Debugging.Log.Info( $"Using {Game?.ClassInfo.Title} as the Game" );
+			Debugging.Log.Info( $"Using {Game.ClassInfo.Title} as the Game, [{Game.ClassInfo.Name}]" );
 
 			return true;
 		}
