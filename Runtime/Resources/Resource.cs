@@ -56,7 +56,6 @@ namespace Espionage.Engine.Resources
 		{
 			if ( Persistant )
 			{
-				Debugging.Log.Warning( "Can't Unload Resource, It is persistant." );
 				return;
 			}
 

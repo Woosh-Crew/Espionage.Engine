@@ -56,6 +56,7 @@ namespace Espionage.Engine.Internal
 
 		// Saving
 
+		[Terminal, Function( "cookies.save" )]
 		public static void Save()
 		{
 			if ( Registry.Count == 0 )

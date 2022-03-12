@@ -18,19 +18,21 @@ namespace Espionage.Engine
 	{
 		public string Path { get; set; }
 
-		#if UNITY_EDITOR
-
 		public Texture2D Icon
 		{
 			get
 			{
-				var path = Files.Path( Path, "project://" );
-				Debugging.Log.Info( path );
-				return AssetDatabase.LoadAssetAtPath<Texture2D>( path );
+				// BUG : Memory leak right here!
+				// TODO : Fix this after we implement texture resources.
+
+				var image = Files.Deserialize( Path );
+
+				var texture = new Texture2D( 2, 2 );
+				texture.LoadImage( image );
+
+				return texture;
 			}
 		}
-
-		#endif
 
 		public void OnAttached( Library library ) { }
 		public void OnAttached( Property property ) { }

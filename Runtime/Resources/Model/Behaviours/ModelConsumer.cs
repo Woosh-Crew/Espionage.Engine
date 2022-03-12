@@ -1,4 +1,5 @@
 ﻿using System;
+using Espionage.Engine.Resources.Internal;
 using UnityEngine;
 
 namespace Espionage.Engine.Resources
@@ -13,13 +14,12 @@ namespace Espionage.Engine.Resources
 			get => _model?.Instances == 0 ? null : _model;
 			set
 			{
-
 				_model?.Remove( Object );
 				_model = value;
 
-				if ( _model != null && Application.isPlaying )
+				if ( _model != null )
 				{
-					Object = _model.Spawn( container );
+					Object = _model.Spawn( Container );
 				}
 			}
 		}
@@ -34,12 +34,8 @@ namespace Espionage.Engine.Resources
 		public override void OnAttached( Entity item )
 		{
 			base.OnAttached( item );
-			Model = Model.Load( modelPath );
-		}
 
-		public override void OnDetached()
-		{
-			_model?.Remove( Object );
+			Model = Model.Load( Path );
 		}
 
 		// Fields

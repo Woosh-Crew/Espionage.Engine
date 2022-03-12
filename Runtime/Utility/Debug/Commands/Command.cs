@@ -44,6 +44,12 @@ namespace Espionage.Engine.Internal.Commands
 			if ( info is MethodInfo method )
 			{
 				var parameters = method.GetParameters();
+
+				if ( parameters.Length == 0 )
+				{
+					return null;
+				}
+
 				var finalArgs = new object[parameters.Length];
 
 				for ( var i = 0; i < parameters.Length; i++ )

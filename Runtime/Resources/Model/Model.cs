@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Espionage.Engine.Resources.Internal;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -67,8 +68,13 @@ namespace Espionage.Engine.Resources
 		/// <returns> The spawned Model. </returns>
 		public GameObject Spawn( Transform container )
 		{
-			var go = Object.Instantiate( Provider.Output, container );
+			var go = Object.Instantiate( Provider.Output );
+			go.transform.parent = container;
 			go.transform.localPosition = Vector3.zero;
+
+			var reference = go.AddComponent<ModelReference>();
+			reference.Model = this;
+
 			Spawned.Add( go );
 			go.name = "Model";
 
@@ -89,7 +95,10 @@ namespace Espionage.Engine.Resources
 			Spawned.Remove( gameObject );
 			((IResource)this).Unload();
 
-			Object.Destroy( gameObject );
+			if ( gameObject != null )
+			{
+				Object.Destroy( gameObject );
+			}
 		}
 
 		// States
