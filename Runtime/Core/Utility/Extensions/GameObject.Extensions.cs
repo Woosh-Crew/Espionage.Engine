@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public static class GameObjectExtensions
+namespace Espionage.Engine
 {
-	public static GameObject MoveTo( this GameObject self, Scene scene )
+	public static class GameObjectExtensions
 	{
-		SceneManager.MoveGameObjectToScene(self, scene);
-		return self;
+		public static GameObject MoveTo( this GameObject self, Scene scene )
+		{
+			SceneManager.MoveGameObjectToScene(self, scene);
+			return self;
+		}
 	}
 }

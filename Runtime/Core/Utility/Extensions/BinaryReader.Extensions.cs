@@ -1,23 +1,26 @@
 ﻿using System.IO;
 using UnityEngine;
 
-public static class BinaryReaderExtensions
+namespace Espionage.Engine
 {
-	public static Vector3 ReadVec3( this BinaryReader reader )
+	public static class BinaryReaderExtensions
 	{
-		var x = reader.ReadSingle();
-		var y = reader.ReadSingle();
-		var z = reader.ReadSingle();
+		public static Vector3 ReadVec3( this BinaryReader reader )
+		{
+			var x = reader.ReadSingle();
+			var y = reader.ReadSingle();
+			var z = reader.ReadSingle();
 
-		return new( x, y, z );
-	}
+			return new( x, y, z );
+		}
 
-	public static Vector3 ReadSourceVec3( this BinaryReader reader )
-	{
-		var x = reader.ReadSingle();
-		var z = reader.ReadSingle();
-		var y = reader.ReadSingle();
+		public static Vector3 ReadSourceVec3( this BinaryReader reader )
+		{
+			var x = reader.ReadSingle();
+			var z = reader.ReadSingle();
+			var y = reader.ReadSingle();
 
-		return new( x, y, z );
+			return new( x, y, z );
+		}
 	}
 }

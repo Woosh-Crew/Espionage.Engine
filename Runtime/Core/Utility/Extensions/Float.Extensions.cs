@@ -1,14 +1,17 @@
 ﻿using UnityEngine;
 
-public static class FloatExtensions
+namespace Espionage.Engine
 {
-	public static float Remap( this float input, float inputMin, float inputMax, float min, float max )
+	public static class FloatExtensions
 	{
-		return min + (input - inputMin) * (max - min) / (inputMax - inputMin);
-	}
+		public static float Remap( this float input, float inputMin, float inputMax, float min, float max )
+		{
+			return min + (input - inputMin) * (max - min) / (inputMax - inputMin);
+		}
 
-	public static float LerpTo( this float input, float b, float t )
-	{
-		return Mathf.Lerp( input, b, t );
+		public static float LerpTo( this float input, float b, float t )
+		{
+			return Mathf.Lerp( input, b, t );
+		}
 	}
 }

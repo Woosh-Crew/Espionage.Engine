@@ -1,15 +1,18 @@
 using System;
 using System.Linq;
 
-public static class TypeExtensions
+namespace Espionage.Engine
 {
-	public static bool HasInterface<T>( this Type type )
+	public static class TypeExtensions
 	{
-		return type.GetInterfaces().Contains( typeof( T ) );
-	}
+		public static bool HasInterface<T>( this Type type )
+		{
+			return type.GetInterfaces().Contains( typeof( T ) );
+		}
 
-	public static bool HasInterface( this Type type, Type interfaceType )
-	{
-		return type.GetInterfaces().Contains( interfaceType );
+		public static bool HasInterface( this Type type, Type interfaceType )
+		{
+			return type.GetInterfaces().Contains( interfaceType );
+		}
 	}
 }

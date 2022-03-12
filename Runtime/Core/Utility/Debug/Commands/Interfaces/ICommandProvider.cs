@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Espionage.Engine;
 using Espionage.Engine.Internal.Commands;
 
 namespace Espionage.Engine.Internal.Commands
@@ -18,23 +18,25 @@ namespace Espionage.Engine.Internal.Commands
 //
 // Extensions
 //
-
-public static class CommandProviderExtensions
+namespace Espionage.Engine
 {
-	public static void Invoke( this ICommandProvider provider, string commandLine )
+	public static class CommandProviderExtensions
 	{
-		foreach ( var targetCommand in commandLine.Split( ';' ) )
+		public static void Invoke( this ICommandProvider provider, string commandLine )
 		{
-			var name = targetCommand.TrimStart().Split( ' ' ).First();
-			var args = targetCommand.Substring( name.Length ).SplitArguments();
+			foreach ( var targetCommand in commandLine.Split( ';' ) )
+			{
+				var name = targetCommand.TrimStart().Split( ' ' ).First();
+				var args = targetCommand.Substring( name.Length ).SplitArguments();
 
-			// Invoke multiple commands at the same time
-			provider.Invoke( name, args );
+				// Invoke multiple commands at the same time
+				provider.Invoke( name, args );
+			}
 		}
-	}
 
-	public static string[] Find( this ICommandProvider provider, string input )
-	{
-		return provider.All.Select( e => e.Name ).Where( e => e.StartsWith( input ) ).ToArray();
+		public static string[] Find( this ICommandProvider provider, string input )
+		{
+			return provider.All.Select( e => e.Name ).Where( e => e.StartsWith( input ) ).ToArray();
+		}
 	}
 }
