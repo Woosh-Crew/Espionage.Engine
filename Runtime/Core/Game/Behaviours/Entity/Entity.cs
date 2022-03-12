@@ -29,14 +29,11 @@ namespace Espionage.Engine
 		/// <summary> The client that has authority over this Entity </summary>
 		public Client Client { get; internal set; }
 
-		/// <summary> Components that are currently attached to this Entity </summary>
-		public Components<Entity> Components { get; private set; }
-
 		internal sealed override void Awake()
 		{
 			ClassInfo = Library.Register( this );
-
 			All.Add( this );
+
 			Components = new( this );
 
 			OnAwake();
@@ -46,15 +43,22 @@ namespace Espionage.Engine
 			{
 				Components.Add( item );
 			}
+
+			Components.OnAdded += OnComponentAdded;
+			Components.OnRemove += OnComponentRemoved;
 		}
 
 		protected override void OnAwake() { }
 
 		protected sealed override void OnDestroy()
 		{
+			All.Remove( this );
+
+			Components.OnAdded -= OnComponentAdded;
+			Components.OnRemove -= OnComponentRemoved;
+
 			base.OnDestroy();
 
-			All.Remove( this );
 			Components = null;
 		}
 
@@ -88,11 +92,21 @@ namespace Espionage.Engine
 		/// <param name="delta"> Time taken between the last Tick </param>
 		public virtual void Think( float delta )
 		{
-			foreach ( var component in Components.All.OfType<IThinkable>() )
+			foreach ( var component in Components.GetAll<IThinkable>() )
 			{
 				component.Think( delta );
 			}
 		}
+
+		//
+		// Components
+		//
+
+		/// <summary> Components that are currently attached to this Entity </summary>
+		public Components<Entity> Components { get; private set; }
+
+		protected virtual void OnComponentAdded( IComponent<Entity> component ) { }
+		protected virtual void OnComponentRemoved( IComponent<Entity> component ) { }
 
 		//
 		// Helpers

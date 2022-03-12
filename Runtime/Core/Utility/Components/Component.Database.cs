@@ -9,6 +9,13 @@ namespace Espionage.Engine.Components
 		public IEnumerable<IComponent<T>> All => _components;
 		public IComponent<T> this[ int key ] => _components[key];
 
+		public event Action<IComponent<T>> OnAdded;
+		public event Action<IComponent<T>> OnRemove;
+
+		//
+		// Instance
+		//
+
 		public Components( T item )
 		{
 			_target = item;
@@ -26,6 +33,8 @@ namespace Espionage.Engine.Components
 
 			_components.Add( item );
 			item.OnAttached( _target );
+
+			OnAdded?.Invoke( item );
 		}
 
 		public bool Contains( IComponent<T> item )
@@ -37,6 +46,8 @@ namespace Espionage.Engine.Components
 		{
 			_components.Remove( item );
 			item.OnDetached();
+
+			OnRemove?.Invoke( item );
 		}
 
 		public void Clear()
@@ -71,6 +82,29 @@ namespace Espionage.Engine.Components
 			var newComp = creation.Invoke();
 			Add( newComp as IComponent<T> );
 			return newComp;
+		}
+
+		public void Replace( IComponent<T> old, IComponent<T> newComp )
+		{
+			if ( old == null || newComp == null )
+			{
+				Debugging.Log.Error( $"Components aren't valid" );
+				return;
+			}
+
+			if ( !Contains( old ) )
+			{
+				Debugging.Log.Error( $"Components doesnt contain {old}" );
+				return;
+			}
+
+			Remove( old );
+			Add( newComp );
+		}
+
+		public void Replace<TComp>( IComponent<T> old, Func<TComp> creation )
+		{
+			Replace( old, Create( creation ) as IComponent<T> );
 		}
 
 		public IEnumerable<TComp> GetAll<TComp>()
