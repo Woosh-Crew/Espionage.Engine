@@ -1,5 +1,3 @@
-// Attribute based event callback system
-
 using System;
 using Espionage.Engine.Components;
 
