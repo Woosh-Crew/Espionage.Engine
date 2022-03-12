@@ -18,11 +18,10 @@ namespace Espionage.Engine
 	/// short hands for defining paths.
 	/// </summary>
 	[Library, Group( "Files" ), Title( "File System" )]
-	public static class Files
+	public static partial class Files
 	{
 		internal static readonly Dictionary<string, string> Paths = new()
 		{
-			// using our own path methods rather than the dubious unity ones
 			["config"] = UserConfigPath,
 			["user"] = UserDataPath,
 			["cache"] = CachePath,
@@ -34,39 +33,7 @@ namespace Espionage.Engine
 			["project"] = $"{Application.dataPath}/../",
 			["package"] = PackagePath,
 	#endif
-
 		};
-
-	#if UNITY_EDITOR
-
-		[MenuItem( "Tools/Espionage.Engine/Debug/Files/Report Random File" )]
-		private static void Testing()
-		{
-			Save( "Testing", "game://test.txt" );
-			Debugging.Log.Info( Deserialize<string>( "game://test.txt" ) );
-			Delete( "game://test.txt" );
-		}
-
-		[MenuItem( "Tools/Espionage.Engine/Debug/Files/Debug All Virtual Locations" )]
-		private static void Testing2()
-		{
-			foreach ( var (key, value) in Paths )
-			{
-				Debugging.Log.Info( $"{key} - [{Path( value )}]" );
-			}
-		}
-
-		[MenuItem( "Tools/Espionage.Engine/Debug/Files/Open Cookies" )]
-		private static void Testing3()
-		{
-			Open( "config://.cookies" );
-		}
-
-	#endif
-
-		//
-		// Pathing
-		//
 
 		/// <summary>
 		/// Returns a platform-specific cache and temp. data directory path.
@@ -171,169 +138,6 @@ namespace Espionage.Engine
 
 		#endif
 
-		//
-		// Deserializing
-		//
-
-		/// <summary>
-		/// Load and deserialize the data for us. Will try and find
-		/// the IFile that contains the respective extension.
-		/// </summary>
-		public static T Load<T>( string path ) where T : class, IFile
-		{
-			// Get the actual path
-			path = Path( path );
-
-			if ( !File.Exists( path ) )
-			{
-				throw new FileLoadException( "File doesn't exist" );
-			}
-
-			var fileInfo = new FileInfo( path );
-
-			var library = Library.Database.Find<T>( e => e.Components.Get<FileAttribute>()?.Extension == fileInfo.Extension[1..] );
-
-			if ( library == null )
-			{
-				throw new FileLoadException( "No Valid Deserializers for this File" );
-			}
-
-			var file = Library.Database.Create<T>( library.Class );
-
-			file.File = fileInfo;
-
-			using var stream = Read( path );
-			file.Load( stream );
-
-			return file;
-		}
-
-		/// <summary>
-		/// Deserializes data at the given path. Will
-		/// automatically deserialize it to the target
-		/// format.
-		/// </summary>
-		public static T Deserialize<T>( string path )
-		{
-			path = Path( path );
-
-			var deserializer = GrabDeserializer<T>();
-			return deserializer.Deserialize( Deserialize( path ) );
-		}
-
-		/// <summary>
-		/// Just gives us the raw data from a file at a path
-		/// </summary>
-		public static byte[] Deserialize( string path )
-		{
-			path = Path( path );
-
-			if ( !File.Exists( path ) )
-			{
-				throw new FileNotFoundException();
-			}
-
-			return File.ReadAllBytes( path );
-		}
-
-		private static IDeserializer<T> GrabDeserializer<T>()
-		{
-			var library = Library.Database.Find<IDeserializer<T>>();
-
-			if ( library == null )
-			{
-				throw new FileLoadException( "No Valid Deserializers for this File" );
-			}
-
-			return Library.Database.Create<IDeserializer<T>>( library.Class );
-		}
-
-		//
-		// Serialization
-		//
-
-		/// <summary>
-		/// Saves anything you want, (provided theres a
-		/// serializer for it) to the given path
-		/// </summary>
-		public static void Save<T>( T item, string path )
-		{
-			Save( Serialize( item ), path );
-		}
-
-		/// <summary>
-		/// Saves an array of anything you want,
-		/// (provided theres a serializer for it)
-		/// to the given path
-		/// </summary>
-		public static void Save<T>( T[] item, string path )
-		{
-			Save( Serialize( item ), path );
-		}
-
-		/// <summary>
-		/// Saves a byte buffer to a path,
-		/// it will overwrite if the file at that
-		/// path already exists.
-		/// </summary>
-		public static void Save( byte[] data, string path )
-		{
-			path = Path( path );
-
-			var fileInfo = new FileInfo( path );
-
-			if ( !Directory.Exists( fileInfo.DirectoryName ) )
-			{
-				Directory.CreateDirectory( fileInfo.DirectoryName );
-			}
-
-			using var stream = File.Create( path );
-			stream.Write( data );
-		}
-
-		/// <summary>
-		/// Serialize type of T to a byte array.
-		/// </summary>
-		public static byte[] Serialize<T>( T data )
-		{
-			var serializer = GrabSerializer<T>();
-			return serializer.Serialize( data );
-		}
-
-		/// <summary>
-		/// Serialize an type array of T to a byte array.
-		/// </summary>
-		public static byte[] Serialize<T>( T[] data )
-		{
-			var serializer = GrabSerializer<T>();
-			return serializer.Serialize( data );
-		}
-
-		private static ISerializer<T> GrabSerializer<T>()
-		{
-			var library = Library.Database.Find<ISerializer<T>>();
-
-			if ( library == null )
-			{
-				throw new FileLoadException( "No Valid Serializers for this File" );
-			}
-
-			return Library.Database.Create<ISerializer<T>>( library.Class );
-		}
-
-		//
-		// Reading
-		//
-
-		/// <summary>
-		/// Opens a FileStream to the designated path.
-		/// </summary>
-		public static FileStream Read( string path )
-		{
-			path = Path( path );
-			return new( path, FileMode.Open, FileAccess.Read );
-		}
-
 		/// <summary>
 		/// Gets the Path, If you use the virtual pathing
 		/// It'll search loaded mods first then the base content,
@@ -354,6 +158,12 @@ namespace Espionage.Engine
 			return System.IO.Path.GetFullPath( newPath );
 		}
 
+		/// <summary>
+		/// Gets the path, relative to another path. If you use
+		/// the virtual pathing It'll search loaded mods first
+		///  then the base content, Depending on the virtual
+		/// path you are trying to get.
+		/// </summary>
 		public static string Path( string path, string relative )
 		{
 			path = Path( path );
@@ -361,10 +171,6 @@ namespace Espionage.Engine
 
 			return System.IO.Path.GetRelativePath( relative, path );
 		}
-
-		//
-		// Utility
-		//
 
 		/// <summary>
 		/// Will check if the File or Directory exists

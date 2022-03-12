@@ -30,6 +30,7 @@ namespace Espionage.Engine.Internal
 
 			foreach ( var item in sheet )
 			{
+				// 0 is Index, 1 is value
 				var split = item.Split( '=' );
 
 				try
@@ -67,9 +68,14 @@ namespace Espionage.Engine.Internal
 
 			var serialized = new List<string>( Registry.Count );
 
-			foreach ( var (key, value) in Registry )
+			foreach ( var (key, property) in Registry )
 			{
-				serialized.Add( $"{key}={value[null]}" );
+				if ( property[null] == property.Default )
+				{
+					continue;
+				}
+
+				serialized.Add( $"{key}={property[null]}" );
 			}
 
 			Files.Save( serialized, "config://.cookies" );
