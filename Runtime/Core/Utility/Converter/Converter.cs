@@ -52,6 +52,11 @@ namespace Espionage.Engine
 		/// </summary>
 		public static T Convert<T>( string value )
 		{
+			if ( typeof( T ).IsEnum )
+			{
+				return (T)Enum.Parse( typeof( T ), value );
+			}
+
 			var library = Library.Database.Find<IConverter<T>>();
 
 			if ( library == null )
@@ -82,6 +87,12 @@ namespace Espionage.Engine
 		/// </remarks>
 		public static object Convert( string value, Type type )
 		{
+			// Doing explicit enum shit here, cause fuck it, this class is already painful
+			if ( type.IsEnum )
+			{
+				return Enum.Parse( type, value );
+			}
+
 			// JAKE: This is so aids.... But can't do much about that.
 
 			var interfaceType = typeof( IConverter<> ).MakeGenericType( type );

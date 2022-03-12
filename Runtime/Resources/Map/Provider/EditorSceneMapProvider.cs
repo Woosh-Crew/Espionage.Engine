@@ -1,7 +1,6 @@
 ﻿#if UNITY_EDITOR
 
 using System;
-using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -28,8 +27,11 @@ namespace Espionage.Engine.Resources
 		private static void Init()
 		{
 			// Dont give a shit if this is hacky, its editor only
-			var provider = new EditorSceneMapProvider { Output = SceneManager.GetActiveScene() };
-			Map.Current = new Map( provider );
+			var provider = new EditorSceneMapProvider
+			{
+				Output = SceneManager.GetActiveScene()
+			};
+			Map.Current = new( provider );
 			Map.Current.Load();
 		}
 
