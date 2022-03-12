@@ -3,21 +3,21 @@ using UnityEngine;
 
 namespace Espionage.Engine
 {
-	public readonly struct TimeSince : IEquatable<TimeSince>, IEquatable<float>
+	public struct TimeUntil : IEquatable<TimeUntil>, IEquatable<float>
 	{
-		private TimeSince( float time )
+		private TimeUntil( float time )
 		{
-			_time = Time.time - time;
+			_time = Time.time + time;
 		}
 
 		private readonly float _time;
 
-		public static implicit operator float( TimeSince ts )
+		public static implicit operator float( TimeUntil ts )
 		{
 			return Time.time - ts._time;
 		}
 
-		public static implicit operator TimeSince( float ts )
+		public static implicit operator TimeUntil( float ts )
 		{
 			return new( ts );
 		}
@@ -29,17 +29,17 @@ namespace Espionage.Engine
 				return value.Equals( Time.time - _time );
 			}
 
-			return obj is TimeSince other && Equals( other );
+			return obj is TimeUntil other && Equals( other );
 		}
 
-		public bool Equals( TimeSince other )
+		public bool Equals( TimeUntil other )
 		{
 			return _time.Equals( other._time );
 		}
 
 		public bool Equals( float other )
 		{
-			return (Time.time - _time).Equals( other );
+			return (Time.time + _time).Equals( other );
 		}
 
 		public override int GetHashCode()

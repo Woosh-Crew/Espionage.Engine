@@ -1,9 +1,9 @@
 ﻿using System;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 #if UNITY_EDITOR
 using UnityEditor;
-using UnityEngine;
 #endif
 
 namespace Espionage.Engine
