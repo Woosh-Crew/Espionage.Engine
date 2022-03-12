@@ -67,34 +67,21 @@ namespace Espionage.Engine
 		// Think
 		//
 
-		internal TimeSince timeSinceLastThink;
-		internal float nextThink;
-
-		/// <summary>
-		/// Tick is the time it takes (in seconds), to call <see cref="Think"/>.
-		/// Gets reset when think is called, so make sure to reset it. 
-		/// </summary>
-		public float Tick
-		{
-			set
-			{
-				timeSinceLastThink = 0;
-				nextThink = value;
-			}
-		}
-
 		/// <summary>
 		/// Think gets called every tick, (which is in seconds). Use this for updating
 		/// state logic on the entity in a super performant way. Since its not being called
 		/// every frame, (AI, Particles, etc).
 		/// </summary>
-		/// <param name="delta"> Time taken between the last Tick </param>
-		public virtual void Think( float delta )
+		public Thinker Thinking { get; } = new();
+
+		/// <summary>
+		/// Tick is the time it takes (in seconds), to call the active
+		/// <see cref="Thinking"/> scope. Gets reset when think is called,
+		/// so make sure to reset it. 
+		/// </summary>
+		public float Tick
 		{
-			foreach ( var component in Components.GetAll<IThinkable>() )
-			{
-				component.Think( delta );
-			}
+			set => Thinking.Tick = value;
 		}
 
 		//
