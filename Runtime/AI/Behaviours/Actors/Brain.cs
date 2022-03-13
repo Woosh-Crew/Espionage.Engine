@@ -23,7 +23,10 @@ namespace Espionage.Engine.AI
 
 		public void Think()
 		{
-			_agent.destination = Local.Pawn.transform.position;
+			if ( Local.Pawn != null )
+			{
+				_agent.destination = Local.Pawn.transform.position;
+			}
 
 			Entity.Tick = 0.2f;
 		}
@@ -34,11 +37,13 @@ namespace Espionage.Engine.AI
 
 		public void Possess( Client client )
 		{
+			_agent.enabled = false;
 			Entity.Thinking.Remove( Think );
 		}
 
 		public void UnPossess()
 		{
+			_agent.enabled = true;
 			Entity.Thinking.Add( Think, 0.2f );
 		}
 
