@@ -37,7 +37,6 @@ namespace Espionage.Engine.Internal
 				// Comments (Not sure why there would be any?)
 				if ( string.IsNullOrWhiteSpace( item ) || item.StartsWith( '#' ) || item.StartsWith( '[' ) )
 				{
-					Debugging.Log.Info( $"Skipping - {item}" );
 					continue;
 				}
 

@@ -29,6 +29,20 @@ namespace Espionage.Engine
 			set => QualitySettings.vSyncCount = value;
 		}
 
+		[Option, Terminal, Property( "application.fullscreen", true ), Title( "Fullscreen" ), Group( "Graphics" )]
+		public static bool Fullscreen
+		{
+			get => Screen.fullScreen;
+			set => Screen.fullScreen = value;
+		}
+
+		[Option, Terminal, Property( "application.fullscreen_mode", FullScreenMode.FullScreenWindow ), Title( "Fullscreen Mode" ), Group( "Graphics" )]
+		public static FullScreenMode FullscreenMode
+		{
+			get => Screen.fullScreenMode;
+			set => Screen.fullScreenMode = value;
+		}
+
 		[Option, Terminal, Property( "graphics.shadows_resolution", ShadowResolution.VeryHigh ), Title( "Shadow Resolution" ), Group( "Shadows" )]
 		public static ShadowResolution ShadowQuality
 		{
