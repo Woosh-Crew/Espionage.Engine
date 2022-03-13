@@ -83,7 +83,7 @@ namespace Espionage.Engine
 		[Option, Terminal, Property( "graphics.enable_bloom", true ), Title( "Enable Bloom" ), Group( "Graphics" )]
 		public static bool EnableBloom { get; set; }
 
-		[Option, Terminal, Property( "graphics.bloom_quality", false ), Title( "Bloom Quality" ), Group( "Graphics" )]
+		[Option, Terminal, Property( "graphics.fast_bloom", false ), Title( "Fast Bloom" ), Group( "Graphics" )]
 		public static bool FastBloom { get; set; }
 
 		// SSR
