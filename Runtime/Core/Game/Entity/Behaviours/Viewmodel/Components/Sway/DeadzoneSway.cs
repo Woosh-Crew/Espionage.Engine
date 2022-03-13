@@ -28,9 +28,7 @@ namespace Espionage.Engine.Viewmodels
 
 		private void DeadzoneAxis()
 		{
-			var mouse = new Vector2(
-				Input.GetAxis( "Mouse X" ), Input.GetAxis( "Mouse Y" )
-			) / Time.deltaTime;
+			var mouse = Local.Client.Input.MouseDelta / Time.deltaTime;
 
 			_savedDeadzoneAxis.x += -mouse.y * multiplier * Time.deltaTime;
 			_savedDeadzoneAxis.x = Mathf.Clamp( _savedDeadzoneAxis.x, -deadzone.x, deadzone.x );
