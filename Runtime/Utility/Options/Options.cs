@@ -15,28 +15,28 @@ namespace Espionage.Engine
 
 		// Graphics
 
-		[Option, Terminal, Property( "application.fps", 250 ), Title( "FPS Cap" ), Group( "Graphics" )]
+		[Option, Terminal, Property( "application.fps", 250 ), Title( "FPS Cap" ), Group( "Application" )]
 		public static int Framerate
 		{
 			get => Application.targetFrameRate;
 			set => Application.targetFrameRate = value;
 		}
 
-		[Option, Terminal, Property( "application.vsync", 0 ), Title( "VSync" ), Group( "Graphics" )]
+		[Option, Terminal, Property( "application.vsync", 0 ), Title( "VSync" ), Group( "Application" )]
 		public static int Vsync
 		{
 			get => QualitySettings.vSyncCount;
 			set => QualitySettings.vSyncCount = value;
 		}
 
-		[Option, Terminal, Property( "application.fullscreen", true ), Title( "Fullscreen" ), Group( "Graphics" )]
+		[Option, Terminal, Property( "application.fullscreen", true ), Title( "Fullscreen" ), Group( "Application" )]
 		public static bool Fullscreen
 		{
 			get => Screen.fullScreen;
 			set => Screen.fullScreen = value;
 		}
 
-		[Option, Terminal, Property( "application.fullscreen_mode", FullScreenMode.FullScreenWindow ), Title( "Fullscreen Mode" ), Group( "Graphics" )]
+		[Option, Terminal, Property( "application.fullscreen_mode", FullScreenMode.FullScreenWindow ), Title( "Fullscreen Mode" ), Group( "Application" )]
 		public static FullScreenMode FullscreenMode
 		{
 			get => Screen.fullScreenMode;
@@ -96,12 +96,12 @@ namespace Espionage.Engine
 
 		// Motion Blur
 
-		[Option, Terminal, Property( "graphics.enable_motion_blur", true ), Title( "Enable Motion Blur" ), Group( "Graphics" )]
+		[Option, Terminal, Property( "graphics.enable_motion_blur", false ), Title( "Enable Motion Blur" ), Group( "Graphics" )]
 		public static bool EnableMotionBlur { get; set; }
 
 		// Depth of Field
 
-		[Option, Terminal, Property( "graphics.enable_dof", true ), Title( "Enable Depth of Field" ), Group( "Graphics" )]
+		[Option, Terminal, Property( "graphics.enable_dof", false ), Title( "Enable Depth of Field" ), Group( "Graphics" )]
 		public static bool EnableDOF { get; set; }
 
 		// Chromatic Aberration
@@ -109,7 +109,7 @@ namespace Espionage.Engine
 		[Option, Terminal, Property( "graphics.enable_ca", true ), Title( "Enable Chromatic Aberration" ), Group( "Graphics" )]
 		public static bool EnableChromaticAberration { get; set; }
 
-		[Option, Terminal, Property( "graphics.fast_ca", true ), Title( "Fast Chromatic Aberration" ), Group( "Graphics" )]
+		[Option, Terminal, Property( "graphics.fast_ca", false ), Title( "Fast Chromatic Aberration" ), Group( "Graphics" )]
 		public static bool FastChromaticAberration { get; set; }
 
 
