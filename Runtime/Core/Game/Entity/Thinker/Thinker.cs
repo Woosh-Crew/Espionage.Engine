@@ -85,7 +85,12 @@ namespace Espionage.Engine
 
 		public void Remove( Action method )
 		{
-			_groups.RemoveAt( _groups.FindIndex( e => e.method == method ) );
+			var group = _groups.Find( e => e.method == method );
+
+			if ( group != null )
+			{
+				_groups.Remove( @group );
+			}
 		}
 
 		private class Group

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Espionage.Engine.Services;
 
 namespace Espionage.Engine.Internal
@@ -25,13 +27,22 @@ namespace Espionage.Engine.Internal
 				return;
 			}
 
+			// This is a really shitty ini deserializer
+
 			using var _ = Debugging.Stopwatch( "Loading Cookies" );
-			var sheet = Files.Deserialize<string>( "config://.cookies" ).Split( '\n' );
+			var sheet = Files.Deserialize<string>( "config://.cookies" ).Split( '\n', StringSplitOptions.RemoveEmptyEntries );
 
 			foreach ( var item in sheet )
 			{
+				// Comments (Not sure why there would be any?)
+				if ( string.IsNullOrWhiteSpace( item ) || item.StartsWith( '#' ) || item.StartsWith( '[' ) )
+				{
+					Debugging.Log.Info( $"Skipping - {item}" );
+					continue;
+				}
+
 				// 0 is Index, 1 is value
-				var split = item.Split( '=' );
+				var split = item.Split( " = " );
 
 				try
 				{
@@ -39,7 +50,7 @@ namespace Espionage.Engine.Internal
 					{
 						// This is aids
 						var prop = Registry[split[0]];
-						prop[null] = Converter.Convert( split[1], prop.Type );
+						prop[null] = Converter.Convert( split[1].Trim(), prop.Type );
 					}
 				}
 				catch ( Exception e )
@@ -65,21 +76,31 @@ namespace Espionage.Engine.Internal
 				return;
 			}
 
+			// This is a really shitty ini serializer
+
 			using var _ = Debugging.Stopwatch( "Saving Cookies" );
 
-			var serialized = new List<string>( Registry.Count );
+			var serialized = new StringBuilder();
 
-			foreach ( var (key, property) in Registry )
+			foreach ( var group in Registry.GroupBy( e => e.Value.Group ) )
 			{
-				if ( property[null] == property.Default )
+				// Grouping / Sections
+				if ( serialized.Length != 0 )
 				{
-					continue;
+					serialized.AppendLine();
 				}
 
-				serialized.Add( $"{key}={property[null]}" );
+				serialized.AppendLine( $"[{group.Key}]" );
+
+				foreach ( var (key, property) in group )
+				{
+					serialized.AppendLine( $"{key} = {property[null]}" );
+				}
 			}
 
-			Files.Save( serialized, "config://.cookies" );
+			Files.Save( serialized.ToString(), "config://.cookies" );
+
+			Callback.Run( "cookies.saved" );
 		}
 	}
 }

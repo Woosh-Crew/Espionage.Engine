@@ -70,10 +70,7 @@ namespace Espionage.Engine
 
 			try
 			{
-				return method?.Invoke( converter, new object[]
-				{
-					value
-				} );
+				return method?.Invoke( converter, new object[] { value } );
 			}
 			catch ( Exception e )
 			{

@@ -257,15 +257,18 @@ namespace Espionage.Engine
 			Callback.Run( "application.late_frame" );
 		}
 
+		public static bool IsQuitting { get; private set; }
+
 		private static void OnShutdown()
 		{
+			IsQuitting = true;
+
 			for ( var i = 0; i < Services.Count; i++ )
 			{
 				Services[i].OnShutdown();
 			}
 
 			Game?.OnShutdown();
-
 			Callback.Run( "application.quit" );
 		}
 	}
