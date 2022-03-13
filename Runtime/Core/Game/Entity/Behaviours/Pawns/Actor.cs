@@ -13,9 +13,6 @@
 		{
 			base.OnAwake();
 
-			Thinking.Add( Think, 1 );
-			Thinking.Add( Think2, 5 );
-
 			Health.OnKilled += OnKilled;
 			Health.OnDamaged += OnDamaged;
 		}
@@ -35,18 +32,6 @@
 			}
 
 			base.PostCameraSetup( ref setup );
-		}
-
-		private void Think()
-		{
-			Debugging.Log.Info( "Actor Thinking every 1 second" );
-			Tick = 1;
-		}
-
-		private void Think2()
-		{
-			Debugging.Log.Info( "Actor Thinking every 5 seconds" );
-			Tick = 5;
 		}
 
 		//

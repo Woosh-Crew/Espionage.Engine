@@ -5,11 +5,11 @@ using AI = Espionage.Engine.AI;
 namespace Espionage.Engine.AI
 {
 	[Group( "AI" ), Title( "AI Brain" )]
-	public class Brain : Component<Actor>, Pawn.ICallbacks, IThinkable
+	public class Brain : Component<Actor>, Pawn.ICallbacks
 	{
 		private Graph Logic { get; set; }
 
-		protected override void OnAwake()
+		protected override void OnAttached( Actor actor )
 		{
 			base.OnAwake();
 
@@ -17,17 +17,11 @@ namespace Espionage.Engine.AI
 			{
 				_agent = gameObject.AddComponent<NavMeshAgent>();
 			}
+
+			Entity.Thinking.Add( Think, 0.2f );
 		}
 
-		protected override void OnReady()
-		{
-			base.OnReady();
-
-			Logic = Graph.Load( graphPath );
-			Entity.Tick = 0.2f;
-		}
-
-		public void Think( float delta )
+		public void Think()
 		{
 			_agent.destination = Local.Pawn.transform.position;
 
@@ -40,12 +34,12 @@ namespace Espionage.Engine.AI
 
 		public void Possess( Client client )
 		{
-			Entity.Tick = 0;
+			Entity.Thinking.Remove( Think );
 		}
 
 		public void UnPossess()
 		{
-			Entity.Tick = 0.2f;
+			Entity.Thinking.Add( Think, 0.2f );
 		}
 
 		// Fields

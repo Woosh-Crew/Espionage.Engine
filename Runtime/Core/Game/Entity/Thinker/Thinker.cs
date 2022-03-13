@@ -8,7 +8,7 @@ namespace Espionage.Engine
 		private Group _active;
 		private bool _insideScope;
 		private List<Group> _groups;
-		
+
 		public float Tick
 		{
 			set
@@ -18,43 +18,43 @@ namespace Espionage.Engine
 					Debugging.Log.Error( "Can't change tick, not inside think scope." );
 					return;
 				}
-				
+
 				_active.tick = value;
 				_active.timeSinceLastThink = 0;
 			}
 		}
-		
+
 		internal void Think()
 		{
 			if ( _groups == null )
 			{
 				return;
 			}
-			
-			bool changed = false;
-			
+
+			var changed = false;
+
 			for ( var index = 0; index < _groups.Count; index++ )
 			{
 				// If we can't think, don't think.
 				if ( _groups[index].tick == 0 )
 				{
 					_groups.RemoveAt( index );
-					Debugging.Log.Info("Removing Group, since it was 0");
-					
+					Debugging.Log.Info( "Removing Group, since it was 0" );
+
 					changed = true;
 					continue;
 				}
-				
+
 				var timeSince = _groups[index].timeSinceLastThink;
 
 				if ( !(timeSince > _groups[index].tick) )
 				{
 					continue;
 				}
-				
+
 				_active = _groups[index];
 				_active.tick = 0;
-			
+
 				// Checking for tick
 				_insideScope = true;
 				_active.method?.Invoke();
@@ -74,7 +74,7 @@ namespace Espionage.Engine
 		public void Add( Action method, float tick )
 		{
 			_groups ??= new();
-			
+
 			_groups.Add( new()
 			{
 				method = method,
@@ -82,7 +82,7 @@ namespace Espionage.Engine
 				tick = tick
 			} );
 		}
-		
+
 		public void Remove( Action method )
 		{
 			_groups.RemoveAt( _groups.FindIndex( e => e.method == method ) );
