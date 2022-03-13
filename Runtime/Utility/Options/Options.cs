@@ -78,9 +78,6 @@ namespace Espionage.Engine
 		[Option, Terminal, Property( "graphics.enable_ao", true ), Title( "Enable AO" ), Group( "Graphics" )]
 		public static bool EnableAO { get; set; }
 
-		[Option, Terminal, Property( "graphics.ao_quality", AmbientOcclusionQuality.Medium ), Title( "AO Quality" ), Group( "Graphics" )]
-		public static AmbientOcclusionQuality QualityAO { get; set; }
-
 		// Bloom
 
 		[Option, Terminal, Property( "graphics.enable_bloom", true ), Title( "Enable Bloom" ), Group( "Graphics" )]
@@ -122,8 +119,8 @@ namespace Espionage.Engine
 				// Do shit only if we're active
 				if ( ao.active )
 				{
-					ao.mode.Override( AmbientOcclusionMode.ScalableAmbientObscurance );
-					ao.quality.Override( QualityAO );
+					ao.ambientOnly.Override( true );
+					ao.mode.Override( AmbientOcclusionMode.MultiScaleVolumetricObscurance );
 				}
 			}
 
