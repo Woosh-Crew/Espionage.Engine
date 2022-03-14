@@ -25,7 +25,7 @@ namespace Espionage.Engine
 				// BUG : Memory leak right here!
 				// TODO : Fix this after we implement texture resources.
 
-				var image = Files.Deserializer.Deserialize( Path );
+				var image = Files.Serialization.Deserialize( Path );
 
 				var texture = new Texture2D( 2, 2 );
 				texture.LoadImage( image );

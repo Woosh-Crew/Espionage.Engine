@@ -13,9 +13,7 @@ namespace Espionage.Engine
 	public static partial class Files
 	{
 		public static Pathing Pathing { get; } = new();
-
-		public static Serializer Serializer { get; } = new();
-		public static Deserializer Deserializer { get; } = new();
+		public static Serializer Serialization { get; } = new();
 
 		//
 		// API
@@ -59,7 +57,7 @@ namespace Espionage.Engine
 		/// </summary>
 		public static void Save<T>( T item, string path )
 		{
-			Serializer.Store( Serializer.Serialize( item ), path );
+			Serialization.Store( Serialization.Serialize( item ), path );
 		}
 
 		/// <summary>
@@ -69,7 +67,7 @@ namespace Espionage.Engine
 		/// </summary>
 		public static void Save<T>( T[] item, string path )
 		{
-			Serializer.Store( Serializer.Serialize( item ), path );
+			Serialization.Store( Serialization.Serialize( item ), path );
 		}
 
 		/// <summary>
