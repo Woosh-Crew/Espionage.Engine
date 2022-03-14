@@ -6,13 +6,13 @@ namespace Espionage.Engine.Components
 {
 	public class Components<T> : IDatabase<IComponent<T>, int> where T : class
 	{
-		public IEnumerable<IComponent<T>> All => _components;
-		public int Count => _components.Count;
+		public IEnumerable<IComponent<T>> All => _storage;
+		public int Count => _storage.Count;
 
 		public event Action<IComponent<T>> OnAdded;
 		public event Action<IComponent<T>> OnRemove;
 
-		public IComponent<T> this[ int key ] => _components[key];
+		public IComponent<T> this[ int key ] => _storage[key];
 
 		//
 		// Instance
@@ -20,33 +20,33 @@ namespace Espionage.Engine.Components
 
 		public Components( T item )
 		{
-			_target = item;
+			_owner = item;
 		}
 
-		private readonly T _target;
-		private readonly List<IComponent<T>> _components = new();
+		private readonly T _owner;
+		private readonly List<IComponent<T>> _storage = new();
 
 		public void Add( IComponent<T> item )
 		{
-			if ( !item.CanAttach( _target ) )
+			if ( !item.CanAttach( _owner ) )
 			{
 				return;
 			}
 
-			_components.Add( item );
-			item.OnAttached( _target );
+			_storage.Add( item );
+			item.OnAttached( _owner );
 
 			OnAdded?.Invoke( item );
 		}
 
 		public bool Contains( IComponent<T> item )
 		{
-			return _components.Contains( item );
+			return _storage.Contains( item );
 		}
 
 		public void Remove( IComponent<T> item )
 		{
-			_components.Remove( item );
+			_storage.Remove( item );
 			item.OnDetached();
 
 			OnRemove?.Invoke( item );
@@ -54,12 +54,12 @@ namespace Espionage.Engine.Components
 
 		public void Clear()
 		{
-			for ( var i = 0; i < _components.Count; i++ )
+			for ( var i = 0; i < _storage.Count; i++ )
 			{
-				Remove( _components[i] );
+				Remove( _storage[i] );
 			}
 
-			_components.Clear();
+			_storage.Clear();
 		}
 
 		//

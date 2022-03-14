@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Espionage.Engine.Components;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -36,7 +37,7 @@ namespace Espionage.Engine.Resources
 
 		/// <summary>
 		/// Trys to find the map by path. If it couldn't find the map in the database,
-		/// it'll create a new reference to that map.
+		/// it'll create a new reference to that map for use later.
 		/// </summary>
 		public static Map Find( string path )
 		{
@@ -63,19 +64,19 @@ namespace Espionage.Engine.Resources
 		//
 
 		public Library ClassInfo { get; } = Library.Database[typeof( Map )];
-
-		// Provider
-		private Resource.IProvider<Map> Provider { get; }
-
-		// Meta Data
 		public string Identifier => Provider.Identifier;
+
+		public Components<Map> Components { get; }
+		private Resource.IProvider<Map> Provider { get; }
 
 		// Loadable 
 		float ILoadable.Progress => Provider.Progress;
-		string ILoadable.Text => "Loading";
+		string ILoadable.Text => Components.TryGet( out Meta meta ) ? $"Loading {meta.Title}" : "Loading";
 
 		private Map( Resource.IProvider<Map> provider )
 		{
+			Components = new( this );
+
 			Provider = provider;
 			Database.Add( this );
 		}
