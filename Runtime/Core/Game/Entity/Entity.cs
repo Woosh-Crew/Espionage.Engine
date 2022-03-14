@@ -53,8 +53,12 @@ namespace Espionage.Engine
 		{
 			All.Remove( this );
 
-			Components.OnAdded -= OnComponentAdded;
-			Components.OnRemove -= OnComponentRemoved;
+			// Sometimes its null? wtf?
+			if ( Components != null )
+			{
+				Components.OnAdded -= OnComponentAdded;
+				Components.OnRemove -= OnComponentRemoved;
+			}
 
 			base.OnDestroy();
 
