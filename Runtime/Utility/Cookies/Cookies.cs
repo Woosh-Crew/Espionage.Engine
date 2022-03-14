@@ -21,7 +21,7 @@ namespace Espionage.Engine.Internal
 
 		public override void OnReady()
 		{
-			if ( !Files.Exists( "config://.cookies" ) )
+			if ( !Files.Pathing.Exists( "config://.cookies" ) )
 			{
 				// Nothing to load.
 				return;

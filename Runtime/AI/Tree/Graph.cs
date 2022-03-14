@@ -7,9 +7,9 @@ namespace Espionage.Engine.AI
 	{
 		public static Graph Load( string path )
 		{
-			path = Files.Path( path );
+			path = Files.Pathing.Get( path );
 
-			if ( !Files.Exists( path ) )
+			if ( !Files.Pathing.Exists( path ) )
 			{
 				Debugging.Log.Error( $"We couldn't find [{path}]" );
 				return null;
@@ -21,7 +21,7 @@ namespace Espionage.Engine.AI
 				return databaseModel;
 			}
 
-			using var _ = Debugging.Stopwatch( $"Loading AI Graph [{Files.Path( path )}]" );
+			using var _ = Debugging.Stopwatch( $"Loading AI Graph [{Files.Pathing.Get( path )}]" );
 
 			var model = new Graph( Files.Load<ActionTree>( path ) );
 			((IResource)model).Load();

@@ -30,7 +30,7 @@ namespace Espionage.Engine
 		/// </summary>
 		public static void Save( byte[] data, string path )
 		{
-			path = Path( path );
+			path = Pathing.Get( path );
 
 			var fileInfo = new FileInfo( path );
 

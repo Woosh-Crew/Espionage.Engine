@@ -30,13 +30,13 @@ namespace Espionage.Engine.Resources
 		/// <returns> The new model that has been loaded. </returns>
 		public static Model Load( string path )
 		{
-			path = Files.Path( path );
+			path = Files.Pathing.Get( path );
 
-			if ( !Files.Exists( path ) )
+			if ( !Files.Pathing.Exists( path ) )
 			{
 				const string error = "models://error.umdl";
 
-				if ( Files.Exists( error ) )
+				if ( Files.Pathing.Exists( error ) )
 				{
 					return Load( error );
 				}
@@ -51,7 +51,7 @@ namespace Espionage.Engine.Resources
 				return databaseModel;
 			}
 
-			using var _ = Debugging.Stopwatch( $"Loading Model [{Files.Path( path )}]" );
+			using var _ = Debugging.Stopwatch( $"Loading Model [{Files.Pathing.Get( path )}]" );
 
 			var model = new Model( Files.Load<IFile<Model, GameObject>>( path ).Provider() );
 			((IResource)model).Load();
@@ -110,7 +110,7 @@ namespace Espionage.Engine.Resources
 
 		protected override void OnUnload( Action onUnload )
 		{
-			using var _ = Debugging.Stopwatch( $"Unloading Model [{Files.Path( Identifier )}]" );
+			using var _ = Debugging.Stopwatch( $"Unloading Model [{Files.Pathing.Get( Identifier )}]" );
 
 			// Clear Spawned Models
 			foreach ( var instance in Spawned )

@@ -17,7 +17,7 @@ namespace Espionage.Engine
 
 		public void OnAttached( Library item )
 		{
-			Files.Paths.Add( ShortHand, Path );
+			Files.Pathing.Add( ShortHand, Path );
 		}
 	}
 }

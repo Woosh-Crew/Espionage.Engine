@@ -46,12 +46,13 @@ namespace Espionage.Engine.Tools.Editor
 		[Function, Menu( "Maps/Test Open Map" )]
 		private void TestOpenMap()
 		{
-			if ( !Files.Exists( $"exports://Maps/{SceneManager.GetActiveScene().name}.umap" ) )
+			if ( !Files.Pathing.Exists( $"exports://Maps/{SceneManager.GetActiveScene().name}.umap" ) )
 			{
 				Debugging.Log.Error( "Map needs to be compiled first." );
+				return;
 			}
 
-			Process.Start( @"E:\Projects\Espionage\Espionage.Engine\Exports\Espionage 0.1\Espionage.exe", $"-map \"{Files.Path( $"exports://Maps/{SceneManager.GetActiveScene().name}.umap" )}\"" );
+			Process.Start( @"E:\Projects\Espionage\Espionage.Engine\Exports\Espionage 0.1\Espionage.exe", $"-map \"{Files.Pathing.Get( $"exports://Maps/{SceneManager.GetActiveScene().name}.umap" )}\"" );
 		}
 
 		[Function, Menu( "Maps/Compile Map" )]

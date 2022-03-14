@@ -11,7 +11,7 @@ namespace Espionage.Engine
 		public static T Load<T>( string path ) where T : class, IFile
 		{
 			// Get the actual path
-			path = Path( path );
+			path = Pathing.Get( path );
 
 			if ( !File.Exists( path ) )
 			{
@@ -44,7 +44,7 @@ namespace Espionage.Engine
 		/// </summary>
 		public static T Deserialize<T>( string path )
 		{
-			path = Path( path );
+			path = Pathing.Get( path );
 
 			var deserializer = GrabDeserializer<T>();
 			return deserializer.Deserialize( Deserialize( path ) );
@@ -55,7 +55,7 @@ namespace Espionage.Engine
 		/// </summary>
 		public static byte[] Deserialize( string path )
 		{
-			path = Path( path );
+			path = Pathing.Get( path );
 
 			if ( !File.Exists( path ) )
 			{

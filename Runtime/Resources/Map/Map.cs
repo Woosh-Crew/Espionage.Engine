@@ -62,9 +62,9 @@ namespace Espionage.Engine.Resources
 		/// <param name="description"> Create a reference with this description </param>
 		public static Map Find( string path, string title = null, string description = null )
 		{
-			if ( !Files.Exists( path ) )
+			if ( !Files.Pathing.Exists( path ) )
 			{
-				Debugging.Log.Error( $"Map Path [{Files.Path( path )}], couldn't be found." );
+				Debugging.Log.Error( $"Map Path [{Files.Pathing.Get( path )}], couldn't be found." );
 				return null;
 			}
 
