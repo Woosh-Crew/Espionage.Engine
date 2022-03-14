@@ -1,6 +1,4 @@
-﻿#if UNITY_EDITOR
-
-using System;
+﻿using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -19,34 +17,30 @@ namespace Espionage.Engine.Resources
 		public float Progress { get; }
 		public bool IsLoading { get; private set; }
 
-		//
-		// Editor Initialize
-		//
-
-		[RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.AfterSceneLoad )]
-		private static void Init()
+		public EditorSceneMapProvider()
 		{
-			// Dont give a shit if this is hacky, its editor only
-			var provider = new EditorSceneMapProvider
-			{
-				Output = SceneManager.GetActiveScene()
-			};
-			Map.Current = new( provider );
-			Map.Current.Load();
+			_sceneName = SceneManager.GetActiveScene().name;
 		}
 
 		//
 		// Resource
 		//
 
+		private readonly string _sceneName;
+
 		public void Load( Action finished )
 		{
 			IsLoading = true;
 
-			Output = SceneManager.GetActiveScene();
-			finished?.Invoke();
+			var operation = SceneManager.LoadSceneAsync( _sceneName, LoadSceneMode.Additive );
+			operation.completed += ( _ ) =>
+			{
+				Output = SceneManager.GetSceneByName( _sceneName );
+				SceneManager.SetActiveScene( Output );
 
-			IsLoading = false;
+				finished?.Invoke();
+				IsLoading = false;
+			};
 		}
 
 		public void Unload( Action finished )
@@ -60,5 +54,3 @@ namespace Espionage.Engine.Resources
 		}
 	}
 }
-
-#endif

@@ -26,13 +26,13 @@ namespace Espionage.Engine
 			// Check if Library is Singleton
 			if ( lib.Components.Has<SingletonAttribute>() )
 			{
-				if ( _singletons.ContainsKey( lib.Class ) )
+				if ( Singletons.ContainsKey( lib.Class ) )
 				{
-					Debugging.Log.Error( "You are trying to register another Singleton? How????" );
+					Debugging.Log.Error( $"You are trying to register another Singleton? How???? -- [{lib.Name}]" );
 					return null;
 				}
 
-				_singletons.Add( lib.Class, value );
+				Singletons.Add( lib.Class, value );
 			}
 
 			Callback.Register( value );
@@ -47,6 +47,12 @@ namespace Espionage.Engine
 		/// <param name="value"></param>
 		public static void Unregister( ILibrary value )
 		{
+			// Check if Library is Singleton
+			if ( value.ClassInfo.Components.Has<SingletonAttribute>() )
+			{
+				Singletons.Remove( value.GetType() );
+			}
+
 			Callback.Unregister( value );
 		}
 
@@ -71,9 +77,9 @@ namespace Espionage.Engine
 			// If we are a singleton, Check if an instance already exists 
 			if ( library.Components.Has<SingletonAttribute>() )
 			{
-				if ( _singletons.ContainsKey( library.Class ) )
+				if ( Singletons.ContainsKey( library.Class ) )
 				{
-					return _singletons[library.Class];
+					return Singletons[library.Class];
 				}
 
 				var newSingleton = Construct( library );
@@ -180,6 +186,6 @@ namespace Espionage.Engine
 		// Singletons
 		//
 
-		private static Dictionary<Type, ILibrary> _singletons = new();
+		public static Dictionary<Type, ILibrary> Singletons { get; } = new();
 	}
 }

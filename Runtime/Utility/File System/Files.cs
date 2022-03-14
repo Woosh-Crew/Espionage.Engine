@@ -178,7 +178,7 @@ namespace Espionage.Engine
 		public static bool Exists( string path )
 		{
 			path = Path( path );
-			return System.IO.Path.HasExtension( path ) ? File.Exists( path ) : Directory.Exists( path );
+			return Directory.Exists( path ) || File.Exists( path );
 		}
 
 		/// <summary>

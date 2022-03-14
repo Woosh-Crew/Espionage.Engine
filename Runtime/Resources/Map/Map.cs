@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Espionage.Engine.Components;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Espionage.Engine.Resources
@@ -69,11 +70,29 @@ namespace Espionage.Engine.Resources
 			return Database[path] ?? new Map( Files.Load<IFile<Map, Scene>>( path ).Provider() ) { Title = title, Description = description };
 		}
 
-		[Callback( "engine.ready" )]
-		private static void ReadCMD()
+		[Function, Callback( "engine.ready" )]
+		private static void Initialize()
 		{
-			// Load map if we have the correct command line for it
-			Debugging.Log.Info( Environment.CommandLine );
+			// Load Default Map
+			if ( Engine.Game.Splash == null || SceneManager.GetActiveScene().path != Engine.Game.Splash.Scene )
+			{
+				Resource.IProvider<Map, Scene> provider = Application.isEditor ? new EditorSceneMapProvider() : new BuildIndexMapProvider( 0 );
+
+				// Unload All Scene on Start.
+				for ( var i = 0; i < SceneManager.sceneCount; i++ )
+				{
+					var scene = SceneManager.GetSceneAt( i );
+
+					if ( scene.name == Engine.Scene.name )
+					{
+						continue;
+					}
+
+					scene.Unload();
+				}
+
+				new Map( provider )?.Load();
+			}
 		}
 
 		//

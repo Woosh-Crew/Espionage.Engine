@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
 using UnityEditor;
@@ -46,6 +47,8 @@ namespace Espionage.Engine.Tools.Editor
 		private void TestOpenMap()
 		{
 			Debugging.Log.Info( "This would do something" );
+			Debugging.Log.Info( Files.Path( "maps://map_testing.umap" ) );
+			Process.Start( @"E:\Projects\Espionage\Espionage.Engine\Exports\Espionage 0.1\Espionage.exe", Files.Path( @"E:\Projects\Netscape\Exports\Maps\MovementArea\movementarea.umap" ) );
 		}
 
 		[Function, Menu( "Maps/Compile Map" )]

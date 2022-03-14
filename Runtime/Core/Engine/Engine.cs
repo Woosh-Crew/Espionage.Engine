@@ -31,14 +31,18 @@ namespace Espionage.Engine
 		// Initialization
 		//
 
-		[RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.BeforeSceneLoad )]
-		private static void Initialize_Runtime()
+		[RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.BeforeSplashScreen )]
+		private static void Initialize_RuntimeSplashScreen()
+		{
+			Debugging.Initialize();
+			Library.Initialize();
+		}
+
+		[RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.AfterSceneLoad )]
+		private static void Initialize_RuntimePostScene()
 		{
 			using ( Debugging.Stopwatch( "Engine / Game Ready", true ) )
 			{
-				Debugging.Initialize();
-				Library.Initialize();
-
 				if ( Game == null && !SetupGame() )
 				{
 					Debugging.Log.Error( "Game couldn't be found. Make sure to make a class inherited from Game" );

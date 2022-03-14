@@ -38,18 +38,25 @@ namespace Espionage.Engine.Resources
 		{
 			IsLoading = true;
 
-			_operation = SceneManager.LoadSceneAsync( _buildIndex );
+			_operation = SceneManager.LoadSceneAsync( _buildIndex, LoadSceneMode.Additive );
 			_operation.completed += ( _ ) =>
 			{
 				Output = SceneManager.GetSceneByBuildIndex( _buildIndex );
+				SceneManager.SetActiveScene( Output );
+
 				finished?.Invoke();
+				IsLoading = false;
 			};
 		}
 
 		public void Unload( Action finished )
 		{
-			Output.Unload();
-			Output = default;
+			IsLoading = true;
+
+			var request = Output.Unload();
+			request.completed += _ => finished?.Invoke();
+
+			IsLoading = false;
 		}
 	}
 }
