@@ -44,7 +44,7 @@ namespace Espionage.Engine.Tools.Editor
 		[Function, Menu( "Maps/Test Open Map" )]
 		private void TestOpenMap()
 		{
-			if ( !Files.Pathing.Exists( $"exports://Maps/{SceneManager.GetActiveScene().name}.umap" ) )
+			if ( !Files.Pathing.Exists( $"maps://{SceneManager.GetActiveScene().name}.umap" ) )
 			{
 				Debugging.Log.Error( "Map needs to be compiled first." );
 				return;

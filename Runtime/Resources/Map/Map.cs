@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Espionage.Engine.Components;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -19,26 +17,21 @@ namespace Espionage.Engine.Resources
 		[Function( "maps.init" ), Callback( "engine.ready" )]
 		private static void Initialize()
 		{
-			// Unload All Maps, Make it use Espionage.Engine
-			if ( Engine.Game.Splash == null || SceneManager.GetActiveScene().path != Engine.Game.Splash.Scene )
+			Resource.IProvider<Map> provider = Application.isEditor ? new EditorSceneMapProvider() : new BuildIndexMapProvider( 0 );
+
+			// Get main scene at start, that isn't engine layer.
+			for ( var i = 0; i < SceneManager.sceneCount; i++ )
 			{
-				Resource.IProvider<Map> provider = Application.isEditor ? new EditorSceneMapProvider() : new BuildIndexMapProvider( 0 );
+				var scene = SceneManager.GetSceneAt( i );
 
-				// Unload All Scene on Start.
-				for ( var i = 0; i < SceneManager.sceneCount; i++ )
+				if ( scene.name != Engine.Scene.name )
 				{
-					var scene = SceneManager.GetSceneAt( i );
-
-					if ( scene.name == Engine.Scene.name )
-					{
-						continue;
-					}
-
 					SceneManager.SetActiveScene( scene );
+					break;
 				}
-
-				Current = new( provider );
 			}
+
+			Current = new( provider );
 		}
 
 		/// <summary>
@@ -69,6 +62,8 @@ namespace Espionage.Engine.Resources
 		// Instance
 		//
 
+		public Library ClassInfo { get; } = Library.Database[typeof( Map )];
+
 		// Provider
 		private Resource.IProvider<Map> Provider { get; }
 
@@ -79,19 +74,10 @@ namespace Espionage.Engine.Resources
 		float ILoadable.Progress => Provider.Progress;
 		string ILoadable.Text => "Loading";
 
-		public Library ClassInfo { get; }
-
 		private Map( Resource.IProvider<Map> provider )
 		{
-			ClassInfo = Library.Register( this );
 			Provider = provider;
-
 			Database.Add( this );
-		}
-
-		~Map()
-		{
-			Library.Unregister( this );
 		}
 
 		public void Load( Action loaded = null )
