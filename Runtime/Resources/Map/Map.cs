@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Espionage.Engine.Components;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,7 +13,7 @@ namespace Espionage.Engine.Resources
 	/// You should be using this instead of UnityEngine.SceneManager.
 	/// </summary>
 	[Group( "Maps" ), Path( "maps", "assets://Maps/" )]
-	public sealed class Map : IResource, ILibrary, ILoadable
+	public sealed partial class Map : IResource, ILibrary, ILoadable
 	{
 		public static Map Current { get; internal set; }
 
@@ -60,7 +61,6 @@ namespace Espionage.Engine.Resources
 			return new( file.Provider );
 		}
 
-
 		/// <summary>
 		/// Checks if the map / path already exists in the maps database. 
 		/// </summary>
@@ -68,24 +68,6 @@ namespace Espionage.Engine.Resources
 		{
 			path = Files.Pathing.Absolute( path );
 			return Database[path] != null;
-		}
-
-		/// <summary>
-		/// Sets up a builder for the map, Allowing you to easily control its data
-		/// through a build setup.
-		/// </summary>
-		public static Builder Setup( string path )
-		{
-			path = Files.Pathing.Absolute( path );
-
-			// Use the Database Map if we have it
-			if ( Exists( path ) )
-			{
-				Debugging.Log.Info( $"Map [{path}], already exists" );
-				return default;
-			}
-
-			return new( path );
 		}
 
 		//
@@ -148,100 +130,6 @@ namespace Espionage.Engine.Resources
 			}
 
 			Provider.Unload( unloaded );
-		}
-
-		//
-		// Database
-		//
-
-		private static IDatabase<Map, string> Database { get; } = new InternalDatabase();
-
-		private class InternalDatabase : IDatabase<Map, string>
-		{
-			public IEnumerable<Map> All => _records.Values;
-			public int Count => _records.Count;
-
-			public Map this[ string key ] => _records.ContainsKey( key ) ? _records[key] : null;
-
-			private readonly Dictionary<string, Map> _records = new();
-
-			public void Add( Map item )
-			{
-				// Store it in Database
-				if ( _records.ContainsKey( item.Identifier! ) )
-				{
-					_records[item.Identifier] = item;
-				}
-				else
-				{
-					_records.Add( item.Identifier!, item );
-				}
-			}
-
-			public void Clear()
-			{
-				_records.Clear();
-			}
-
-			public bool Contains( Map item )
-			{
-				return _records.ContainsKey( item.Identifier );
-			}
-
-			public void Remove( Map item )
-			{
-				_records.Remove( item.Identifier );
-			}
-		}
-
-		//
-		// Build
-		//
-
-		public readonly struct Builder
-		{
-			private readonly string _path;
-			private readonly List<IComponent<Map>> _components;
-
-			internal Builder( string path )
-			{
-				_path = path;
-				_components = new();
-			}
-
-			public Builder With( IComponent<Map> component )
-			{
-				_components.Add( component );
-				return this;
-			}
-
-			public Builder Title( string title )
-			{
-				return this;
-			}
-
-			public Builder Description( string description )
-			{
-				return this;
-			}
-
-			public Builder Origin( string name )
-			{
-				_components.Add( new Origin() { Name = name } );
-				return this;
-			}
-
-			public Map Build()
-			{
-				var map = Find( _path );
-
-				foreach ( var component in _components )
-				{
-					map.Components.Add( component );
-				}
-
-				return map;
-			}
 		}
 	}
 }
