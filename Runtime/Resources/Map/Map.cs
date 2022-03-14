@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Espionage.Engine.Components;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -91,7 +92,17 @@ namespace Espionage.Engine.Resources
 					scene.Unload();
 				}
 
-				new Map( provider )?.Load();
+				var args = Environment.GetCommandLineArgs();
+
+				if ( args.Contains( "-map" ) )
+				{
+					Find( args[Array.IndexOf( args, "-map" ) + 1] ).Load();
+				}
+				else
+				{
+					new Map( provider )?.Load();
+				}
+
 			}
 		}
 
