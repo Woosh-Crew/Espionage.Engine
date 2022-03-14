@@ -1,14 +1,30 @@
 ﻿using System.IO;
 
-namespace Espionage.Engine
+namespace Espionage.Engine.IO
 {
-	public static partial class Files
+	public class Serializer
 	{
+		private static ISerializer<T> GrabSerializer<T>()
+		{
+			var library = Library.Database.Find<ISerializer<T>>();
+
+			if ( library == null )
+			{
+				throw new FileLoadException( "No Valid Serializers for this File" );
+			}
+
+			return Library.Database.Create<ISerializer<T>>( library.Class );
+		}
+		
+		//
+		// API
+		//
+		
 		/// <summary>
 		/// Saves anything you want, (provided theres a
 		/// serializer for it) to the given path
 		/// </summary>
-		public static void Save<T>( T item, string path )
+		public void Save<T>( T item, string path )
 		{
 			Save( Serialize( item ), path );
 		}
@@ -18,7 +34,7 @@ namespace Espionage.Engine
 		/// (provided theres a serializer for it)
 		/// to the given path
 		/// </summary>
-		public static void Save<T>( T[] item, string path )
+		public void Save<T>( T[] item, string path )
 		{
 			Save( Serialize( item ), path );
 		}
@@ -28,9 +44,9 @@ namespace Espionage.Engine
 		/// it will overwrite if the file at that
 		/// path already exists.
 		/// </summary>
-		public static void Save( byte[] data, string path )
+		public void Save( byte[] data, string path )
 		{
-			path = Pathing.Get( path );
+			path = Files.Pathing.Get( path );
 
 			var fileInfo = new FileInfo( path );
 
@@ -46,7 +62,7 @@ namespace Espionage.Engine
 		/// <summary>
 		/// Serialize type of T to a byte array.
 		/// </summary>
-		public static byte[] Serialize<T>( T data )
+		public byte[] Serialize<T>( T data )
 		{
 			var serializer = GrabSerializer<T>();
 			return serializer.Serialize( data );
@@ -55,22 +71,10 @@ namespace Espionage.Engine
 		/// <summary>
 		/// Serialize an type array of T to a byte array.
 		/// </summary>
-		public static byte[] Serialize<T>( T[] data )
+		public byte[] Serialize<T>( T[] data )
 		{
 			var serializer = GrabSerializer<T>();
 			return serializer.Serialize( data );
-		}
-
-		private static ISerializer<T> GrabSerializer<T>()
-		{
-			var library = Library.Database.Find<ISerializer<T>>();
-
-			if ( library == null )
-			{
-				throw new FileLoadException( "No Valid Serializers for this File" );
-			}
-
-			return Library.Database.Create<ISerializer<T>>( library.Class );
 		}
 	}
 }

@@ -30,7 +30,7 @@ namespace Espionage.Engine.Internal
 			// This is a really shitty ini deserializer
 
 			using var _ = Debugging.Stopwatch( "Loading Cookies" );
-			var sheet = Files.Deserialize<string>( "config://.cookies" ).Split( '\n', StringSplitOptions.RemoveEmptyEntries );
+			var sheet = Files.Deserializer.Deserialize<string>( "config://.cookies" ).Split( '\n', StringSplitOptions.RemoveEmptyEntries );
 
 			foreach ( var item in sheet )
 			{
@@ -97,7 +97,7 @@ namespace Espionage.Engine.Internal
 				}
 			}
 
-			Files.Save( serialized.ToString(), "config://.cookies" );
+			Files.Serializer.Save( serialized.ToString(), "config://.cookies" );
 
 			Callback.Run( "cookies.saved" );
 		}

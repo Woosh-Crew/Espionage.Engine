@@ -14,6 +14,9 @@ namespace Espionage.Engine
 	public static partial class Files
 	{
 		public static Pathing Pathing { get; } = new();
+		public static Serializer Serializer { get; } = new();
+		public static Deserializer Deserializer { get; } = new();
+
 
 		/// <summary>
 		/// Deletes the file at the given path
