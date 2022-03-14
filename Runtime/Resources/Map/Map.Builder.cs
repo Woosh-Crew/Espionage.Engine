@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Espionage.Engine.Components;
 
 namespace Espionage.Engine.Resources
@@ -40,13 +41,13 @@ namespace Espionage.Engine.Resources
 		{
 			return new( new BuildIndexMapProvider( buildIndex ) );
 		}
-		
+
 		public readonly struct Builder
 		{
 			private readonly string _path;
 			private readonly Resource.IProvider<Map> _provider;
 
-			private readonly List<IComponent<Map>> _components;
+			private readonly Dictionary<Type, IComponent<Map>> _components;
 
 			internal Builder( string path )
 			{
@@ -66,13 +67,19 @@ namespace Espionage.Engine.Resources
 
 			public Builder With<T>( T component ) where T : IComponent<Map>
 			{
-				_components.Add( component );
+				_components.Add( typeof( T ), component );
 				return this;
 			}
 
 			public Builder Origin( string name )
 			{
-				_components.Add( new Origin() { Name = name } );
+				if ( _components.ContainsKey( typeof( Origin ) ) )
+				{
+					return this;
+				}
+
+				// Only Apply if the database doesnt have it yet.
+				With( new Origin() { Name = name } );
 				return this;
 			}
 
@@ -80,7 +87,7 @@ namespace Espionage.Engine.Resources
 			{
 				var map = _provider == null ? Find( _path ) : new( _provider );
 
-				foreach ( var component in _components )
+				foreach ( var component in _components.Values )
 				{
 					map.Components.Add( component );
 				}
