@@ -97,7 +97,7 @@ namespace Espionage.Engine.Internal
 				}
 			}
 
-			Files.Serializer.Save( serialized.ToString(), "config://.cookies" );
+			Files.Save( serialized.ToString(), "config://.cookies" );
 
 			Callback.Run( "cookies.saved" );
 		}

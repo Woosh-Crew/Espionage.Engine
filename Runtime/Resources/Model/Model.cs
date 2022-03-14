@@ -53,7 +53,7 @@ namespace Espionage.Engine.Resources
 
 			using var _ = Debugging.Stopwatch( $"Loading Model [{Files.Pathing.Get( path )}]" );
 
-			var model = new Model( Files.Deserializer.Load<IFile<Model, GameObject>>( path ).Provider() );
+			var model = new Model( Files.Load<IFile<Model, GameObject>>( path ).Provider() );
 			((IResource)model).Load();
 			return model;
 		}

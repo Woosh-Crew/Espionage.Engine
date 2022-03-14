@@ -15,36 +15,17 @@ namespace Espionage.Engine.IO
 
 			return Library.Database.Create<ISerializer<T>>( library.Class );
 		}
-		
+
 		//
 		// API
 		//
-		
-		/// <summary>
-		/// Saves anything you want, (provided theres a
-		/// serializer for it) to the given path
-		/// </summary>
-		public void Save<T>( T item, string path )
-		{
-			Save( Serialize( item ), path );
-		}
-
-		/// <summary>
-		/// Saves an array of anything you want,
-		/// (provided theres a serializer for it)
-		/// to the given path
-		/// </summary>
-		public void Save<T>( T[] item, string path )
-		{
-			Save( Serialize( item ), path );
-		}
 
 		/// <summary>
 		/// Saves a byte buffer to a path,
 		/// it will overwrite if the file at that
 		/// path already exists.
 		/// </summary>
-		public void Save( byte[] data, string path )
+		public void Store( byte[] data, string path )
 		{
 			path = Files.Pathing.Get( path );
 
