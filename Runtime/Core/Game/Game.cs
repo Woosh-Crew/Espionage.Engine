@@ -35,7 +35,7 @@ namespace Espionage.Engine
 		public abstract void OnReady();
 		public abstract void OnShutdown();
 
-		// Networking
+		// Networking & Game-loop
 
 		public virtual void Simulate( Client cl )
 		{
@@ -49,8 +49,23 @@ namespace Espionage.Engine
 		//
 		// Gamemode
 		//
+
 		private Gamemode _gamemode;
 
+		/// <summary>
+		/// <para>
+		/// The gamemode is used for controlling game flow. Instead of jamming
+		/// or your game specific logic into your game manager you'd make separate
+		/// "Gamemodes".
+		/// </para>
+		/// <para>
+		/// Gamemodes have callbacks for a lot of Game specific things, like when an
+		/// actor took damage, actor got killed, etc
+		/// </para>
+		/// <example>
+		/// You can use Gamemodes for Single-player, Death-match, etc.
+		/// </example>
+		/// </summary>
 		public Gamemode Gamemode
 		{
 			get => _gamemode;
@@ -85,6 +100,16 @@ namespace Espionage.Engine
 
 		private ITripod LastTripod { get; set; }
 
+		/// <summary>
+		/// Finds the Active tripod in the game. It goes from the
+		/// client Tripod, down to the pawns tripod. Which ever
+		/// tripod is returned, it'll use that tripod as the main
+		/// camera controller.
+		/// </summary>
+		/// <returns>
+		/// The active tripod that should be built and used as the
+		/// main camera controller.
+		/// </returns>
 		protected virtual ITripod FindActiveCamera()
 		{
 			if ( Local.Client.Tripod != null )
@@ -100,6 +125,11 @@ namespace Espionage.Engine
 			return null;
 		}
 
+		/// <summary>
+		/// Build camera will find the active tripod, and use it for
+		/// controlling the main camera, you shouldn't need to override
+		/// this, instead use <see cref="PostCameraSetup"/>.
+		/// </summary>
 		public virtual Tripod.Setup BuildCamera( Tripod.Setup camSetup )
 		{
 			var cam = FindActiveCamera();
@@ -117,6 +147,11 @@ namespace Espionage.Engine
 			return camSetup;
 		}
 
+		/// <summary>
+		/// PostCameraSetup is called to mutate the current Tripod.Setup
+		/// pipeline. We use this for asking the pawn, viewmodels and
+		/// modifiers to mutate the Tripod.Setup.
+		/// </summary>
 		protected virtual void PostCameraSetup( ref Tripod.Setup camSetup )
 		{
 			if ( Local.Pawn != null )
@@ -160,6 +195,11 @@ namespace Espionage.Engine
 		// Build Input
 		//
 
+		/// <summary>
+		/// Use build controls for mutating the current input pipeline.
+		/// It'll go from the current tripod and down to the pawn for
+		/// mutation.
+		/// </summary>
 		public virtual IControls.Setup BuildControls( IControls.Setup builder )
 		{
 			// If the Current Tripod can BuildInput, let it
@@ -180,5 +220,8 @@ namespace Espionage.Engine
 
 		[Function, Callback( "map.loaded" )]
 		public virtual void OnMapLoaded() { }
+
+		[Function, Callback( "cookies.saved" )]
+		public virtual void OnCookiesSaved() { }
 	}
 }
