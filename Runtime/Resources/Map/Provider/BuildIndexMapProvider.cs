@@ -44,6 +44,11 @@ namespace Espionage.Engine.Resources
 
 		public void Unload( Action finished )
 		{
+			if ( _scene == default )
+			{
+				_scene = SceneManager.GetActiveScene();
+			}
+
 			var request = _scene.Unload();
 			request.completed += _ => finished?.Invoke();
 		}

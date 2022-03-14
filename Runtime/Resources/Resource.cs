@@ -32,9 +32,6 @@ namespace Espionage.Engine.Resources
 		/// <summary> The path / database entry to this resource. </summary>
 		public abstract string Identifier { get; }
 
-		/// <summary> Is this resource currently being loaded into memory </summary>
-		public virtual bool IsLoading { get; protected set; }
-
 		/// <summary> Is this resource actually loaded? </summary>
 		protected bool IsLoaded => Database.Contains( this );
 

@@ -34,20 +34,10 @@ namespace Espionage.Engine.Resources
 						continue;
 					}
 
-					scene.Unload();
+					SceneManager.SetActiveScene( scene );
 				}
 
-				var args = Environment.GetCommandLineArgs();
-
-				if ( args.Contains( "-map" ) )
-				{
-					Find( args[Array.IndexOf( args, "-map" ) + 1] ).Load();
-				}
-				else
-				{
-					new Map( provider )?.Load();
-				}
-
+				Current = new( provider );
 			}
 		}
 

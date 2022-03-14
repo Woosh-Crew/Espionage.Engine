@@ -32,13 +32,15 @@ namespace Espionage.Engine.IO
 
 			// -- Editor Specific
 			["project"] = $"{Application.dataPath}/../",
-			["exports"] = "project://Exports/"
+			["exports"] = "project://Exports/",
+			["compiled"] = "exports://<game> <version>/"
 		};
 
 		private readonly Dictionary<string, string> _keywords = new()
 		{
 			// -- Game Specific
 			["game"] = Application.productName,
+			["version"] = Application.version,
 			["company"] = Application.companyName,
 			["user"] = Environment.UserName
 		};
