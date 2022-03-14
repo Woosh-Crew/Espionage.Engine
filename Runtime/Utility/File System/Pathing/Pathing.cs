@@ -14,20 +14,31 @@ namespace Espionage.Engine.IO
 			["assets"] = Application.isEditor ? "exports://" : "game://",
 
 			// -- User Specific
-			["cache"] = CachePath,
-			["config"] = UserConfigPath,
-			["data"] = UserDataPath,
+			["cache"] = GetUserPath( "XDG_CACHE_HOME",
+				$"{Environment.GetEnvironmentVariable( "TEMP" )}\\<game>",
+				$"{Environment.GetFolderPath( Environment.SpecialFolder.UserProfile )}/.cache/<game>",
+				$"{Environment.GetFolderPath( Environment.SpecialFolder.UserProfile )}/Library/Caches/<game>"
+			),
+			["config"] = GetUserPath( "XDG_CONFIG_HOME",
+				$"{Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData )}\\<game>",
+				$"{Environment.GetFolderPath( Environment.SpecialFolder.UserProfile )}/.config/<game>",
+				$"{Environment.GetFolderPath( Environment.SpecialFolder.UserProfile )}/Library/Preferences/<game>"
+			),
+			["data"] = GetUserPath( "XDG_DATA_HOME",
+				$"{Environment.GetFolderPath( Environment.SpecialFolder.LocalApplicationData )}\\<game>",
+				$"{Environment.GetFolderPath( Environment.SpecialFolder.UserProfile )}/.local/share/<game>",
+				$"{Environment.GetFolderPath( Environment.SpecialFolder.UserProfile )}/Library/Application Support/<game>"
+			),
 
 			// -- Editor Specific
 			["project"] = "game:///../",
-			["exports"] = "project://Exports/",
+			["exports"] = "project://Exports/"
 		};
 
 		private readonly Dictionary<string, string> _keywords = new()
 		{
 			// -- Game Specific
-			["game"] = Application.productName,
-			["company"] = Application.companyName
+			["game"] = Application.productName, ["company"] = Application.companyName
 		};
 
 		//
@@ -53,24 +64,6 @@ namespace Espionage.Engine.IO
 				_ => throw new PlatformNotSupportedException()
 			};
 		}
-
-		private static string CachePath => GetUserPath( "XDG_CACHE_HOME",
-			$"{Environment.GetEnvironmentVariable( "TEMP" )}\\<game>",
-			$"{Environment.GetFolderPath( Environment.SpecialFolder.UserProfile )}/.cache/<game>",
-			$"{Environment.GetFolderPath( Environment.SpecialFolder.UserProfile )}/Library/Caches/<game>"
-		);
-
-		private static string UserDataPath => GetUserPath( "XDG_DATA_HOME",
-			$"{Environment.GetFolderPath( Environment.SpecialFolder.LocalApplicationData )}\\<game>",
-			$"{Environment.GetFolderPath( Environment.SpecialFolder.UserProfile )}/.local/share/<game>",
-			$"{Environment.GetFolderPath( Environment.SpecialFolder.UserProfile )}/Library/Application Support/<game>"
-		);
-
-		private static string UserConfigPath => GetUserPath( "XDG_CONFIG_HOME",
-			$"{Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData )}\\<game>",
-			$"{Environment.GetFolderPath( Environment.SpecialFolder.UserProfile )}/.config/<game>",
-			$"{Environment.GetFolderPath( Environment.SpecialFolder.UserProfile )}/Library/Preferences/<game>"
-		);
 
 		//
 		// API
