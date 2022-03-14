@@ -7,6 +7,6 @@ namespace Espionage.Engine
 		float Progress { get; }
 		string Text { get; }
 
-		void Load( Action onLoad = null );
+		void Load( Action loaded = null );
 	}
 }

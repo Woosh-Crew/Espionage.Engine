@@ -5,17 +5,11 @@ using UnityEngine.SceneManagement;
 namespace Espionage.Engine.Resources
 {
 	[Library, Title( "Editor Map" ), Group( "Maps" )]
-	public class EditorSceneMapProvider : Resource.IProvider<Map, Scene>
+	public class EditorSceneMapProvider : Resource.IProvider<Map>
 	{
 		// Id
 		public string Identifier => "editor";
-
-		// Outcome
-		public Scene Output { get; private set; }
-
-		// Loading Meta
-		public float Progress { get; }
-		public bool IsLoading { get; private set; }
+		public float Progress { get; } = 1;
 
 		public EditorSceneMapProvider()
 		{
@@ -26,31 +20,25 @@ namespace Espionage.Engine.Resources
 		// Resource
 		//
 
+		private Scene _scene;
 		private readonly string _sceneName;
 
 		public void Load( Action finished )
 		{
-			IsLoading = true;
-
 			var operation = SceneManager.LoadSceneAsync( _sceneName, LoadSceneMode.Additive );
 			operation.completed += ( _ ) =>
 			{
-				Output = SceneManager.GetSceneByName( _sceneName );
-				SceneManager.SetActiveScene( Output );
+				_scene = SceneManager.GetSceneByName( _sceneName );
+				SceneManager.SetActiveScene( _scene );
 
 				finished?.Invoke();
-				IsLoading = false;
 			};
 		}
 
 		public void Unload( Action finished )
 		{
-			IsLoading = true;
-
-			var request = Output.Unload();
+			var request = _scene.Unload();
 			request.completed += _ => finished?.Invoke();
-
-			IsLoading = false;
 		}
 	}
 }

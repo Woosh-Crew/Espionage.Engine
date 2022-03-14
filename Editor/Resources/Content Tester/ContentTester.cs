@@ -2,10 +2,8 @@ using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
 using UnityEditor;
-using UnityEngine.UIElements;
 using Espionage.Engine.Editor;
 using Espionage.Engine.Resources;
-using Espionage.Engine.Resources.Editor;
 using UnityEngine.SceneManagement;
 
 namespace Espionage.Engine.Tools.Editor
@@ -31,7 +29,7 @@ namespace Espionage.Engine.Tools.Editor
 			}
 
 			// Get all Map Types and their extensions
-			var providers = Library.Database.GetAll<IFile<Map, Scene>>().Where( e => e.Components.Get<FileAttribute>() != null );
+			var providers = Library.Database.GetAll<IFile<Map>>().Where( e => e.Components.Get<FileAttribute>() != null );
 			var path = EditorUtility.OpenFilePanel( "Load a Map", "Exports/Maps", string.Join( ',', providers.Select( e => e.Components.Get<FileAttribute>().Extension ) ) );
 
 			if ( string.IsNullOrEmpty( path ) )
@@ -52,13 +50,7 @@ namespace Espionage.Engine.Tools.Editor
 				return;
 			}
 
-			Process.Start( @"E:\Projects\Espionage\Espionage.Engine\Exports\Espionage 0.1\Espionage.exe", $"-map \"{Files.Pathing.Get( $"exports://Maps/{SceneManager.GetActiveScene().name}.umap" )}\"" );
-		}
-
-		[Function, Menu( "Maps/Compile Map" )]
-		private void OpenMapCompiler()
-		{
-			GetWindow<MapCompiler>();
+			Process.Start( @"E:\Projects\Espionage\Espionage.Engine\Exports\Espionage 0.1\Espionage.exe", $"-map \"{Files.Pathing.Absolute( $"exports://Maps/{SceneManager.GetActiveScene().name}.umap" )}\"" );
 		}
 
 		// UI

@@ -7,7 +7,7 @@ namespace Espionage.Engine.AI
 	{
 		public static Graph Load( string path )
 		{
-			path = Files.Pathing.Get( path );
+			path = Files.Pathing.Absolute( path );
 
 			if ( !Files.Pathing.Exists( path ) )
 			{
@@ -21,7 +21,7 @@ namespace Espionage.Engine.AI
 				return databaseModel;
 			}
 
-			using var _ = Debugging.Stopwatch( $"Loading AI Graph [{Files.Pathing.Get( path )}]" );
+			using var _ = Debugging.Stopwatch( $"Loading AI Graph [{Files.Pathing.Absolute( path )}]" );
 
 			var model = new Graph( Files.Serialization.Load<ActionTree>( path ) );
 			((IResource)model).Load();

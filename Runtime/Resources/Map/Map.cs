@@ -9,75 +9,20 @@ namespace Espionage.Engine.Resources
 {
 	/// <summary>
 	/// Allows the loading and unloading of maps at runtime.
-	/// </summary>
-	/// <remarks>
 	/// You should be using this instead of UnityEngine.SceneManager.
-	/// </remarks>
+	/// </summary>
 	[Group( "Maps" ), Path( "maps", "assets://Maps/" )]
 	public sealed class Map : IResource, ILibrary, ILoadable
 	{
 		public static Map Current { get; internal set; }
 
-		// Provider
-		private Resource.IProvider<Map, Scene> Provider { get; }
-		public Components<Map> Components { get; }
-
-		// Meta Data
-		public string Identifier => Provider.Identifier;
-		public string Title { get; set; }
-		public string Description { get; set; }
-
-		// Loadable 
-		float ILoadable.Progress => Provider.Progress;
-		string ILoadable.Text => $"Loading {Title}";
-
-		//
-		// Constructors
-		//
-
-		public Library ClassInfo { get; }
-
-		/// <summary> Make a reference to a map, using a provider. </summary>
-		/// <param name="provider"> What provider should we use for loading and unloading maps? </param>
-		public Map( Resource.IProvider<Map, Scene> provider )
-		{
-			ClassInfo = Library.Register( this );
-
-			Components = new( this );
-			Provider = provider;
-
-			Database.Add( this );
-		}
-
-		~Map()
-		{
-			Library.Unregister( this );
-		}
-
-		/// <summary>
-		/// Trys to find the map by path. If it couldn't find the map in the database,
-		/// it'll create a new reference to that map.
-		/// </summary>
-		/// <param name="title"> Create a reference with this title </param>
-		/// <param name="description"> Create a reference with this description </param>
-		public static Map Find( string path, string title = null, string description = null )
-		{
-			if ( !Files.Pathing.Exists( path ) )
-			{
-				Debugging.Log.Error( $"Map Path [{Files.Pathing.Get( path )}], couldn't be found." );
-				return null;
-			}
-
-			return Database[path] ?? new Map( Files.Serialization.Load<IFile<Map, Scene>>( path ).Provider() ) { Title = title, Description = description };
-		}
-
-		[Function, Callback( "engine.ready" )]
+		[Function( "maps.init" ), Callback( "engine.ready" )]
 		private static void Initialize()
 		{
-			// Load Default Map
+			// Unload All Maps, Make it use Espionage.Engine
 			if ( Engine.Game.Splash == null || SceneManager.GetActiveScene().path != Engine.Game.Splash.Scene )
 			{
-				Resource.IProvider<Map, Scene> provider = Application.isEditor ? new EditorSceneMapProvider() : new BuildIndexMapProvider( 0 );
+				Resource.IProvider<Map> provider = Application.isEditor ? new EditorSceneMapProvider() : new BuildIndexMapProvider( 0 );
 
 				// Unload All Scene on Start.
 				for ( var i = 0; i < SceneManager.sceneCount; i++ )
@@ -106,88 +51,107 @@ namespace Espionage.Engine.Resources
 			}
 		}
 
-		//
-		// Resource 
-		//
-
-		public Action Loaded { get; set; }
-		public Action Unloaded { get; set; }
-
-		public bool IsLoading => Provider.IsLoading;
-
-		public void Load( Action onLoad = null )
+		/// <summary>
+		/// Trys to find the map by path. If it couldn't find the map in the database,
+		/// it'll create a new reference to that map.
+		/// </summary>
+		public static Map Find( string path )
 		{
-			if ( IsLoading )
+			path = Files.Pathing.Absolute( path );
+
+			// Use the Database Map if we have it
+			if ( Database[path] != null )
 			{
-				throw new( "Already performing an operation action this map" );
+				return Database[path];
 			}
 
-			onLoad += Loaded;
-			onLoad += () =>
+			if ( !Files.Pathing.Exists( path ) )
 			{
-				Callback.Run( "map.loaded" );
-			};
-
-			if ( Current == this )
-			{
-				onLoad?.Invoke();
-				return;
+				Debugging.Log.Error( $"Map Path [{Files.Pathing.Absolute( path )}], couldn't be found." );
+				return null;
 			}
 
-			var lastMap = Current;
+			var file = Files.Serialization.Load<IFile<Map>>( path );
+			return new( file.Provider );
+		}
+
+		//
+		// Instance
+		//
+
+		// Provider
+		private Resource.IProvider<Map> Provider { get; }
+
+		// Meta Data
+		public string Identifier => Provider.Identifier;
+
+		// Loadable 
+		float ILoadable.Progress => Provider.Progress;
+		string ILoadable.Text => "Loading";
+
+		public Library ClassInfo { get; }
+
+		private Map( Resource.IProvider<Map> provider )
+		{
+			ClassInfo = Library.Register( this );
+			Provider = provider;
+
+			Database.Add( this );
+		}
+
+		~Map()
+		{
+			Library.Unregister( this );
+		}
+
+		public void Load( Action loaded = null )
+		{
+			loaded += () => Callback.Run( "map.loaded" );
+
+			Callback.Run( "map.loading" );
 
 			// Unload first, then load the next map
-			if ( lastMap != null )
+			if ( Current != null )
 			{
 				Debugging.Log.Info( "Unloading, then loading" );
-				lastMap?.Unload( () => Provider.Load( onLoad ) );
+				Current?.Unload( () => Provider.Load( loaded ) );
 			}
 			else
 			{
-				Provider.Load( onLoad );
+				Debugging.Log.Info( "Loading Map" );
+				Provider.Load( loaded );
 			}
 
 			Current = this;
-			Callback.Run( "map.loading" );
 		}
 
-		public void Unload( Action onUnload = null )
+		public void Unload( Action unloaded = null )
 		{
-			if ( IsLoading )
-			{
-				throw new( "Already performing an operation action this map" );
-			}
-
 			// Add Callback
-			onUnload += Unloaded;
-			onUnload += () =>
-			{
-				Callback.Run( "map.unloaded" );
-			};
+			unloaded += () => Callback.Run( "map.unloaded" );
 
 			if ( Current == this )
 			{
 				Current = null;
 			}
 
-			Provider.Unload( onUnload );
+			Provider.Unload( unloaded );
 		}
 
 		//
 		// Database
 		//
 
-		/// <summary>
-		/// A reference to all the maps that have already been found or loaded.
-		/// </summary>
-		public static IDatabase<Map, string> Database { get; } = new InternalDatabase();
+		private static IDatabase<Map, string> Database { get; } = new InternalDatabase();
 
 		private class InternalDatabase : IDatabase<Map, string>
 		{
 			public IEnumerable<Map> All => _records.Values;
-			private readonly Dictionary<string, Map> _records = new();
+			public int Count => _records.Count;
 
 			public Map this[ string key ] => _records.ContainsKey( key ) ? _records[key] : null;
+
+			private readonly Dictionary<string, Map> _records = new();
 
 			public void Add( Map item )
 			{
@@ -216,8 +180,6 @@ namespace Espionage.Engine.Resources
 			{
 				_records.Remove( item.Identifier );
 			}
-
-			public int Count => _records.Count;
 		}
 	}
 }

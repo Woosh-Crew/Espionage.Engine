@@ -11,12 +11,9 @@ using UnityEditor.SceneManagement;
 namespace Espionage.Engine.Resources
 {
 	[Group( "Maps" ), Title( "UMAP File" ), File( Extension = "umap" )]
-	public sealed class UMAP : IFile<Map, Scene>, IAsset
+	public sealed class UMAP : IFile<Map>, IAsset
 	{
-		public Library ClassInfo { get; }
-
-		public UMAP() { ClassInfo = Library.Register( this ); }
-		~UMAP() { Library.Unregister( this ); }
+		public Library ClassInfo { get; } = Library.Database[typeof( UMAP )];
 
 		// Resource
 
@@ -25,26 +22,19 @@ namespace Espionage.Engine.Resources
 
 		// Provider
 
-		public Resource.IProvider<Map, Scene> Provider()
-		{
-			// This file is basically an Asset Bundle
-			return new AssetBundleMapProvider( File );
-		}
+		public Resource.IProvider<Map> Provider => new AssetBundleMapProvider( File );
 
 		// Compiler
 
 	#if UNITY_EDITOR
 
-		public static void Compile( string scenePath, params BuildTarget[] targets )
+		public static void Compile( string scenePath )
 		{
 			// Ask the user if they want to save the scene, if not don't export!
 			var activeScene = SceneManager.GetActiveScene();
 			var originalPath = activeScene.path;
 
-			if ( activeScene.path == scenePath && !EditorSceneManager.SaveModifiedScenesIfUserWantsTo( new[]
-			    {
-				    SceneManager.GetActiveScene()
-			    } ) )
+			if ( activeScene.path == scenePath && !EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo() )
 			{
 				return;
 			}
@@ -66,9 +56,6 @@ namespace Espionage.Engine.Resources
 					return;
 				}
 
-				// Compile Preprocess. Allows anything to act as a preprocessor
-				Callback.Run( "compiler.pre_process", scene );
-
 				try
 				{
 					// Create the Map scene, we use this for preprocessing & exporting
@@ -81,29 +68,14 @@ namespace Espionage.Engine.Resources
 					}
 
 					var extension = Library.Database.Get<UMAP>().Components.Get<FileAttribute>().Extension;
+					var builds = new[] { new AssetBundleBuild() { assetNames = new[] { "Assets/Map.unity" }, assetBundleName = $"{scene.name}.{extension}" } };
 
-					var builds = new[]
+					var bundle = BuildPipeline.BuildAssetBundles( exportPath, builds, BuildAssetBundleOptions.ChunkBasedCompression, BuildTarget.StandaloneWindows );
+
+					if ( bundle == null )
 					{
-						new AssetBundleBuild()
-						{
-							assetNames = new[]
-							{
-								"Assets/Map.unity"
-							},
-							assetBundleName = $"{scene.name}.{extension}"
-						}
-					};
-
-					// For each target build, build
-					foreach ( var target in targets )
-					{
-						var bundle = BuildPipeline.BuildAssetBundles( exportPath, builds, BuildAssetBundleOptions.ChunkBasedCompression, target );
-
-						if ( bundle == null )
-						{
-							EditorUtility.DisplayDialog( "ERROR", $"Map asset bundle compile failed. {target.ToString()}", "Okay" );
-							return;
-						}
+						EditorUtility.DisplayDialog( "Map Failed to Compile", "Map asset bundle compile failed.", "Okay" );
+						return;
 					}
 
 					Files.Delete( $"assets://{Library.Database.Get<Map>().Group}", "manifest", "" );

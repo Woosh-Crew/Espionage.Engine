@@ -17,5 +17,7 @@ namespace Espionage.Engine.AI
 		public FileInfo File { get; set; }
 
 		public void Load( FileStream fileStream ) { }
+
+		public Resource.IProvider<Graph> Provider { get; }
 	}
 }
