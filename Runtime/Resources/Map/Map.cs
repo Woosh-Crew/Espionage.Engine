@@ -66,11 +66,14 @@ namespace Espionage.Engine.Resources
 				return null;
 			}
 
-			return Database[path] ?? new Map( Files.Load<IFile<Map, Scene>>( path ).Provider() )
-			{
-				Title = title,
-				Description = description
-			};
+			return Database[path] ?? new Map( Files.Load<IFile<Map, Scene>>( path ).Provider() ) { Title = title, Description = description };
+		}
+
+		[Callback( "engine.ready" )]
+		private static void ReadCMD()
+		{
+			// Load map if we have the correct command line for it
+			Debugging.Log.Info( Environment.CommandLine );
 		}
 
 		//

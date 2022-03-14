@@ -6,8 +6,7 @@
 		{
 			for ( var index = 0; index < Entity.All.Count; index++ )
 			{
-				var entity = Entity.All[index];
-				entity.Thinking.Think();
+				Entity.All[index].Thinking.Think();
 			}
 		}
 	}

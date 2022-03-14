@@ -50,8 +50,6 @@ namespace Espionage.Engine
 		// Gamemode
 		//
 
-		private Gamemode _gamemode;
-
 		/// <summary>
 		/// <para>
 		/// The gamemode is used for controlling game flow. Instead of jamming
@@ -93,6 +91,8 @@ namespace Espionage.Engine
 				Callback.Run( "gamemodes.switched" );
 			}
 		}
+
+		private Gamemode _gamemode;
 
 		//
 		// Build Camera

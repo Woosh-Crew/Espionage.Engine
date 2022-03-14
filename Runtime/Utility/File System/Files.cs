@@ -20,7 +20,7 @@ namespace Espionage.Engine
 	[Library, Group( "Files" ), Title( "File System" )]
 	public static partial class Files
 	{
-		internal static readonly Dictionary<string, string> Paths = new()
+		public static readonly Dictionary<string, string> Paths = new()
 		{
 			["config"] = UserConfigPath,
 			["user"] = UserDataPath,
