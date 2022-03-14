@@ -8,9 +8,9 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 #endif
 
-namespace Espionage.Engine.Resources
+namespace Espionage.Engine.Resources.Formats
 {
-	[Group( "Maps" ), Title( "UMAP File" ), File( Extension = "umap" )]
+	[Group( "Maps" ), Title( "Unity Map File" ), File( Extension = "umap" )]
 	public sealed class UMAP : IFile<Map>, IAsset
 	{
 		public Library ClassInfo { get; } = Library.Database[typeof( UMAP )];
