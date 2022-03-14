@@ -40,7 +40,7 @@ namespace Espionage.Engine.IO
 			// -- Game Specific
 			["game"] = Application.productName,
 			["company"] = Application.companyName,
-			["user"] = "local"
+			["user"] = Environment.UserName
 		};
 
 		//
@@ -71,17 +71,19 @@ namespace Espionage.Engine.IO
 		// API
 		//
 
-		public void Add( string shortHand, string path )
+		/// <summary>
+		/// Add a shorthand / virtual path to the pathing database.
+		/// for use later, you can't override already exising keys.
+		/// </summary>
+		public void Add( string key, string path )
 		{
-			if ( _paths.ContainsKey( shortHand ) )
+			if ( _paths.ContainsKey( key ) )
 			{
-				Debugging.Log.Error( $"Pathing already contains shorthand {shortHand}" );
+				Debugging.Log.Error( $"Pathing already contains shorthand {key}" );
 				return;
 			}
 
-			_paths.Add( shortHand, path );
-
-			Debugging.Log.Info( Get( shortHand + "://" ) );
+			_paths.Add( key, path );
 		}
 
 		public bool Contains( string item )
