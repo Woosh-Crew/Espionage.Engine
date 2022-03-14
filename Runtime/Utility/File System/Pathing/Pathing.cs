@@ -31,14 +31,16 @@ namespace Espionage.Engine.IO
 			),
 
 			// -- Editor Specific
-			["project"] = "game:///../",
+			["project"] = $"{Application.dataPath}/../",
 			["exports"] = "project://Exports/"
 		};
 
 		private readonly Dictionary<string, string> _keywords = new()
 		{
 			// -- Game Specific
-			["game"] = Application.productName, ["company"] = Application.companyName
+			["game"] = Application.productName,
+			["company"] = Application.companyName,
+			["user"] = "local"
 		};
 
 		//
@@ -78,6 +80,8 @@ namespace Espionage.Engine.IO
 			}
 
 			_paths.Add( shortHand, path );
+
+			Debugging.Log.Info( Get( shortHand + "://" ) );
 		}
 
 		public bool Contains( string item )
