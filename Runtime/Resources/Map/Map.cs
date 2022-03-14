@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Espionage.Engine.Components;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -59,6 +60,34 @@ namespace Espionage.Engine.Resources
 			return new( file.Provider );
 		}
 
+
+		/// <summary>
+		/// Checks if the map / path already exists in the maps database. 
+		/// </summary>
+		public static bool Exists( string path )
+		{
+			path = Files.Pathing.Absolute( path );
+			return Database[path] != null;
+		}
+
+		/// <summary>
+		/// Sets up a builder for the map, Allowing you to easily control its data
+		/// through a build setup.
+		/// </summary>
+		public static Builder Setup( string path )
+		{
+			path = Files.Pathing.Absolute( path );
+
+			// Use the Database Map if we have it
+			if ( Exists( path ) )
+			{
+				Debugging.Log.Info( $"Map [{path}], already exists" );
+				return default;
+			}
+
+			return new( path );
+		}
+
 		//
 		// Instance
 		//
@@ -70,6 +99,7 @@ namespace Espionage.Engine.Resources
 		private Resource.IProvider<Map> Provider { get; }
 
 		// Loadable 
+
 		float ILoadable.Progress => Provider.Progress;
 		string ILoadable.Text => Components.TryGet( out Meta meta ) ? $"Loading {meta.Title}" : "Loading";
 
@@ -81,9 +111,13 @@ namespace Espionage.Engine.Resources
 			Database.Add( this );
 		}
 
+		public Action Loaded { get; set; }
+		public Action Unloaded { get; set; }
+
 		public void Load( Action loaded = null )
 		{
 			loaded += () => Callback.Run( "map.loaded" );
+			loaded += Loaded;
 
 			Callback.Run( "map.loading" );
 
@@ -106,6 +140,7 @@ namespace Espionage.Engine.Resources
 		{
 			// Add Callback
 			unloaded += () => Callback.Run( "map.unloaded" );
+			unloaded += Unloaded;
 
 			if ( Current == this )
 			{
@@ -156,6 +191,56 @@ namespace Espionage.Engine.Resources
 			public void Remove( Map item )
 			{
 				_records.Remove( item.Identifier );
+			}
+		}
+
+		//
+		// Build
+		//
+
+		public readonly struct Builder
+		{
+			private readonly string _path;
+			private readonly List<IComponent<Map>> _components;
+
+			internal Builder( string path )
+			{
+				_path = path;
+				_components = new();
+			}
+
+			public Builder With( IComponent<Map> component )
+			{
+				_components.Add( component );
+				return this;
+			}
+
+			public Builder Title( string title )
+			{
+				return this;
+			}
+
+			public Builder Description( string description )
+			{
+				return this;
+			}
+
+			public Builder Origin( string name )
+			{
+				_components.Add( new Origin() { Name = name } );
+				return this;
+			}
+
+			public Map Build()
+			{
+				var map = Find( _path );
+
+				foreach ( var component in _components )
+				{
+					map.Components.Add( component );
+				}
+
+				return map;
 			}
 		}
 	}
