@@ -23,7 +23,7 @@ namespace Espionage.Engine.AI
 
 			using var _ = Debugging.Stopwatch( $"Loading AI Graph [{Files.Pathing.Get( path )}]" );
 
-			var model = new Graph( Files.Load<ActionTree>( path ) );
+			var model = new Graph( Files.Serialization.Load<ActionTree>( path ) );
 			((IResource)model).Load();
 			return model;
 		}

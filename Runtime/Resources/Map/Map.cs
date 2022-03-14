@@ -68,7 +68,7 @@ namespace Espionage.Engine.Resources
 				return null;
 			}
 
-			return Database[path] ?? new Map( Files.Load<IFile<Map, Scene>>( path ).Provider() ) { Title = title, Description = description };
+			return Database[path] ?? new Map( Files.Serialization.Load<IFile<Map, Scene>>( path ).Provider() ) { Title = title, Description = description };
 		}
 
 		[Function, Callback( "engine.ready" )]
