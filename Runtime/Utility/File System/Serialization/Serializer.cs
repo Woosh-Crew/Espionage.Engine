@@ -86,7 +86,7 @@ namespace Espionage.Engine.IO
 
 			var file = Library.Database.Create<T>( library.Class );
 
-			file.File = fileInfo;
+			file.Source = fileInfo;
 
 			using FileStream stream = new( path, FileMode.Open, FileAccess.Read );
 			file.Load( stream );

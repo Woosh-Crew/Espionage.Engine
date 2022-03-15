@@ -1,15 +1,10 @@
-﻿using System.IO;
+﻿using Espionage.Engine.Resources.Binders;
 
 namespace Espionage.Engine.Resources.Formats
 {
 	[Title( "Ravenfield Level File" ), File( Extension = "rfl" )]
-	public sealed class RFL : IFile<Map>
+	public sealed class RFL : Map.File
 	{
-		public Library ClassInfo { get; } = Library.Database[typeof( RFL )];
-
-		public FileInfo File { get; set; }
-		public void Load( FileStream fileStream ) { }
-
-		public IBinder<Map> Binder => new AssetBundleMapProvider( File );
+		public override Map.Binder Binder => new AssetBundleMapProvider( Source.FullName );
 	}
 }

@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Espionage.Engine.Resources
+namespace Espionage.Engine.Resources.Binders
 {
 	[Library, Title( "Build Index Map" ), Group( "Maps" )]
 	public class BuildIndexMapProvider : Map.Binder

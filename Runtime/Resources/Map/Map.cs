@@ -2,6 +2,7 @@ using System;
 using Espionage.Engine.Components;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Espionage.Engine.Resources.Binders;
 
 namespace Espionage.Engine.Resources
 {
@@ -54,8 +55,8 @@ namespace Espionage.Engine.Resources
 				return null;
 			}
 
-			var file = Files.Serialization.Load<IFile<Map>>( path );
-			return new( file.Binder as Binder );
+			var file = Files.Serialization.Load<File>( path );
+			return new( file.Binder );
 		}
 
 		/// <summary>

@@ -3,20 +3,19 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Espionage.Engine.Resources
+namespace Espionage.Engine.Resources.Binders
 {
 	[Library, Title( "Asset Bundle Map" ), Group( "Maps" )]
 	public class AssetBundleMapProvider : Map.Binder
 	{
-		public override string Identifier => File.FullName;
-		private FileInfo File { get; }
+		public override string Identifier { get; }
 
 		// Loading Meta
 		public override float Progress => _bundleRequestOperation.progress / 2 + _sceneLoadOperation.progress / 2;
 
-		public AssetBundleMapProvider( FileInfo file )
+		public AssetBundleMapProvider( string path )
 		{
-			File = file;
+			Identifier = path;
 		}
 
 		//
@@ -31,7 +30,7 @@ namespace Espionage.Engine.Resources
 		public override void Load( Action<Scene> finished = null )
 		{
 			// Load Bundle
-			_bundleRequestOperation = AssetBundle.LoadFromFileAsync( File.FullName );
+			_bundleRequestOperation = AssetBundle.LoadFromFileAsync( Identifier );
 			_bundleRequestOperation.completed += ( _ ) =>
 			{
 				// When we've finished loading the asset

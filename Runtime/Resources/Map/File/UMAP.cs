@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using Espionage.Engine.Resources.Binders;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -11,14 +12,9 @@ using UnityEditor.SceneManagement;
 namespace Espionage.Engine.Resources.Formats
 {
 	[Title( "Unity Map File" ), File( Extension = "umap" )]
-	public sealed class UMAP : IFile<Map>
+	public sealed class UMAP : Map.File
 	{
-		public Library ClassInfo { get; } = Library.Database[typeof( UMAP )];
-
-		public FileInfo File { get; set; }
-		public void Load( FileStream fileStream ) { }
-
-		public IBinder<Map> Binder => new AssetBundleMapProvider( File );
+		public override Map.Binder Binder => new AssetBundleMapProvider( Source.FullName );
 
 		// Compiler
 
