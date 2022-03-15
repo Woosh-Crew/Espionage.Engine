@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 namespace Espionage.Engine.Resources
 {
 	[Library, Title( "Editor Map" ), Group( "Maps" )]
-	public class EditorSceneMapProvider : Resource.IProvider<Map>
+	public class EditorSceneMapProvider : Resource.IProvider<Map, Scene>
 	{
 		// Id
 		public string Identifier => "editor";
@@ -23,15 +23,12 @@ namespace Espionage.Engine.Resources
 		private Scene _scene;
 		private readonly string _sceneName;
 
-		public void Load( Action finished )
+		public void Load( Action<Scene> finished )
 		{
 			var operation = SceneManager.LoadSceneAsync( _sceneName, LoadSceneMode.Additive );
 			operation.completed += ( _ ) =>
 			{
-				_scene = SceneManager.GetSceneByName( _sceneName );
-				SceneManager.SetActiveScene( _scene );
-
-				finished?.Invoke();
+				finished?.Invoke( SceneManager.GetSceneByName( _sceneName ) );
 			};
 		}
 

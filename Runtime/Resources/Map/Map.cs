@@ -20,7 +20,7 @@ namespace Espionage.Engine.Resources
 		[Function( "maps.init" ), Callback( "engine.ready" )]
 		private static void Initialize()
 		{
-			Resource.IProvider<Map> provider = Application.isEditor ? new EditorSceneMapProvider() : new BuildIndexMapProvider( 0 );
+			Resource.IProvider<Map, Scene> provider = Application.isEditor ? new EditorSceneMapProvider() : new BuildIndexMapProvider( 0 );
 
 			// Get main scene at start, that isn't engine layer.
 			for ( var i = 0; i < SceneManager.sceneCount; i++ )
@@ -57,7 +57,7 @@ namespace Espionage.Engine.Resources
 				return null;
 			}
 
-			var file = Files.Serialization.Load<IFile<Map>>( path );
+			var file = Files.Serialization.Load<IFile<Map, Scene>>( path );
 			return new( file.Provider );
 		}
 
@@ -78,14 +78,14 @@ namespace Espionage.Engine.Resources
 		public string Identifier => Provider.Identifier;
 
 		public Components<Map> Components { get; }
-		private Resource.IProvider<Map> Provider { get; }
+		private Resource.IProvider<Map, Scene> Provider { get; }
 
 		// Loadable 
 
 		float ILoadable.Progress => Provider.Progress;
 		string ILoadable.Text => Components.TryGet( out Meta meta ) ? $"Loading {meta.Title}" : "Loading";
 
-		private Map( Resource.IProvider<Map> provider )
+		private Map( Resource.IProvider<Map, Scene> provider )
 		{
 			Components = new( this );
 
@@ -107,15 +107,26 @@ namespace Espionage.Engine.Resources
 			if ( Current != null )
 			{
 				Debugging.Log.Info( "Unloading, then loading" );
-				Current?.Unload( () => Provider.Load( loaded ) );
+				Current?.Unload( () => LoadRequest( loaded ) );
 			}
 			else
 			{
 				Debugging.Log.Info( "Loading Map" );
-				Provider.Load( loaded );
+				LoadRequest( loaded );
 			}
 
 			Current = this;
+		}
+
+		private void LoadRequest( Action onLoad )
+		{
+			Action<Scene> loaded = ( scene ) =>
+			{
+				SceneManager.SetActiveScene( scene );
+				onLoad?.Invoke();
+			};
+
+			Provider.Load( loaded );
 		}
 
 		public void Unload( Action unloaded = null )

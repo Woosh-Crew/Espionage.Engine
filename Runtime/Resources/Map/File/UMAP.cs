@@ -11,7 +11,7 @@ using UnityEditor.SceneManagement;
 namespace Espionage.Engine.Resources.Formats
 {
 	[Group( "Maps" ), Title( "Unity Map File" ), File( Extension = "umap" )]
-	public sealed class UMAP : IFile<Map>, IAsset
+	public sealed class UMAP : IFile<Map, Scene>, IAsset
 	{
 		public Library ClassInfo { get; } = Library.Database[typeof( UMAP )];
 
@@ -22,7 +22,7 @@ namespace Espionage.Engine.Resources.Formats
 
 		// Provider
 
-		public Resource.IProvider<Map> Provider => new AssetBundleMapProvider( File );
+		public Resource.IProvider<Map, Scene> Provider => new AssetBundleMapProvider( File );
 
 		// Compiler
 

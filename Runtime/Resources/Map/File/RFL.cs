@@ -1,9 +1,10 @@
 ﻿using System.IO;
+using UnityEngine.SceneManagement;
 
 namespace Espionage.Engine.Resources.Formats
 {
 	[Group( "Maps" ), Title( "Ravenfield Level File" ), File( Extension = "rfl" )]
-	public class RFL : IFile<Map>, IAsset
+	public class RFL : IFile<Map, Scene>, IAsset
 	{
 		public Library ClassInfo { get; } = Library.Database[typeof( RFL )];
 
@@ -14,6 +15,6 @@ namespace Espionage.Engine.Resources.Formats
 
 		// Provider
 
-		public Resource.IProvider<Map> Provider => new AssetBundleMapProvider( File );
+		public Resource.IProvider<Map, Scene> Provider => new AssetBundleMapProvider( File );
 	}
 }

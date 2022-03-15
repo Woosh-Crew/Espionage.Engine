@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Espionage.Engine.Components;
+using UnityEngine.SceneManagement;
 
 namespace Espionage.Engine.Resources
 {
@@ -28,7 +29,7 @@ namespace Espionage.Engine.Resources
 		/// Sets up a builder for the map using a provider, Allowing you 
 		/// to easily control its data through a build setup.
 		/// </summary>
-		public static Builder Setup( Resource.IProvider<Map> provider )
+		public static Builder Setup( Resource.IProvider<Map, Scene> provider )
 		{
 			return new( provider );
 		}
@@ -45,7 +46,7 @@ namespace Espionage.Engine.Resources
 		public readonly struct Builder
 		{
 			private readonly string _path;
-			private readonly Resource.IProvider<Map> _provider;
+			private readonly Resource.IProvider<Map, Scene> _provider;
 
 			private readonly Dictionary<Type, IComponent<Map>> _components;
 
@@ -57,7 +58,7 @@ namespace Espionage.Engine.Resources
 				_provider = null;
 			}
 
-			internal Builder( Resource.IProvider<Map> provider )
+			internal Builder( Resource.IProvider<Map, Scene> provider )
 			{
 				_provider = provider;
 				_components = new();

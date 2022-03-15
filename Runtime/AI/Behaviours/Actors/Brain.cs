@@ -7,8 +7,6 @@ namespace Espionage.Engine.AI
 	[Group( "AI" ), Title( "AI Brain" )]
 	public class Brain : Component<Actor>, Pawn.ICallbacks
 	{
-		private Graph Logic { get; set; }
-
 		protected override void OnAttached( Actor actor )
 		{
 			base.OnAwake();

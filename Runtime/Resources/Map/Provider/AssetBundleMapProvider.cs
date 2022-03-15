@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 namespace Espionage.Engine.Resources
 {
 	[Library, Title( "Asset Bundle Map" ), Group( "Maps" )]
-	public class AssetBundleMapProvider : Resource.IProvider<Map>
+	public class AssetBundleMapProvider : Resource.IProvider<Map, Scene>
 	{
 		public string Identifier => File.FullName;
 		private FileInfo File { get; }
@@ -29,7 +29,7 @@ namespace Espionage.Engine.Resources
 		private Scene _scene;
 		private AssetBundle _bundle;
 
-		public void Load( Action finished )
+		public void Load( Action<Scene> finished )
 		{
 			// Load Bundle
 			_bundleRequestOperation = AssetBundle.LoadFromFileAsync( File.FullName );
@@ -48,9 +48,7 @@ namespace Espionage.Engine.Resources
 				{
 					// We've finished loading the scene.
 					Debugging.Log.Info( "Finished Loading Scene" );
-					_scene = SceneManager.GetSceneByPath( scenePath );
-					SceneManager.SetActiveScene( _scene );
-					finished?.Invoke();
+					finished?.Invoke( SceneManager.GetSceneByPath( scenePath ) );
 				};
 			};
 		}

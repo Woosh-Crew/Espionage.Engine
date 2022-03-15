@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 namespace Espionage.Engine.Resources
 {
 	[Library, Title( "Build Index Map" ), Group( "Maps" )]
-	public class BuildIndexMapProvider : Resource.IProvider<Map>
+	public class BuildIndexMapProvider : Resource.IProvider<Map, Scene>
 	{
 		// Id
 		public string Identifier => $"index:{_buildIndex}";
@@ -32,14 +32,13 @@ namespace Espionage.Engine.Resources
 		private AsyncOperation _operation;
 		private readonly int _buildIndex;
 
-		public void Load( Action finished )
+		public void Load( Action<Scene> finished )
 		{
-			SceneManager.LoadScene( _buildIndex );
-
-			_scene = SceneManager.GetSceneAt( _buildIndex );
-			SceneManager.SetActiveScene( _scene );
-
-			finished?.Invoke();
+			var operation = SceneManager.LoadSceneAsync( _buildIndex, LoadSceneMode.Additive );
+			operation.completed += ( _ ) =>
+			{
+				finished?.Invoke( SceneManager.GetSceneByBuildIndex( _buildIndex ) );
+			};
 		}
 
 		public void Unload( Action finished )
