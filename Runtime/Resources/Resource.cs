@@ -8,7 +8,7 @@ namespace Espionage.Engine.Resources
 	/// Resources will keep references to the instances and the assets identifier.
 	/// </summary>
 	[Group( "Resources" )]
-	public abstract partial class Resource : IResource, IDisposable, ILibrary
+	public abstract partial class Resource : IResource, ILibrary
 	{
 		public Library ClassInfo { get; }
 
@@ -26,47 +26,23 @@ namespace Espionage.Engine.Resources
 		// Resource
 		//
 
-		/// <summary> How many instances of this Resource are currently being used. </summary>
-		public int Instances { get; private set; }
-
 		/// <summary> The path / database entry to this resource. </summary>
 		public abstract string Identifier { get; }
 
 		/// <summary> Is this resource actually loaded? </summary>
 		protected bool IsLoaded => Database.Contains( this );
 
-		public void Load( Action loaded )
+		public void Load( Action loaded = null )
 		{
 			if ( !IsLoaded )
 			{
 				Database.Add( this );
-				OnLoad( loaded );
-			}
-
-			Instances++;
-		}
-
-		/// <summary> What should we do when this resource is loaded </summary>
-		protected virtual void OnLoad( Action onLoad ) { }
-
-		public void Unload( Action unloaded )
-		{
-			Instances--;
-
-			if ( Instances == 0 )
-			{
-				Database.Remove( this );
-				OnUnload( unloaded );
 			}
 		}
 
-		/// <summary> What should we do when this resource is unloaded </summary>
-		protected virtual void OnUnload( Action onUnload ) { }
-
-		/// <summary> Forcefully Unload this Resource </summary>
-		public void Dispose()
+		public void Unload( Action unloaded = null )
 		{
-			Unload( null );
+			Database.Remove( this );
 		}
 
 		//
@@ -79,6 +55,8 @@ namespace Espionage.Engine.Resources
 		private class InternalDatabase : IDatabase<Resource, string>
 		{
 			public IEnumerable<Resource> All => _records.Values;
+			public int Count => _records.Count;
+
 			private readonly Dictionary<string, Resource> _records = new();
 
 			public Resource this[ string key ] => _records.ContainsKey( key ) ? _records[key] : null;
@@ -88,13 +66,11 @@ namespace Espionage.Engine.Resources
 				// Store it in Database
 				if ( _records.ContainsKey( item.Identifier! ) )
 				{
-					_records[item.Identifier] = item;
-					Debugging.Log.Warning( $"For some reason we're replacing a resource? [{item.Identifier}]" );
+					Debugging.Log.Error( $"For some reason we're replacing a resource? [{item.Identifier}]" );
+					return;
 				}
-				else
-				{
-					_records.Add( item.Identifier!, item );
-				}
+
+				_records.Add( item.Identifier!, item );
 			}
 
 			public void Clear()
@@ -111,8 +87,6 @@ namespace Espionage.Engine.Resources
 			{
 				_records.Remove( item.Identifier );
 			}
-
-			public int Count => _records.Count;
 		}
 	}
 }
