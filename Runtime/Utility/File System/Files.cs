@@ -10,7 +10,7 @@ namespace Espionage.Engine
 	/// short hands for defining paths.
 	/// </summary>
 	[Library, Group( "Files" ), Title( "File System" )]
-	public static partial class Files
+	public static class Files
 	{
 		public static Pathing Pathing { get; } = new();
 		public static Serializer Serialization { get; } = new();
@@ -18,8 +18,6 @@ namespace Espionage.Engine
 		//
 		// API
 		//
-
-
 
 		/// <summary>
 		/// Saves anything you want, (provided theres a
@@ -45,7 +43,7 @@ namespace Espionage.Engine
 		/// </summary>
 		public static void Delete( string path )
 		{
-			path = Pathing.Get( path );
+			path = Pathing.Absolute( path );
 
 			if ( File.Exists( path ) )
 			{
@@ -60,7 +58,7 @@ namespace Espionage.Engine
 		/// </summary>
 		public static void Delete( string path, string extension )
 		{
-			path = Pathing.Get( path );
+			path = Pathing.Absolute( path );
 
 			var files = Directory.GetFiles( path, $"*.{extension}" );
 			foreach ( var item in files )
@@ -90,8 +88,8 @@ namespace Espionage.Engine
 		/// </summary>
 		public static void Copy( string file, string path )
 		{
-			file = Pathing.Get( file );
-			path = Pathing.Get( path );
+			file = Pathing.Absolute( file );
+			path = Pathing.Absolute( path );
 
 			var fileInfo = new FileInfo( file );
 
@@ -113,8 +111,8 @@ namespace Espionage.Engine
 		/// </summary>
 		public static void Move( string source, string destination, bool overwrite = true )
 		{
-			source = Pathing.Get( source );
-			destination = Pathing.Get( destination );
+			source = Pathing.Absolute( source );
+			destination = Pathing.Absolute( destination );
 
 			if ( !File.Exists( source ) )
 			{
@@ -130,7 +128,7 @@ namespace Espionage.Engine
 		/// </summary>
 		public static void Open( string path )
 		{
-			path = Pathing.Get( path );
+			path = Pathing.Absolute( path );
 
 			if ( !Pathing.Exists( path ) )
 			{

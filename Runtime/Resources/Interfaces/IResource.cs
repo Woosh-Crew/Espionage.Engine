@@ -9,9 +9,8 @@ namespace Espionage.Engine.Resources
 	public interface IResource
 	{
 		string Identifier { get; }
-		bool IsLoading { get; }
 
-		void Load( Action onLoad = null );
-		void Unload( Action onUnload = null );
+		void Load( Action loaded = null );
+		void Unload( Action unloaded = null );
 	}
 }

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 
 namespace Espionage.Engine
 {
@@ -48,7 +47,7 @@ namespace Espionage.Engine
 		public static void Unregister( ILibrary value )
 		{
 			// Check if Library is Singleton
-			if ( value.ClassInfo.Components.Has<SingletonAttribute>() )
+			if ( value.ClassInfo?.Components.Has<SingletonAttribute>() ?? false )
 			{
 				Singletons.Remove( value.GetType() );
 			}

@@ -115,7 +115,7 @@ namespace Espionage.Engine
 
 		// Assigning
 
-		[Function, Callback( "map.loaded" ), Callback( "cookies.saved" )]
+		[Function( "options.apply_postfx" ), Callback( "map.loaded" ), Callback( "cookies.saved" )]
 		private static void SetPostFX()
 		{
 			// We don't need to set shit if its quiting

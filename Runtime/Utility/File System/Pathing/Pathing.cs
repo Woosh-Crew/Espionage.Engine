@@ -32,13 +32,15 @@ namespace Espionage.Engine.IO
 
 			// -- Editor Specific
 			["project"] = $"{Application.dataPath}/../",
-			["exports"] = "project://Exports/"
+			["exports"] = "project://Exports/",
+			["compiled"] = "exports://<game> <version>/"
 		};
 
 		private readonly Dictionary<string, string> _keywords = new()
 		{
 			// -- Game Specific
 			["game"] = Application.productName,
+			["version"] = Application.version,
 			["company"] = Application.companyName,
 			["user"] = Environment.UserName
 		};
@@ -96,7 +98,7 @@ namespace Espionage.Engine.IO
 		/// It'll search loaded mods first then the base content,
 		/// Depending on the virtual path you are trying to get.
 		/// </summary>
-		public string Get( string path )
+		public string Absolute( string path )
 		{
 			// Change Keywords
 			if ( path.Contains( '<' ) )
@@ -114,7 +116,7 @@ namespace Espionage.Engine.IO
 			}
 
 			var splitPath = path.Split( "://" );
-			splitPath[0] = Get( _paths[splitPath[0]] );
+			splitPath[0] = Absolute( _paths[splitPath[0]] );
 
 			var newPath = Path.Combine( splitPath[0], splitPath[1] );
 
@@ -127,10 +129,10 @@ namespace Espionage.Engine.IO
 		///  then the base content, Depending on the virtual
 		/// path you are trying to get.
 		/// </summary>
-		public string Get( string path, string relative )
+		public string Relative( string path, string relative )
 		{
-			path = Get( path );
-			relative = Get( relative );
+			path = Absolute( path );
+			relative = Absolute( relative );
 
 			return Path.GetRelativePath( relative, path );
 		}
@@ -140,7 +142,7 @@ namespace Espionage.Engine.IO
 		/// </summary>
 		public bool Exists( string path )
 		{
-			path = Get( path );
+			path = Absolute( path );
 			return Directory.Exists( path ) || File.Exists( path );
 		}
 	}

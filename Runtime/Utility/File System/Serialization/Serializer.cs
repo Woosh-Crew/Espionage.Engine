@@ -6,7 +6,7 @@ namespace Espionage.Engine.IO
 	{
 		protected static T Find<T>() where T : class, ILibrary
 		{
-			var library = Library.Database.Find<ISerializer<T>>();
+			var library = Library.Database.Find<T>();
 
 			if ( library == null )
 			{
@@ -29,7 +29,7 @@ namespace Espionage.Engine.IO
 		/// </summary>
 		public virtual void Store( byte[] data, string path )
 		{
-			path = Files.Pathing.Get( path );
+			path = Files.Pathing.Absolute( path );
 
 			var fileInfo = new FileInfo( path );
 
@@ -69,7 +69,7 @@ namespace Espionage.Engine.IO
 		public T Load<T>( string path ) where T : class, IFile
 		{
 			// Get the actual path
-			path = Files.Pathing.Get( path );
+			path = Files.Pathing.Absolute( path );
 
 			if ( !Files.Pathing.Exists( path ) )
 			{
@@ -86,7 +86,7 @@ namespace Espionage.Engine.IO
 
 			var file = Library.Database.Create<T>( library.Class );
 
-			file.File = fileInfo;
+			file.Source = fileInfo;
 
 			using FileStream stream = new( path, FileMode.Open, FileAccess.Read );
 			file.Load( stream );
@@ -101,7 +101,7 @@ namespace Espionage.Engine.IO
 		/// </summary>
 		public virtual T Deserialize<T>( string path )
 		{
-			path = Files.Pathing.Get( path );
+			path = Files.Pathing.Absolute( path );
 
 			var deserializer = Find<IDeserializer<T>>();
 			return deserializer.Deserialize( Deserialize( path ) );
@@ -112,7 +112,7 @@ namespace Espionage.Engine.IO
 		/// </summary>
 		public virtual byte[] Deserialize( string path )
 		{
-			path = Files.Pathing.Get( path );
+			path = Files.Pathing.Absolute( path );
 
 			if ( !File.Exists( path ) )
 			{

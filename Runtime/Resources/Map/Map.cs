@@ -1,223 +1,145 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Espionage.Engine.Components;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Espionage.Engine.Resources.Binders;
 
 namespace Espionage.Engine.Resources
 {
 	/// <summary>
 	/// Allows the loading and unloading of maps at runtime.
-	/// </summary>
-	/// <remarks>
 	/// You should be using this instead of UnityEngine.SceneManager.
-	/// </remarks>
+	/// </summary>
 	[Group( "Maps" ), Path( "maps", "assets://Maps/" )]
-	public sealed class Map : IResource, ILibrary, ILoadable
+	public sealed partial class Map : IResource, ILibrary, ILoadable
 	{
 		public static Map Current { get; internal set; }
 
-		// Provider
-		private Resource.IProvider<Map, Scene> Provider { get; }
-		public Components<Map> Components { get; }
-
-		// Meta Data
-		public string Identifier => Provider.Identifier;
-		public string Title { get; set; }
-		public string Description { get; set; }
-
-		// Loadable 
-		float ILoadable.Progress => Provider.Progress;
-		string ILoadable.Text => $"Loading {Title}";
-
-		//
-		// Constructors
-		//
-
-		public Library ClassInfo { get; }
-
-		/// <summary> Make a reference to a map, using a provider. </summary>
-		/// <param name="provider"> What provider should we use for loading and unloading maps? </param>
-		public Map( Resource.IProvider<Map, Scene> provider )
+		[Function( "maps.init" ), Callback( "engine.ready" )]
+		private static void Initialize()
 		{
-			ClassInfo = Library.Register( this );
+			Binder provider = Application.isEditor ? new EditorSceneMapProvider() : new BuildIndexMapProvider( 0 );
 
-			Components = new( this );
-			Provider = provider;
+			// Get main scene at start, that isn't engine layer.
+			for ( var i = 0; i < SceneManager.sceneCount; i++ )
+			{
+				var scene = SceneManager.GetSceneAt( i );
 
-			Database.Add( this );
-		}
+				if ( scene.name != Engine.Scene.name )
+				{
+					SceneManager.SetActiveScene( scene );
+					break;
+				}
+			}
 
-		~Map()
-		{
-			Library.Unregister( this );
+			Current = new( provider );
 		}
 
 		/// <summary>
 		/// Trys to find the map by path. If it couldn't find the map in the database,
-		/// it'll create a new reference to that map.
+		/// it'll create a new reference to that map for use later.
 		/// </summary>
-		/// <param name="title"> Create a reference with this title </param>
-		/// <param name="description"> Create a reference with this description </param>
-		public static Map Find( string path, string title = null, string description = null )
+		public static Map Find( string path )
 		{
+			path = Files.Pathing.Absolute( path );
+
+			// Use the Database Map if we have it
+			if ( Database[path] != null )
+			{
+				return Database[path];
+			}
+
 			if ( !Files.Pathing.Exists( path ) )
 			{
-				Debugging.Log.Error( $"Map Path [{Files.Pathing.Get( path )}], couldn't be found." );
+				Debugging.Log.Error( $"Map Path [{Files.Pathing.Absolute( path )}], couldn't be found." );
 				return null;
 			}
 
-			return Database[path] ?? new Map( Files.Serialization.Load<IFile<Map, Scene>>( path ).Provider() ) { Title = title, Description = description };
+			var file = Files.Serialization.Load<File>( path );
+			return new( file.Binder );
 		}
 
-		[Function, Callback( "engine.ready" )]
-		private static void Initialize()
+		/// <summary>
+		/// Checks if the map / path already exists in the maps database. 
+		/// </summary>
+		public static bool Exists( string path )
 		{
-			// Load Default Map
-			if ( Engine.Game.Splash == null || SceneManager.GetActiveScene().path != Engine.Game.Splash.Scene )
-			{
-				Resource.IProvider<Map, Scene> provider = Application.isEditor ? new EditorSceneMapProvider() : new BuildIndexMapProvider( 0 );
-
-				// Unload All Scene on Start.
-				for ( var i = 0; i < SceneManager.sceneCount; i++ )
-				{
-					var scene = SceneManager.GetSceneAt( i );
-
-					if ( scene.name == Engine.Scene.name )
-					{
-						continue;
-					}
-
-					scene.Unload();
-				}
-
-				var args = Environment.GetCommandLineArgs();
-
-				if ( args.Contains( "-map" ) )
-				{
-					Find( args[Array.IndexOf( args, "-map" ) + 1] ).Load();
-				}
-				else
-				{
-					new Map( provider )?.Load();
-				}
-
-			}
+			path = Files.Pathing.Absolute( path );
+			return Database[path] != null;
 		}
 
 		//
-		// Resource 
+		// Instance
 		//
+
+		public Library ClassInfo { get; } = Library.Database[typeof( Map )];
+		public string Identifier => Provider.Identifier;
+
+		public Components<Map> Components { get; }
+		private Binder Provider { get; }
+
+		// Loadable 
+
+		float ILoadable.Progress => Provider.Progress;
+		string ILoadable.Text => Components.TryGet( out Meta meta ) ? $"Loading {meta.Title}" : "Loading";
+
+		private Map( Binder provider )
+		{
+			Components = new( this );
+
+			Provider = provider ?? throw new NullReferenceException();
+			Database.Add( this );
+		}
 
 		public Action Loaded { get; set; }
 		public Action Unloaded { get; set; }
 
-		public bool IsLoading => Provider.IsLoading;
-
-		public void Load( Action onLoad = null )
+		public void Load( Action loaded = null )
 		{
-			if ( IsLoading )
-			{
-				throw new( "Already performing an operation action this map" );
-			}
+			loaded += () => Callback.Run( "map.loaded" );
+			loaded += Loaded;
 
-			onLoad += Loaded;
-			onLoad += () =>
-			{
-				Callback.Run( "map.loaded" );
-			};
-
-			if ( Current == this )
-			{
-				onLoad?.Invoke();
-				return;
-			}
-
-			var lastMap = Current;
+			Callback.Run( "map.loading" );
 
 			// Unload first, then load the next map
-			if ( lastMap != null )
+			if ( Current != null )
 			{
 				Debugging.Log.Info( "Unloading, then loading" );
-				lastMap?.Unload( () => Provider.Load( onLoad ) );
+				Current?.Unload( () => LoadRequest( loaded ) );
 			}
 			else
 			{
-				Provider.Load( onLoad );
+				Debugging.Log.Info( "Loading Map" );
+				LoadRequest( loaded );
 			}
 
 			Current = this;
-			Callback.Run( "map.loading" );
 		}
 
-		public void Unload( Action onUnload = null )
+		private void LoadRequest( Action onLoad )
 		{
-			if ( IsLoading )
+			// This maybe stupid?!
+			Action<Scene> loaded = ( scene ) =>
 			{
-				throw new( "Already performing an operation action this map" );
-			}
-
-			// Add Callback
-			onUnload += Unloaded;
-			onUnload += () =>
-			{
-				Callback.Run( "map.unloaded" );
+				SceneManager.SetActiveScene( scene );
+				onLoad?.Invoke();
 			};
+
+			Provider.Load( loaded );
+		}
+
+		public void Unload( Action unloaded = null )
+		{
+			// Add Callback
+			unloaded += () => Callback.Run( "map.unloaded" );
+			unloaded += Unloaded;
 
 			if ( Current == this )
 			{
 				Current = null;
 			}
 
-			Provider.Unload( onUnload );
-		}
-
-		//
-		// Database
-		//
-
-		/// <summary>
-		/// A reference to all the maps that have already been found or loaded.
-		/// </summary>
-		public static IDatabase<Map, string> Database { get; } = new InternalDatabase();
-
-		private class InternalDatabase : IDatabase<Map, string>
-		{
-			public IEnumerable<Map> All => _records.Values;
-			private readonly Dictionary<string, Map> _records = new();
-
-			public Map this[ string key ] => _records.ContainsKey( key ) ? _records[key] : null;
-
-			public void Add( Map item )
-			{
-				// Store it in Database
-				if ( _records.ContainsKey( item.Identifier! ) )
-				{
-					_records[item.Identifier] = item;
-				}
-				else
-				{
-					_records.Add( item.Identifier!, item );
-				}
-			}
-
-			public void Clear()
-			{
-				_records.Clear();
-			}
-
-			public bool Contains( Map item )
-			{
-				return _records.ContainsKey( item.Identifier );
-			}
-
-			public void Remove( Map item )
-			{
-				_records.Remove( item.Identifier );
-			}
-
-			public int Count => _records.Count;
+			Provider.Unload( unloaded );
 		}
 	}
 }

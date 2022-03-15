@@ -2,72 +2,47 @@
 using System.IO;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using Espionage.Engine.Resources.Binders;
 
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.SceneManagement;
 #endif
 
-namespace Espionage.Engine.Resources
+namespace Espionage.Engine.Resources.Formats
 {
-	[Group( "Maps" ), Title( "UMAP File" ), File( Extension = "umap" )]
-	public sealed class UMAP : IFile<Map, Scene>, IAsset
+	[Title( "Unity Map File" ), File( Extension = "umap" )]
+	public sealed class UMAP : Map.File
 	{
-		public Library ClassInfo { get; }
-
-		public UMAP() { ClassInfo = Library.Register( this ); }
-		~UMAP() { Library.Unregister( this ); }
-
-		// Resource
-
-		public FileInfo File { get; set; }
-		public void Load( FileStream fileStream ) { }
-
-		// Provider
-
-		public Resource.IProvider<Map, Scene> Provider()
-		{
-			// This file is basically an Asset Bundle
-			return new AssetBundleMapProvider( File );
-		}
+		public override Map.Binder Binder => new AssetBundleMapProvider( Source.FullName );
 
 		// Compiler
 
 	#if UNITY_EDITOR
 
-		public static void Compile( string scenePath, params BuildTarget[] targets )
+		public static void Compile( string scenePath )
 		{
 			// Ask the user if they want to save the scene, if not don't export!
 			var activeScene = SceneManager.GetActiveScene();
 			var originalPath = activeScene.path;
 
-			if ( activeScene.path == scenePath && !EditorSceneManager.SaveModifiedScenesIfUserWantsTo( new[]
-			    {
-				    SceneManager.GetActiveScene()
-			    } ) )
+			if ( activeScene.path == scenePath && !EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo() )
 			{
+				Debugging.Log.Warning( "Not compiling, User didn't want to save." );
 				return;
 			}
 
 			var scene = EditorSceneManager.OpenScene( scenePath, OpenSceneMode.Single );
-
 			var exportPath = $"Exports/{Library.Database.Get<Map>().Group}/";
 
 			// Track how long exporting took
 			using ( Debugging.Stopwatch( "Map Compiled", true ) )
 			{
-				//
-				// Export Level Processes
-				//
-
 				if ( Callback.Run<bool>( "compiler.sanity_check", scene )?.Any( e => e is false ) ?? false )
 				{
 					Debugging.Log.Info( "Sanity check failed" );
 					return;
 				}
-
-				// Compile Preprocess. Allows anything to act as a preprocessor
-				Callback.Run( "compiler.pre_process", scene );
 
 				try
 				{
@@ -81,29 +56,14 @@ namespace Espionage.Engine.Resources
 					}
 
 					var extension = Library.Database.Get<UMAP>().Components.Get<FileAttribute>().Extension;
+					var builds = new[] { new AssetBundleBuild() { assetNames = new[] { "Assets/Map.unity" }, assetBundleName = $"{scene.name}.{extension}" } };
 
-					var builds = new[]
+					var bundle = BuildPipeline.BuildAssetBundles( exportPath, builds, BuildAssetBundleOptions.ChunkBasedCompression, BuildTarget.StandaloneWindows );
+
+					if ( bundle == null )
 					{
-						new AssetBundleBuild()
-						{
-							assetNames = new[]
-							{
-								"Assets/Map.unity"
-							},
-							assetBundleName = $"{scene.name}.{extension}"
-						}
-					};
-
-					// For each target build, build
-					foreach ( var target in targets )
-					{
-						var bundle = BuildPipeline.BuildAssetBundles( exportPath, builds, BuildAssetBundleOptions.ChunkBasedCompression, target );
-
-						if ( bundle == null )
-						{
-							EditorUtility.DisplayDialog( "ERROR", $"Map asset bundle compile failed. {target.ToString()}", "Okay" );
-							return;
-						}
+						EditorUtility.DisplayDialog( "Map Failed to Compile", "Map asset bundle compile failed.", "Okay" );
+						return;
 					}
 
 					Files.Delete( $"assets://{Library.Database.Get<Map>().Group}", "manifest", "" );
