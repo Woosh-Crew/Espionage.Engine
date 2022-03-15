@@ -38,6 +38,14 @@ namespace Espionage.Engine.AI
 		}
 
 		/// <summary>
+		/// Reference to a 'parent' node used for recursively returning a path of nodes
+		/// </summary>
+		/// <value></value>
+		public AINode Parent{
+			get; set;
+		}
+
+		/// <summary>
 		/// Index in the heap
 		/// </summary>
 		private int _heapIndex;
