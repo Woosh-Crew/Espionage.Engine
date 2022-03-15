@@ -5,13 +5,13 @@ using UnityEngine.SceneManagement;
 namespace Espionage.Engine.Resources
 {
 	[Library, Title( "Build Index Map" ), Group( "Maps" )]
-	public class BuildIndexMapProvider : Resource.IProvider<Map, Scene>
+	public class BuildIndexMapProvider : Map.Service
 	{
 		// Id
-		public string Identifier => $"index:{_buildIndex}";
+		public override string Identifier => $"index:{_buildIndex}";
 
 		// Loading Meta
-		public float Progress => _operation.progress;
+		public override float Progress => _operation.progress;
 
 		public BuildIndexMapProvider( int index )
 		{
@@ -27,28 +27,27 @@ namespace Espionage.Engine.Resources
 		// Resource
 		//
 
-		private Scene _scene;
-
 		private AsyncOperation _operation;
 		private readonly int _buildIndex;
 
-		public void Load( Action<Scene> finished )
+		public override void Load( Action<Scene> finished )
 		{
 			var operation = SceneManager.LoadSceneAsync( _buildIndex, LoadSceneMode.Additive );
 			operation.completed += ( _ ) =>
 			{
-				finished?.Invoke( SceneManager.GetSceneByBuildIndex( _buildIndex ) );
+				Scene = SceneManager.GetSceneByBuildIndex( _buildIndex );
+				finished?.Invoke( Scene );
 			};
 		}
 
-		public void Unload( Action finished )
+		public override void Unload( Action finished )
 		{
-			if ( _scene == default )
+			if ( Scene == default )
 			{
-				_scene = SceneManager.GetActiveScene();
+				Scene = SceneManager.GetActiveScene();
 			}
 
-			var request = _scene.Unload();
+			var request = Scene.Unload();
 			request.completed += _ => finished?.Invoke();
 		}
 	}

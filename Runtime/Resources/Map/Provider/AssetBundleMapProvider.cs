@@ -6,13 +6,13 @@ using UnityEngine.SceneManagement;
 namespace Espionage.Engine.Resources
 {
 	[Library, Title( "Asset Bundle Map" ), Group( "Maps" )]
-	public class AssetBundleMapProvider : Resource.IProvider<Map, Scene>
+	public class AssetBundleMapProvider : Map.Service
 	{
-		public string Identifier => File.FullName;
+		public override string Identifier => File.FullName;
 		private FileInfo File { get; }
 
 		// Loading Meta
-		public float Progress => _bundleRequestOperation.progress / 2 + _sceneLoadOperation.progress / 2;
+		public override float Progress => _bundleRequestOperation.progress / 2 + _sceneLoadOperation.progress / 2;
 
 		public AssetBundleMapProvider( FileInfo file )
 		{
@@ -26,10 +26,9 @@ namespace Espionage.Engine.Resources
 		private AssetBundleCreateRequest _bundleRequestOperation;
 		private AsyncOperation _sceneLoadOperation;
 
-		private Scene _scene;
 		private AssetBundle _bundle;
 
-		public void Load( Action<Scene> finished )
+		public override void Load( Action<Scene> finished = null )
 		{
 			// Load Bundle
 			_bundleRequestOperation = AssetBundle.LoadFromFileAsync( File.FullName );
@@ -48,16 +47,17 @@ namespace Espionage.Engine.Resources
 				{
 					// We've finished loading the scene.
 					Debugging.Log.Info( "Finished Loading Scene" );
-					finished?.Invoke( SceneManager.GetSceneByPath( scenePath ) );
+					Scene = SceneManager.GetSceneByPath( scenePath );
+					finished?.Invoke( Scene );
 				};
 			};
 		}
 
-		public void Unload( Action finished )
+		public override void Unload( Action finished = null )
 		{
 			// Unload scene and bundle
-			_scene.Unload();
-			_scene = default;
+			Scene.Unload();
+			Scene = default;
 
 			var request = _bundle.UnloadAsync( true );
 			request.completed += ( e ) =>
