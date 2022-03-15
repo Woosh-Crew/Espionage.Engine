@@ -32,7 +32,7 @@ namespace Espionage.Engine.Resources
 		/// <summary> Is this resource actually loaded? </summary>
 		protected bool IsLoaded => Database.Contains( this );
 
-		public void Load( Action loaded = null )
+		public virtual void Load( Action loaded = null )
 		{
 			if ( !IsLoaded )
 			{
@@ -40,7 +40,7 @@ namespace Espionage.Engine.Resources
 			}
 		}
 
-		public void Unload( Action unloaded = null )
+		public virtual void Unload( Action unloaded = null )
 		{
 			Database.Remove( this );
 		}

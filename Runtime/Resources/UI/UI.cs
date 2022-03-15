@@ -13,5 +13,17 @@ namespace Espionage.Engine.Resources
 			Provider = provider ?? throw new NullReferenceException();
 			Database.Add( this );
 		}
+
+		public override void Load( Action loaded = null )
+		{
+			base.Load( loaded );
+			Provider.Load( loaded );
+		}
+
+		public override void Unload( Action unloaded = null )
+		{
+			base.Unload( unloaded );
+			Provider.Unload( unloaded );
+		}
 	}
 }
