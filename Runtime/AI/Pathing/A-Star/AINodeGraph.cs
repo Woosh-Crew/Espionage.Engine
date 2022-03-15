@@ -29,5 +29,6 @@ namespace Espionage.Engine.AI
 			//Return the closest node to the given world position
 			return Nodes.OrderBy( x => Vector3.Distance( x.transform.position, worldPosition ) ).FirstOrDefault();
 		}
+
     }
 }
