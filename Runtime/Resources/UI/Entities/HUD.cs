@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.UIElements;
-
 using Res = UnityEngine.Resources;
 
 namespace Espionage.Engine.Resources
 {
-	[RequireComponent( typeof( UIDocument ) )]
+	[Group( "User Interfaces" ), Title( "HUD" ), RequireComponent( typeof( UIDocument ) )]
 	public class HUD : Entity
 	{
 		public UI UI { get; private set; }
@@ -16,12 +15,18 @@ namespace Espionage.Engine.Resources
 			base.OnAwake();
 
 			Document = GetComponent<UIDocument>();
-			
+
 			// Setup UI Document
 			Document.panelSettings = Res.Load<PanelSettings>( "UI Toolkit/PanelSettings" );
-		}
-		
 
-		public void CreateGUI() { }
+			var elements = CreateGUI( Document.visualTreeAsset );
+			Document.rootVisualElement.Add( elements );
+		}
+
+
+		public virtual VisualElement CreateGUI( VisualTreeAsset root )
+		{
+			return null;
+		}
 	}
 }
