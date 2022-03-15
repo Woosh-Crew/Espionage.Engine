@@ -50,7 +50,7 @@ namespace Espionage.Engine.Tools.Editor
 				return;
 			}
 
-			Process.Start( Files.Pathing.Absolute( "compiled://Espionage.exe" ), $"-map \"{Files.Pathing.Absolute( $"exports://Maps/{SceneManager.GetActiveScene().name}.umap" )}\"" );
+			Process.Start( Files.Pathing.Absolute( $"compiled://{Application.productName}.exe" ), $"-map \"{Files.Pathing.Absolute( $"exports://Maps/{SceneManager.GetActiveScene().name}.umap" )}\"" );
 		}
 
 		// UI

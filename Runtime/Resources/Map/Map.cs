@@ -118,6 +118,7 @@ namespace Espionage.Engine.Resources
 
 		private void LoadRequest( Action onLoad )
 		{
+			// This maybe stupid?!
 			Action<Scene> loaded = ( scene ) =>
 			{
 				SceneManager.SetActiveScene( scene );
