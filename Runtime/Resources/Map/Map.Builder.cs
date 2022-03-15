@@ -72,6 +72,50 @@ namespace Espionage.Engine.Resources
 				return this;
 			}
 
+			//
+			// Defaults
+			//
+
+			public Builder Title( string title )
+			{
+				if ( _components.ContainsKey( typeof( Meta ) ) )
+				{
+					((Meta)_components[typeof( Meta )]).Title = title;
+					return this;
+				}
+
+				// Only Apply if the database doesnt have it yet.
+				With( new Meta() { Title = title } );
+				return this;
+			}
+
+			public Builder Description( string desc )
+			{
+				if ( _components.ContainsKey( typeof( Meta ) ) )
+				{
+					((Meta)_components[typeof( Meta )]).Description = desc;
+					return this;
+				}
+
+				// Only Apply if the database doesnt have it yet.
+				With( new Meta() { Description = desc } );
+				return this;
+			}
+
+			public Builder Author( string author )
+			{
+				if ( _components.ContainsKey( typeof( Meta ) ) )
+				{
+					((Meta)_components[typeof( Meta )]).Author = author;
+					return this;
+				}
+
+				// Only Apply if the database doesnt have it yet.
+				With( new Meta() { Author = author } );
+				return this;
+			}
+
+
 			public Builder Origin( string name )
 			{
 				if ( _components.ContainsKey( typeof( Origin ) ) )
@@ -83,6 +127,22 @@ namespace Espionage.Engine.Resources
 				With( new Origin() { Name = name } );
 				return this;
 			}
+
+			public Builder Thumbnail( string path )
+			{
+				if ( _components.ContainsKey( typeof( Thumbnail ) ) )
+				{
+					return this;
+				}
+
+				// Only Apply if the database doesnt have it yet.
+				With( new Thumbnail( path ) );
+				return this;
+			}
+
+			//
+			// Builder
+			//
 
 			public Map Build()
 			{

@@ -4,13 +4,9 @@ namespace Espionage.Engine.Resources
 {
 	public class Meta : IComponent<IResource>
 	{
-		public string Title { get; }
+		public string Title { get; set; }
 		public string Description { get; set; }
-
-		public Meta( string title )
-		{
-			Title = title;
-		}
+		public string Author { get; set; }
 
 		public void OnAttached( IResource item ) { }
 	}
