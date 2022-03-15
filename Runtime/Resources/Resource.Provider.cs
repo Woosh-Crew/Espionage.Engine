@@ -12,5 +12,11 @@ namespace Espionage.Engine.Resources
 			void Load( Action<TOut> onLoad = null );
 			void Unload( Action onUnload = null );
 		}
+
+		public interface IProvider<T> where T : IResource
+		{
+			float Progress { get; }
+			string Identifier { get; }
+		}
 	}
 }

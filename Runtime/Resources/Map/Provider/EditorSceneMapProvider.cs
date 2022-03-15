@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 namespace Espionage.Engine.Resources
 {
 	[Library, Title( "Editor Map" ), Group( "Maps" )]
-	public class EditorSceneMapProvider : Map.Service
+	public class EditorSceneMapProvider : Map.Binder
 	{
 		public override string Identifier => "editor";
 

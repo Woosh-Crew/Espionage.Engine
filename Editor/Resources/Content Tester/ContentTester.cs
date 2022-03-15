@@ -29,7 +29,7 @@ namespace Espionage.Engine.Tools.Editor
 			}
 
 			// Get all Map Types and their extensions
-			var providers = Library.Database.GetAll<IFile<Map, Scene>>().Where( e => e.Components.Get<FileAttribute>() != null );
+			var providers = Library.Database.GetAll<IFile<Map>>().Where( e => e.Components.Get<FileAttribute>() != null );
 			var path = EditorUtility.OpenFilePanel( "Load a Map", "Exports/Maps", string.Join( ',', providers.Select( e => e.Components.Get<FileAttribute>().Extension ) ) );
 
 			if ( string.IsNullOrEmpty( path ) )

@@ -17,7 +17,7 @@ namespace Espionage.Engine.Resources
 		[Function( "maps.init" ), Callback( "engine.ready" )]
 		private static void Initialize()
 		{
-			Resource.IProvider<Map, Scene> provider = Application.isEditor ? new EditorSceneMapProvider() : new BuildIndexMapProvider( 0 );
+			Binder provider = Application.isEditor ? new EditorSceneMapProvider() : new BuildIndexMapProvider( 0 );
 
 			// Get main scene at start, that isn't engine layer.
 			for ( var i = 0; i < SceneManager.sceneCount; i++ )
@@ -54,8 +54,8 @@ namespace Espionage.Engine.Resources
 				return null;
 			}
 
-			var file = Files.Serialization.Load<IFile<Map, Scene>>( path );
-			return new( file.Provider );
+			var file = Files.Serialization.Load<IFile<Map>>( path );
+			return new( file.Binder as Binder );
 		}
 
 		/// <summary>
@@ -75,18 +75,18 @@ namespace Espionage.Engine.Resources
 		public string Identifier => Provider.Identifier;
 
 		public Components<Map> Components { get; }
-		private Resource.IProvider<Map, Scene> Provider { get; }
+		private Binder Provider { get; }
 
 		// Loadable 
 
 		float ILoadable.Progress => Provider.Progress;
 		string ILoadable.Text => Components.TryGet( out Meta meta ) ? $"Loading {meta.Title}" : "Loading";
 
-		private Map( Resource.IProvider<Map, Scene> provider )
+		private Map( Binder provider )
 		{
 			Components = new( this );
 
-			Provider = provider;
+			Provider = provider ?? throw new NullReferenceException();
 			Database.Add( this );
 		}
 

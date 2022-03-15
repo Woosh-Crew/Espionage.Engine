@@ -10,19 +10,15 @@ using UnityEditor.SceneManagement;
 
 namespace Espionage.Engine.Resources.Formats
 {
-	[Group( "Maps" ), Title( "Unity Map File" ), File( Extension = "umap" )]
-	public sealed class UMAP : IFile<Map, Scene>, IAsset
+	[Title( "Unity Map File" ), File( Extension = "umap" )]
+	public sealed class UMAP : IFile<Map>
 	{
 		public Library ClassInfo { get; } = Library.Database[typeof( UMAP )];
-
-		// Resource
 
 		public FileInfo File { get; set; }
 		public void Load( FileStream fileStream ) { }
 
-		// Provider
-
-		public Resource.IProvider<Map, Scene> Provider => new AssetBundleMapProvider( File );
+		public IBinder<Map> Binder => new AssetBundleMapProvider( File );
 
 		// Compiler
 
@@ -36,20 +32,16 @@ namespace Espionage.Engine.Resources.Formats
 
 			if ( activeScene.path == scenePath && !EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo() )
 			{
+				Debugging.Log.Warning( "Not compiling, User didn't want to save." );
 				return;
 			}
 
 			var scene = EditorSceneManager.OpenScene( scenePath, OpenSceneMode.Single );
-
 			var exportPath = $"Exports/{Library.Database.Get<Map>().Group}/";
 
 			// Track how long exporting took
 			using ( Debugging.Stopwatch( "Map Compiled", true ) )
 			{
-				//
-				// Export Level Processes
-				//
-
 				if ( Callback.Run<bool>( "compiler.sanity_check", scene )?.Any( e => e is false ) ?? false )
 				{
 					Debugging.Log.Info( "Sanity check failed" );

@@ -5,7 +5,8 @@ namespace Espionage.Engine.Resources
 {
 	public sealed partial class Map
 	{
-		public abstract class Service : Resource.IProvider<Map, Scene>
+		[Group( "Maps" )]
+		public abstract class Binder : IBinder<Map>
 		{
 			public virtual float Progress { get; protected set; }
 			public abstract string Identifier { get; }

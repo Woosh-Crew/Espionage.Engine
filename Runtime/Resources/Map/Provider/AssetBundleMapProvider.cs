@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 namespace Espionage.Engine.Resources
 {
 	[Library, Title( "Asset Bundle Map" ), Group( "Maps" )]
-	public class AssetBundleMapProvider : Map.Service
+	public class AssetBundleMapProvider : Map.Binder
 	{
 		public override string Identifier => File.FullName;
 		private FileInfo File { get; }

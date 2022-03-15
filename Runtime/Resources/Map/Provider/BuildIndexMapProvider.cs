@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 namespace Espionage.Engine.Resources
 {
 	[Library, Title( "Build Index Map" ), Group( "Maps" )]
-	public class BuildIndexMapProvider : Map.Service
+	public class BuildIndexMapProvider : Map.Binder
 	{
 		// Id
 		public override string Identifier => $"index:{_buildIndex}";
