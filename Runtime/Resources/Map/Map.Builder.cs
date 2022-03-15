@@ -68,6 +68,12 @@ namespace Espionage.Engine.Resources
 
 			public Builder With<T>( T component ) where T : IComponent<Map>
 			{
+				if ( _components.ContainsKey( typeof( T ) ) )
+				{
+					Debugging.Log.Warning( $"Builder already contains component, {typeof( T ).FullName}" );
+					return this;
+				}
+
 				_components.Add( typeof( T ), component );
 				return this;
 			}
@@ -132,6 +138,7 @@ namespace Espionage.Engine.Resources
 			{
 				if ( _components.ContainsKey( typeof( Thumbnail ) ) )
 				{
+					((Thumbnail)_components[typeof( Thumbnail )]).Path = path;
 					return this;
 				}
 

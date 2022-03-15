@@ -4,7 +4,7 @@ namespace Espionage.Engine.Resources
 {
 	public class Thumbnail : IComponent<Map>
 	{
-		public string Path { get; }
+		public string Path { get; set; }
 
 		public Thumbnail( string path )
 		{
