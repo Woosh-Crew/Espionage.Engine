@@ -27,7 +27,7 @@ namespace Espionage.Engine.AI
 		/// </summary>
 		public virtual AINode NodeFromWorldPoint(Vector3 worldPosition){
 			//Return the closest node to the given world position
-			return Nodes.OrderBy( x => Vector3.Distance( x.transform.position, worldPosition ) ).FirstOrDefault();
+			return Nodes.OrderBy( x => Vector3.Distance( x.Position, worldPosition ) ).FirstOrDefault();
 		}
 
     }
