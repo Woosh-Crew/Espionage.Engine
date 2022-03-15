@@ -10,7 +10,7 @@ namespace Espionage.Engine
 	/// also contain IO / Actions logic.
 	/// </summary>
 	[DisallowMultipleComponent, Group( "Entities" ), Constructor( nameof( Constructor ) ), Spawnable]
-	public abstract class Entity : Behaviour
+	public abstract partial class Entity : Behaviour
 	{
 		/// <summary> All the entities that exists in the game world. </summary>
 		public static List<Entity> All { get; } = new();
@@ -129,5 +129,6 @@ namespace Espionage.Engine
 			get => gameObject.activeInHierarchy;
 			set => gameObject.SetActive( value );
 		}
+
 	}
 }

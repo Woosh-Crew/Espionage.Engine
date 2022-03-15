@@ -33,6 +33,7 @@ namespace Espionage.Engine.Resources
 			}
 
 			Current = new( provider );
+			Callback.Run( "map.loaded" );
 		}
 
 		/// <summary>
