@@ -55,7 +55,7 @@ namespace Espionage.Engine
 		// Initialize
 		//
 
-		public static bool Initialized { get; private set; }
+		private static bool Initialized { get; set; }
 
 		internal static void Initialize()
 		{

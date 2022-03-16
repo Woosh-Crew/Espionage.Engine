@@ -6,12 +6,12 @@ namespace Espionage.Engine.Internal.Commands
 	internal class SimpleCommandProvider : ICommandProvider
 	{
 		// Commands
-
 		private readonly Dictionary<string, Command> _commands = new( StringComparer.CurrentCultureIgnoreCase );
+
+
 		public IEnumerable<Command> All => _commands.Values;
 
 		// History
-
 		private readonly HashSet<string> _history = new();
 		public IReadOnlyCollection<string> History => _history;
 
@@ -28,6 +28,11 @@ namespace Espionage.Engine.Internal.Commands
 		public void Add( Command command )
 		{
 			_commands.Add( command.Name, command );
+		}
+
+		public Command Get( string command )
+		{
+			return _commands.ContainsKey( command ) ? _commands[command] : default;
 		}
 
 		public void Invoke( string command, string[] args )

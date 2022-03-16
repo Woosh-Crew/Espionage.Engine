@@ -13,7 +13,7 @@ namespace Espionage.Engine.Resources
 	[Group( "Maps" ), Path( "maps", "assets://Maps/" )]
 	public sealed partial class Map : IResource, ILibrary, ILoadable
 	{
-		public static Map Current { get; internal set; }
+		public static Map Current { get; private set; }
 
 		[Function( "maps.init" ), Callback( "engine.getting_ready" )]
 		private static void Initialize()

@@ -9,6 +9,7 @@ namespace Espionage.Engine.Internal.Commands
 	{
 		void Add( Command command );
 		void Invoke( string command, params string[] args );
+		Command Get( string command );
 
 		IEnumerable<Command> All { get; }
 		IReadOnlyCollection<string> History { get; }

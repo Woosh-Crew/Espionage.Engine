@@ -1,8 +1,6 @@
 ﻿using Espionage.Engine.Gamemodes;
 using Espionage.Engine.Resources;
-using Espionage.Engine.Tripods;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.Rendering.PostProcessing;
 
 namespace Espionage.Engine
@@ -63,7 +61,7 @@ namespace Espionage.Engine
 		protected virtual Map.Builder[] Maps { get; }
 
 		[Function, Callback( "map.loaded" )]
-		private void MapLoaded()
+		public void MapLoaded()
 		{
 			OnMapLoaded( Map.Current );
 		}
