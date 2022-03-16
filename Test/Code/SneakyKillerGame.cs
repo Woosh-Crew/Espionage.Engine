@@ -17,18 +17,4 @@ public class SneakyKiller : Game
 			.With<FirstPersonController>()
 			.Build();
 	}
-
-	protected override Map.Builder[] Maps => new[]
-	{
-		// Testing Lab		
-		Map.Setup( "maps://map_testing.umap" )
-			.Meta( "Testing Map", "Used for testing Espionage.Engine functionality.", "JakeSayingWoosh" )
-			.Thumbnail( "textures://map.png" )
-			.Origin( "Espionage" ),
-
-		// Testing Lab 2
-		Map.Setup( 0 )
-			.Meta( "Testing 2" )
-			.Origin( "Espionage" )
-	};
 }
