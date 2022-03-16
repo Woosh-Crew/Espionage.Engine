@@ -41,6 +41,8 @@ namespace Espionage.Engine
 
 		// Instance
 
+		public Animator Animator { get; private set; }
+
 		protected override void OnAwake()
 		{
 			foreach ( var render in GetComponentsInChildren<Renderer>() )
@@ -48,6 +50,15 @@ namespace Espionage.Engine
 				render.shadowCastingMode = castShadows ? ShadowCastingMode.On : ShadowCastingMode.Off;
 				render.receiveShadows = receiveShadows;
 				render.gameObject.layer = LayerMask.NameToLayer( "Viewmodel" );
+			}
+
+			if ( TryGetComponent( out Animator animator ) )
+			{
+				Animator = animator;
+			}
+			else
+			{
+				Dev.Log.Warning( $"No Animator found on Viewmodel, {name}" );
 			}
 
 			Enabled = Showing;
