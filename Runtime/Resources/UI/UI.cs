@@ -50,12 +50,8 @@ namespace Espionage.Engine.Resources
 				return;
 			}
 
-			if ( !IsLoaded )
-			{
-				Debugging.Log.Info( "Loading" );
-				Provider.Load( loaded );
-			}
-
+			using var _ = Debugging.Stopwatch( "Loaded UI" );
+			Provider.Load( loaded );
 			base.Load( loaded );
 		}
 

@@ -22,7 +22,6 @@ namespace Espionage.Engine.Resources
 				Library.Unregister( this );
 			}
 
-			public virtual float Progress { get; protected set; }
 			public abstract string Identifier { get; }
 			public abstract VisualTreeAsset Tree { get; set; }
 

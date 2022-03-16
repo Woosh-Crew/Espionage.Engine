@@ -18,13 +18,16 @@ namespace Espionage.Engine.Resources
 			Document = GetComponent<UIDocument>();
 			Document.panelSettings = Res.Load<PanelSettings>( "UI Toolkit/PanelSettings" );
 
-			// Load UI
-			UI = UI.Find( "ui://terminal.uitk" );
-			UI.Load( e =>
+			if ( ClassInfo.Components.TryGet<FileAttribute>( out var file ) )
 			{
-				Document.visualTreeAsset = e;
-				CreateGUI();
-			} );
+				// Load UI
+				UI = UI.Find( file.Path );
+				UI.Load( e =>
+				{
+					Document.visualTreeAsset = e;
+					CreateGUI();
+				} );
+			}
 		}
 
 		protected virtual void CreateGUI() { }
