@@ -50,7 +50,7 @@ namespace Espionage.Engine.Resources
 				return;
 			}
 
-			using var _ = Debugging.Stopwatch( "Loaded UI" );
+			using var _ = Debugging.Stopwatch( $"Loaded UI [{Identifier}]" );
 			Provider.Load( loaded );
 			base.Load( loaded );
 		}
