@@ -14,19 +14,19 @@ namespace Espionage.Engine.Resources
 		{
 			base.OnAwake();
 
-			Document = GetComponent<UIDocument>();
-
 			// Setup UI Document
+			Document = GetComponent<UIDocument>();
 			Document.panelSettings = Res.Load<PanelSettings>( "UI Toolkit/PanelSettings" );
 
-			var elements = CreateGUI( Document.visualTreeAsset );
-			Document.rootVisualElement.Add( elements );
+			// Load UI
+			UI = UI.Find( "ui://terminal.uitk" );
+			UI.Load( e =>
+			{
+				Document.visualTreeAsset = e;
+				CreateGUI();
+			} );
 		}
 
-
-		public virtual VisualElement CreateGUI( VisualTreeAsset root )
-		{
-			return null;
-		}
+		protected virtual void CreateGUI() { }
 	}
 }

@@ -1,9 +1,10 @@
 ﻿using System;
+using UnityEngine.UIElements;
 
 namespace Espionage.Engine.Resources
 {
-	[Group( "User Interfaces" ), Title( "User Interface" ), Path( "ui", "assets://Interfaces/" )]
-	public partial class UI : Resource
+	[Group( "User Interfaces" ), Title( "User Interface" ), Path( "ui", "assets://User Interfaces/" )]
+	public partial class UI : Resource<VisualTreeAsset>
 	{
 		/// <summary>
 		/// Trys to find the UI by path. If it couldn't find the UI in the database,
@@ -33,19 +34,29 @@ namespace Espionage.Engine.Resources
 		// Instance
 		//
 
-		public override string Identifier { get; }
+		public override string Identifier => Provider.Identifier;
 		private Binder Provider { get; }
 
 		private UI( Binder provider )
 		{
 			Provider = provider ?? throw new NullReferenceException();
-			Database.Add( this );
 		}
 
-		public override void Load( Action loaded = null )
+		public override void Load( Action<VisualTreeAsset> loaded = null )
 		{
+			if ( IsLoaded )
+			{
+				loaded?.Invoke( Provider.Tree );
+				return;
+			}
+
+			if ( !IsLoaded )
+			{
+				Debugging.Log.Info( "Loading" );
+				Provider.Load( loaded );
+			}
+
 			base.Load( loaded );
-			Provider.Load( loaded );
 		}
 
 		public override void Unload( Action unloaded = null )

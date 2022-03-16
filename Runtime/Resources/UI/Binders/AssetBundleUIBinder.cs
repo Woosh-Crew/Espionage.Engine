@@ -7,6 +7,7 @@ namespace Espionage.Engine.Resources.Binders
 	public class AssetBundleUIBinder : UI.Binder
 	{
 		public override string Identifier { get; }
+		public override VisualTreeAsset Tree { get; set; }
 
 		public AssetBundleUIBinder( string path )
 		{
@@ -18,11 +19,9 @@ namespace Espionage.Engine.Resources.Binders
 		//
 
 		private AssetBundleCreateRequest _bundleRequestOperation;
-		private AsyncOperation _sceneLoadOperation;
-
 		private AssetBundle _bundle;
 
-		public override void Load( Action onLoad = null )
+		public override void Load( Action<VisualTreeAsset> onLoad = null )
 		{
 			// Load Bundle
 			_bundleRequestOperation = AssetBundle.LoadFromFileAsync( Identifier );
@@ -36,11 +35,12 @@ namespace Espionage.Engine.Resources.Binders
 				// Load the scene by getting all scene
 				// paths from a bundle, and getting the first index
 				var asset = _bundle.LoadAllAssetsAsync<VisualTreeAsset>();
-				_sceneLoadOperation.completed += ( _ ) =>
+				asset.completed += ( _ ) =>
 				{
 					// We've finished loading the scene.
 					Debugging.Log.Info( "Finished Loading UI" );
-					onLoad?.Invoke();
+					Tree = asset.asset as VisualTreeAsset;
+					onLoad?.Invoke( Tree );
 				};
 			};
 		}

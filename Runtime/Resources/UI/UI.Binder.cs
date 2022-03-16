@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Espionage.Engine.Resources
 {
@@ -13,18 +14,19 @@ namespace Espionage.Engine.Resources
 
 			public Binder()
 			{
-				ClassInfo= Library.Register(this);
+				ClassInfo = Library.Register( this );
 			}
 
 			~Binder()
 			{
-				Library.Unregister(this);
+				Library.Unregister( this );
 			}
-			
+
 			public virtual float Progress { get; protected set; }
 			public abstract string Identifier { get; }
-			
-			public abstract void Load( Action onLoad = null );
+			public abstract VisualTreeAsset Tree { get; set; }
+
+			public abstract void Load( Action<VisualTreeAsset> onLoad = null );
 			public abstract void Unload( Action onUnload = null );
 		}
 

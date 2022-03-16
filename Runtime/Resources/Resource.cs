@@ -8,7 +8,7 @@ namespace Espionage.Engine.Resources
 	/// Resources will keep references to the instances and the assets identifier.
 	/// </summary>
 	[Group( "Resources" )]
-	public abstract partial class Resource : IResource, ILibrary
+	public abstract class Resource<T> : IResource<T>, ILibrary
 	{
 		public Library ClassInfo { get; }
 
@@ -32,7 +32,7 @@ namespace Espionage.Engine.Resources
 		/// <summary> Is this resource actually loaded? </summary>
 		protected bool IsLoaded => Database.Contains( this );
 
-		public virtual void Load( Action loaded = null )
+		public virtual void Load( Action<T> loaded = null )
 		{
 			if ( !IsLoaded )
 			{
@@ -50,18 +50,18 @@ namespace Espionage.Engine.Resources
 		//
 
 		///	<summary> A reference to all resources that are loaded. </summary>
-		public static IDatabase<Resource, string> Database { get; } = new InternalDatabase();
+		public static IDatabase<IResource, string> Database { get; } = new InternalDatabase();
 
-		private class InternalDatabase : IDatabase<Resource, string>
+		private class InternalDatabase : IDatabase<IResource, string>
 		{
-			public IEnumerable<Resource> All => _records.Values;
+			public IEnumerable<IResource> All => _records.Values;
 			public int Count => _records.Count;
 
-			private readonly Dictionary<string, Resource> _records = new();
+			private readonly Dictionary<string, IResource> _records = new();
 
-			public Resource this[ string key ] => _records.ContainsKey( key ) ? _records[key] : null;
+			public IResource this[ string key ] => _records.ContainsKey( key ) ? _records[key] : null;
 
-			public void Add( Resource item )
+			public void Add( IResource item )
 			{
 				// Store it in Database
 				if ( _records.ContainsKey( item.Identifier! ) )
@@ -78,12 +78,12 @@ namespace Espionage.Engine.Resources
 				_records.Clear();
 			}
 
-			public bool Contains( Resource item )
+			public bool Contains( IResource item )
 			{
 				return _records.ContainsKey( item.Identifier );
 			}
 
-			public void Remove( Resource item )
+			public void Remove( IResource item )
 			{
 				_records.Remove( item.Identifier );
 			}

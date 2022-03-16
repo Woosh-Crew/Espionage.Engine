@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using Espionage.Engine.Resources.Binders;
 using UnityEngine.UIElements;
 
 #if UNITY_EDITOR
@@ -10,7 +11,7 @@ namespace Espionage.Engine.Resources.Formats
 	[Title( "UI Toolkit File" ), File( Extension = "uitk" )]
 	public sealed partial class UITK : UI.File
 	{
-		public override UI.Binder Binder { get; }
+		public override UI.Binder Binder => new AssetBundleUIBinder( Source.FullName );
 	}
 
 	#if UNITY_EDITOR
@@ -45,7 +46,7 @@ namespace Espionage.Engine.Resources.Formats
 						EditorUtility.DisplayDialog( "ERROR", $"Asset bundle compile failed.", "Okay" );
 						return;
 					}
-					
+
 					Files.Delete( $"assets://{ClassInfo.Group}", "manifest", "" );
 				}
 				finally
