@@ -16,7 +16,7 @@ namespace Espionage.Engine
 			// If we dont own this and if we cant carry it, ignore
 			if ( Contains( item ) || item.Carrier is not null )
 			{
-				Debugging.Log.Info( $"Can't pickup item {item}" );
+				Dev.Log.Info( $"Can't pickup item {item}" );
 				return;
 			}
 

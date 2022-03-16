@@ -12,7 +12,7 @@
 			if ( _splashTime >= (Splash?.Delay ?? 2) && !_finished )
 			{
 				_finished = true;
-				Debugging.Log.Info( "Splash Loaded" );
+				Dev.Log.Info( "Splash Loaded" );
 			}
 		}
 	}

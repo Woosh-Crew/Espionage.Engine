@@ -20,7 +20,7 @@ namespace Espionage.Engine
 
 			if ( !ClassInfo.Components.TryGet<FileAttribute>( out var fileAttribute ) )
 			{
-				Debugging.Log.Error( $"{ClassInfo.Name} doesn't have, FileAttribute" );
+				Dev.Log.Error( $"{ClassInfo.Name} doesn't have, FileAttribute" );
 				return;
 			}
 

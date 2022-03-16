@@ -18,7 +18,7 @@ namespace Espionage.Engine.Resources
 			// Use the Database Map if we have it
 			if ( Exists( path ) )
 			{
-				Debugging.Log.Info( $"Map [{path}], already exists" );
+				Dev.Log.Info( $"Map [{path}], already exists" );
 				return default;
 			}
 
@@ -70,7 +70,7 @@ namespace Espionage.Engine.Resources
 			{
 				if ( _components.ContainsKey( typeof( T ) ) )
 				{
-					Debugging.Log.Warning( $"Builder already contains component, {typeof( T ).FullName}" );
+					Dev.Log.Warning( $"Builder already contains component, {typeof( T ).FullName}" );
 					return this;
 				}
 

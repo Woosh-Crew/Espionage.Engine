@@ -12,23 +12,23 @@ namespace Espionage.Engine.Resources
 			var map = Find( path );
 			map?.Load();
 		}
-		
+
 		[Function( "map.current" ), Terminal]
-		private static void LoadMap(  )
+		private static void LoadMap()
 		{
 			if ( Current == null )
 			{
-				Debugging.Log.Info( "Nothing" );
+				Dev.Log.Info( "Nothing" );
 				return;
 			}
 
 			if ( Current.Components.TryGet( out Meta meta ) )
 			{
-				Debugging.Log.Info($"Map [{Current.Identifier}], Title [{meta.Title}], Author [{meta.Author}]");
+				Dev.Log.Info( $"Map [{Current.Identifier}], Title [{meta.Title}], Author [{meta.Author}]" );
 				return;
 			}
-			
-			Debugging.Log.Info($"Map [{Current.Identifier}]");
+
+			Dev.Log.Info( $"Map [{Current.Identifier}]" );
 		}
 	}
 }

@@ -66,7 +66,7 @@ namespace Espionage.Engine.Resources
 				// Store it in Database
 				if ( _records.ContainsKey( item.Identifier! ) )
 				{
-					Debugging.Log.Error( $"For some reason we're replacing a resource? [{item.Identifier}]" );
+					Dev.Log.Error( $"For some reason we're replacing a resource? [{item.Identifier}]" );
 					return;
 				}
 

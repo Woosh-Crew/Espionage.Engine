@@ -92,13 +92,13 @@ namespace Espionage.Engine.Components
 		{
 			if ( old == null || newComp == null )
 			{
-				Debugging.Log.Error( $"Components aren't valid" );
+				Dev.Log.Error( $"Components aren't valid" );
 				return;
 			}
 
 			if ( !Contains( old ) )
 			{
-				Debugging.Log.Error( $"Components doesnt contain {old}" );
+				Dev.Log.Error( $"Components doesnt contain {old}" );
 				return;
 			}
 

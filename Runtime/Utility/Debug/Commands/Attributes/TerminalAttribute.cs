@@ -16,7 +16,7 @@ namespace Espionage.Engine
 		{
 			if ( !item.Info.IsStatic )
 			{
-				Debugging.Log.Error( $"Function \"{item.Name}\" Must be Static!" );
+				Dev.Log.Error( $"Function \"{item.Name}\" Must be Static!" );
 				return;
 			}
 
@@ -29,14 +29,14 @@ namespace Espionage.Engine
 				( e ) => item.Info?.Invoke( null, e )
 			);
 
-			Debugging.Console.Add( command );
+			Dev.Terminal.Add( command );
 		}
 
 		public void OnAttached( Property item )
 		{
 			if ( !item.IsStatic )
 			{
-				Debugging.Log.Error( $"Property \"{item.Name}\" Must be Static!" );
+				Dev.Log.Error( $"Property \"{item.Name}\" Must be Static!" );
 				return;
 			}
 
@@ -53,16 +53,16 @@ namespace Espionage.Engine
 						var value = parameters[0];
 						item[null] = value;
 
-						Debugging.Log.Info( $"{item.Name} now equals {value}" );
+						Dev.Log.Info( $"{item.Name} now equals {value}" );
 					}
 					else
 					{
-						Debugging.Log.Info( $"{item.Name} = {item[null]}" );
+						Dev.Log.Info( $"{item.Name} = {item[null]}" );
 					}
 				}
 			);
 
-			Debugging.Console.Add( command );
+			Dev.Terminal.Add( command );
 		}
 	}
 }

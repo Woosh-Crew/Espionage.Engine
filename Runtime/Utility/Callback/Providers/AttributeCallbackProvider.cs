@@ -20,10 +20,7 @@ namespace Espionage.Engine.Internal.Callbacks
 			var items = _callbacks[eventName];
 
 			items?.Add(
-				new Callback.Info
-					{
-						IsStatic = function.IsStatic
-					}
+				new Callback.Info { IsStatic = function.IsStatic }
 					.FromType( function.Info.DeclaringType )
 					.WithCallback( Build( function.Info ) )
 			);
@@ -134,7 +131,7 @@ namespace Espionage.Engine.Internal.Callbacks
 			_callbacks?.Clear();
 			_callbacks = null;
 
-			Debugging.Log.Warning( "Disposing ICallbackProvider" );
+			Dev.Log.Warning( "Disposing ICallbackProvider" );
 		}
 
 		private static Callback.Info.Action Build( MethodBase info )

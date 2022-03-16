@@ -9,19 +9,19 @@ namespace Espionage.Engine.Services
 			// Use Dev Tripod
 			if ( Input.GetKeyDown( KeyCode.F1 ) )
 			{
-				Debugging.Console.Invoke( "dev.tripod" );
+				Dev.Terminal.Invoke( "dev.tripod" );
 			}
-			
+
 			// Open Terminal
 			if ( Input.GetKeyDown( KeyCode.F3 ) )
 			{
-				Debugging.Console.Invoke( "dev.noclip" );
+				Dev.Terminal.Invoke( "dev.noclip" );
 			}
-			
+
 			// Open Terminal
 			if ( Input.GetKeyDown( KeyCode.F2 ) )
 			{
-				Debugging.Console.Invoke( "dev.terminal" );
+				Dev.Terminal.Invoke( "dev.terminal" );
 			}
 		}
 	}

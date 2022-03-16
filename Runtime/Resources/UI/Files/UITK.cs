@@ -25,11 +25,11 @@ namespace Espionage.Engine.Resources.Formats
 
 			if ( string.IsNullOrEmpty( extension ) )
 			{
-				Debugging.Log.Error( $"{ClassInfo.Title} doesn't have an extension. Not compiling" );
+				Dev.Log.Error( $"{ClassInfo.Title} doesn't have an extension. Not compiling" );
 				return;
 			}
 
-			using ( Debugging.Stopwatch( $"{ClassInfo.Title} Compiled" ) )
+			using ( Dev.Stopwatch( $"{ClassInfo.Title} Compiled" ) )
 			{
 				try
 				{

@@ -22,7 +22,7 @@ namespace Espionage.Engine.Resources
 
 			if ( !Files.Pathing.Exists( path ) )
 			{
-				Debugging.Log.Error( $"UI Path [{Files.Pathing.Absolute( path )}], couldn't be found." );
+				Dev.Log.Error( $"UI Path [{Files.Pathing.Absolute( path )}], couldn't be found." );
 				return null;
 			}
 
@@ -50,7 +50,7 @@ namespace Espionage.Engine.Resources
 				return;
 			}
 
-			using var _ = Debugging.Stopwatch( $"Loaded UI [{Identifier}]" );
+			using var _ = Dev.Stopwatch( $"Loaded UI [{Identifier}]" );
 			Provider.Load( loaded );
 			base.Load( loaded );
 		}

@@ -36,7 +36,7 @@ namespace Espionage.Engine.Resources.Binders
 				// When we've finished loading the asset
 				// bundle, go onto loading the scene itself
 				_bundle = _bundleRequestOperation.assetBundle;
-				Debugging.Log.Info( "Finished Loading Bundle" );
+				Dev.Log.Info( "Finished Loading Bundle" );
 
 				// Load the scene by getting all scene
 				// paths from a bundle, and getting the first index
@@ -45,7 +45,7 @@ namespace Espionage.Engine.Resources.Binders
 				_sceneLoadOperation.completed += ( _ ) =>
 				{
 					// We've finished loading the scene.
-					Debugging.Log.Info( "Finished Loading Scene" );
+					Dev.Log.Info( "Finished Loading Scene" );
 					Scene = SceneManager.GetSceneByPath( scenePath );
 					finished?.Invoke( Scene );
 				};
@@ -61,7 +61,7 @@ namespace Espionage.Engine.Resources.Binders
 			var request = _bundle.UnloadAsync( true );
 			request.completed += ( e ) =>
 			{
-				Debugging.Log.Info( "Finished Unloading Bundle" );
+				Dev.Log.Info( "Finished Unloading Bundle" );
 				finished?.Invoke();
 			};
 		}

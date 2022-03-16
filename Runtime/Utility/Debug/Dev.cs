@@ -14,7 +14,7 @@ namespace Espionage.Engine
 	/// You should be using this over Unity's debug library.
 	/// </summary>
 	[Library, Group( "Debug" )]
-	public static class Debugging
+	public static class Dev
 	{
 		// Providers
 
@@ -24,7 +24,7 @@ namespace Espionage.Engine
 		/// It also provides a SOLID way of handling it. Your game can have its own
 		/// Console provider.
 		/// </summary>
-		public static ICommandProvider Console { get; set; }
+		public static ICommandProvider Terminal { get; set; }
 
 		/// <summary>
 		/// Logging in a SOLID way. Add your own extension methods if need be,
@@ -66,10 +66,10 @@ namespace Espionage.Engine
 
 			Initialized = true;
 
-			using var _ = Stopwatch( "Debugging Initialized" );
+			using var _ = Stopwatch( "Dev Layer Initialized" );
 
 			Log = new SimpleLoggingProvider();
-			Console = new SimpleCommandProvider();
+			Terminal = new SimpleCommandProvider();
 		}
 
 		//
@@ -91,7 +91,7 @@ namespace Espionage.Engine
 			{
 				if ( args[i].StartsWith( "+" ) )
 				{
-					Console.Invoke( args[i], new[] { args[i + 1] } );
+					Terminal.Invoke( args[i], new[] { args[i + 1] } );
 				}
 			}
 		}
@@ -110,14 +110,14 @@ namespace Espionage.Engine
 
 		// Debug
 
-		[Terminal, Property( "debug.overlay" )]
+		[Terminal, Property( "dev.overlay" )]
 		private static bool ShowOverlays
 		{
 			get => Overlay.Show;
 			set => Overlay.Show = value;
 		}
 
-		[Terminal, Property( "debug.report_stopwatch", true )]
+		[Terminal, Property( "dev.report_stopwatch", true )]
 		private static bool ReportStopwatch { get; set; } = true;
 
 		private class TimedScope : IDisposable

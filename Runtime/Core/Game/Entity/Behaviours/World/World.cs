@@ -37,7 +37,7 @@ namespace Espionage.Engine
 				return;
 			}
 
-			Debugging.Log.Warning( "More than one world was present in scene" );
+			Dev.Log.Warning( "More than one world was present in scene" );
 			Destroy( gameObject );
 		}
 

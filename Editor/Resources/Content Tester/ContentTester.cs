@@ -24,7 +24,7 @@ namespace Espionage.Engine.Resources.Editor
 		{
 			if ( !Application.isPlaying )
 			{
-				Debugging.Log.Warning( "Can't Load map while not in Play Mode" );
+				Dev.Log.Warning( "Can't Load map while not in Play Mode" );
 				return;
 			}
 
@@ -34,7 +34,7 @@ namespace Espionage.Engine.Resources.Editor
 
 			if ( string.IsNullOrEmpty( path ) )
 			{
-				Debugging.Log.Info( "No Map Selected" );
+				Dev.Log.Info( "No Map Selected" );
 				return;
 			}
 
@@ -46,7 +46,7 @@ namespace Espionage.Engine.Resources.Editor
 		{
 			if ( !Files.Pathing.Exists( $"maps://{SceneManager.GetActiveScene().name}.umap" ) )
 			{
-				Debugging.Log.Error( "Map needs to be compiled first." );
+				Dev.Log.Error( "Map needs to be compiled first." );
 				return;
 			}
 

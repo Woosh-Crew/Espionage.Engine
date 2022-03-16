@@ -24,6 +24,15 @@ namespace Espionage.Engine
 		protected Game()
 		{
 			ClassInfo = Library.Register( this );
+
+			// Setup Maps. Its fine to do it here.
+			if ( Maps != null )
+			{
+				foreach ( var map in Maps )
+				{
+					map.Build();
+				}
+			}
 		}
 
 		~Game()
@@ -51,7 +60,7 @@ namespace Espionage.Engine
 		// Maps
 		//
 
-		protected abstract Map.Builder[] Maps { get; }
+		protected virtual Map.Builder[] Maps { get; }
 
 		[Function, Callback( "map.loaded" )]
 		private void MapLoaded()
@@ -86,7 +95,7 @@ namespace Espionage.Engine
 			{
 				if ( value != null && !value.Validate() )
 				{
-					Debugging.Log.Warning( $"Gamemode {value.ClassInfo.Name} is not valid for map" );
+					Dev.Log.Warning( $"Gamemode {value.ClassInfo.Name} is not valid for map" );
 					return;
 				}
 

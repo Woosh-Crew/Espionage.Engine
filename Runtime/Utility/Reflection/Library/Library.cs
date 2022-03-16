@@ -161,7 +161,7 @@ namespace Espionage.Engine
 			{
 				if ( _all.ContainsKey( item.Name ) )
 				{
-					Debugging.Log.Warning( $"Replacing {item.Name}" );
+					Dev.Log.Warning( $"Replacing {item.Name}" );
 					_all[item.Name] = item;
 
 					return;

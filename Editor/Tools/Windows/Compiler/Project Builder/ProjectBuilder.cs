@@ -53,33 +53,19 @@ namespace Espionage.Engine.Tools.Editor
 				box.AddToClassList( "Box" );
 				rootVisualElement.Add( box );
 
-				box.Add( new TextField( "Product" )
-				{
-					isReadOnly = true,
-					value = Application.productName
-				} );
-				box.Add( new TextField( "Company" )
-				{
-					isReadOnly = true,
-					value = Application.companyName
-				} );
-				box.Add( new TextField( "Version" )
-				{
-					isReadOnly = true,
-					value = Application.version
-				} );
+				box.Add( new TextField( "Product" ) { isReadOnly = true, value = Application.productName } );
+				box.Add( new TextField( "Company" ) { isReadOnly = true, value = Application.companyName } );
+				box.Add( new TextField( "Version" ) { isReadOnly = true, value = Application.version } );
 
 				box.Add( new ObjectField( "Splash Screen" )
 				{
-					objectType = typeof( SceneAsset ),
-					tooltip = "Splash Screen is used for Loading Assets and hiding Initialization"
+					objectType = typeof( SceneAsset ), tooltip = "Splash Screen is used for Loading Assets and hiding Initialization"
 					// value = AssetDatabase.LoadAssetAtPath<SceneAsset>( Engine.Game?.SplashScreen )
 				} );
 
 				box.Add( new ObjectField( "Main Menu" )
 				{
-					objectType = typeof( SceneAsset ),
-					tooltip = "Main Menu is loaded after the Splash Screen"
+					objectType = typeof( SceneAsset ), tooltip = "Main Menu is loaded after the Splash Screen"
 					// value = AssetDatabase.LoadAssetAtPath<SceneAsset>( Engine.Game?.MainMenu )
 				} );
 			}
@@ -102,23 +88,19 @@ namespace Espionage.Engine.Tools.Editor
 				box.AddToClassList( "Box" );
 				rootVisualElement.Add( box );
 
-				box.Add( new Button( () => Build( BuildTarget.StandaloneWindows, BuildOptions.Development ) )
-				{
-					text = "Build Game"
-				} );
+				box.Add( new Button( () => Build( BuildTarget.StandaloneWindows, BuildOptions.Development ) ) { text = "Build Game" } );
 			}
 		}
 
 		public static void Build( BuildTarget target, BuildOptions options )
 		{
-			using ( Debugging.Stopwatch( "Project Build Finished", true ) )
+			using ( Dev.Stopwatch( "Project Build Finished", true ) )
 			{
 				try
 				{
 					var blueprintBuild = new AssetBundleBuild
 					{
-						assetNames = Library.Database.GetAll<Prefab>().Select( e => e.Components.Get<FileAttribute>()?.Path ).ToArray(),
-						assetBundleName = $"{Library.Database.Get<Prefab>().Title}.pak"
+						assetNames = Library.Database.GetAll<Prefab>().Select( e => e.Components.Get<FileAttribute>()?.Path ).ToArray(), assetBundleName = $"{Library.Database.Get<Prefab>().Title}.pak"
 					};
 
 					// Setup BuildPipeline
@@ -151,7 +133,7 @@ namespace Espionage.Engine.Tools.Editor
 				{
 					if ( !library.Components.TryGet<FileAttribute>( out var file ) )
 					{
-						Debugging.Log.Warning( $"{library.Name} does have file component. Not moving " );
+						Dev.Log.Warning( $"{library.Name} does have file component. Not moving " );
 						continue;
 					}
 
@@ -172,7 +154,7 @@ namespace Espionage.Engine.Tools.Editor
 						foreach ( var item in levelFiles )
 						{
 							var name = Path.GetFileName( item );
-							Debugging.Log.Info( $"Moving {name}, to exported project" );
+							Dev.Log.Info( $"Moving {name}, to exported project" );
 							File.Copy( item, $"{destinationPath}/{name}", true );
 						}
 					}

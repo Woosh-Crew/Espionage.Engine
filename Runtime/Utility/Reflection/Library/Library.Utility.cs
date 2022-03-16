@@ -177,7 +177,7 @@ public static class LibraryDatabaseExtensions
 
 		if ( assertMissing )
 		{
-			Debugging.Log.Error( $"Library doesnt contain [{name}], not creating ILibrary" );
+			Dev.Log.Error( $"Library doesnt contain [{name}], not creating ILibrary" );
 		}
 
 		return null;
@@ -197,7 +197,7 @@ public static class LibraryDatabaseExtensions
 			return Library.Create( library );
 		}
 
-		Debugging.Log.Error( "Invalid ID" );
+		Dev.Log.Error( "Invalid ID" );
 		return null;
 	}
 

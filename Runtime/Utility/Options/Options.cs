@@ -125,7 +125,7 @@ namespace Espionage.Engine
 			}
 
 			// Get all Post FX.
-			Debugging.Log.Info( "Changing PostFX" );
+			Dev.Log.Info( "Changing PostFX" );
 
 			var all = Object.FindObjectsOfType<PostProcessVolume>();
 

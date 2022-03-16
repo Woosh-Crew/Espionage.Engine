@@ -15,7 +15,7 @@ namespace Espionage.Engine
 			{
 				if ( !_insideScope )
 				{
-					Debugging.Log.Error( "Can't change tick, not inside think scope." );
+					Dev.Log.Error( "Can't change tick, not inside think scope." );
 					return;
 				}
 
@@ -39,7 +39,7 @@ namespace Espionage.Engine
 				if ( _groups[index].tick == 0 )
 				{
 					_groups.RemoveAt( index );
-					Debugging.Log.Info( "Removing Group, since it was 0" );
+					Dev.Log.Info( "Removing Group, since it was 0" );
 
 					changed = true;
 					continue;

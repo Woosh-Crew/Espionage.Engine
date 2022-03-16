@@ -29,7 +29,7 @@ namespace Espionage.Engine.Internal
 
 			// This is a really shitty ini deserializer
 
-			using var _ = Debugging.Stopwatch( "Loading Cookies" );
+			using var _ = Dev.Stopwatch( "Loading Cookies" );
 			var sheet = Files.Serialization.Deserialize<string>( "config://.cookies" ).Split( '\n', StringSplitOptions.RemoveEmptyEntries );
 
 			foreach ( var item in sheet )
@@ -54,7 +54,7 @@ namespace Espionage.Engine.Internal
 				}
 				catch ( Exception e )
 				{
-					Debugging.Log.Exception( e );
+					Dev.Log.Exception( e );
 				}
 			}
 		}
@@ -77,7 +77,7 @@ namespace Espionage.Engine.Internal
 
 			// This is a really shitty ini serializer
 
-			using var _ = Debugging.Stopwatch( "Saving Cookies" );
+			using var _ = Dev.Stopwatch( "Saving Cookies" );
 
 			var serialized = new StringBuilder();
 

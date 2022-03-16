@@ -81,7 +81,7 @@ namespace Espionage.Engine.IO
 		{
 			if ( _paths.ContainsKey( key ) )
 			{
-				Debugging.Log.Error( $"Pathing already contains shorthand {key}" );
+				Dev.Log.Error( $"Pathing already contains shorthand {key}" );
 				return;
 			}
 

@@ -23,7 +23,7 @@ namespace Espionage.Engine.Resources
 
 			if ( !Files.Pathing.Exists( path ) )
 			{
-				Debugging.Log.Error( $"Texture Path [{Files.Pathing.Absolute( path )}], couldn't be found." );
+				Dev.Log.Error( $"Texture Path [{Files.Pathing.Absolute( path )}], couldn't be found." );
 				return null;
 			}
 
@@ -51,7 +51,7 @@ namespace Espionage.Engine.Resources
 				return;
 			}
 
-			using var _ = Debugging.Stopwatch( $"Loaded Texture [{Identifier}]" );
+			using var _ = Dev.Stopwatch( $"Loaded Texture [{Identifier}]" );
 			Provider.Load( loaded );
 			base.Load( loaded );
 		}

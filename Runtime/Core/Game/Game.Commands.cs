@@ -7,7 +7,7 @@ namespace Espionage.Engine
 		//
 		// Dev
 		//
-		
+
 		[Function( "dev.tripod" ), Terminal]
 		private static void DevTripodCMD()
 		{
@@ -17,7 +17,7 @@ namespace Espionage.Engine
 		[Function( "dev.noclip" ), Terminal]
 		private static void NoclipCMD()
 		{
-			Debugging.Log.Info( "This would Noclip" );
+			Dev.Log.Info( "This would Noclip" );
 		}
 	}
 }

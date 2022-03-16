@@ -28,7 +28,7 @@ namespace Espionage.Engine.Gamemodes
 
 		public void Begin()
 		{
-			Debugging.Log.Info( $"Starting Gamemode - [{ClassInfo.Title}]" );
+			Dev.Log.Info( $"Starting Gamemode - [{ClassInfo.Title}]" );
 			OnBegin();
 
 			started.Invoke();
@@ -38,7 +38,7 @@ namespace Espionage.Engine.Gamemodes
 
 		public void Finish()
 		{
-			Debugging.Log.Info( $"Finishing Gamemode - [{ClassInfo.Title}]" );
+			Dev.Log.Info( $"Finishing Gamemode - [{ClassInfo.Title}]" );
 			OnFinish();
 
 			finished.Invoke();

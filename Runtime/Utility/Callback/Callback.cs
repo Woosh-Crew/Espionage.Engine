@@ -40,7 +40,7 @@ namespace Espionage.Engine
 			}
 			catch ( Exception e )
 			{
-				Debugging.Log.Exception( e );
+				Dev.Log.Exception( e );
 			}
 		}
 
@@ -59,7 +59,7 @@ namespace Espionage.Engine
 			}
 			catch ( Exception e )
 			{
-				Debugging.Log.Exception( e );
+				Dev.Log.Exception( e );
 			}
 
 			return null;

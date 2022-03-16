@@ -18,7 +18,7 @@ namespace Espionage.Engine
 
 			if ( lib == null )
 			{
-				Debugging.Log.Error( $"[FATAL] {value} was null in library database." );
+				Dev.Log.Error( $"[FATAL] {value} was null in library database." );
 				return null;
 			}
 
@@ -27,7 +27,7 @@ namespace Espionage.Engine
 			{
 				if ( Singletons.ContainsKey( lib.Class ) )
 				{
-					Debugging.Log.Error( $"You are trying to register another Singleton? How???? -- [{lib.Name}]" );
+					Dev.Log.Error( $"You are trying to register another Singleton? How???? -- [{lib.Name}]" );
 					return null;
 				}
 
@@ -63,13 +63,13 @@ namespace Espionage.Engine
 		{
 			if ( library is null )
 			{
-				Debugging.Log.Error( "Can't construct, Library is null" );
+				Dev.Log.Error( "Can't construct, Library is null" );
 				return null;
 			}
 
 			if ( !library.Spawnable )
 			{
-				Debugging.Log.Error( $"{library.Name} is not spawnable. Set Spawnable to true in classes meta." );
+				Dev.Log.Error( $"{library.Name} is not spawnable. Set Spawnable to true in classes meta." );
 				return null;
 			}
 
@@ -101,7 +101,7 @@ namespace Espionage.Engine
 				return Activator.CreateInstance( library.Class ) as ILibrary;
 			}
 
-			Debugging.Log.Error( $"Can't construct {library.Name}, is abstract and doesn't have constructor predefined." );
+			Dev.Log.Error( $"Can't construct {library.Name}, is abstract and doesn't have constructor predefined." );
 			return null;
 		}
 
@@ -121,7 +121,7 @@ namespace Espionage.Engine
 			Database = new InternalDatabase();
 			Database.Add( new( typeof( Global ) ) );
 
-			using ( Debugging.Stopwatch( "Library Initialized" ) )
+			using ( Dev.Stopwatch( "Library Initialized" ) )
 			{
 				var main = typeof( Library ).Assembly;
 				AddAssembly( main );

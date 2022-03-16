@@ -8,7 +8,7 @@ namespace Espionage.Engine.Services
 	{
 		public override void OnReady()
 		{
-			Debugging.Overlay = new UnityOverlayProvider( this );
+			Dev.Overlay = new UnityOverlayProvider( this );
 		}
 
 		private List<GUIBlock> _stack = new();
@@ -39,7 +39,7 @@ namespace Espionage.Engine.Services
 		[Function, Callback( "imgui.draw" )]
 		private void OnGUI()
 		{
-			if ( !Debugging.Overlay.Show )
+			if ( !Dev.Overlay.Show )
 			{
 				return;
 			}
@@ -51,11 +51,7 @@ namespace Espionage.Engine.Services
 			{
 				var current = _stack[i];
 
-				var style = new GUIStyle( GUI.skin.box )
-				{
-					fontSize = 8 * scale,
-					alignment = TextAnchor.MiddleCenter
-				};
+				var style = new GUIStyle( GUI.skin.box ) { fontSize = 8 * scale, alignment = TextAnchor.MiddleCenter };
 
 				GUI.Box( new( 16 * scale, currentOffset, current.size.x * scale, current.size.y * scale ), current.text, style );
 

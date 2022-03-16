@@ -54,7 +54,7 @@ namespace Espionage.Engine
 		{
 			if ( Entity == null )
 			{
-				Debugging.Log.Error( "No Entity found on component" );
+				Dev.Log.Error( "No Entity found on component" );
 			}
 		}
 

@@ -29,7 +29,7 @@ namespace Espionage.Engine.Resources.Formats
 
 			if ( activeScene.path == scenePath && !EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo() )
 			{
-				Debugging.Log.Warning( "Not compiling, User didn't want to save." );
+				Dev.Log.Warning( "Not compiling, User didn't want to save." );
 				return;
 			}
 
@@ -37,11 +37,11 @@ namespace Espionage.Engine.Resources.Formats
 			var exportPath = $"Exports/{ClassInfo.Group}/";
 
 			// Track how long exporting took
-			using ( Debugging.Stopwatch( "Map Compiled", true ) )
+			using ( Dev.Stopwatch( "Map Compiled", true ) )
 			{
 				if ( Callback.Run<bool>( "compiler.sanity_check", scene )?.Any( e => e is false ) ?? false )
 				{
-					Debugging.Log.Info( "Sanity check failed" );
+					Dev.Log.Info( "Sanity check failed" );
 					return;
 				}
 
@@ -71,7 +71,7 @@ namespace Espionage.Engine.Resources.Formats
 				}
 				catch ( Exception e )
 				{
-					Debugging.Log.Exception( e );
+					Dev.Log.Exception( e );
 				}
 				finally
 				{

@@ -21,6 +21,7 @@ namespace Espionage.Engine
 		{
 			private readonly Library _lib;
 			internal Builder( string name ) : this( Library.Database[name] ) { }
+
 			internal Builder( Library library )
 			{
 				_lib = library;
@@ -29,11 +30,11 @@ namespace Espionage.Engine
 
 			private readonly List<Type> _components;
 
-			public Builder With<T>( ) where T : IComponent<Entity>
+			public Builder With<T>() where T : IComponent<Entity>
 			{
 				if ( _components.Contains( typeof( T ) ) )
 				{
-					Debugging.Log.Warning( $"Builder already contains component, {typeof( T ).FullName}" );
+					Dev.Log.Warning( $"Builder already contains component, {typeof( T ).FullName}" );
 					return this;
 				}
 
@@ -47,13 +48,13 @@ namespace Espionage.Engine
 
 				if ( ent == null )
 				{
-					Debugging.Log.Error( "Entity was null" );
+					Dev.Log.Error( "Entity was null" );
 					return null;
 				}
 
 				foreach ( var component in _components )
 				{
-					ent.Components.Create(() => ent.gameObject.AddComponent(component));
+					ent.Components.Create( () => ent.gameObject.AddComponent( component ) );
 				}
 
 				return ent;
@@ -71,11 +72,11 @@ namespace Espionage.Engine
 				_components = new();
 			}
 
-			public Builder<T> With<TComp>( ) where TComp : IComponent<Entity>
+			public Builder<T> With<TComp>() where TComp : IComponent<Entity>
 			{
 				if ( _components.Contains( typeof( TComp ) ) )
 				{
-					Debugging.Log.Warning( $"Builder already contains component, {typeof( TComp ).FullName}" );
+					Dev.Log.Warning( $"Builder already contains component, {typeof( TComp ).FullName}" );
 					return this;
 				}
 
@@ -89,13 +90,13 @@ namespace Espionage.Engine
 
 				if ( ent == null )
 				{
-					Debugging.Log.Error( "Entity was null" );
+					Dev.Log.Error( "Entity was null" );
 					return null;
 				}
 
 				foreach ( var component in _components )
 				{
-					ent.Components.Create(() => ent.gameObject.AddComponent(component));
+					ent.Components.Create( () => ent.gameObject.AddComponent( component ) );
 				}
 
 				return ent;

@@ -34,18 +34,18 @@ namespace Espionage.Engine
 		[RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.BeforeSplashScreen )]
 		private static void Initialize_RuntimeSplashScreen()
 		{
-			Debugging.Initialize();
+			Dev.Initialize();
 			Library.Initialize();
 		}
 
 		[RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.AfterSceneLoad )]
 		private static void Initialize_RuntimePostScene()
 		{
-			using ( Debugging.Stopwatch( "Engine / Game Ready", true ) )
+			using ( Dev.Stopwatch( "Engine / Game Ready", true ) )
 			{
 				if ( Game == null && !SetupGame() )
 				{
-					Debugging.Log.Error( "Game couldn't be found. Make sure to make a class inherited from Game" );
+					Dev.Log.Error( "Game couldn't be found. Make sure to make a class inherited from Game" );
 					return;
 				}
 
@@ -76,12 +76,12 @@ namespace Espionage.Engine
 		[InitializeOnLoadMethod]
 		private static void Initialize_Editor()
 		{
-			Debugging.Initialize();
+			Dev.Initialize();
 			Library.Initialize();
 
 			if ( Game == null && !SetupGame() )
 			{
-				Debugging.Log.Error( "Game couldn't be found. Make sure to make a class inherited from Game" );
+				Dev.Log.Error( "Game couldn't be found. Make sure to make a class inherited from Game" );
 			}
 
 		}
@@ -101,7 +101,7 @@ namespace Espionage.Engine
 			Game = Library.Database.Create<Game>( target.Class );
 			Callback.Run( "game.ready" );
 
-			Debugging.Log.Info( $"Using {Game.ClassInfo.Title} as the Game, [{Game.ClassInfo.Name}]" );
+			Dev.Log.Info( $"Using {Game.ClassInfo.Title} as the Game, [{Game.ClassInfo.Name}]" );
 
 			return true;
 		}

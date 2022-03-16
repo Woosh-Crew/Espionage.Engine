@@ -52,7 +52,7 @@ namespace Espionage.Engine.Resources
 
 			if ( !Files.Pathing.Exists( path ) )
 			{
-				Debugging.Log.Error( $"Map Path [{Files.Pathing.Absolute( path )}], couldn't be found." );
+				Dev.Log.Error( $"Map Path [{Files.Pathing.Absolute( path )}], couldn't be found." );
 				return null;
 			}
 
@@ -105,12 +105,12 @@ namespace Espionage.Engine.Resources
 			// Unload first, then load the next map
 			if ( Current != null )
 			{
-				Debugging.Log.Info( "Unloading, then loading" );
+				Dev.Log.Info( "Unloading, then loading" );
 				Current?.Unload( () => LoadRequest( loaded ) );
 			}
 			else
 			{
-				Debugging.Log.Info( "Loading Map" );
+				Dev.Log.Info( "Loading Map" );
 				LoadRequest( loaded );
 			}
 

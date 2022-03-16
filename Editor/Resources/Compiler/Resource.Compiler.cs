@@ -51,7 +51,7 @@ namespace Espionage.Engine.Resources.Editor
 			}
 			catch ( Exception e )
 			{
-				Debugging.Log.Exception( e );
+				Dev.Log.Exception( e );
 			}
 		}
 	}

@@ -34,7 +34,7 @@ namespace Espionage.Engine.Internal.Commands
 		{
 			if ( !_commands.TryGetValue( command, out var consoleCommand ) )
 			{
-				Debugging.Log.Info( $"Couldn't find command \"{command}\"" );
+				Dev.Log.Info( $"Couldn't find command \"{command}\"" );
 				return;
 			}
 
