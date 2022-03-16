@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Linq;
 using Espionage.Engine.Internal.Logging;
 using Espionage.Engine.Internal.Commands;
 using Espionage.Engine.Internal.Overlay;
@@ -69,6 +70,30 @@ namespace Espionage.Engine
 
 			Log = new SimpleLoggingProvider();
 			Console = new SimpleCommandProvider();
+		}
+
+		//
+		// Launch Args
+		//
+
+		[Function, Callback( "engine.ready" )]
+		private static void ParseLaunchArgs()
+		{
+			// We don't care, we're in the stupid editor
+			if ( Application.isEditor )
+			{
+				return;
+			}
+
+			var args = Environment.GetCommandLineArgs();
+
+			for ( var i = 0; i < args.Length; i++ )
+			{
+				if ( args[i].StartsWith( "+" ) )
+				{
+					Console.Invoke( args[i], new[] { args[i + 1] } );
+				}
+			}
 		}
 
 		//

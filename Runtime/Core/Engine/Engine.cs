@@ -55,6 +55,8 @@ namespace Espionage.Engine
 				// TODO: THIS IS TEMP
 				Local.Client = Client.Create( "Local" );
 
+				Callback.Run( "engine.getting_ready" );
+
 				// Tell Services we're ready
 				foreach ( var service in Services.All )
 				{

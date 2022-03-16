@@ -7,8 +7,8 @@ namespace Espionage.Engine.Resources
 	[Group( "User Interfaces" ), Title( "HUD" ), RequireComponent( typeof( UIDocument ) )]
 	public class HUD : Entity
 	{
-		public UI UI { get; private set; }
-		public UIDocument Document { get; private set; }
+		protected UI UI { get; private set; }
+		protected UIDocument Document { get; private set; }
 
 		protected override void OnAwake()
 		{
@@ -18,6 +18,7 @@ namespace Espionage.Engine.Resources
 			Document = GetComponent<UIDocument>();
 			Document.panelSettings = Res.Load<PanelSettings>( "UI Toolkit/PanelSettings" );
 
+			// Load UI XML first, if we have it
 			if ( ClassInfo.Components.TryGet<FileAttribute>( out var file ) )
 			{
 				// Load UI
@@ -27,7 +28,11 @@ namespace Espionage.Engine.Resources
 					Document.visualTreeAsset = e;
 					CreateGUI();
 				} );
+
+				return;
 			}
+
+			CreateGUI();
 		}
 
 		protected virtual void CreateGUI() { }

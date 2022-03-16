@@ -10,17 +10,17 @@ namespace Espionage.Engine
 		public MethodInfo Info { get; }
 		public Components<Function> Components { get; }
 
-		internal Function( Library owner, MethodInfo info )
+		internal Function( Library owner, MethodInfo info, string name )
 		{
 			Owner = owner;
 			Info = info;
 
-			Name = info.Name;
+			Name = name;
 			Title = info.Name;
 			Group = owner.Title;
 
 			// Components
-			Components = new Components<Function>( this );
+			Components = new( this );
 
 			// This is really expensive (6ms)...
 			// Get Components attached to type

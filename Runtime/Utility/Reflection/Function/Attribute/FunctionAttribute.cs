@@ -19,7 +19,7 @@ namespace Espionage.Engine
 
 		public Function CreateRecord( Library library, MethodInfo info )
 		{
-			return new Function( library, info ) { Name = string.IsNullOrEmpty( Name ) ? info.Name : Name };
+			return new( library, info, string.IsNullOrEmpty( Name ) ? info.Name : Name );
 		}
 	}
 }

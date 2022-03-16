@@ -3,16 +3,16 @@ using UnityEditor;
 
 namespace Espionage.Engine.Resources.Editor
 {
-	public class ResourceCompiler
+	public static class ResourceCompiler
 	{
-		[MenuItem( "Assets/Compile Asset", true )]
+		[MenuItem( "Assets/Compile Selected Asset", true )]
 		private static bool CompileValidate()
 		{
 			return Exists( Selection.activeObject.GetType() );
 		}
 
 
-		[MenuItem( "Assets/Compile Asset", priority = -500 )]
+		[MenuItem( "Assets/Compile Selected Asset", priority = -500 )]
 		private static void Compile()
 		{
 			// Find Compiler, and Create it.	

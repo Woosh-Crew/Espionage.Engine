@@ -15,7 +15,7 @@ namespace Espionage.Engine.Resources
 	{
 		public static Map Current { get; internal set; }
 
-		[Function( "maps.init" ), Callback( "engine.ready" )]
+		[Function( "maps.init" ), Callback( "engine.getting_ready" )]
 		private static void Initialize()
 		{
 			Binder provider = Application.isEditor ? new EditorSceneMapProvider() : new BuildIndexMapProvider( 0 );

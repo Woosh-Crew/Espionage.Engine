@@ -29,11 +29,6 @@ namespace Espionage.Engine.Services
 
 		public override void OnPostUpdate()
 		{
-			if ( Input.GetKeyDown( KeyCode.F1 ) )
-			{
-				Local.Client.Tripod = Local.Client.Tripod == null ? new DevTripod() : null;
-			}
-
 			// Default FOV
 			_lastSetup.FieldOfView = 68;
 			_lastSetup.Viewer = null;

@@ -7,18 +7,20 @@ namespace Espionage.Engine
 	{
 		private Vector3 _targetPos;
 
-		public void Simulate( Client cl, Pawn pawn )
+		protected override void Simulate()
 		{
-			var direction = new Vector2( cl.Input.Forward, cl.Input.Horizontal );
+			base.Simulate();
+
+			var direction = new Vector2( Client.Input.Forward, Client.Input.Horizontal );
 
 			if ( _targetPos == default )
 			{
-				_targetPos = pawn.transform.position;
+				_targetPos = Entity.transform.position;
 			}
 
 			// Movement
 
-			var vel = pawn.EyeRot * Vector3.forward * direction.x + pawn.EyeRot * Vector3.right * direction.y;
+			var vel = Entity.EyeRot * Vector3.forward * direction.x + Entity.EyeRot * Vector3.right * direction.y;
 
 			if ( Input.GetKey( KeyCode.Space ) || Input.GetKey( KeyCode.E ) )
 			{
@@ -44,11 +46,9 @@ namespace Espionage.Engine
 
 			_targetPos += vel * Time.deltaTime;
 
-			pawn.Velocity = vel;
+			Velocity = vel;
 
-			pawn.transform.position = Vector3.Lerp( pawn.transform.position, _targetPos, 5 * Time.deltaTime );
+			Entity.transform.position = Vector3.Lerp( Entity.transform.position, _targetPos, 5 * Time.deltaTime );
 		}
-
-		protected override void Simulate() { }
 	}
 }

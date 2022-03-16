@@ -123,6 +123,9 @@ namespace Espionage.Engine
 
 			using ( Debugging.Stopwatch( "Library Initialized" ) )
 			{
+				var main = typeof( Library ).Assembly;
+				AddAssembly( main );
+
 				var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
 				// Select all types where ILibrary exists or if it has the correct attribute
@@ -130,29 +133,29 @@ namespace Espionage.Engine
 				{
 					var assembly = assemblies[assemblyIndex];
 
-					// Some fully awesome code  - maybe stupid? i dont care its awesome, basically checks if the assembly references library
-					// and if it doesn't skip it. Resulting in crazy fast init
-					var libAssembly = typeof( Library ).Assembly;
-					if ( assembly != libAssembly && assembly.GetReferencedAssemblies().All( e => e.FullName != libAssembly.FullName ) )
+					if ( assembly != main && assembly.GetReferencedAssemblies().Any( e => e.FullName == main.FullName ) )
 					{
-						continue;
-					}
-
-					var types = assembly.GetTypes();
-					for ( var typeIndex = 0; typeIndex < types.Length; typeIndex++ )
-					{
-						var type = types[typeIndex];
-
-						if ( type.HasInterface( typeof( ILibrary ) ) || type.IsDefined( typeof( LibraryAttribute ), true ) )
-						{
-							Database.Add( CreateRecord( type ) );
-						}
+						AddAssembly( assembly );
 					}
 				}
 			}
 
 			Initialized = true;
 			Callback.Run( "library.ready" );
+		}
+
+		private static void AddAssembly( Assembly assembly )
+		{
+			var types = assembly.GetTypes();
+			for ( var typeIndex = 0; typeIndex < types.Length; typeIndex++ )
+			{
+				var type = types[typeIndex];
+
+				if ( type.HasInterface( typeof( ILibrary ) ) || type.IsDefined( typeof( LibraryAttribute ), true ) )
+				{
+					Database.Add( CreateRecord( type ) );
+				}
+			}
 		}
 
 		private static Library CreateRecord( Type type )
@@ -185,6 +188,6 @@ namespace Espionage.Engine
 		// Singletons
 		//
 
-		public static Dictionary<Type, ILibrary> Singletons { get; } = new();
+		private static Dictionary<Type, ILibrary> Singletons { get; } = new();
 	}
 }

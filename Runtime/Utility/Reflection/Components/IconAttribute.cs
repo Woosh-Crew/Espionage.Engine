@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using Espionage.Engine.Components;
 using UnityEngine;
+using Texture = Espionage.Engine.Resources.Texture;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -22,15 +23,10 @@ namespace Espionage.Engine
 		{
 			get
 			{
-				// BUG : Memory leak right here!
-				// TODO : Fix this after we implement texture resources.
+				var texture = Texture.Find( Path );
+				texture.Load();
 
-				var image = Files.Serialization.Deserialize( Path );
-
-				var texture = new Texture2D( 2, 2 );
-				texture.LoadImage( image );
-
-				return texture;
+				return texture.Provider.Texture;
 			}
 		}
 
