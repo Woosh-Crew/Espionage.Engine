@@ -182,7 +182,7 @@ namespace Espionage.Engine
 			}
 
 			Viewmodel.Apply( ref camSetup );
-			Tripod.Modifier.Apply( ref camSetup );
+			Tripod.Effect.Apply( ref camSetup );
 		}
 
 		/// <summary>

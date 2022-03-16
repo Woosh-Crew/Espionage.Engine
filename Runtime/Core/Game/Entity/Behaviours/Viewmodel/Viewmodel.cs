@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using System.Linq;
 using Espionage.Engine.Tripods;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.UIElements;
 
 namespace Espionage.Engine
 {
@@ -18,6 +20,9 @@ namespace Espionage.Engine
 					viewmodel.PostCameraSetup( ref setup );
 				}
 			}
+
+			// Explosions, Landing, etc
+			Effect.Apply( ref setup );
 		}
 
 		public static void Show( bool value )
@@ -59,16 +64,55 @@ namespace Espionage.Engine
 			trans.localPosition = setup.Position;
 			trans.localRotation = setup.Rotation;
 
-			foreach ( var effect in Components.GetAll<Effect>() )
+			foreach ( var effect in Components.GetAll<Modifier>() )
 			{
 				effect.PostCameraSetup( ref setup );
 			}
 		}
 
 		[Group( "Viewmodels" )]
-		public abstract class Effect : Component<Viewmodel>
+		public abstract class Modifier : Component<Viewmodel>
 		{
 			public abstract void PostCameraSetup( ref Tripod.Setup setup );
+		}
+
+		public abstract class Effect
+		{
+			private static readonly List<Effect> All = new();
+
+			public static void Apply( ref Tripod.Setup setup )
+			{
+				for ( var i = All.Count; i > 0; i-- )
+				{
+					var remove = false;
+
+					foreach ( var viewmodel in All.OfType<Viewmodel>() )
+					{
+						if ( All[i - 1].Update( ref setup, viewmodel ) )
+						{
+							remove = true;
+						}
+					}
+
+					if ( remove )
+					{
+						All.RemoveAt( i - 1 );
+					}
+				}
+			}
+
+			public static void Clear()
+			{
+				All.Clear();
+			}
+
+			public Effect()
+			{
+				All.Add( this );
+			}
+
+			/// <returns> True if were done with this Modifier </returns>
+			protected abstract bool Update( ref Tripod.Setup setup, Viewmodel viewmodel );
 		}
 
 		// Fields

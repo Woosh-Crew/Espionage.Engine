@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Espionage.Engine.Viewmodels
 {
-	public class BasicOffset : Viewmodel.Effect
+	public class BasicOffset : Viewmodel.Modifier
 	{
 		public override void PostCameraSetup( ref Tripod.Setup camSetup )
 		{

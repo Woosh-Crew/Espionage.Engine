@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Espionage.Engine.Viewmodels
 {
-	public sealed class SimpleSway : Viewmodel.Effect
+	public sealed class SimpleSway : Viewmodel.Modifier
 	{
 		private Vector2 _lastMouseDelta;
 

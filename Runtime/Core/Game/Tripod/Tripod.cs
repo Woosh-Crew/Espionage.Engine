@@ -76,9 +76,9 @@ namespace Espionage.Engine
 		/// been built. This allows you to do cool stuff like
 		/// screen shake, or on land effects.
 		/// </summary>
-		public abstract class Modifier
+		public abstract class Effect
 		{
-			private static readonly List<Modifier> All = new();
+			private static readonly List<Effect> All = new();
 
 			public static void Apply( ref Setup setup )
 			{
@@ -98,7 +98,7 @@ namespace Espionage.Engine
 				All.Clear();
 			}
 
-			public Modifier()
+			public Effect()
 			{
 				All.Add( this );
 			}
