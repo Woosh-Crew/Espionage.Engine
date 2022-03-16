@@ -36,7 +36,7 @@ namespace Espionage.Engine.Resources
 			}
 
 			public FileInfo Source { get; set; }
-			public void Load( FileStream fileStream ) { }
+			public virtual void Load( FileStream fileStream ) { }
 		}
 	}
 }

@@ -12,15 +12,16 @@ using UnityEditor.SceneManagement;
 namespace Espionage.Engine.Resources.Formats
 {
 	[Title( "Unity Map File" ), File( Extension = "umap" )]
-	public sealed class UMAP : Map.File
+	public sealed partial class UMAP : Map.File
 	{
 		public override Map.Binder Binder => new AssetBundleMapProvider( Source.FullName );
-
-		// Compiler
+	}
 
 	#if UNITY_EDITOR
 
-		public static void Compile( string scenePath )
+	public partial class UMAP : ICompiler<SceneAsset>
+	{
+		public void Compile( string scenePath )
 		{
 			// Ask the user if they want to save the scene, if not don't export!
 			var activeScene = SceneManager.GetActiveScene();
@@ -33,7 +34,7 @@ namespace Espionage.Engine.Resources.Formats
 			}
 
 			var scene = EditorSceneManager.OpenScene( scenePath, OpenSceneMode.Single );
-			var exportPath = $"Exports/{Library.Database.Get<Map>().Group}/";
+			var exportPath = $"Exports/{ClassInfo.Group}/";
 
 			// Track how long exporting took
 			using ( Debugging.Stopwatch( "Map Compiled", true ) )
@@ -66,7 +67,7 @@ namespace Espionage.Engine.Resources.Formats
 						return;
 					}
 
-					Files.Delete( $"assets://{Library.Database.Get<Map>().Group}", "manifest", "" );
+					Files.Delete( $"assets://{ClassInfo.Group}", "manifest", "" );
 				}
 				catch ( Exception e )
 				{
@@ -82,7 +83,7 @@ namespace Espionage.Engine.Resources.Formats
 				}
 			}
 		}
+	}
 
 	#endif
-	}
 }

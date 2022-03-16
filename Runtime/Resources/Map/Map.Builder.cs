@@ -82,42 +82,24 @@ namespace Espionage.Engine.Resources
 			// Defaults
 			//
 
-			public Builder Title( string title )
+			public Builder Meta( string title, string description = null, string author = null )
 			{
 				if ( _components.ContainsKey( typeof( Meta ) ) )
 				{
-					((Meta)_components[typeof( Meta )]).Title = title;
+					var meta = (Meta)_components[typeof( Meta )];
+					meta.Title = title;
+					meta.Description = description;
+					meta.Author = author;
 					return this;
 				}
 
 				// Only Apply if the database doesnt have it yet.
-				With( new Meta() { Title = title } );
-				return this;
-			}
-
-			public Builder Description( string desc )
-			{
-				if ( _components.ContainsKey( typeof( Meta ) ) )
+				With( new Meta()
 				{
-					((Meta)_components[typeof( Meta )]).Description = desc;
-					return this;
-				}
-
-				// Only Apply if the database doesnt have it yet.
-				With( new Meta() { Description = desc } );
-				return this;
-			}
-
-			public Builder Author( string author )
-			{
-				if ( _components.ContainsKey( typeof( Meta ) ) )
-				{
-					((Meta)_components[typeof( Meta )]).Author = author;
-					return this;
-				}
-
-				// Only Apply if the database doesnt have it yet.
-				With( new Meta() { Author = author } );
+					Title = title,
+					Description = description,
+					Author = author
+				} );
 				return this;
 			}
 

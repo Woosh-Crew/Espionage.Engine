@@ -1,4 +1,5 @@
 ﻿using Espionage.Engine.Gamemodes;
+using Espionage.Engine.Resources;
 using Espionage.Engine.Tripods;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -45,6 +46,20 @@ namespace Espionage.Engine
 				cl.Pawn.Simulate( cl );
 			}
 		}
+
+		//
+		// Maps
+		//
+
+		protected abstract Map.Builder[] Maps { get; }
+
+		[Function, Callback( "map.loaded" )]
+		private void MapLoaded()
+		{
+			OnMapLoaded( Map.Current );
+		}
+
+		protected virtual void OnMapLoaded( Map map ) { }
 
 		//
 		// Gamemode
@@ -217,9 +232,6 @@ namespace Espionage.Engine
 		//
 		// Callbacks
 		//
-
-		[Function, Callback( "map.loaded" )]
-		public virtual void OnMapLoaded() { }
 
 		[Function, Callback( "cookies.saved" )]
 		public virtual void OnCookiesSaved() { }
