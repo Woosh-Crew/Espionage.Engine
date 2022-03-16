@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 using System.Linq;
-using Espionage.Engine.Tripods;
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.UIElements;
 
 namespace Espionage.Engine
 {
+	/// <summary>
+	/// Viewmodels are what show up in First Person, when the
+	/// current pawn is carrying something.
+	/// </summary>
 	[Group( "Viewmodels" )]
 	public sealed class Viewmodel : Entity
 	{
@@ -70,12 +72,22 @@ namespace Espionage.Engine
 			}
 		}
 
+		/// <summary>
+		/// Viewmodel Modifiers are components that get attached to
+		/// the viewmodel entity, allowing it to be changed. You
+		/// would use this for sway, bob, breathe, etc.
+		/// </summary>
 		[Group( "Viewmodels" )]
 		public abstract class Modifier : Component<Viewmodel>
 		{
 			public abstract void PostCameraSetup( ref Tripod.Setup setup );
 		}
 
+		/// <summary>
+		/// Viewmodel.Effect is a temporary viewmodel modifier. We
+		/// can use this for Landing Effects, Explosions, Animations,
+		/// etc. Basically allows you to do cool shit
+		/// </summary>
 		public abstract class Effect
 		{
 			private static readonly List<Effect> All = new();
@@ -118,9 +130,9 @@ namespace Espionage.Engine
 		// Fields
 
 		[SerializeField]
-		private bool castShadows = false;
+		private bool castShadows;
 
 		[SerializeField]
-		private bool receiveShadows = false;
+		private bool receiveShadows;
 	}
 }
