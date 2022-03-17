@@ -15,7 +15,7 @@ namespace Espionage.Engine
 
 		internal static Client Create( string name )
 		{
-			var obj = new GameObject( $"[id=0]{name}" ).AddComponent<Client>();
+			var obj = new GameObject( $"[ Client ] {name} / id=0" ).AddComponent<Client>();
 			Engine.Scene.Grab( obj.gameObject );
 			return obj;
 		}
@@ -32,7 +32,7 @@ namespace Espionage.Engine
 
 		internal virtual void Simulate()
 		{
-			Controls.Active = Input;
+			Controls.SetSetup( this );
 			Engine.Game.Simulate( this );
 		}
 

@@ -5,21 +5,20 @@ using UnityEngine;
 namespace Espionage.Engine.Services
 {
 	[Order( -5 )]
-	public class CameraService : Service
+	internal class CameraService : Service
 	{
 		public override void OnReady()
 		{
-			Controller = Library.Database.Create<CameraController>();
-			Controller.gameObject.MoveTo( Engine.Scene );
-			Controller.name = "Camera";
+			_controller = Library.Database.Create<CameraController>();
+			Engine.Scene.Grab( _controller );
+			_controller.name = "[ Viewport ] Main Camera";
 
-			Engine.Game.OnCameraCreated( Controller.Camera );
-			Callback.Run( "camera.created", Controller );
+			Callback.Run( "camera.created", _controller.Camera );
 		}
 
 		// Frame
 
-		public CameraController Controller { get; private set; }
+		private CameraController _controller;
 
 		private Tripod.Setup _lastSetup = new()
 		{
@@ -35,15 +34,11 @@ namespace Espionage.Engine.Services
 			_lastSetup.Viewer = null;
 			_lastSetup.Clipping = new( 0.1f, 700 );
 
-
 			// Build the camSetup, from game.
 			_lastSetup = Engine.Game.BuildCamera( _lastSetup );
 
 			// Finalise
-			Controller.Finalise( _lastSetup );
-
-			// Set the viewer to null, so its cleared every frame.
-			_lastSetup.Viewer = null;
+			_controller.Finalise( _lastSetup );
 		}
 	}
 }

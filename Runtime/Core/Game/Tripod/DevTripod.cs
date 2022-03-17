@@ -16,6 +16,8 @@ namespace Espionage.Engine.Tripods
 
 		private float _speedMulti = 1;
 
+		// Tripod
+
 		void ITripod.Build( ref Tripod.Setup camSetup )
 		{
 			// FOV
@@ -71,6 +73,7 @@ namespace Espionage.Engine.Tripods
 					Dev.Overlay.Box( new( 128, 16 ), "Possess Pawn with [F]" );
 					if ( Input.GetKeyDown( KeyCode.F ) )
 					{
+						Dev.Terminal.Invoke( "dev.tripod" );
 						Local.Client.Pawn = pawn;
 					}
 				}

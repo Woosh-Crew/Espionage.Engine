@@ -10,19 +10,10 @@ namespace Espionage.Engine
 	/// Use this as your "GameManager".
 	/// </summary>
 	[Spawnable, Group( "Engine" )]
-	public abstract partial class Game : IPackage
+	public abstract partial class Game : Entity, IGame
 	{
-		public Loader Loader { get; protected set; }
-		public Splash Splash { get; protected set; }
-		public Menu Menu { get; protected set; }
-
-		// Class
-		public Library ClassInfo { get; }
-
-		protected Game()
+		protected override void OnAwake()
 		{
-			ClassInfo = Library.Register( this );
-
 			// Setup Maps. Its fine to do it here.
 			if ( Maps != null )
 			{
@@ -33,12 +24,9 @@ namespace Espionage.Engine
 			}
 		}
 
-		~Game()
-		{
-			Library.Unregister( this );
-		}
+		protected virtual Map.Builder[] Maps { get; }
 
-		// IPackage
+		// Required
 
 		public abstract void OnReady();
 		public abstract void OnShutdown();
@@ -54,38 +42,8 @@ namespace Espionage.Engine
 			}
 		}
 
-		//
-		// Maps
-		//
-
-		protected virtual Map.Builder[] Maps { get; }
-
-		[Function, Callback( "map.loaded" )]
-		public void MapLoaded()
-		{
-			OnMapLoaded( Map.Current );
-		}
-
-		protected virtual void OnMapLoaded( Map map ) { }
-
-		//
 		// Gamemode
-		//
 
-		/// <summary>
-		/// <para>
-		/// The gamemode is used for controlling game flow. Instead of jamming
-		/// or your game specific logic into your game manager you'd make separate
-		/// "Gamemodes".
-		/// </para>
-		/// <para>
-		/// Gamemodes have callbacks for a lot of Game specific things, like when an
-		/// actor took damage, actor got killed, etc
-		/// </para>
-		/// <example>
-		/// You can use Gamemodes for Single-player, Death-match, etc.
-		/// </example>
-		/// </summary>
 		public Gamemode Gamemode
 		{
 			get => _gamemode;

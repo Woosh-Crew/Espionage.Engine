@@ -8,7 +8,7 @@ namespace Espionage.Engine.Internal
 	[Group( "Engine" ), Singleton, RequireComponent( typeof( Camera ), typeof( AudioListener ) )]
 	public class CameraController : Entity
 	{
-		internal Camera Camera { get; set; }
+		internal Camera Camera { get; private set; }
 
 		protected override void OnAwake()
 		{
@@ -59,25 +59,6 @@ namespace Espionage.Engine.Internal
 			}
 
 			Viewmodel.Show( _lastViewer != null );
-		}
-
-		private void OnDrawGizmos()
-		{
-			var position = transform.position;
-			var rotation = transform.rotation;
-
-			Gizmos.DrawWireSphere( position, 0.2f );
-
-			Gizmos.color = Color.red;
-			Gizmos.DrawLine( position, rotation * Vector3.forward + position );
-			Gizmos.DrawLine( position, rotation * Vector3.forward + position + rotation * Vector3.left );
-			Gizmos.DrawLine( position, rotation * Vector3.forward + position + rotation * Vector3.right );
-			Gizmos.DrawLine( position, rotation * Vector3.forward + position + rotation * Vector3.up );
-			Gizmos.DrawLine( position, rotation * Vector3.forward + position + rotation * Vector3.down );
-			Gizmos.color = Color.white;
-
-			// This is hacky.. But who cares
-			Callback.Run( "debug.gizmos" );
 		}
 
 		private void OnGUI()

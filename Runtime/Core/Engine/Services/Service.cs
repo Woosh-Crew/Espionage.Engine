@@ -1,7 +1,7 @@
 ﻿namespace Espionage.Engine.Services
 {
 	[Group( "Services" )]
-	public abstract class Service : IService
+	public abstract partial class Service : IService
 	{
 		public Library ClassInfo { get; }
 
@@ -11,6 +11,7 @@
 		}
 
 		public virtual void OnReady() { }
+
 		public virtual void OnUpdate() { }
 		public virtual void OnPostUpdate() { }
 

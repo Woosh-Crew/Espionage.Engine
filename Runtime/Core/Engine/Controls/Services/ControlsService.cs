@@ -31,8 +31,8 @@ namespace Espionage.Engine.Services
 			_setup = Engine.Game.BuildControls( _setup );
 
 			// Applying
-			Cursor.visible = _setup.Cursor.Visible;
-			Cursor.lockState = _setup.Cursor.Locked ? CursorLockMode.Locked : CursorLockMode.None;
+			UnityEngine.Cursor.visible = _setup.Cursor.Visible;
+			UnityEngine.Cursor.lockState = _setup.Cursor.Locked ? CursorLockMode.Locked : CursorLockMode.None;
 		}
 	}
 }

@@ -8,10 +8,17 @@ namespace Espionage.Engine
 	/// </summary>
 	public static class Controls
 	{
-		internal static Setup Active { get; set; }
+		public static Mouse Mouse => _active.Mouse;
+		public static Cursor Cursor => _active.Cursor;
 
-		public static MouseInfo Mouse => Active.Mouse;
-		public static CursorInfo Cursor => Active.Cursor;
+		internal static void SetSetup( Client client )
+		{
+			_active = client.Input;
+		}
+
+		// Fields
+
+		private static Setup _active;
 
 		/// <summary>
 		/// Controls the raw values of Input. This is what would be built
@@ -19,9 +26,9 @@ namespace Espionage.Engine
 		/// </summary>
 		public class Setup
 		{
-			public MouseInfo Mouse { get; set; }
-			public CursorInfo Cursor { get; set; }
-			
+			public Mouse Mouse { get; set; }
+			public Cursor Cursor { get; set; }
+
 			public float Forward { get; internal set; }
 			public float Horizontal { get; internal set; }
 
@@ -37,23 +44,23 @@ namespace Espionage.Engine
 				Horizontal = 0;
 			}
 		}
+	}
 
-		/// <summary>
-		/// Struct containing data about the mouse
-		/// </summary>
-		public struct MouseInfo
-		{
-			public Vector2 Delta { get; internal set; }
-			public float Wheel { get; internal set; }
-		}
-		
-		/// <summary>
-		/// Struct containing data about the cursor
-		/// </summary>
-		public class CursorInfo
-		{
-			public bool Visible { get; set; }
-			public bool Locked { get; set; }
-		}
+	/// <summary>
+	/// Struct containing data about the mouse
+	/// </summary>
+	public struct Mouse
+	{
+		public Vector2 Delta { get; internal set; }
+		public float Wheel { get; internal set; }
+	}
+
+	/// <summary>
+	/// Struct containing data about the cursor
+	/// </summary>
+	public class Cursor
+	{
+		public bool Visible { get; set; }
+		public bool Locked { get; set; }
 	}
 }
