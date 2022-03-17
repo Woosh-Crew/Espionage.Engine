@@ -222,7 +222,7 @@ namespace Espionage.Engine
 		/// It'll go from the current tripod and down to the pawn for
 		/// mutation.
 		/// </summary>
-		public virtual IControls.Setup BuildControls( IControls.Setup builder )
+		public virtual Controls.Setup BuildControls( Controls.Setup builder )
 		{
 			// If the Current Tripod can BuildInput, let it
 			(LastTripod as IControls)?.Build( builder );

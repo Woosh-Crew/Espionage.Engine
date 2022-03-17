@@ -11,6 +11,13 @@ public class SneakyKiller : Game
 		Library.Database.Create<TerminalUI>();
 	}
 
+	public override Controls.Setup BuildControls( Controls.Setup builder )
+	{
+		builder.Cursor.Visible = true;
+
+		return base.BuildControls( builder );
+	}
+
 	public override void OnShutdown() { }
 
 	protected override void OnMapLoaded( Map map )

@@ -32,6 +32,7 @@ namespace Espionage.Engine
 
 		internal virtual void Simulate()
 		{
+			Controls.Active = Input;
 			Engine.Game.Simulate( this );
 		}
 
@@ -54,7 +55,7 @@ namespace Espionage.Engine
 		/// input system.
 		/// </remarks>
 		/// </summary>
-		public IControls.Setup Input { get; set; }
+		public Controls.Setup Input { get; set; }
 
 		//
 		// Pawn

@@ -4,8 +4,7 @@ namespace Espionage.Engine.Services
 {
 	internal class ControlsService : Service
 	{
-		private IControls.Setup _setup = new();
-
+		private Controls.Setup _setup = new() { Cursor = new() { Locked = true, Visible = false } };
 
 		public override void OnReady()
 		{
@@ -23,14 +22,17 @@ namespace Espionage.Engine.Services
 			Vector2 mouse = new() { x = Input.GetAxis( "Mouse X" ), y = Input.GetAxis( "Mouse Y" ) };
 			mouse *= Options.MouseSensitivity;
 
-			_setup.MouseDelta = mouse;
-
-			_setup.MouseWheel = Input.GetAxisRaw( "Mouse ScrollWheel" );
+			_setup.Mouse = new() { Delta = mouse, Wheel = Input.GetAxisRaw( "Mouse ScrollWheel" ) };
 
 			_setup.Forward = Input.GetAxisRaw( "Vertical" );
 			_setup.Horizontal = Input.GetAxisRaw( "Horizontal" );
 
+			// Building
 			_setup = Engine.Game.BuildControls( _setup );
+
+			// Applying
+			Cursor.visible = _setup.Cursor.Visible;
+			Cursor.lockState = _setup.Cursor.Locked ? CursorLockMode.Locked : CursorLockMode.None;
 		}
 	}
 }

@@ -88,7 +88,7 @@ namespace Espionage.Engine.Tripods
 
 		// Input
 
-		void IControls.Build( IControls.Setup setup )
+		void IControls.Build( Controls.Setup setup )
 		{
 			try
 			{
@@ -103,7 +103,7 @@ namespace Espionage.Engine.Tripods
 				}
 
 				// We don't use ViewAngles here, as they are not our eyes.
-				_targetRot += new Vector3( -setup.MouseDelta.y, setup.MouseDelta.x, 0 );
+				_targetRot += new Vector3( -setup.Mouse.Delta.y, setup.Mouse.Delta.x, 0 );
 				_targetRot.x = Mathf.Clamp( _targetRot.x, -88, 88 );
 
 				if ( Input.GetMouseButtonDown( 2 ) )
@@ -111,7 +111,7 @@ namespace Espionage.Engine.Tripods
 					_interpolate = !_interpolate;
 				}
 
-				_speedMulti += setup.MouseWheel * 2;
+				_speedMulti += setup.Mouse.Wheel * 2;
 				_speedMulti = Mathf.Clamp( _speedMulti, 0.1f, 10 );
 			}
 			finally

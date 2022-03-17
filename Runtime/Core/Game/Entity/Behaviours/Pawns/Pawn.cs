@@ -119,7 +119,7 @@ namespace Espionage.Engine
 		// Controls
 		//
 
-		void IControls.Build( IControls.Setup setup )
+		void IControls.Build( Controls.Setup setup )
 		{
 			OnBuildControls( setup );
 
@@ -129,7 +129,7 @@ namespace Espionage.Engine
 			}
 		}
 
-		protected virtual void OnBuildControls( IControls.Setup setup ) { }
+		protected virtual void OnBuildControls( Controls.Setup setup ) { }
 
 		//
 		// Helpers
@@ -165,7 +165,7 @@ namespace Espionage.Engine
 			void PostCameraSetup( ref Tripod.Setup setup ) { }
 
 			/// <inheritdoc cref="Pawn.OnBuildControls"/>
-			void OnBuildControls( IControls.Setup setup ) { }
+			void OnBuildControls( Controls.Setup setup ) { }
 		}
 
 		// Fields
