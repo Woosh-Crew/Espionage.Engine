@@ -4,26 +4,26 @@ using UnityEngine.UIElements;
 
 namespace Espionage.Engine.Resources
 {
-	[Group( "Textures" ), Title( "User Interface" ), Path( "textures", "assets://Textures/" )]
-	public partial class Texture : Resource<Texture2D>
+	[Group( "User Interfaces" ), Title( "User Interface" ), Path( "ui", "assets://User Interfaces/" )]
+	public partial class UI : Resource<GameObject>
 	{
 		/// <summary>
 		/// Trys to find the UI by path. If it couldn't find the UI in the database,
 		/// it'll create a new reference to that UI for use later.
 		/// </summary>
-		public static Texture Find( string path )
+		public static UI Find( string path )
 		{
 			path = Files.Pathing.Absolute( path );
 
 			// Use the Database Map if we have it
 			if ( Database[path] != null )
 			{
-				return Database[path] as Texture;
+				return Database[path] as UI;
 			}
 
 			if ( !Files.Pathing.Exists( path ) )
 			{
-				Dev.Log.Error( $"Texture Path [{Files.Pathing.Absolute( path )}], couldn't be found." );
+				Dev.Log.Error( $"UI Path [{Files.Pathing.Absolute( path )}], couldn't be found." );
 				return null;
 			}
 
@@ -36,22 +36,22 @@ namespace Espionage.Engine.Resources
 		//
 
 		public override string Identifier => Provider.Identifier;
-		public Binder Provider { get; }
+		private Binder Provider { get; }
 
-		private Texture( Binder provider )
+		private UI( Binder provider )
 		{
 			Provider = provider ?? throw new NullReferenceException();
 		}
 
-		public override void Load( Action<Texture2D> loaded = null )
+		public override void Load( Action<GameObject> loaded = null )
 		{
 			if ( IsLoaded )
 			{
-				loaded?.Invoke( Provider.Texture );
+				loaded?.Invoke( Provider.Canvas );
 				return;
 			}
 
-			using var _ = Dev.Stopwatch( $"Loaded Texture [{Identifier}]" );
+			using var _ = Dev.Stopwatch( $"Loaded UI [{Identifier}]" );
 			Provider.Load( loaded );
 			base.Load( loaded );
 		}

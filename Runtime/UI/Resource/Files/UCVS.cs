@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using Espionage.Engine.Resources.Binders;
-using UnityEngine.UIElements;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -8,15 +7,15 @@ using UnityEditor;
 
 namespace Espionage.Engine.Resources.Formats
 {
-	[Title( "UI Toolkit File" ), File( Extension = "uitk" )]
-	public sealed partial class UITK : UI.File
+	[Title( "Unity Canvas File" ), File( Extension = "ucvs" )]
+	public sealed partial class UCVS : UI.File
 	{
-		public override UI.Binder Binder => new AssetBundleUIBinder( Source.FullName );
+		public override UI.Binder Binder => new AssetBundleCanvasBinder( Source.FullName );
 	}
 
 	#if UNITY_EDITOR
 
-	public partial class UITK : ICompiler<VisualTreeAsset>
+	public partial class UCVS : ICompiler<CanvasAsset>
 	{
 		public void Compile( string asset )
 		{

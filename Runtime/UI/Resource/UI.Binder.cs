@@ -5,9 +5,9 @@ using UnityEngine.UIElements;
 
 namespace Espionage.Engine.Resources
 {
-	public partial class Texture
+	public partial class UI
 	{
-		[Group( "Textures" )]
+		[Group( "User Interfaces" )]
 		public abstract class Binder : ILibrary
 		{
 			public Library ClassInfo { get; }
@@ -23,13 +23,13 @@ namespace Espionage.Engine.Resources
 			}
 
 			public abstract string Identifier { get; }
-			public abstract Texture2D Texture { get; set; }
+			public abstract GameObject Canvas { get; set; }
 
-			public abstract void Load( Action<Texture2D> onLoad = null );
+			public abstract void Load( Action<GameObject> onLoad = null );
 			public abstract void Unload( Action onUnload = null );
 		}
 
-		[Group( "Textures" )]
+		[Group( "User Interfaces" )]
 		public abstract class File : IFile, IAsset
 		{
 			public abstract Binder Binder { get; }

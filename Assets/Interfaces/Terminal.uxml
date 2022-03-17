@@ -1,8 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <Espionage.Engine.UI.Window style="background-color: rgba(38, 38, 38, 0.9);">
-        <ui:VisualElement name="Top" style="height: 24px; padding-left: 4px; padding-right: 4px; margin-top: 0; margin-bottom: 0; background-color: rgba(40, 40, 40, 0.9); padding-top: 0; padding-bottom: 0; justify-content: space-between; border-top-width: 1px; border-bottom-width: 1px; flex-direction: row; opacity: 1;">
-            <ui:Label text="Terminal" display-tooltip-when-elided="true" style="color: rgb(229, 229, 229); -unity-font: none; -unity-font-style: bold; -unity-font-definition: url(&apos;project://database/Assets/Espionage.Engine/Assets/Fonts/SolidMono%20SDF.asset?fileID=11400000&amp;guid=d75f49bec591fff44b8c61d0f719caa3&amp;type=2#SolidMono SDF&apos;); -unity-text-align: middle-right; font-size: 12px; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; justify-content: center; align-items: stretch; flex-grow: 0; flex-shrink: 1;" />
-        </ui:VisualElement>
-        <ui:ListView focusable="true" name="Output" style="flex-shrink: 0; flex-grow: 1;" />
-    </Espionage.Engine.UI.Window>
-</ui:UXML>

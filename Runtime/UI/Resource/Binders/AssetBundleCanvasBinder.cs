@@ -1,15 +1,15 @@
 ﻿using System;
+using Espionage.Engine.Resources.Formats;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace Espionage.Engine.Resources.Binders
 {
-	public class AssetBundleUIBinder : UI.Binder
+	public class AssetBundleCanvasBinder : UI.Binder
 	{
 		public override string Identifier { get; }
-		public override VisualTreeAsset Tree { get; set; }
+		public override GameObject Canvas { get; set; }
 
-		public AssetBundleUIBinder( string path )
+		public AssetBundleCanvasBinder( string path )
 		{
 			Identifier = path;
 		}
@@ -21,7 +21,7 @@ namespace Espionage.Engine.Resources.Binders
 		private AssetBundleCreateRequest _bundleRequestOperation;
 		private AssetBundle _bundle;
 
-		public override void Load( Action<VisualTreeAsset> onLoad = null )
+		public override void Load( Action<GameObject> onLoad = null )
 		{
 			// Load Bundle
 			_bundleRequestOperation = AssetBundle.LoadFromFileAsync( Identifier );
@@ -34,13 +34,13 @@ namespace Espionage.Engine.Resources.Binders
 
 				// Load the scene by getting all scene
 				// paths from a bundle, and getting the first index
-				var asset = _bundle.LoadAllAssetsAsync<VisualTreeAsset>();
+				var asset = _bundle.LoadAllAssetsAsync<CanvasAsset>();
 				asset.completed += ( _ ) =>
 				{
 					// We've finished loading the scene.
 					Dev.Log.Info( "Finished Loading UI" );
-					Tree = asset.asset as VisualTreeAsset;
-					onLoad?.Invoke( Tree );
+					Canvas = (asset.asset as CanvasAsset)?.UI.gameObject;
+					onLoad?.Invoke( Canvas );
 				};
 			};
 		}

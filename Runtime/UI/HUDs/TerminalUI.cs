@@ -2,9 +2,6 @@
 
 namespace Espionage.Engine.UI
 {
-	[Title( "Terminal UI" ), File( Path = "ui://terminal.uitk" )]
-	public class TerminalUI : HUD
-	{
-		
-	}
+	[Title( "Terminal UI" ), File( Path = "ui://terminal.ucvs" )]
+	public class TerminalUI : HUD { }
 }
