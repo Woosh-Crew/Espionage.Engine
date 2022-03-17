@@ -10,24 +10,8 @@ namespace Espionage.Engine
 	/// Use this as your "GameManager".
 	/// </summary>
 	[Spawnable, Group( "Engine" )]
-	public abstract partial class Game : Entity, IGame
+	public abstract partial class Game : Entity
 	{
-		protected override void OnAwake()
-		{
-			// Setup Maps. Its fine to do it here.
-			if ( Maps != null )
-			{
-				foreach ( var map in Maps )
-				{
-					map.Build();
-				}
-			}
-		}
-
-		protected virtual Map.Builder[] Maps { get; }
-
-		// Required
-
 		public abstract void OnReady();
 		public abstract void OnShutdown();
 
@@ -74,11 +58,9 @@ namespace Espionage.Engine
 
 		private Gamemode _gamemode;
 
-		//
-		// Build Camera
-		//
+		// Build Tripod
 
-		private ITripod LastTripod { get; set; }
+		protected ITripod LastTripod { get; set; }
 
 		/// <summary>
 		/// Finds the Active tripod in the game. It goes from the
@@ -110,7 +92,7 @@ namespace Espionage.Engine
 		/// controlling the main camera, you shouldn't need to override
 		/// this, instead use <see cref="PostCameraSetup"/>.
 		/// </summary>
-		public virtual Tripod.Setup BuildCamera( Tripod.Setup camSetup )
+		internal Tripod.Setup BuildTripod( Tripod.Setup camSetup )
 		{
 			var cam = FindActiveCamera();
 
@@ -171,27 +153,29 @@ namespace Espionage.Engine
 			debug.postProcessLayer = postProcessLayer;
 		}
 
-		//
-		// Build Input
-		//
+		// Build Controls
+
+		internal Controls.Setup BuildControls( Controls.Setup builder )
+		{
+			PostControlSetup( builder );
+			return builder;
+		}
 
 		/// <summary>
-		/// Use build controls for mutating the current input pipeline.
+		/// Use PostControlSetup for mutating the current input pipeline.
 		/// It'll go from the current tripod and down to the pawn for
 		/// mutation.
 		/// </summary>
-		public virtual Controls.Setup BuildControls( Controls.Setup builder )
+		protected virtual void PostControlSetup( Controls.Setup setup )
 		{
 			// If the Current Tripod can BuildInput, let it
-			(LastTripod as IControls)?.Build( builder );
+			(LastTripod as IControls)?.Build( setup );
 
 			// Now if the pawn can change input, let it.
-			if ( Local.Pawn != null && Local.Pawn is IControls controls )
+			if ( Local.Pawn != null )
 			{
-				controls.Build( builder );
+				((IControls)Local.Pawn).Build( setup );
 			}
-
-			return builder;
 		}
 
 		//

@@ -5,11 +5,11 @@ namespace Espionage.Engine.Services
 {
 	public partial class Service
 	{
-		public class Database : IDatabase<IService>
+		public sealed class Database : IDatabase<IService>
 		{
 			public IEnumerable<IService> All => _services;
 			public int Count => _services.Count;
-			
+
 			private readonly List<IService> _services = new();
 
 			public Database()

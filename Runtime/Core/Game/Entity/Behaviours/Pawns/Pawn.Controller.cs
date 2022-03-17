@@ -5,7 +5,7 @@ namespace Espionage.Engine
 {
 	public partial class Pawn
 	{
-		public abstract class Controller : Component<Pawn>, ISimulated, IControls
+		public abstract class Controller : Component<Pawn>, IControls
 		{
 			public void Simulate( Client client )
 			{

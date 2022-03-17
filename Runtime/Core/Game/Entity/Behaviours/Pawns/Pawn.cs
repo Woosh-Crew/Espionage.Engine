@@ -11,45 +11,19 @@ namespace Espionage.Engine
 	{
 		public Vector3 Velocity { get; set; }
 
-		protected override void OnReady()
+		protected override void OnAwake()
 		{
 			gameObject.layer = LayerMask.NameToLayer( "Pawn" );
 		}
 
 		public void Simulate( Client client )
 		{
-			Ground = FindGround();
-
-			// Controller
-
 			GetActiveController()?.Simulate( client );
-
-			// Components
 
 			foreach ( var item in Components.GetAll<ISimulated>() )
 			{
-				// Don't simulate Pawn Controllers, we do that above.
-				if ( item is Controller )
-				{
-					continue;
-				}
-
 				item.Simulate( client );
 			}
-		}
-
-		//
-		// Ground
-		// 
-
-		public RaycastHit Ground { get; private set; }
-
-		protected virtual RaycastHit FindGround()
-		{
-			var ray = new Ray( Position, Vector3.down );
-			Physics.Raycast( ray, out var result, 0.1f );
-
-			return result;
 		}
 
 		//
@@ -123,9 +97,9 @@ namespace Espionage.Engine
 		{
 			OnBuildControls( setup );
 
-			foreach ( var item in Components.GetAll<ICallbacks>() )
+			foreach ( var item in Components.GetAll<IControls>() )
 			{
-				item.OnBuildControls( setup );
+				item.Build( setup );
 			}
 		}
 
@@ -163,9 +137,6 @@ namespace Espionage.Engine
 
 			/// <inheritdoc cref="Pawn.PostCameraSetup"/>
 			void PostCameraSetup( ref Tripod.Setup setup ) { }
-
-			/// <inheritdoc cref="Pawn.OnBuildControls"/>
-			void OnBuildControls( Controls.Setup setup ) { }
 		}
 
 		// Fields

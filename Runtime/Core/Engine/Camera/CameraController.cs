@@ -14,8 +14,10 @@ namespace Espionage.Engine.Internal
 		{
 			gameObject.tag = "MainCamera";
 			Camera = GetComponent<Camera>();
-			Camera.depth = 2;
+			Camera.depth = 5;
 		}
+
+		private Transform _lastViewer;
 
 		internal void Finalise( in Tripod.Setup camSetup )
 		{
@@ -25,16 +27,13 @@ namespace Espionage.Engine.Internal
 
 			Camera.fieldOfView = camSetup.Damping > 0 ? Mathf.Lerp( Camera.fieldOfView, camSetup.FieldOfView, camSetup.Damping * Time.deltaTime ) : camSetup.FieldOfView;
 
+			// Clipping Planes
+
 			Camera.farClipPlane = camSetup.Clipping.y;
 			Camera.nearClipPlane = camSetup.Clipping.x;
 
-			HandleViewer( camSetup );
-		}
+			// Viewer
 
-		private Transform _lastViewer;
-
-		private void HandleViewer( in Tripod.Setup camSetup )
-		{
 			if ( _lastViewer == camSetup.Viewer )
 			{
 				return;

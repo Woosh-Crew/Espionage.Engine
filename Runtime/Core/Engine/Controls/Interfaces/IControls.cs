@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace Espionage.Engine
+﻿namespace Espionage.Engine
 {
 	/// <summary>
 	/// <para>

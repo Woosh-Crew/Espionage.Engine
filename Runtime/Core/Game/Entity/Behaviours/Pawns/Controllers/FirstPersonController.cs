@@ -29,6 +29,7 @@ namespace Espionage.Engine
 			wishDirection *= Speed();
 
 			Velocity = wishDirection;
+			Velocity += new Vector3( 0, -9, 0 ) * Time.deltaTime;
 
 			_characterController.Move( Velocity );
 		}

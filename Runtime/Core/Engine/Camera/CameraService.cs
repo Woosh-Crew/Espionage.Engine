@@ -13,6 +13,7 @@ namespace Espionage.Engine.Services
 			Engine.Scene.Grab( _controller );
 			_controller.name = "[ Viewport ] Main Camera";
 
+			Engine.Game.OnCameraCreated( _controller.Camera );
 			Callback.Run( "camera.created", _controller.Camera );
 		}
 
@@ -35,7 +36,7 @@ namespace Espionage.Engine.Services
 			_lastSetup.Clipping = new( 0.1f, 700 );
 
 			// Build the camSetup, from game.
-			_lastSetup = Engine.Game.BuildCamera( _lastSetup );
+			_lastSetup = Engine.Game.BuildTripod( _lastSetup );
 
 			// Finalise
 			_controller.Finalise( _lastSetup );
