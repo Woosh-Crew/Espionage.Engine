@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea0dac6e3b1a41e7a4d7ea9af5826d65, type: 3}
+  m_Name: Terminal
+  m_EditorClassIdentifier: Espionage.Engine:Espionage.Engine.Resources.Formats:CanvasAsset
+  ui: {fileID: 7720037705252217192, guid: e7b8daba9381d8e408937fe04251b28c, type: 3}

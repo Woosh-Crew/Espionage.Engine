@@ -32,15 +32,15 @@ namespace Espionage.Engine
 
 		// Controls
 
-		void IControls.Build( IControls.Setup setup )
+		void IControls.Build( Controls.Setup setup )
 		{
 			OnBuildControls( setup );
 		}
 
 		/// <summary> <inheritdoc cref="IControls.Build"/> </summary>
-		protected virtual void OnBuildControls( IControls.Setup setup )
+		protected virtual void OnBuildControls( Controls.Setup setup )
 		{
-			setup.ViewAngles += new Vector3( -setup.MouseDelta.y, setup.MouseDelta.x, 0 );
+			setup.ViewAngles += new Vector3( -setup.Mouse.Delta.y, setup.Mouse.Delta.x, 0 );
 			setup.ViewAngles = setup.ViewAngles.WithX( Mathf.Clamp( setup.ViewAngles.x, -88, 88 ) );
 		}
 

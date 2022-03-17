@@ -8,7 +8,8 @@ namespace Espionage.Engine.Resources.Editor
 		[MenuItem( "Assets/Compile Selected Asset", true )]
 		private static bool CompileValidate()
 		{
-			return Exists( Selection.activeObject.GetType() );
+			return Selection.activeObject != null && Exists( Selection.activeObject.GetType() );
+
 		}
 
 

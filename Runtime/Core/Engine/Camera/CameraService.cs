@@ -11,6 +11,7 @@ namespace Espionage.Engine.Services
 		{
 			Controller = Library.Database.Create<CameraController>();
 			Controller.gameObject.MoveTo( Engine.Scene );
+			Controller.name = "Camera";
 
 			Engine.Game.OnCameraCreated( Controller.Camera );
 			Callback.Run( "camera.created", Controller );

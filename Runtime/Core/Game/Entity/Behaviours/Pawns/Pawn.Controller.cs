@@ -61,7 +61,7 @@ namespace Espionage.Engine
 
 			// Input
 
-			public virtual void Build( IControls.Setup setup ) { }
+			public virtual void Build( Controls.Setup setup ) { }
 
 			// Fields
 

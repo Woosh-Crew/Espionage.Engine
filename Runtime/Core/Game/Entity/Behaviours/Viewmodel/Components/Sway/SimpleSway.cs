@@ -9,7 +9,7 @@ namespace Espionage.Engine.Viewmodels
 
 		public override void PostCameraSetup( ref Tripod.Setup setup )
 		{
-			var mouse = Local.Client.Input.MouseDelta;
+			var mouse = Local.Client.Input.Mouse.Delta;
 
 			_lastMouseDelta = Vector2.Lerp( _lastMouseDelta, mouse / 500 / Time.deltaTime, smoothing * Time.deltaTime );
 
