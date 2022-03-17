@@ -7,7 +7,7 @@ namespace Espionage.Engine.Resources.Binders
 	public class AssetBundleCanvasBinder : UI.Binder
 	{
 		public override string Identifier { get; }
-		public override GameObject Canvas { get; set; }
+		public override Canvas Canvas { get; set; }
 
 		public AssetBundleCanvasBinder( string path )
 		{
@@ -21,7 +21,7 @@ namespace Espionage.Engine.Resources.Binders
 		private AssetBundleCreateRequest _bundleRequestOperation;
 		private AssetBundle _bundle;
 
-		public override void Load( Action<GameObject> onLoad = null )
+		public override void Load( Action<Canvas> onLoad = null )
 		{
 			// Load Bundle
 			_bundleRequestOperation = AssetBundle.LoadFromFileAsync( Identifier );
@@ -39,7 +39,7 @@ namespace Espionage.Engine.Resources.Binders
 				{
 					// We've finished loading the scene.
 					Dev.Log.Info( "Finished Loading UI" );
-					Canvas = (asset.asset as CanvasAsset)?.UI.gameObject;
+					Canvas = (asset.asset as CanvasAsset)?.UI;
 					onLoad?.Invoke( Canvas );
 				};
 			};

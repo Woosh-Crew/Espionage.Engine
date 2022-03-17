@@ -1,8 +1,4 @@
-﻿using UnityEngine;
-using UnityEngine.UIElements;
-using Res = UnityEngine.Resources;
-
-namespace Espionage.Engine.Resources
+﻿namespace Espionage.Engine.Resources
 {
 	[Group( "User Interfaces" ), Title( "HUD" )]
 	public class HUD : Entity
@@ -17,7 +13,7 @@ namespace Espionage.Engine.Resources
 			if ( ClassInfo.Components.TryGet<FileAttribute>( out var file ) )
 			{
 				UI = UI.Find( file.Path );
-				UI?.Load( e => Instantiate( e ) );
+				UI?.Load( e => Instantiate( e.gameObject ) );
 
 				return;
 			}

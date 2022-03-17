@@ -5,7 +5,7 @@ using UnityEngine.UIElements;
 namespace Espionage.Engine.Resources
 {
 	[Group( "User Interfaces" ), Title( "User Interface" ), Path( "ui", "assets://User Interfaces/" )]
-	public partial class UI : Resource<GameObject>
+	public partial class UI : Resource<Canvas>
 	{
 		/// <summary>
 		/// Trys to find the UI by path. If it couldn't find the UI in the database,
@@ -43,7 +43,7 @@ namespace Espionage.Engine.Resources
 			Provider = provider ?? throw new NullReferenceException();
 		}
 
-		public override void Load( Action<GameObject> loaded = null )
+		public override void Load( Action<Canvas> loaded = null )
 		{
 			if ( IsLoaded )
 			{

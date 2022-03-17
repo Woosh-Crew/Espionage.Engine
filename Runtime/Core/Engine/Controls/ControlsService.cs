@@ -30,9 +30,6 @@ namespace Espionage.Engine.Services
 			_setup.Forward = Input.GetAxisRaw( "Vertical" );
 			_setup.Horizontal = Input.GetAxisRaw( "Horizontal" );
 
-			Cursor.lockState = CursorLockMode.Locked;
-			Cursor.visible = false;
-
 			_setup = Engine.Game.BuildControls( _setup );
 		}
 	}

@@ -23,9 +23,9 @@ namespace Espionage.Engine.Resources
 			}
 
 			public abstract string Identifier { get; }
-			public abstract GameObject Canvas { get; set; }
+			public abstract Canvas Canvas { get; set; }
 
-			public abstract void Load( Action<GameObject> onLoad = null );
+			public abstract void Load( Action<Canvas> onLoad = null );
 			public abstract void Unload( Action onUnload = null );
 		}
 
