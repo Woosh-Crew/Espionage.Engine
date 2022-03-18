@@ -7,7 +7,7 @@ namespace Espionage.Engine
 	/// Central point of a map. Holds meta data about the map
 	/// such as Custom NavMeshes, Environment Lighting, etc. 
 	/// </summary>
-	[Library( "env.world" ), Group( "Environment" ), Singleton, Icon( Path = "Assets/Espionage.Engine/Assets/Icons/Entities/env_world.png" )]
+	[Library( "env.world" ), Group( "Environment" ), Singleton]
 	public class World : Entity
 	{
 		// Singleton

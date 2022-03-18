@@ -33,7 +33,7 @@ namespace Espionage.Engine.Editor
 			var required = Library.Database[type.GetGenericArguments()[0]];
 
 			// Check if we actually can add this component
-			if ( !((Component)target).TryGetComponent( required.Class, out _ ) )
+			if ( !((Component)target).TryGetComponent( required.Class, out var comp ) )
 			{
 				EditorUtility.DisplayDialog(
 					$"Missing required Entity ({required.Title})",
@@ -45,6 +45,13 @@ namespace Espionage.Engine.Editor
 
 			// Apply title, if all is good
 			var inherited = required.Title;
+			var obj = Library.Database[comp.GetType()].Title;
+
+			if ( obj != inherited )
+			{
+				inherited += $"   <color=#8a8a8a>[{obj}]</color>";
+			}
+
 			EditorInjection.Titles[target.GetType()] = $"{ClassInfo.Title}  <size=10>- Component for {inherited}</size>";
 		}
 	}

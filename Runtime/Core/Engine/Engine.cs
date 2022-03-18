@@ -102,8 +102,6 @@ namespace Espionage.Engine
 			Scene = SceneManager.CreateScene( "Engine Layer" );
 
 			Game = Library.Database.Create<Game>( target.Class );
-			Game.name = $"[ Game ] {target.Title}";
-			Scene.Grab( Game );
 
 			Callback.Run( "game.ready" );
 

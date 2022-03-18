@@ -10,8 +10,17 @@ namespace Espionage.Engine
 	/// Use this as your "GameManager".
 	/// </summary>
 	[Spawnable, Group( "Engine" )]
-	public abstract partial class Game : Entity
+	public abstract partial class Game : ILibrary
 	{
+		public Library ClassInfo { get; }
+
+		public Game()
+		{
+			// Doesn't go out of scope, no need
+			// to unregister it.
+			ClassInfo = Library.Register( this );
+		}
+
 		public abstract void OnReady();
 		public abstract void OnShutdown();
 

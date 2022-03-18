@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1094,7 +1094,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -1455,6 +1455,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 6588455279810503946, guid: ca60639675ccc2d47a8b0b9407007e52, type: 3}
@@ -1506,6 +1507,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: ca60639675ccc2d47a8b0b9407007e52, type: 3}
 --- !u!1 &714617854 stripped
 GameObject:
@@ -1632,6 +1634,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 1099446398}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 10cecbff1014e314f87b19f497d4c0f0, type: 3}
@@ -1683,6 +1686,7 @@ PrefabInstance:
       value: Error (1)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 10cecbff1014e314f87b19f497d4c0f0, type: 3}
 --- !u!1 &851554888
 GameObject:
@@ -1836,14 +1840,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 909143235}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
+  m_Script: {fileID: 11500000, guid: fdd2ff5114c24f0e8058d1db219f4169, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sharedProfile: {fileID: 11400000, guid: 39030cba0588da446bc5e37287d8f673, type: 2}
-  isGlobal: 1
-  blendDistance: 0
-  weight: 1
-  priority: 0
 --- !u!1 &974377573
 GameObject:
   m_ObjectHideFlags: 0
@@ -2508,7 +2507,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -2854,6 +2853,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 1099446398}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 10cecbff1014e314f87b19f497d4c0f0, type: 3}
@@ -2905,6 +2905,7 @@ PrefabInstance:
       value: Error
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 10cecbff1014e314f87b19f497d4c0f0, type: 3}
 --- !u!1 &1744531775
 GameObject:
