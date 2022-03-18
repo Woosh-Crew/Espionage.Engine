@@ -5,6 +5,7 @@
 	/// for Actors instead of Pawns. Actors Also have Health, Respawning, Inventory
 	/// and other gameplay specific things.
 	/// </summary>
+	[Help( "Actor is designed to be a pawn used in gameplay, AI and Clients control this. AI will look for Actors instead of pawns is well." )]
 	public class Actor : Pawn
 	{
 		public Inventory Inventory => Components.Get<Inventory>();

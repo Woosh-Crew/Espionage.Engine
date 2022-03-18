@@ -13,8 +13,6 @@ namespace Espionage.Engine.Internal
 			gameObject.tag = "MainCamera";
 			Camera = GetComponent<Camera>();
 			Camera.depth = 5;
-
-			Camera.cullingMask = ~LayerMask.GetMask( "Viewmodel" );
 		}
 
 		private Transform _lastViewer;
@@ -56,6 +54,8 @@ namespace Espionage.Engine.Internal
 					meshRenderer.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
 				}
 			}
+
+			Viewmodel.Show( _lastViewer != null );
 		}
 
 		private void OnGUI()

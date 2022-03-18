@@ -1,7 +1,5 @@
 ﻿namespace Espionage.Engine
 {
-	public class Wind : Component<World>
-	{
-		
-	}
+	[Library( "env.wind" )]
+	public class Wind : Component<World> { }
 }

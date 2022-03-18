@@ -15,13 +15,6 @@ namespace Espionage.Engine.Services
 			Engine.Scene.Grab( _camController );
 			_camController.name = "[ Viewport ] Main Camera";
 
-			// Viewmodel
-
-			_viewmodelController = Library.Database.Create<ViewmodelController>();
-
-			Engine.Scene.Grab( _viewmodelController );
-			_viewmodelController.name = "[ Viewport ] Viewmodel Camera";
-
 			// Tell everyone we got cameras
 
 			Engine.Game.OnCameraCreated( _camController.Camera );
@@ -31,7 +24,6 @@ namespace Espionage.Engine.Services
 		// Frame
 
 		private CameraController _camController;
-		private ViewmodelController _viewmodelController;
 
 		private Tripod.Setup _lastSetup = new()
 		{
@@ -45,14 +37,13 @@ namespace Espionage.Engine.Services
 			// Default FOV
 			_lastSetup.FieldOfView = 68;
 			_lastSetup.Viewer = null;
-			_lastSetup.Clipping = new( 0.3f, 700 );
+			_lastSetup.Clipping = new( 0.1f, 700 );
 
 			// Build the camSetup, from game.
 			_lastSetup = Engine.Game.BuildTripod( _lastSetup );
 
 			// Finalise
 			_camController.Finalise( _lastSetup );
-			_viewmodelController.Finalise( _lastSetup );
 		}
 	}
 }

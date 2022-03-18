@@ -1,8 +1,5 @@
-﻿using System;
-using Espionage.Engine.Internal;
-using NUnit.Framework.Internal.Filters;
+﻿using Espionage.Engine.Internal;
 using UnityEditor;
-using UnityEditorInternal;
 using UnityEngine;
 
 namespace Espionage.Engine.Editor
@@ -24,6 +21,11 @@ namespace Espionage.Engine.Editor
 			{
 				DrawPropertiesExcluding( serializedObject, "m_Script" );
 				serializedObject.ApplyModifiedProperties();
+
+				if ( !string.IsNullOrEmpty( ClassInfo.Help ) )
+				{
+					EditorGUILayout.HelpBox( ClassInfo.Help, MessageType.None );
+				}
 			}
 			else
 			{

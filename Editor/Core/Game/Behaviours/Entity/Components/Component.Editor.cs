@@ -9,7 +9,7 @@ namespace Espionage.Engine.Editor
 		protected override void OnEnable()
 		{
 			base.OnEnable();
-			EditorInjection.Titles[target.GetType()] = $"{ClassInfo.Title}  <size=10>- Component</size>";
+			EditorInjection.Titles[target.GetType()] = $"{ClassInfo.Title}  <size=10>-</size> <size=10>Component</size>";
 
 			var type = ClassInfo.Class;
 			var isGeneric = false;
@@ -52,7 +52,7 @@ namespace Espionage.Engine.Editor
 				inherited += $"   <color=#8a8a8a>[{obj}]</color>";
 			}
 
-			EditorInjection.Titles[target.GetType()] = $"{ClassInfo.Title}  <size=10>- Component for {inherited}</size>";
+			EditorInjection.Titles[target.GetType()] = $"{ClassInfo.Title}  <size=10>-</size> <size=10>Component for {inherited}</size>";
 		}
 	}
 }

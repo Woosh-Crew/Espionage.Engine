@@ -61,7 +61,7 @@ namespace Espionage.Engine.Editor
 			GUI.Label( rect, $"Entity  <size=10>[{ClassInfo.Name} / {ClassInfo.Group}]</size>", Styles.Text );
 
 			// Help
-			if ( ClassInfo.Components.TryGet<HelpAttribute>( out var help ) )
+			if ( ClassInfo.Components.TryGet<HelpAttribute>( out var help ) && !string.IsNullOrEmpty( help.URL ) )
 			{
 				var helpRect = originalRect;
 
