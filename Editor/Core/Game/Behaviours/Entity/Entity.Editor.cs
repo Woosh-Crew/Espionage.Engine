@@ -1,5 +1,4 @@
-﻿using System;
-using Espionage.Engine.Internal;
+﻿using Espionage.Engine.Internal;
 using UnityEditor;
 using UnityEngine;
 
@@ -13,6 +12,28 @@ namespace Espionage.Engine.Editor
 		protected override void OnEnable()
 		{
 			base.OnEnable();
+
+			// Check if we're a Singleton, if we are, delete this instance if it already exists
+			if ( ClassInfo.Components.TryGet<SingletonAttribute>( out _ ) )
+			{
+				// Find all objects of Type.
+				var objects = FindObjectsOfType( ClassInfo.Class );
+
+				foreach ( var o in objects )
+				{
+					if ( target != o )
+					{
+						EditorUtility.DisplayDialog(
+							$"Singleton ({ClassInfo.Title}) already exists",
+							$"Can't create Entity {ClassInfo.Title} onto this GameObject. An instance of it already exists else where in the scene",
+							"Okay" );
+
+						DestroyImmediate( target );
+						return;
+					}
+				}
+			}
+
 			EditorInjection.Titles[target.GetType()] = $"{ClassInfo.Title}";
 
 			// Only Entities can have custom icons...
@@ -21,8 +42,6 @@ namespace Espionage.Engine.Editor
 				EditorGUIUtility.SetIconForObject( target, icon.Icon );
 			}
 		}
-
-		private void OnSceneGUI() { }
 
 		public override void OnInspectorGUI()
 		{
