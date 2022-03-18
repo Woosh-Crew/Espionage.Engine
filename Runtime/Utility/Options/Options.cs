@@ -131,6 +131,11 @@ namespace Espionage.Engine
 
 			foreach ( var volume in all )
 			{
+				if ( volume.sharedProfile == null )
+				{
+					continue;
+				}
+
 				AdjustProfile( volume.sharedProfile );
 			}
 		}
