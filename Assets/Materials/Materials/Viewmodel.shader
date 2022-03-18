@@ -135,7 +135,7 @@ Shader "Viewmodel Standard"
         //  Shadow rendering pass
         Pass {
             Name "ShadowCaster"
-            Tags { "LightMode" = "ShadowCaster"  }
+            Tags { "LightMode" = "ShadowCaster" }
 
             ZWrite On ZTest LEqual
 
@@ -158,6 +158,7 @@ Shader "Viewmodel Standard"
             #pragma fragment fragShadowCaster
 
             #include "UnityStandardShadow.cginc"
+            
 
             ENDCG
         }
@@ -166,7 +167,7 @@ Shader "Viewmodel Standard"
         Pass
         {
             Name "DEFERRED"
-            Tags { "LightMode" = "Deferred" "Queue" = "Geometry+2" }
+            Tags { "LightMode" = "Deferred" }
 
             CGPROGRAM
             #pragma target 3.0
@@ -193,7 +194,7 @@ Shader "Viewmodel Standard"
             #pragma fragment fragDeferred
 
             #include "UnityStandardCore.cginc"
-            #include "VIewmodelInclude.cginc"
+
             ENDCG
         }
 

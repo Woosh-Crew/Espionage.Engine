@@ -2,6 +2,7 @@
 using Espionage.Engine.Resources;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
+using Espionage.Engine.Viewmodels;
 
 namespace Espionage.Engine
 {
@@ -160,6 +161,17 @@ namespace Espionage.Engine
 
 			var debug = camera.gameObject.AddComponent<PostProcessDebug>();
 			debug.postProcessLayer = postProcessLayer;
+
+			SetWeaponProjectionMatrix matrixSetter = camera.gameObject.AddComponent<SetWeaponProjectionMatrix>();
+			GameObject viewmodelCameraHolder = new GameObject();
+			viewmodelCameraHolder.name = "Viewmodel Projection Basis Camera (Disabled)";
+			Camera viewmodelCamera = viewmodelCameraHolder.AddComponent<Camera>();
+			viewmodelCamera.transform.SetParent(camera.gameObject.transform);
+			viewmodelCamera.transform.localPosition = Vector3.zero;
+			viewmodelCamera.transform.localRotation = Quaternion.identity;
+			matrixSetter.SourceCam = viewmodelCamera;
+			viewmodelCamera.enabled = false;
+			
 		}
 
 		// Build Controls
