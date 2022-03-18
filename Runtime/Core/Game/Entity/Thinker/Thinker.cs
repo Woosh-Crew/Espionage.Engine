@@ -24,7 +24,7 @@ namespace Espionage.Engine
 			}
 		}
 
-		internal void Think()
+		internal void Run()
 		{
 			if ( _groups == null )
 			{

@@ -47,7 +47,6 @@ namespace Espionage.Engine
 		[RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.BeforeSplashScreen )]
 		private static void Initialize_RuntimeSplashScreen()
 		{
-			Dev.Initialize();
 			Library.Initialize();
 		}
 
@@ -82,7 +81,6 @@ namespace Espionage.Engine
 		[InitializeOnLoadMethod]
 		private static void Initialize_Editor()
 		{
-			Dev.Initialize();
 			Library.Initialize();
 		}
 

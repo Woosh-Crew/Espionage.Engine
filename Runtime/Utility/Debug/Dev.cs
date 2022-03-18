@@ -38,8 +38,6 @@ namespace Espionage.Engine
 		/// </summary>
 		public static IDebugOverlayProvider Overlay { get; set; }
 
-		// Stopwatch
-
 		/// <summary>
 		/// Runs a stopwatch on a IDisposable Scope. Use this in a using() expression
 		/// to record how long it took to execute that code block.
@@ -51,22 +49,9 @@ namespace Espionage.Engine
 			return ReportStopwatch || alwaysReport ? new TimedScope( message ) : null;
 		}
 
-		//
-		// Initialize
-		//
-
-		private static bool Initialized { get; set; }
-
-		internal static void Initialize()
+		static Dev()
 		{
-			if ( Initialized )
-			{
-				return;
-			}
-
-			Initialized = true;
-
-			using var _ = Stopwatch( "Dev Layer Initialized" );
+			using var _ = Stopwatch( "Dev Initialized" );
 
 			Log = new SimpleLoggingProvider();
 			Terminal = new SimpleCommandProvider();
