@@ -73,6 +73,8 @@ namespace Espionage.Engine
 				return;
 			}
 
+			SetMatrix( setup.Camera );
+
 			var trans = transform;
 			trans.localPosition = setup.Position;
 			trans.localRotation = setup.Rotation;
@@ -82,6 +84,21 @@ namespace Espionage.Engine
 				effect.PostCameraSetup( ref setup );
 			}
 		}
+
+		// Projection Matrix
+
+		private void SetMatrix( in Camera camera )
+		{
+			var matrix = Matrix4x4.Perspective( fieldOfView, camera.aspect, clipping.x, clipping.y );
+			var view = camera.transform.worldToLocalMatrix;
+
+			Shader.SetGlobalMatrix( "_PrevCustomVP", matrix * view );
+			Shader.SetGlobalMatrix( "_CustomProjMatrix", GL.GetGPUProjectionMatrix( matrix, false ) );
+		}
+
+		//
+		// Classes
+		// 
 
 		/// <summary>
 		/// Viewmodel Modifiers are components that get attached to
@@ -139,6 +156,12 @@ namespace Espionage.Engine
 		}
 
 		// Fields
+
+		[SerializeField]
+		private Vector2 clipping = new( 0.05f, 10 );
+
+		[SerializeField]
+		private float fieldOfView = 62;
 
 		[SerializeField]
 		private bool castShadows;
