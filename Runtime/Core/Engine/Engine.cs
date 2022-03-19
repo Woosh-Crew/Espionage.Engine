@@ -20,7 +20,7 @@ namespace Espionage.Engine
 		/// <summary>
 		/// The Current Game that is in Session, this will
 		/// be automatically created when the game launches, and
-		/// will be based off the game you exported from
+		/// will be based off the game you exported from	
 		/// the packager.
 		/// </summary>
 		public static Game Game { get; private set; }
