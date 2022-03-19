@@ -193,7 +193,7 @@ Shader "Viewmodel Standard"
             #pragma fragment fragDeferred
 
             #include "UnityStandardCore.cginc"
-            #include "VIewmodelInclude.cginc"
+            #include "ViewmodelInclude.cginc"
             ENDCG
         }
 

@@ -272,7 +272,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 5ff47c7732752454292e79db48631221, type: 2}
+  - {fileID: 2100000, guid: 2970e696c323ea44ab3bd213a299723b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -460,7 +460,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   castShadows: 0
-  receiveShadows: 0
+  receiveShadows: 1
 --- !u!4 &105412608
 Transform:
   m_ObjectHideFlags: 0
@@ -2344,7 +2344,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 5ff47c7732752454292e79db48631221, type: 2}
+  - {fileID: 2100000, guid: 2970e696c323ea44ab3bd213a299723b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
