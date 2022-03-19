@@ -459,8 +459,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdb7c0fbbf769074cb4b3f635b989b48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  castShadows: 1
-  receiveShadows: 1
+  castShadows: 0
+  receiveShadows: 0
 --- !u!4 &105412608
 Transform:
   m_ObjectHideFlags: 0

@@ -69,8 +69,17 @@ namespace Espionage.Engine
 			/// <summary> Clipping Planes, X = Near, Y = Far </summary>
 			public Vector2 Clipping;
 
+			/// <summary> The current parameters for viewmodels </summary>
+			public Viewmodels Viewmodel;
+
 			/// <summary> The camera rendering this tripod </summary>
 			public Camera Camera { get; internal set; }
+
+			public struct Viewmodels
+			{
+				public float FieldOfView;
+				public Vector2 Clipping;
+			}
 		}
 
 		/// <summary>

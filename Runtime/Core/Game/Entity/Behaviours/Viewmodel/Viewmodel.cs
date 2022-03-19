@@ -14,6 +14,8 @@ namespace Espionage.Engine
 	{
 		public static void Apply( ref Tripod.Setup setup )
 		{
+			SetMatrix( setup );
+
 			// Build Viewmodels...
 			foreach ( var viewmodel in All.OfType<Viewmodel>() )
 			{
@@ -41,8 +43,6 @@ namespace Espionage.Engine
 
 		// Instance
 
-		public Animator Animator { get; private set; }
-
 		protected override void OnAwake()
 		{
 			foreach ( var render in GetComponentsInChildren<Renderer>() )
@@ -50,15 +50,12 @@ namespace Espionage.Engine
 				render.shadowCastingMode = castShadows ? ShadowCastingMode.On : ShadowCastingMode.Off;
 				render.receiveShadows = receiveShadows;
 				render.gameObject.layer = LayerMask.NameToLayer( "Viewmodel" );
-			}
 
-			if ( TryGetComponent( out Animator animator ) )
-			{
-				Animator = animator;
-			}
-			else
-			{
-				Dev.Log.Warning( $"No Animator found on Viewmodel, {name}" );
+				// Assign Correct Viewmodel Shader
+				foreach ( var mat in render.materials )
+				{
+					mat.shader = Shader.Find( "Viewmodel Standard" );
+				}
 			}
 
 			Enabled = Showing;
@@ -73,8 +70,6 @@ namespace Espionage.Engine
 				return;
 			}
 
-			SetMatrix( setup.Camera );
-
 			var trans = transform;
 			trans.localPosition = setup.Position;
 			trans.localRotation = setup.Rotation;
@@ -87,10 +82,12 @@ namespace Espionage.Engine
 
 		// Projection Matrix
 
-		private void SetMatrix( in Camera camera )
+		private static void SetMatrix( Tripod.Setup setup )
 		{
-			var matrix = Matrix4x4.Perspective( fieldOfView, camera.aspect, clipping.x, clipping.y );
-			var view = camera.transform.worldToLocalMatrix;
+			var viewmodel = setup.Viewmodel;
+
+			var matrix = Matrix4x4.Perspective( viewmodel.FieldOfView, setup.Camera.aspect, viewmodel.Clipping.x, viewmodel.Clipping.y );
+			var view = setup.Camera.transform.worldToLocalMatrix;
 
 			Shader.SetGlobalMatrix( "_PrevCustomVP", matrix * view );
 			Shader.SetGlobalMatrix( "_CustomProjMatrix", GL.GetGPUProjectionMatrix( matrix, false ) );
@@ -156,12 +153,6 @@ namespace Espionage.Engine
 		}
 
 		// Fields
-
-		[SerializeField]
-		private Vector2 clipping = new( 0.05f, 10 );
-
-		[SerializeField]
-		private float fieldOfView = 62;
 
 		[SerializeField]
 		private bool castShadows;

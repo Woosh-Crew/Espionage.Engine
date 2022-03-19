@@ -29,7 +29,8 @@ namespace Espionage.Engine.Services
 		{
 			Rotation = Quaternion.identity,
 			FieldOfView = 60,
-			Position = Vector3.zero
+			Position = Vector3.zero,
+			Viewmodel = new() { FieldOfView = 60, Clipping = new( 0.05f, 10 ) }
 		};
 
 		public override void OnPostUpdate()
