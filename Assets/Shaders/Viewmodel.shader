@@ -1,6 +1,6 @@
 // Unity built-in shader source. Copyright (c) 2016 Unity Technologies. MIT license (see license.txt)
 
-Shader "Standard Viewmodel"
+Shader "Viewmodel Standard"
 {
     Properties
     {
@@ -53,18 +53,10 @@ Shader "Standard Viewmodel"
 
     SubShader
     {
-        Tags { "RenderType"="Opaque" "PerformanceChecks"="False" "Queue"="Geometry+2"   }
+        Tags { "RenderType"="Opaque" "PerformanceChecks"="False" }
         LOD 300
 
-        Pass
-        {
-            // Write Z buffer information after all other geometry, so that the Z buffer contains informations that will allow the Z ignoring objects to be written on top of the world
-            Tags{ "Queue" = "Geometry+1" }
 
-            ColorMask 0
-            ZTest Always
-            ZWrite On
-        }
         // ------------------------------------------------------------------
         //  Base forward pass (directional light, emission, lightmaps, ...)
         Pass
@@ -95,6 +87,7 @@ Shader "Standard Viewmodel"
             #pragma multi_compile_instancing
             // Uncomment the following line to enable dithering LOD crossfade. Note: there are more in the file to uncomment for other passes.
             //#pragma multi_compile _ LOD_FADE_CROSSFADE
+
 
             #pragma vertex vertBase
             #pragma fragment fragBase
@@ -138,12 +131,11 @@ Shader "Standard Viewmodel"
 
             ENDCG
         }
-        
         // ------------------------------------------------------------------
         //  Shadow rendering pass
         Pass {
             Name "ShadowCaster"
-            Tags { "LightMode" = "ShadowCaster" }
+            Tags { "LightMode" = "ShadowCaster"  }
 
             ZWrite On ZTest LEqual
 
@@ -169,7 +161,6 @@ Shader "Standard Viewmodel"
 
             ENDCG
         }
-        
         // ------------------------------------------------------------------
         //  Deferred pass
         Pass
@@ -177,13 +168,11 @@ Shader "Standard Viewmodel"
             Name "DEFERRED"
             Tags { "LightMode" = "Deferred" "Queue" = "Geometry+2" }
 
-            ZTest Always
-            ZWrite On
             CGPROGRAM
             #pragma target 3.0
             #pragma exclude_renderers nomrt
 
-            
+
             // -------------------------------------
 
             #pragma shader_feature_local _NORMALMAP
@@ -204,10 +193,10 @@ Shader "Standard Viewmodel"
             #pragma fragment fragDeferred
 
             #include "UnityStandardCore.cginc"
-
+            #include "ViewmodelInclude.cginc"
             ENDCG
         }
-        
+
         // ------------------------------------------------------------------
         // Extracts information for lightmapping, GI (emission, albedo, ...)
         // This pass it not used during regular rendering.
@@ -235,7 +224,7 @@ Shader "Standard Viewmodel"
 
     SubShader
     {
-        Tags { "RenderType"="Opaque" "PerformanceChecks"="False" "Queue"="Geometry+2"  }
+        Tags { "RenderType"="Opaque" "PerformanceChecks"="False" }
         LOD 150
 
         // ------------------------------------------------------------------
@@ -304,7 +293,6 @@ Shader "Standard Viewmodel"
 
             ENDCG
         }
-        
         // ------------------------------------------------------------------
         //  Shadow rendering pass
         Pass {
@@ -353,11 +341,9 @@ Shader "Standard Viewmodel"
             #include "UnityStandardMeta.cginc"
             ENDCG
         }
-
-        
     }
 
 
-    //FallBack "VertexLit"
+    FallBack "VertexLit"
     CustomEditor "StandardShaderGUI"
 }

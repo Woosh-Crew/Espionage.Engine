@@ -29,7 +29,8 @@ namespace Espionage.Engine.Services
 		{
 			Rotation = Quaternion.identity,
 			FieldOfView = 60,
-			Position = Vector3.zero
+			Position = Vector3.zero,
+			Viewmodel = new() { FieldOfView = 60, Clipping = new( 0.16f, 10 ) }
 		};
 
 		public override void OnPostUpdate()
@@ -38,6 +39,7 @@ namespace Espionage.Engine.Services
 			_lastSetup.FieldOfView = 68;
 			_lastSetup.Viewer = null;
 			_lastSetup.Clipping = new( 0.1f, 700 );
+			_lastSetup.Camera = _camController.Camera;
 
 			// Build the camSetup, from game.
 			_lastSetup = Engine.Game.BuildTripod( _lastSetup );
