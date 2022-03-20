@@ -47,16 +47,43 @@ namespace Espionage.Engine
 	/// </summary>
 	public abstract class Component : Behaviour, IComponent<Entity>
 	{
-		/// <summary> The Entity this Component is attached too. </summary>
-		public Entity Entity { get; private set; }
+		// Sealed
 
-		protected override void OnReady()
+		internal void Ready()
+		{
+			OnReady();
+		}
+
+		internal override void Start()
 		{
 			if ( Entity == null )
 			{
 				Dev.Log.Error( "No Entity found on component" );
 			}
 		}
+
+		protected sealed override void OnAwake()
+		{
+			base.OnAwake();
+		}
+
+		protected sealed override void OnDelete()
+		{
+			if ( Entity == null || Entity.Components == null )
+			{
+				OnDetached();
+			}
+			else
+			{
+				Entity.Components?.Remove( this );
+			}
+
+		}
+
+		// Component
+
+		/// <summary> The Entity this Component is attached too. </summary>
+		public Entity Entity { get; private set; }
 
 		/// <summary>
 		/// What should we do when this component
@@ -74,19 +101,6 @@ namespace Espionage.Engine
 		public virtual void OnDetached()
 		{
 			Entity = null;
-		}
-
-		protected sealed override void OnDelete()
-		{
-			if ( Entity == null || Entity.Components == null )
-			{
-				OnDetached();
-			}
-			else
-			{
-				Entity.Components?.Remove( this );
-			}
-
 		}
 
 		/// <summary>

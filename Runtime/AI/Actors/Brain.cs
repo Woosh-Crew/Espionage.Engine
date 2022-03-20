@@ -1,15 +1,15 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 using UnityEngine.AI;
-using AI = Espionage.Engine.AI;
 
 namespace Espionage.Engine.AI
 {
 	[Group( "AI" ), Title( "AI Brain" )]
-	public class Brain : Component<Actor>, Pawn.ICallbacks
+	public class Brain : Component<Actor>, Pawn.ICallbacks, Actor.ICallbacks
 	{
 		protected override void OnAttached( Actor actor )
 		{
-			base.OnAwake();
+			OnAwake();
 
 			if ( !TryGetComponent( out _agent ) )
 			{
@@ -17,6 +17,12 @@ namespace Espionage.Engine.AI
 			}
 
 			Entity.Thinking.Add( Think, 0.2f );
+		}
+
+		protected override void OnReady()
+		{
+			// Cache Sensors			
+			Senses = Entity.Components.GetAll<Sense>().ToArray();
 		}
 
 		public void Think()
@@ -29,17 +35,31 @@ namespace Espionage.Engine.AI
 			Entity.Tick = 0.2f;
 		}
 
-		//
-		// Possession
-		//
+		// Senses
 
-		public void Possess( Client client )
+		public Sense[] Senses { get; private set; }
+
+		// Actor Health
+
+		public void Respawn()
+		{
+			// We, don't care if this pawn respawns
+			// Cause it gets destroyed when it dies.
+		}
+
+		public bool OnDamaged( ref IDamageable.Info info ) { return true; }
+
+		public void OnKilled( IDamageable.Info info ) { }
+
+		// Pawn Possession
+
+		void Pawn.ICallbacks.Possess( Client client )
 		{
 			_agent.enabled = false;
 			Entity.Thinking.Remove( Think );
 		}
 
-		public void UnPossess()
+		void Pawn.ICallbacks.UnPossess()
 		{
 			_agent.enabled = true;
 			Entity.Thinking.Add( Think, 0.2f );

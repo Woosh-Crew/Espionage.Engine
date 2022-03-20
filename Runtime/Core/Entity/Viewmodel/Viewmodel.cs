@@ -29,6 +29,8 @@ namespace Espionage.Engine
 			Effect.Apply( ref setup );
 		}
 
+		private static bool Showing { get; set; }
+
 		public static void Show( bool value )
 		{
 			Showing = value;
@@ -39,7 +41,18 @@ namespace Espionage.Engine
 			}
 		}
 
-		private static bool Showing { get; set; }
+		// Projection Matrix
+
+		private static void SetMatrix( Tripod.Setup setup )
+		{
+			var viewmodel = setup.Viewmodel;
+
+			var matrix = Matrix4x4.Perspective( viewmodel.FieldOfView, setup.Camera.aspect, viewmodel.Clipping.x, viewmodel.Clipping.y );
+			var view = setup.Camera.transform.worldToLocalMatrix;
+
+			Shader.SetGlobalMatrix( "_PrevCustomVP", matrix * view );
+			Shader.SetGlobalMatrix( "_CustomProjMatrix", GL.GetGPUProjectionMatrix( matrix, false ) );
+		}
 
 		// Instance
 
@@ -78,19 +91,6 @@ namespace Espionage.Engine
 			{
 				effect.PostCameraSetup( ref setup );
 			}
-		}
-
-		// Projection Matrix
-
-		private static void SetMatrix( Tripod.Setup setup )
-		{
-			var viewmodel = setup.Viewmodel;
-
-			var matrix = Matrix4x4.Perspective( viewmodel.FieldOfView, setup.Camera.aspect, viewmodel.Clipping.x, viewmodel.Clipping.y );
-			var view = setup.Camera.transform.worldToLocalMatrix;
-
-			Shader.SetGlobalMatrix( "_PrevCustomVP", matrix * view );
-			Shader.SetGlobalMatrix( "_CustomProjMatrix", GL.GetGPUProjectionMatrix( matrix, false ) );
 		}
 
 		//

@@ -126,6 +126,8 @@ namespace Espionage.Engine
 		/// </summary>
 		protected virtual void PostCameraSetup( ref Tripod.Setup camSetup )
 		{
+			camSetup.Viewmodel.FieldOfView = camSetup.FieldOfView;
+
 			if ( Local.Pawn != null )
 			{
 				Local.Pawn.PostCameraSetup( ref camSetup );

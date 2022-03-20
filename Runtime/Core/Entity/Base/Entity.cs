@@ -43,6 +43,12 @@ namespace Espionage.Engine
 				Components.Add( item );
 			}
 
+			// Stupid? yes.
+			foreach ( var item in Components.GetAll<Component>() )
+			{
+				item.Ready();
+			}
+
 			Components.OnAdded += OnComponentAdded;
 			Components.OnRemove += OnComponentRemoved;
 		}

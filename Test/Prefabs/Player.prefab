@@ -45,8 +45,11 @@ GameObject:
   - component: {fileID: 1018398870550434286}
   - component: {fileID: 6257697963679273195}
   - component: {fileID: 7118727389276054331}
+  - component: {fileID: 3191258976054525598}
   - component: {fileID: -5532259837855969405}
   - component: {fileID: 8571425568235216450}
+  - component: {fileID: 8213110094436585677}
+  - component: {fileID: 7229246937776732865}
   m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
@@ -120,6 +123,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a7979bcfdcb4fb3b70d2bb5bfc12992, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3191258976054525598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6588455279810503946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 028b85bc1b9040dfbbdb08d319c6476f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tripods:
+  - {fileID: -5532259837855969405}
+  - {fileID: 8213110094436585677}
 --- !u!114 &-5532259837855969405
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -147,6 +165,43 @@ MonoBehaviour:
   eyeHeight: 1.65
   walkSpeed: 7
   sprintSpeed: 12
+--- !u!114 &8213110094436585677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6588455279810503946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7414e0ccf69245d18b124bd21a57c292, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  offset: {x: 0, y: 0}
+  smoothing: 20
+  distance: 5
+  padding: 0.1
+  minDistance: 1
+  maxDistance: 15
+  damping: 15
+--- !u!143 &7229246937776732865
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6588455279810503946}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Height: 1.8
+  m_Radius: 0.35
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0.9, z: 0}
 --- !u!1001 &9200157310600105531
 PrefabInstance:
   m_ObjectHideFlags: 0
