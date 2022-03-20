@@ -133,7 +133,11 @@ namespace Espionage.Engine
 				Local.Pawn.PostCameraSetup( ref camSetup );
 			}
 
+			// First Person
 			Viewmodel.Apply( ref camSetup );
+			Viewlegs.Apply( ref camSetup );
+
+			// Camera Effects
 			Tripod.Effect.Apply( ref camSetup );
 		}
 

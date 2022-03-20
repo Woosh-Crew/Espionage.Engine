@@ -30,6 +30,7 @@ namespace Espionage.Engine.Tripods
 
 		// Fields
 
+		[SerializeField]
 		private float neckLength = 0.5f;
 	}
 }
