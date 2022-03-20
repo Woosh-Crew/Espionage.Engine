@@ -66,7 +66,7 @@ namespace Espionage.Engine
 			// Fields
 
 			[SerializeField]
-			private float eyeHeight = 1.65f;
+			protected float eyeHeight = 1.65f;
 		}
 	}
 }
