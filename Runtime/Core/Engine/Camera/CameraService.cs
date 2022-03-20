@@ -5,8 +5,10 @@ using UnityEngine;
 namespace Espionage.Engine.Services
 {
 	[Order( -5 )]
-	internal class CameraService : Service
+	public class CameraService : Service
 	{
+		public Camera Camera => _camController.Camera;
+
 		public override void OnReady()
 		{
 			// Main Camera

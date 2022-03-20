@@ -20,6 +20,8 @@ namespace Espionage.Engine.Services
 					{
 						Add( Library.Database.Create<IService>( service.Class ) );
 					}
+
+					_services = _services.OrderBy( e => e.ClassInfo.Components.Get<OrderAttribute>()?.Order ?? -5 ).ToList();
 				}
 			}
 
