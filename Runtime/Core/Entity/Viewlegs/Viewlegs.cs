@@ -48,7 +48,7 @@ namespace Espionage.Engine
 		{
 			// Basically if the current tripod is not the 
 			// Pawns one, don't move...
-			if ( Local.Client.Tripod != null || Local.Pawn == null)
+			if ( Local.Client.Tripod != null || Local.Pawn == null )
 			{
 				return;
 			}
@@ -58,6 +58,7 @@ namespace Espionage.Engine
 			var trans = transform;
 			trans.localPosition = pawn.Position;
 			trans.localRotation = pawn.Rotation;
+			trans.localScale = pawn.Scale;
 		}
 
 		// Fields

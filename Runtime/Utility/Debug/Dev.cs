@@ -51,8 +51,6 @@ namespace Espionage.Engine
 
 		static Dev()
 		{
-			using var _ = Stopwatch( "Dev Initialized" );
-
 			Log = new SimpleLoggingProvider();
 			Terminal = new SimpleCommandProvider();
 		}

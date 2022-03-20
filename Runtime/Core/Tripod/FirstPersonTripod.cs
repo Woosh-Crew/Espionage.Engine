@@ -25,7 +25,7 @@ namespace Espionage.Engine.Tripods
 			camSetup.Position = Local.Pawn.EyePos;
 
 			var pitch = camSetup.Rotation.Pitch() - (camSetup.Rotation.Pitch() > 270 ? 360 : 0);
-			camSetup.Position += Local.Pawn.Rotation * Vector3.forward * pitch.Remap( -90, 90, -neckLength, neckLength );
+			camSetup.Position += Local.Pawn.Rotation * Vector3.forward * pitch.Remap( -90, 90, -neckLength * Local.Pawn.Scale.magnitude, neckLength * Local.Pawn.Scale.magnitude );
 		}
 
 		// Fields

@@ -27,8 +27,9 @@ namespace Espionage.Engine
 			var input = new Vector2( Client.Input.Horizontal, Client.Input.Forward );
 			input = input.normalized;
 
-			var wishDirection = Rotation * (Vector3.right * input.x + Vector3.forward * input.y) * Time.deltaTime;
+			var wishDirection = Rotation * (Vector3.right * input.x + Vector3.forward * input.y);
 			wishDirection *= Speed();
+			wishDirection *= Time.deltaTime;
 
 			_dampedWishDir = _dampedWishDir.LerpTo( wishDirection, 12 * Time.deltaTime );
 
