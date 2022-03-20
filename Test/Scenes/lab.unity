@@ -331,7 +331,6 @@ GameObject:
   - component: {fileID: 105412610}
   - component: {fileID: 105412609}
   - component: {fileID: 105412611}
-  - component: {fileID: 105412612}
   m_Layer: 0
   m_Name: Viewmodel
   m_TagString: Untagged
@@ -422,23 +421,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damping: 6
   muzzle: {fileID: 661008231}
---- !u!114 &105412612
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 105412605}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0c6378425b1411a8040bc75b62da428, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  autoCenter: 1
-  returnSpeed: 2
-  damping: 8
-  multiplier: 1
-  deadzone: {x: 8, y: 8}
 --- !u!1 &177163646
 GameObject:
   m_ObjectHideFlags: 0

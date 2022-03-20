@@ -135,7 +135,6 @@ namespace Espionage.Engine
 
 			// First Person
 			Viewmodel.Apply( ref camSetup );
-			Viewlegs.Apply( ref camSetup );
 
 			// Camera Effects
 			Tripod.Effect.Apply( ref camSetup );

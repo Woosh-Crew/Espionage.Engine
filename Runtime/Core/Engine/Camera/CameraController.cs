@@ -56,7 +56,6 @@ namespace Espionage.Engine.Internal
 			}
 
 			Viewmodel.Show( _lastViewer != null );
-			Viewlegs.Show( _lastViewer != null );
 		}
 
 		private void OnGUI()

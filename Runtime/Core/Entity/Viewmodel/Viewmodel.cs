@@ -26,6 +26,7 @@ namespace Espionage.Engine
 			}
 
 			// Explosions, Landing, etc
+			Viewlegs.Apply( ref setup );
 			Effect.Apply( ref setup );
 		}
 
@@ -33,6 +34,8 @@ namespace Espionage.Engine
 
 		public static void Show( bool value )
 		{
+			Viewlegs.Show( value );
+
 			Showing = value;
 
 			foreach ( var viewmodel in All.OfType<Viewmodel>() )
