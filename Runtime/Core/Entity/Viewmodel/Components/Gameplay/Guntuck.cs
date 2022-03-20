@@ -8,20 +8,22 @@ namespace Espionage.Engine.Viewmodels
 
 		public override void PostCameraSetup( ref Tripod.Setup setup )
 		{
-			var distance = Vector3.Distance( end.position, setup.Position );
-			var start = end.position + end.rotation * Vector3.back * distance;
+			var distance = Vector3.Distance( muzzle.position, setup.Position );
+			var start = muzzle.position + muzzle.rotation * Vector3.back * distance;
 
-			var hit = Physics.Raycast( new( start, end.rotation * Vector3.forward ), out var info, distance, ~LayerMask.GetMask( "Viewmodel", "Pawn" ) );
+			var hit = Physics.Raycast( new( start, muzzle.rotation * Vector3.forward ), out var info, distance, ~LayerMask.GetMask( "Viewmodel", "Pawn" ) );
 
-			_dampedOffset = _dampedOffset.LerpTo( -(hit ? info.distance - distance : 0), 8 * Time.deltaTime );
+			_dampedOffset = _dampedOffset.LerpTo( -(hit ? info.distance - distance : 0), damping * Time.deltaTime );
 
 			transform.position += setup.Rotation * new Vector3( 0, -_dampedOffset / 2, -_dampedOffset );
-
 		}
 
 		// Fields 
 
 		[SerializeField]
-		private Transform end;
+		private float damping = 8;
+
+		[SerializeField]
+		private Transform muzzle;
 	}
 }
