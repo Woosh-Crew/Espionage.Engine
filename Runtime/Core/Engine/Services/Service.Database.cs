@@ -33,7 +33,10 @@ namespace Espionage.Engine.Services
 			{
 				foreach ( var service in _services )
 				{
-					service.OnReady();
+					using ( Dev.Stopwatch( $"Initializing {service.ClassInfo.Title}" ) )
+					{
+						service.OnReady();
+					}
 				}
 			}
 

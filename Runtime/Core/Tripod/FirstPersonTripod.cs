@@ -28,6 +28,16 @@ namespace Espionage.Engine.Tripods
 			camSetup.Position += Local.Pawn.Rotation * Vector3.forward * pitch.Remap( -90, 90, -neckLength * Local.Pawn.Scale.magnitude, neckLength * Local.Pawn.Scale.magnitude );
 		}
 
+		protected override void OnBuildControls( Controls.Setup setup )
+		{
+			// Only rotate if the cursor is locked.
+
+			if ( setup.Cursor.Locked )
+			{
+				base.OnBuildControls( setup );
+			}
+		}
+
 		// Fields
 
 		[SerializeField]
