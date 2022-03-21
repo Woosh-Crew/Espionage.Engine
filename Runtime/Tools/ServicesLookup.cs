@@ -11,7 +11,11 @@ namespace Espionage.Engine.Tools
 			{
 				foreach ( var service in Engine.Services.All )
 				{
-					ImGui.Text( $"{service.ClassInfo.Title}" );
+					if ( ImGui.Selectable( $"{service.ClassInfo.Title}" ) )
+					{
+						Service.Selection = service;
+					}
+
 					ImGui.TextColored( Color.gray, $"ClassInfo: [{service.ClassInfo.Name}] - [{service.ClassInfo.Group}]" );
 					ImGui.TextColored( Color.gray, $"Stopwatch: [Ready = {service.Time}ms]" );
 					ImGui.Separator();

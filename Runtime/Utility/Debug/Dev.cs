@@ -1,9 +1,7 @@
 using System;
 using System.Diagnostics;
-using System.Linq;
 using Espionage.Engine.Logging;
 using Espionage.Engine.Internal.Commands;
-using Espionage.Engine.Internal.Overlay;
 using UnityEngine;
 
 namespace Espionage.Engine
@@ -31,12 +29,6 @@ namespace Espionage.Engine
 		/// since this is an instanced class.
 		/// </summary>
 		public static ILoggingProvider Log { get; set; }
-
-		/// <summary>
-		/// Draw Debug Overlays on the Viewport, such as spheres, cubes, etc.
-		/// Very useful for debugging volumes and collisions.
-		/// </summary>
-		public static IDebugOverlayProvider Overlay { get; set; }
 
 		/// <summary>
 		/// Runs a stopwatch on a IDisposable Scope. Use this in a using() expression
@@ -92,13 +84,6 @@ namespace Espionage.Engine
 		private static string Language => Application.systemLanguage.ToString();
 
 		// Debug
-
-		[Terminal, Property( "dev.overlay" )]
-		private static bool ShowOverlays
-		{
-			get => Overlay.Show;
-			set => Overlay.Show = value;
-		}
 
 		[Terminal, Property( "dev.report_stopwatch", true )]
 		private static bool ReportStopwatch { get; set; } = true;
