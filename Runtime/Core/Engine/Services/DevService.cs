@@ -1,4 +1,6 @@
-﻿using ImGuiNET;
+﻿using System.Linq;
+using ImGuiNET;
+using UnityEditor;
 using UnityEngine;
 
 namespace Espionage.Engine.Services
@@ -43,16 +45,7 @@ namespace Espionage.Engine.Services
 
 			if ( ImGui.BeginMainMenuBar() )
 			{
-				if ( ImGui.BeginMenu( "Files" ) )
-				{
-					ImGui.MenuItem( "Main menu bar" );
-					ImGui.EndMenu();
-				}
-
-				if ( ImGui.BeginMenu( "Maps" ) )
-				{
-					ImGui.EndMenu();
-				}
+				Callback.Run( "dev.menu_bar" );
 
 				ImGui.EndMainMenuBar();
 			}

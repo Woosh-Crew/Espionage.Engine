@@ -1,4 +1,5 @@
 ﻿using Espionage.Engine.Services;
+using ImGuiNET;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 
@@ -7,21 +8,49 @@ namespace Espionage.Engine.PostProcessing
 	[Title( "Post Processing" )]
 	public class PostFXService : Service
 	{
+		private PostProcessDebug _debug;
+		private PostProcessLayer _layer;
+
 		public override void OnReady()
 		{
 			// Get the Main Camera
 			var camera = Engine.Services.Get<CameraService>().Camera;
 
 			// Setup Post Processing
-			var postProcessLayer = camera.gameObject.AddComponent<PostProcessLayer>();
-			postProcessLayer.Init( UnityEngine.Resources.Load<PostProcessResources>( "PostProcessResources" ) );
+			_layer = camera.gameObject.AddComponent<PostProcessLayer>();
+			_layer.Init( UnityEngine.Resources.Load<PostProcessResources>( "PostProcessResources" ) );
 
-			postProcessLayer.volumeTrigger = camera.transform;
-			postProcessLayer.volumeLayer = LayerMask.GetMask( "TransparentFX", "Water" );
-			postProcessLayer.antialiasingMode = PostProcessLayer.Antialiasing.SubpixelMorphologicalAntialiasing;
+			_layer.volumeTrigger = camera.transform;
+			_layer.volumeLayer = LayerMask.GetMask( "TransparentFX", "Water" );
+			_layer.antialiasingMode = PostProcessLayer.Antialiasing.SubpixelMorphologicalAntialiasing;
 
-			var debug = camera.gameObject.AddComponent<PostProcessDebug>();
-			debug.postProcessLayer = postProcessLayer;
+			_debug = camera.gameObject.AddComponent<PostProcessDebug>();
+			_debug.postProcessLayer = _layer;
+		}
+
+		[Function, Callback( "dev.menu_bar" )]
+		private void MenuBar()
+		{
+			// Post Processing Debug Overlays
+			if ( ImGui.BeginMenu( "Overlays" ) )
+			{
+				Item( "None", DebugOverlay.None );
+				Item( "Depth", DebugOverlay.Depth );
+				Item( "Normals", DebugOverlay.Normals );
+				Item( "Ambient Occlusion", DebugOverlay.AmbientOcclusion );
+				Item( "Depth Of Field", DebugOverlay.DepthOfField );
+				Item( "Bloom Threshold", DebugOverlay.BloomThreshold );
+				Item( "Bloom Buffer", DebugOverlay.BloomBuffer );
+				ImGui.EndMenu();
+			}
+		}
+
+		private void Item( string name, DebugOverlay overlay )
+		{
+			if ( ImGui.MenuItem( name, null, _debug.debugOverlay == overlay ) )
+			{
+				_debug.debugOverlay = _debug.debugOverlay == overlay ? DebugOverlay.None : overlay;
+			}
 		}
 
 		// Options
@@ -68,7 +97,7 @@ namespace Espionage.Engine.PostProcessing
 
 		// Assigning
 
-		[Function( "postfx.apply" ), Terminal,Callback( "map.loaded" ), Callback( "cookies.saved" )]
+		[Function( "postfx.apply" ), Terminal, Callback( "map.loaded" ), Callback( "cookies.saved" )]
 		private static void SetPostFX()
 		{
 			// We don't need to set shit if its quiting
