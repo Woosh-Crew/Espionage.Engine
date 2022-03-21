@@ -1,13 +1,10 @@
 ﻿using UnityEngine;
-using UnityEngine.Rendering.PostProcessing;
 
 namespace Espionage.Engine
 {
 	[Library, Group( "Preferences" )]
 	public static class Options
 	{
-		// Default Options
-
 		// Controls
 
 		[Option, Terminal, Property( "controls.ms_sensitivity", 1.5f ), Title( "Mouse Sensitivity" ), Group( "Controls" )]
