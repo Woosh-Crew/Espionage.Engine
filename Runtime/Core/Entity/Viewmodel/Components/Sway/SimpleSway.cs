@@ -1,4 +1,3 @@
-using Espionage.Engine.Tripods;
 using UnityEngine;
 
 namespace Espionage.Engine.Viewmodels

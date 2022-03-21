@@ -30,8 +30,8 @@ namespace Espionage.Engine
 		// Pawn
 		//
 
-		public Vector3 EyePos { get; internal set; }
-		public Quaternion EyeRot { get; internal set; }
+		[Property] public Vector3 EyePos { get; internal set; }
+		[Property] public Quaternion EyeRot { get; internal set; }
 
 		public virtual void Posses( Client client )
 		{
@@ -67,19 +67,19 @@ namespace Espionage.Engine
 		/// The controller that is currently being used
 		/// for controlling this pawn.
 		/// </summary>
-		public Controller PawnController { get; set; }
+		[Property] public Controller PawnController { get; set; }
 
 		/// <summary>
 		/// This controller will override the normal controller.
 		/// Is used for dev shit like no-clip.
 		/// </summary>
-		public Controller DevController { get; set; }
+		[Property] public Controller DevController { get; set; }
 
 		//
 		// Camera
 		//
 
-		public ITripod Tripod { get; set; }
+		[Property] public ITripod Tripod { get; set; }
 
 		public virtual void PostCameraSetup( ref Tripod.Setup setup )
 		{

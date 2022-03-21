@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Espionage.Engine.Tools
 {
-	public class Inspector : Tool
+	public class Inspector : Window
 	{
 		public override void OnLayout()
 		{
@@ -15,40 +15,100 @@ namespace Espionage.Engine.Tools
 				return;
 			}
 
-			var ent = Service.Selection;
+			var lib = Service.Selection;
 
-			// Render Class Info
-			ImGui.Text( $"{ent.ClassInfo.Title}" );
-			ImGui.Text( $"{ent.ClassInfo.Name} - [{ent.ClassInfo.Group}]" );
-			ImGui.Separator();
-			ImGui.TextColored( Color.green, "Entity" );
-			ImGui.BeginChild( "Entity Values", new( 0, 128 ), true, ImGuiWindowFlags.ChildWindow );
+			// Entity Class Info
+			ImGui.Text( $"{lib.ClassInfo.Title}" );
+			ImGui.Text( $"{lib.ClassInfo.Name} - [{lib.ClassInfo.Group}]" );
+
+			if ( Service.Selection is Pawn pawn && ImGui.Button( "Possess Pawn" ) )
 			{
-				ImGui.Text( "this would render properties" );
+				Local.Client.Pawn = pawn;
+				Dev.Terminal.Invoke( "dev.tripod" );
+				Controls.Cursor.Locked = false;
 			}
-			ImGui.EndChild();
 
-			ImGui.TextColored( Color.green, "Components" );
+			ImGui.Separator();
 
-			ImGui.BeginChild( "Components", new( 0, 0 ), true, ImGuiWindowFlags.ChildWindow );
+			// Entity Property Inspector
+			ImGui.TextColored( Color.green, "Properties" );
+			ImGui.BeginChild( $"{lib.ClassInfo.Title} Values", new( 0, lib.ClassInfo.Properties.Count * (ImGui.GetFontSize() + 16) + 2 ), true, ImGuiWindowFlags.ChildWindow );
 			{
-				for ( var i = 0; i < ent.Components.Count; i++ )
+				foreach ( var property in lib.ClassInfo.Properties.All )
 				{
-					ComponentUI( ent, ent.Components[i] as Component, i );
-
+					PropertyUI( property, lib );
 				}
 			}
 			ImGui.EndChild();
 
+			ImGui.TextColored( Color.green, "Functions" );
+			// Entity Functions
+			ImGui.BeginChild( $"{lib.ClassInfo.Title} Functions", new( 0, lib.ClassInfo.Functions.Count * (ImGui.GetFontSize() + 16) + 2 ), true, ImGuiWindowFlags.ChildWindow );
+			{
+				foreach ( var function in lib.ClassInfo.Functions.All )
+				{
+					FunctionUI( function, lib );
+				}
+			}
+			ImGui.EndChild();
 
+			ImGui.Separator();
+
+			if ( lib is Entity entity )
+			{
+				// Component Property Inspector
+				ImGui.TextColored( Color.green, "Components" );
+				ImGui.BeginChild( "Entity Components", new( 0, entity.Components.Count * (ImGui.GetFontSize() + 16) + 2 ), true, ImGuiWindowFlags.ChildWindow );
+				{
+					for ( var i = 0; i < entity.Components.Count; i++ )
+					{
+						ComponentUI( entity.Components[i] as Component, i );
+					}
+				}
+				ImGui.EndChild();
+			}
 		}
 
-		private void ComponentUI( Entity selction, Component component, int index )
+		private void ComponentUI( Component component, int index )
 		{
+			if ( component == null )
+			{
+				return;
+			}
+
 			if ( ImGui.TreeNode( new IntPtr( index ), $"{component.ClassInfo.Name} - [{component.ClassInfo.Group}]" ) )
 			{
+				foreach ( var property in component.ClassInfo.Properties.All )
+				{
+					PropertyUI( property, component );
+				}
 
 				ImGui.TreePop();
+			}
+
+			if ( ImGui.IsItemHovered() && !string.IsNullOrEmpty( component.ClassInfo.Help ) )
+			{
+				ImGui.SetTooltip( component.ClassInfo.Help );
+			}
+		}
+
+		private void PropertyUI( Property property, ILibrary scope )
+		{
+			ImGui.Text( $"{property.Name} = [{property[scope]}]" );
+
+			if ( ImGui.IsItemHovered() && !string.IsNullOrEmpty( property.Help ) )
+			{
+				ImGui.SetTooltip( property.Help );
+			}
+		}
+
+		private void FunctionUI( Function function, ILibrary scope )
+		{
+			ImGui.Text( $"{function.Name}" );
+
+			if ( ImGui.IsItemHovered() && !string.IsNullOrEmpty( function.Help ) )
+			{
+				ImGui.SetTooltip( function.Help );
 			}
 		}
 	}

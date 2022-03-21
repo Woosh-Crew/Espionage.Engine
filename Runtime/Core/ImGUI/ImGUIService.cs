@@ -1,3 +1,4 @@
+using System;
 using Espionage.Engine.ImGUI.Assets;
 using Espionage.Engine.ImGUI.Events;
 using Espionage.Engine.ImGUI.Platform;
@@ -83,12 +84,16 @@ namespace Espionage.Engine.ImGUI
 			ImGuizmoNET.ImGuizmo.BeginFrame();
 #endif
 			Constants.PrepareFrameMarker.End();
-
 			Constants.LayoutMarker.Begin();
+
 			try
 			{
 				UImGuiUtility.DoLayout( this );
 				Callback.Run( "imgui.layout" );
+			}
+			catch ( Exception e )
+			{
+				Dev.Log.Exception( e );
 			}
 			finally
 			{
@@ -134,7 +139,7 @@ namespace Espionage.Engine.ImGUI
 			UImGuiUtility.DestroyContext( _context );
 		}
 
-		public void SetUserData( System.IntPtr userDataPtr )
+		public void SetUserData( IntPtr userDataPtr )
 		{
 			_initialConfiguration.UserData = userDataPtr;
 			var io = ImGui.GetIO();

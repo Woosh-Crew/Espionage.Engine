@@ -92,6 +92,7 @@ namespace Espionage.Engine
 		public virtual void OnAttached( Entity item )
 		{
 			Entity = item;
+			ClassInfo ??= Library.Register( this );
 		}
 
 		/// <summary>

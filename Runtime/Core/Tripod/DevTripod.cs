@@ -17,12 +17,20 @@ namespace Espionage.Engine.Tripods
 
 		private Vector3 _direction;
 		private Vector3 _targetPos;
-		private Vector3 _targetRot;
+
+		private Vector3 _viewAngles;
+		private Quaternion _targetRot;
 
 		void ITripod.Build( ref Tripod.Setup camSetup )
 		{
+			camSetup.Viewer = null;
+			if ( Local.Pawn != null )
+			{
+				camSetup.Viewer = Local.Pawn.Visuals;
+			}
+
 			// Rotation
-			camSetup.Rotation = Quaternion.Euler( _targetRot );
+			camSetup.Rotation = _targetRot;
 
 			// Movement
 			var vel = camSetup.Rotation * _direction;
@@ -54,7 +62,9 @@ namespace Espionage.Engine.Tripods
 		public void Activated( ref Tripod.Setup camSetup )
 		{
 			_targetPos = camSetup.Position;
-			_targetRot = camSetup.Rotation.eulerAngles.WithZ( 0 );
+			_targetRot = camSetup.Rotation;
+
+			_viewAngles = camSetup.Rotation.eulerAngles;
 		}
 
 		public void Deactivated() { }
@@ -83,8 +93,10 @@ namespace Espionage.Engine.Tripods
 					setup.Cursor.Locked = true;
 
 					// We don't use ViewAngles here, as they are not our eyes.
-					_targetRot += new Vector3( -setup.Mouse.Delta.y, setup.Mouse.Delta.x, 0 );
-					_targetRot.x = Mathf.Clamp( _targetRot.x, -88, 88 );
+					_viewAngles += new Vector3( -setup.Mouse.Delta.y, setup.Mouse.Delta.x, 0 );
+					_viewAngles.x = Mathf.Clamp( _viewAngles.x, -88, 88 );
+
+					_targetRot = Quaternion.Euler( _viewAngles );
 				}
 			}
 			finally

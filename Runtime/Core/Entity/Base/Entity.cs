@@ -35,13 +35,13 @@ namespace Espionage.Engine
 
 			Components = new( this );
 
-			OnAwake();
-
 			// Cache Components
 			foreach ( var item in GetComponents<IComponent<Entity>>() )
 			{
 				Components.Add( item );
 			}
+
+			OnAwake();
 
 			// Stupid? yes.
 			foreach ( var item in Components.GetAll<Component>() )

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Espionage.Engine.Tools
 {
-	public class Terminal : Tool
+	public class Terminal : Window
 	{
 		private string _input = string.Empty;
 		private bool _scrollToBottom;

@@ -1,6 +1,7 @@
 ﻿using Espionage.Engine.Tools;
 using Espionage.Engine.Tripods;
 using ImGuiNET;
+using ImGuizmoNET;
 using UnityEngine;
 
 namespace Espionage.Engine.Services
@@ -11,7 +12,8 @@ namespace Espionage.Engine.Services
 	/// </summary>
 	public class DiagnosticsService : Service
 	{
-		public Entity Selection { get; private set; }
+		public ILibrary Selection { get; set; }
+		public Entity Hovering { get; set; }
 
 		private Camera _camera;
 
@@ -34,10 +36,19 @@ namespace Espionage.Engine.Services
 				return;
 			}
 
-			if ( !Input.GetMouseButton( 1 ) && Physics.Raycast( _camera.ScreenPointToRay( Input.mousePosition ), out var hit ) )
+			// This is really bad...
+			if ( !Input.GetMouseButton( 1 ) )
 			{
-				if ( Input.GetMouseButtonDown( 0 ) )
+				if ( !Physics.Raycast( _camera.ScreenPointToRay( Input.mousePosition ), out var hit ) )
 				{
+					Hovering = null;
+					return;
+				}
+
+				if ( !(ImGui.IsWindowHovered() || ImGui.IsAnyItemHovered()) && Input.GetMouseButtonDown( 0 ) )
+				{
+					Selection = null;
+
 					if ( hit.collider.TryGetComponent<Entity>( out var entity ) )
 					{
 						Selection = entity;
@@ -46,17 +57,16 @@ namespace Espionage.Engine.Services
 
 				if ( hit.collider != _lastCollider )
 				{
-					_ent = null;
+					Hovering = null;
 					if ( hit.collider.TryGetComponent<Entity>( out var entity ) )
 					{
-						_ent = entity;
+						Hovering = entity;
 					}
 				}
 			}
 		}
 
 		private Collider _lastCollider;
-		private Entity _ent;
 
 		private bool Enabled => Local.Client.Tripod is DevTripod;
 
@@ -72,16 +82,18 @@ namespace Espionage.Engine.Services
 				return;
 			}
 
-			Tool.DoLayout( this );
+			ImGuizmo.Enable( true );
+
+			Window.DoLayout( this );
 
 			// Active Hovering Entity Tooltip
-			if ( _ent != null )
+			if ( Hovering != null )
 			{
 				ImGui.SetNextWindowBgAlpha( 0.7f );
 				ImGui.BeginTooltip();
 				{
-					ImGui.Text( $"{_ent.ClassInfo.Title}" );
-					ImGui.Text( $"{_ent.ClassInfo.Name} - [{_ent.ClassInfo.Group}]" );
+					ImGui.Text( $"{Hovering.ClassInfo.Title}" );
+					ImGui.Text( $"{Hovering.ClassInfo.Name} - [{Hovering.ClassInfo.Group}]" );
 				}
 				ImGui.EndTooltip();
 			}

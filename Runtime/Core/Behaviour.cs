@@ -16,7 +16,7 @@ namespace Espionage.Engine
 
 		internal virtual void Awake()
 		{
-			ClassInfo = Library.Register( this );
+			ClassInfo ??= Library.Register( this );
 
 			// If no Library, Something went wrong.
 			// Just destroy.
