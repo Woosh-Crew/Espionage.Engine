@@ -1013,7 +1013,6 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: b2d81896f305f0d4099c6f9904d6fed9, type: 3}
@@ -1065,7 +1064,6 @@ PrefabInstance:
       value: Garry_legs
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: b2d81896f305f0d4099c6f9904d6fed9, type: 3}
 --- !u!1 &564144360
 GameObject:
@@ -1266,7 +1264,6 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 31a6b09a4c9106743a7a95cc214be341, type: 3}
@@ -1318,7 +1315,6 @@ PrefabInstance:
       value: Garry
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 31a6b09a4c9106743a7a95cc214be341, type: 3}
 --- !u!1 &661008230
 GameObject:
@@ -1349,14 +1345,13 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1073501571}
-  m_RootOrder: -1
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &696520391
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    serializedVersion: 2
     m_TransformParent: {fileID: 105412608}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 964ea16b1ef062b47beaf320a32151da, type: 3}
@@ -1424,10 +1419,6 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: -7448610886234979829, guid: 964ea16b1ef062b47beaf320a32151da, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 661008231}
   m_SourcePrefab: {fileID: 100100000, guid: 964ea16b1ef062b47beaf320a32151da, type: 3}
 --- !u!4 &696520392 stripped
 Transform:
@@ -1439,7 +1430,6 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -5532259837855969405, guid: ca60639675ccc2d47a8b0b9407007e52, type: 3}
@@ -1521,7 +1511,6 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 8213110094436585677, guid: ca60639675ccc2d47a8b0b9407007e52, type: 3}
     - {fileID: 3191258976054525598, guid: ca60639675ccc2d47a8b0b9407007e52, type: 3}
-    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: ca60639675ccc2d47a8b0b9407007e52, type: 3}
 --- !u!1 &714617854 stripped
 GameObject:
@@ -1779,7 +1768,6 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    serializedVersion: 2
     m_TransformParent: {fileID: 1774131819}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: b2d81896f305f0d4099c6f9904d6fed9, type: 3}
@@ -1831,7 +1819,6 @@ PrefabInstance:
       value: Garry_legs
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: b2d81896f305f0d4099c6f9904d6fed9, type: 3}
 --- !u!1 &909143235
 GameObject:
@@ -2227,7 +2214,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1099446398}
-  m_RootOrder: 2
+  m_RootOrder: 28
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1130287002
 BoxCollider:
@@ -3330,7 +3317,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1099446398}
-  m_RootOrder: -1
+  m_RootOrder: 29
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1918417381
 BoxCollider:
@@ -3523,7 +3510,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1099446398}
-  m_RootOrder: -1
+  m_RootOrder: 27
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!154 &1964863140
 TerrainCollider:

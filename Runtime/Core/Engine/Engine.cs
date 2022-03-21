@@ -56,7 +56,7 @@ namespace Espionage.Engine
 			using var _ = Dev.Stopwatch( "Engine / Game Ready", true );
 
 			// Find Game
-			if ( !SetupGame() )
+			if ( Game == null && !SetupGame() )
 			{
 				Dev.Log.Error( "Game couldn't be found. Make sure to make a class inherited from Game" );
 				return;
@@ -64,6 +64,9 @@ namespace Espionage.Engine
 
 			UpdatePlayerLoop( false );
 			Services = new();
+
+			// Create engine layer scene
+			Scene = SceneManager.CreateScene( "Engine Layer" );
 
 			Local.Client = Client.Create( "Local" );
 			Callback.Run( "engine.getting_ready" );
@@ -82,6 +85,13 @@ namespace Espionage.Engine
 		private static void Initialize_Editor()
 		{
 			Library.Initialize();
+
+			// Find Game
+			if ( Game == null && !SetupGame() )
+			{
+				Dev.Log.Error( "Game couldn't be found. Make sure to make a class inherited from Game" );
+				return;
+			}
 		}
 
 		#endif
@@ -95,9 +105,6 @@ namespace Espionage.Engine
 				Callback.Run( "game.not_found" );
 				return false;
 			}
-
-			// Create engine layer scene
-			Scene = SceneManager.CreateScene( "Engine Layer" );
 
 			Game = Library.Database.Create<Game>( target.Class );
 

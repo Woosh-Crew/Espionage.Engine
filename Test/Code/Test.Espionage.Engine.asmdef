@@ -1,0 +1,16 @@
+{
+    "name": "Test.Espionage.Engine",
+    "rootNamespace": "",
+    "references": [
+        "GUID:b479bc809753b2141a4f58843671b904"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
