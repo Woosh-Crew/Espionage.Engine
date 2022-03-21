@@ -88,7 +88,7 @@ namespace Espionage.Engine.Tools.Editor
 				box.AddToClassList( "Box" );
 				rootVisualElement.Add( box );
 
-				box.Add( new Button( () => Build( BuildTarget.StandaloneWindows, BuildOptions.Development ) ) { text = "Build Game" } );
+				box.Add( new Button( () => Build( BuildTarget.StandaloneWindows64, BuildOptions.Development ) ) { text = "Build Game" } );
 			}
 		}
 
