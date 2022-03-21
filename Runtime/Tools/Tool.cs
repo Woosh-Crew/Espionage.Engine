@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using ImGuiNET;
-using UnityEngine.Rendering.PostProcessing;
 
 namespace Espionage.Engine.Tools
 {
@@ -34,7 +31,7 @@ namespace Espionage.Engine.Tools
 						All[value].Delete();
 						continue;
 					}
-					
+
 					Library.Create( value );
 				}
 			}
@@ -64,7 +61,7 @@ namespace Espionage.Engine.Tools
 			{
 				ImGui.End();
 			}
-			
+
 			OnLayout();
 		}
 
