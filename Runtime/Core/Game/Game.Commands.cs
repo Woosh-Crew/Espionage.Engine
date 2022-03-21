@@ -7,7 +7,14 @@ namespace Espionage.Engine
 		[Function( "dev.tripod" ), Terminal]
 		private static void DevTripodCommand()
 		{
-			Local.Client.Tripod = Local.Client.Tripod is DevTripod ? null : new DevTripod();
+			if ( Local.Client.Tripod is DevTripod )
+			{
+				Local.Client.Tripod.Delete();
+				Local.Client.Tripod = null;
+				return;
+			}
+
+			Local.Client.Tripod = new DevTripod();
 		}
 
 		[Function( "dev.noclip" ), Terminal]

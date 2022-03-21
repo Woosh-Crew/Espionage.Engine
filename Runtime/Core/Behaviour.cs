@@ -51,9 +51,14 @@ namespace Espionage.Engine
 
 		// Destroy
 
-		protected virtual void OnDestroy()
+		public void Delete()
 		{
 			Library.Unregister( this );
+			Destroy( this );
+		}
+
+		protected virtual void OnDestroy()
+		{
 			OnDelete();
 		}
 

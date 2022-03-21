@@ -12,5 +12,10 @@ namespace Espionage.Engine
 		/// such as Functions, Properties, Groups, Components, etc.
 		/// </summary>
 		Library ClassInfo { get; }
+
+		void Delete()
+		{
+			Library.Unregister( this );
+		}
 	}
 }

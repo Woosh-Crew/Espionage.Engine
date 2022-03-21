@@ -1,10 +1,20 @@
-﻿using UnityEngine;
+﻿using ImGuiNET;
+using UnityEngine;
 
 namespace Espionage.Engine.Tripods
 {
 	[Library( "tripod.dev" ), Group( "Tripods" ), Title( "Dev Cam" )]
-	public class DevTripod : ITripod, IControls
+	public class DevTripod : ITripod, IControls, ILibrary
 	{
+		public Library ClassInfo { get; }
+
+		public DevTripod()
+		{
+			ClassInfo = Library.Register( this );
+		}
+
+		// Tripod
+
 		private Vector2 _direction;
 		private Vector3 _targetPos;
 		private Vector3 _targetRot;
@@ -15,8 +25,6 @@ namespace Espionage.Engine.Tripods
 		private float _targetFov;
 
 		private float _speedMulti = 1;
-
-		// Tripod
 
 		void ITripod.Build( ref Tripod.Setup camSetup )
 		{
@@ -121,6 +129,34 @@ namespace Espionage.Engine.Tripods
 			{
 				setup.Clear();
 			}
+		}
+
+		// UI
+
+		[Function, Callback( "imgui.layout" )]
+		private void Layout()
+		{
+			// Get Padding
+			const float Padding = 10.0f;
+			var viewport = ImGui.GetMainViewport();
+
+			var workPos = viewport.WorkPos; // Use work area to avoid menu-bar/task-bar, if any!
+			Vector2 windowPos = new() { x = workPos.x + Padding, y = workPos.y + Padding };
+
+			ImGui.SetNextWindowPos( windowPos, ImGuiCond.Always, Vector2.zero );
+
+			// Create Window
+			var flags = ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoSavedSettings | ImGuiWindowFlags.NoFocusOnAppearing | ImGuiWindowFlags.NoNav | ImGuiWindowFlags.NoMove;
+
+			ImGui.SetNextWindowBgAlpha( 0.35f );
+			if ( ImGui.Begin( "Dev Tripod", flags ) )
+			{
+				ImGui.Text( "Developer Tripod" );
+				ImGui.Separator();
+				ImGui.Text( $"Fov: {_targetFov}, Speed: {_speedMulti}" );
+			}
+
+			ImGui.End();
 		}
 	}
 }

@@ -17,7 +17,7 @@ namespace Espionage.Engine
 	/// tripod, or overriding the <see cref="Client"/>'s tripod entirely.
 	/// </para>
 	/// </summary>
-	public interface ITripod
+	public interface ITripod : ILibrary
 	{
 		/// <summary>
 		/// Called every Tripod update. Used

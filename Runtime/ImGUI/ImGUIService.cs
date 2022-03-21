@@ -21,38 +21,6 @@ namespace Espionage.Engine.ImGUI
 		private IPlatform _platform;
 		private CommandBuffer _renderCommandBuffer;
 
-		[Function, Callback( "imgui.layout" )]
-		private void Layout()
-		{
-			ImGui.ShowMetricsWindow();
-
-			// Terminal
-			if ( !ImGui.Begin( "Terminal" ) )
-			{
-				// End if were not valid
-				ImGui.End();
-				return;
-			}
-
-			if ( ImGui.BeginMainMenuBar() )
-			{
-				if ( ImGui.BeginMenu( "Files" ) )
-				{
-					ImGui.MenuItem( "Main menu bar" );
-					ImGui.EndMenu();
-				}
-
-				if ( ImGui.BeginMenu( "Maps" ) )
-				{
-					ImGui.EndMenu();
-				}
-
-				ImGui.EndMainMenuBar();
-			}
-
-			ImGui.Text( "Hello World!" );
-		}
-
 		public override void OnReady()
 		{
 			// Get the Main Camera
