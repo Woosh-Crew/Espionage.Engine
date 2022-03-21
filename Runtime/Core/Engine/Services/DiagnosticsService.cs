@@ -64,6 +64,10 @@ namespace Espionage.Engine.Services
 					}
 				}
 			}
+			else
+			{
+				Hovering = null;
+			}
 		}
 
 		private Collider _lastCollider;

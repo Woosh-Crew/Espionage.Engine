@@ -32,7 +32,7 @@ namespace Espionage.Engine.Tools
 
 			// Entity Property Inspector
 			ImGui.TextColored( Color.green, "Properties" );
-			ImGui.BeginChild( $"{lib.ClassInfo.Title} Values", new( 0, lib.ClassInfo.Properties.Count * (ImGui.GetFontSize() + 16) + 2 ), true, ImGuiWindowFlags.ChildWindow );
+			ImGui.BeginChild( $"{lib.ClassInfo.Title} Values", new( 0, 128 ), true, ImGuiWindowFlags.ChildWindow );
 			{
 				foreach ( var property in lib.ClassInfo.Properties.All )
 				{
@@ -43,7 +43,7 @@ namespace Espionage.Engine.Tools
 
 			ImGui.TextColored( Color.green, "Functions" );
 			// Entity Functions
-			ImGui.BeginChild( $"{lib.ClassInfo.Title} Functions", new( 0, lib.ClassInfo.Functions.Count * (ImGui.GetFontSize() + 16) + 2 ), true, ImGuiWindowFlags.ChildWindow );
+			ImGui.BeginChild( $"{lib.ClassInfo.Title} Functions", new( 0, 128 ), true, ImGuiWindowFlags.ChildWindow );
 			{
 				foreach ( var function in lib.ClassInfo.Functions.All )
 				{
@@ -52,13 +52,14 @@ namespace Espionage.Engine.Tools
 			}
 			ImGui.EndChild();
 
-			ImGui.Separator();
-
+			// Do Components Inspector Lazily
 			if ( lib is Entity entity )
 			{
+				ImGui.Separator();
+
 				// Component Property Inspector
 				ImGui.TextColored( Color.green, "Components" );
-				ImGui.BeginChild( "Entity Components", new( 0, entity.Components.Count * (ImGui.GetFontSize() + 16) + 2 ), true, ImGuiWindowFlags.ChildWindow );
+				ImGui.BeginChild( "Entity Components", new( 0, 128 ), true, ImGuiWindowFlags.ChildWindow );
 				{
 					for ( var i = 0; i < entity.Components.Count; i++ )
 					{
@@ -94,7 +95,14 @@ namespace Espionage.Engine.Tools
 
 		private void PropertyUI( Property property, ILibrary scope )
 		{
-			ImGui.Text( $"{property.Name} = [{property[scope]}]" );
+			if ( scope is Library )
+			{
+				ImGui.Text( $"{property.Name}" );
+			}
+			else
+			{
+				ImGui.Text( $"{property.Name} = [{property[scope]}]" );
+			}
 
 			if ( ImGui.IsItemHovered() && !string.IsNullOrEmpty( property.Help ) )
 			{

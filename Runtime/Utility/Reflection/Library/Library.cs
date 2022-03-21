@@ -19,8 +19,15 @@ namespace Espionage.Engine
 	/// </para>
 	/// </summary>
 	[Serializable]
-	public sealed partial class Library
+	public sealed partial class Library : ILibrary
 	{
+		/// <summary>
+		/// This is here so we can reference a library like its a
+		/// ILibrary object. You can loop this very easily, so make
+		/// sure you don't do that... 
+		/// </summary>
+		public Library ClassInfo => this;
+
 		/// <summary>
 		/// All static Properties and Functions can be found in the Globals Library
 		/// database index. It is here for easy viewing
