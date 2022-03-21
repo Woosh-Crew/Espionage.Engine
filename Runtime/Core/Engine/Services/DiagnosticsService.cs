@@ -1,11 +1,18 @@
-﻿using Espionage.Engine.Tripods;
+﻿using Espionage.Engine.Tools;
+using Espionage.Engine.Tripods;
 using ImGuiNET;
 using UnityEngine;
 
 namespace Espionage.Engine.Services
 {
+	/// <summary>
+	/// Diagnostics service is responsible for providing the
+	/// dev tripod, and tools. For use in debugging.
+	/// </summary>
 	public class DiagnosticsService : Service
 	{
+		public Entity Selection { get; private set; }
+
 		private Camera _camera;
 
 		public override void OnReady()
@@ -29,6 +36,14 @@ namespace Espionage.Engine.Services
 
 			if ( !Input.GetMouseButton( 1 ) && Physics.Raycast( _camera.ScreenPointToRay( Input.mousePosition ), out var hit ) )
 			{
+				if ( Input.GetMouseButtonDown( 0 ) )
+				{
+					if ( hit.collider.TryGetComponent<Entity>( out var entity ) )
+					{
+						Selection = entity;
+					}
+				}
+
 				if ( hit.collider != _lastCollider )
 				{
 					_ent = null;
@@ -56,6 +71,8 @@ namespace Espionage.Engine.Services
 			{
 				return;
 			}
+
+			Tool.DoLayout( this );
 
 			// Active Hovering Entity Tooltip
 			if ( _ent != null )

@@ -5,6 +5,9 @@ namespace Espionage.Engine.Services
 	[Group( "Services" )]
 	public interface IService : ILibrary, IDisposable
 	{
+		/// <summary> Time it took to complete update loop </summary>
+		public float Time { get; set; }
+
 		void OnReady();
 		void OnShutdown();
 

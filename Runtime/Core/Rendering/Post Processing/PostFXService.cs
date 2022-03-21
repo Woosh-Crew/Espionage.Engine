@@ -16,7 +16,7 @@ namespace Espionage.Engine.PostProcessing
 		public override void OnReady()
 		{
 			// Get the Main Camera
-			var camera = Engine.Services.Get<CameraService>().Camera;
+			var camera = Engine.Camera;
 
 			// Setup Post Processing
 			_layer = camera.gameObject.AddComponent<PostProcessLayer>();

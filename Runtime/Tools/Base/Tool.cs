@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Espionage.Engine.Services;
 using ImGuiNET;
 using UnityEngine;
 
@@ -8,13 +9,13 @@ namespace Espionage.Engine.Tools
 	{
 		internal static Dictionary<Library, Tool> All { get; } = new();
 
-		[Function( "tool.layout" ), Callback( "imgui.layout" )]
-		internal static void DoLayout()
+		internal static void DoLayout( DiagnosticsService service )
 		{
 			Library toRemove = null;
 
 			foreach ( var (key, value) in All )
 			{
+				value.Service = service;
 				if ( value.Layout() )
 				{
 					toRemove = key;
@@ -80,6 +81,8 @@ namespace Espionage.Engine.Tools
 
 			return !delete;
 		}
+
+		protected DiagnosticsService Service { get; private set; }
 
 		public abstract void OnLayout();
 	}

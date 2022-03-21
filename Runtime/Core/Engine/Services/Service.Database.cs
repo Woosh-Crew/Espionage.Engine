@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace Espionage.Engine.Services
@@ -33,10 +34,10 @@ namespace Espionage.Engine.Services
 			{
 				foreach ( var service in _services )
 				{
-					using ( Dev.Stopwatch( $"Initializing {service.ClassInfo.Title}" ) )
-					{
-						service.OnReady();
-					}
+					var stopwatch = Stopwatch.StartNew();
+					service.OnReady();
+					stopwatch.Stop();
+					service.Time = stopwatch.ElapsedMilliseconds;
 				}
 			}
 
