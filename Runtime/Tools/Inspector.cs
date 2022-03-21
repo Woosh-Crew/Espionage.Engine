@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Espionage.Engine.Tools
 {
+	[Title( "ILibrary Inspector" )]
 	public class Inspector : Window
 	{
 		public override void OnLayout()

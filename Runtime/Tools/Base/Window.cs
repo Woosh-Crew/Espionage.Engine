@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Espionage.Engine.Services;
 using ImGuiNET;
 
@@ -6,10 +7,13 @@ namespace Espionage.Engine.Tools
 {
 	public abstract class Window : ILibrary
 	{
-		internal static Dictionary<Library, Window> All { get; } = new();
+		private static Dictionary<Library, Window> All { get; } = new();
 
-		internal static void DoLayout( DiagnosticsService service )
+		internal static void Apply( DiagnosticsService service )
 		{
+			// I'd assume you wouldn't be able 
+			// to remove more then 1 window on
+			// the same frame.
 			Library toRemove = null;
 
 			foreach ( var (key, value) in All )
@@ -27,10 +31,17 @@ namespace Espionage.Engine.Tools
 			}
 		}
 
-		[Function( "tool.menu_bar" ), Callback( "dev.menu_bar.tools" )]
-		internal static void MenuBarLayout()
+		public static T Show<T>() where T : Window
 		{
-			var menuItems = Library.Database.GetAll<Window>();
+			// Gotta do this or the compiler has a fit?
+			var item = Library.Database.Create<Window>( typeof( T ) );
+			return item as T;
+		}
+
+		[Function( "tool.menu_bar" ), Callback( "dev.menu_bar.tools" )]
+		private static void MenuBarLayout()
+		{
+			var menuItems = Library.Database.GetAll<Window>().Where( e => !e.Class.IsAbstract );
 
 			// Post Processing Debug Overlays
 			foreach ( var value in menuItems )
@@ -60,13 +71,14 @@ namespace Espionage.Engine.Tools
 
 		public void Delete()
 		{
+			Service = null;
 			All.Remove( ClassInfo );
 			Library.Unregister( this );
 		}
 
-		private bool _open;
+		protected DiagnosticsService Service { get; private set; }
 
-		internal bool Layout()
+		internal virtual bool Layout()
 		{
 			var delete = true;
 
@@ -80,8 +92,6 @@ namespace Espionage.Engine.Tools
 
 			return !delete;
 		}
-
-		protected DiagnosticsService Service { get; private set; }
 
 		public abstract void OnLayout();
 	}

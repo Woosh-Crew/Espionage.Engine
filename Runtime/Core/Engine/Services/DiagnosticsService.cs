@@ -36,7 +36,7 @@ namespace Espionage.Engine.Services
 				return;
 			}
 
-			// This is really bad...
+			// Hovering and Selection
 			if ( !Input.GetMouseButton( 1 ) )
 			{
 				if ( !Physics.Raycast( _camera.ScreenPointToRay( Input.mousePosition ), out var hit ) )
@@ -86,9 +86,7 @@ namespace Espionage.Engine.Services
 				return;
 			}
 
-			ImGuizmo.Enable( true );
-
-			Window.DoLayout( this );
+			Window.Apply( this );
 
 			// Active Hovering Entity Tooltip
 			if ( Hovering != null )
