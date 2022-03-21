@@ -9,7 +9,7 @@ namespace Espionage.Engine
 	/// the <see cref="IComponent{Entity}"/> interface or inherited from <see cref="Component{T}"/>. Entities
 	/// also contain IO / Actions logic.
 	/// </summary>
-	[DisallowMultipleComponent, Group( "Entities" ), Constructor( nameof( Constructor ) ), Spawnable]
+	[DisallowMultipleComponent, Group( "Entities" ), Constructor( nameof( Constructor ) ), Spawnable, SelectionBase]
 	public abstract partial class Entity : Behaviour
 	{
 		/// <summary> All the entities that exists in the game world. </summary>
