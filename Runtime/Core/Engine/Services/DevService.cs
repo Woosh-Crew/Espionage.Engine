@@ -1,6 +1,5 @@
-﻿using System.Linq;
+﻿using Espionage.Engine.Tripods;
 using ImGuiNET;
-using UnityEditor;
 using UnityEngine;
 
 namespace Espionage.Engine.Services
@@ -16,24 +15,31 @@ namespace Espionage.Engine.Services
 				Dev.Terminal.Invoke( "dev.tripod" );
 			}
 
-			// Open Terminal
-			if ( Input.GetKeyDown( KeyCode.F3 ) )
+			// If were in Dev Tripod
+			if ( !Enabled )
 			{
-				Dev.Terminal.Invoke( "dev.noclip" );
+				return;
 			}
 
-			// Open Terminal
-			if ( Input.GetKeyDown( KeyCode.F2 ) )
+			if ( Physics.Raycast( Camera.main.ScreenPointToRay( Input.mousePosition ), out var hit ) && hit.collider != _lastCollider )
 			{
-				Enabled = !Enabled;
+				_ent = null;
+				if ( hit.collider.TryGetComponent<Entity>( out var entity ) )
+				{
+					_ent = entity;
+				}
 			}
 		}
+
+		private Collider _lastCollider;
+		private Entity _ent;
+
+
+		private bool Enabled => Local.Client.Tripod is DevTripod;
 
 		//
 		// UI
 		//
-
-		public bool Enabled { get; set; }
 
 		[Function, Callback( "imgui.layout" )]
 		private void Layout()
@@ -43,34 +49,50 @@ namespace Espionage.Engine.Services
 				return;
 			}
 
+			// Active Hovering Entity Tooltip
+			if ( _ent != null )
+			{
+				ImGui.SetNextWindowBgAlpha( 0.7f );
+				ImGui.BeginTooltip();
+				{
+					ImGui.Text( $"{_ent.ClassInfo.Title}" );
+					ImGui.Text( $"{_ent.ClassInfo.Name} - [{_ent.ClassInfo.Group}]" );
+				}
+				ImGui.EndTooltip();
+			}
+
+			// Main Menu Bar
 			if ( ImGui.BeginMainMenuBar() )
 			{
-				Callback.Run( "dev.menu_bar" );
+				// Left Padding
+				ImGui.Dummy( new( 2, 0 ) );
+				ImGui.Separator();
+
+				// Title
+				ImGui.Dummy( new( 4, 0 ) );
+				ImGui.Text( "Espionage.Engine" );
+				ImGui.Dummy( new( 4, 0 ) );
+
+				ImGui.Separator();
+
+				if ( ImGui.BeginMenu( "Tools" ) )
+				{
+					Callback.Run( "dev.menu_bar.tools" );
+					ImGui.EndMenu();
+				}
+
+				if ( ImGui.BeginMenu( "Graphics" ) )
+				{
+					Callback.Run( "dev.menu_bar.graphics" );
+					ImGui.EndMenu();
+				}
+
+				if ( ImGui.BeginMenu( "Help" ) )
+				{
+					ImGui.EndMenu();
+				}
 
 				ImGui.EndMainMenuBar();
-			}
-
-			TerminalUI();
-		}
-
-		// Terminal UI
-
-		private string _input = string.Empty;
-
-		private void TerminalUI()
-		{
-			// Terminal
-			if ( !ImGui.Begin( "Terminal" ) )
-			{
-				// End if were not valid
-				ImGui.End();
-				return;
-			}
-
-			ImGui.InputTextWithHint( string.Empty, "Enter Command...", ref _input, 128 );
-			if ( ImGui.Button( "Submit" ) )
-			{
-				Dev.Terminal.Invoke( _input );
 			}
 		}
 	}

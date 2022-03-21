@@ -1,7 +1,9 @@
-﻿using Espionage.Engine.Services;
+﻿using System;
+using Espionage.Engine.Services;
 using ImGuiNET;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
+using Object = UnityEngine.Object;
 
 namespace Espionage.Engine.PostProcessing
 {
@@ -28,19 +30,22 @@ namespace Espionage.Engine.PostProcessing
 			_debug.postProcessLayer = _layer;
 		}
 
-		[Function, Callback( "dev.menu_bar" )]
+		//
+		// UI
+		//
+
+		[Function, Callback( "dev.menu_bar.graphics" )]
 		private void MenuBar()
 		{
 			// Post Processing Debug Overlays
-			if ( ImGui.BeginMenu( "Overlays" ) )
+			if ( ImGui.BeginMenu( "Fullbright Overlays" ) )
 			{
-				Item( "None", DebugOverlay.None );
-				Item( "Depth", DebugOverlay.Depth );
-				Item( "Normals", DebugOverlay.Normals );
-				Item( "Ambient Occlusion", DebugOverlay.AmbientOcclusion );
-				Item( "Depth Of Field", DebugOverlay.DepthOfField );
-				Item( "Bloom Threshold", DebugOverlay.BloomThreshold );
-				Item( "Bloom Buffer", DebugOverlay.BloomBuffer );
+				foreach ( var value in Enum.GetValues( typeof( DebugOverlay ) ) )
+				{
+					var item = (DebugOverlay)value;
+					Item( item.ToString(), item );
+				}
+
 				ImGui.EndMenu();
 			}
 		}
@@ -53,7 +58,9 @@ namespace Espionage.Engine.PostProcessing
 			}
 		}
 
+		//
 		// Options
+		//
 
 		// AO
 

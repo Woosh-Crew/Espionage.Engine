@@ -16,11 +16,5 @@ namespace Espionage.Engine
 
 			Local.Client.Tripod = new DevTripod();
 		}
-
-		[Function( "dev.noclip" ), Terminal]
-		private static void NoclipCommand()
-		{
-			Dev.Log.Info( "This would Noclip" );
-		}
 	}
 }

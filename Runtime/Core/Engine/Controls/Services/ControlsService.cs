@@ -33,6 +33,11 @@ namespace Espionage.Engine.Services
 			// Applying
 			UnityEngine.Cursor.visible = _setup.Cursor.Visible;
 			UnityEngine.Cursor.lockState = _setup.Cursor.Locked ? CursorLockMode.Locked : CursorLockMode.None;
+
+			if ( !_setup.Cursor.Locked && _setup.Cursor.Confined )
+			{
+				UnityEngine.Cursor.lockState = CursorLockMode.Confined;
+			}
 		}
 	}
 }
