@@ -4,9 +4,15 @@ using UnityEngine;
 
 namespace Espionage.Engine.Services
 {
-	[Title( "Developer" )]
-	public class DevService : Service
+	public class DiagnosticsService : Service
 	{
+		private Camera _camera;
+
+		public override void OnReady()
+		{
+			_camera = Engine.Camera;
+		}
+
 		public override void OnUpdate()
 		{
 			// Use Dev Tripod
@@ -21,19 +27,21 @@ namespace Espionage.Engine.Services
 				return;
 			}
 
-			if ( Physics.Raycast( Camera.main.ScreenPointToRay( Input.mousePosition ), out var hit ) && hit.collider != _lastCollider )
+			if ( !Input.GetMouseButton( 1 ) && Physics.Raycast( _camera.ScreenPointToRay( Input.mousePosition ), out var hit ) )
 			{
-				_ent = null;
-				if ( hit.collider.TryGetComponent<Entity>( out var entity ) )
+				if ( hit.collider != _lastCollider )
 				{
-					_ent = entity;
+					_ent = null;
+					if ( hit.collider.TryGetComponent<Entity>( out var entity ) )
+					{
+						_ent = entity;
+					}
 				}
 			}
 		}
 
 		private Collider _lastCollider;
 		private Entity _ent;
-
 
 		private bool Enabled => Local.Client.Tripod is DevTripod;
 

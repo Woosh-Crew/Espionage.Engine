@@ -40,6 +40,12 @@ namespace Espionage.Engine
 		/// </summary>
 		public static Scene Scene { get; private set; }
 
+		/// <summary>
+		/// The Main Camera Espionage.Engine creates. We recommend you
+		/// cache this as this will do a services Get() call.
+		/// </summary>
+		public static Camera Camera => Services.Get<CameraService>().Camera;
+
 		//
 		// Initialization
 		//
