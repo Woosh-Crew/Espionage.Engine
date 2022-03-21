@@ -10,6 +10,7 @@ namespace Espionage.Engine.Internal.Commands
 
 		private Action<object[]> _action;
 		public MemberInfo Info { get; internal set; }
+		public Type[] Parameters { get; internal set; }
 
 		public Command WithAction( Action<object[]> action )
 		{

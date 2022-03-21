@@ -5,7 +5,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Espionage.Engine.Internal.Logging
+namespace Espionage.Engine.Logging
 {
 	internal class UnityLoggingSerializer : ILoggingSerializer
 	{

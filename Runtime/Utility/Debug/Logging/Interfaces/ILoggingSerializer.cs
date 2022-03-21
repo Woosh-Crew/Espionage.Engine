@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Espionage.Engine.Internal.Logging
+namespace Espionage.Engine.Logging
 {
 	public interface ILoggingSerializer
 	{

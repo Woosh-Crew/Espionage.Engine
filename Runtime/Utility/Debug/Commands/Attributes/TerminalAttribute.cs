@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Espionage.Engine.Components;
 using Espionage.Engine.Internal.Commands;
 
@@ -24,7 +25,8 @@ namespace Espionage.Engine
 			{
 				Name = item.Name,
 				Help = item.Help,
-				Info = item.Info
+				Info = item.Info,
+				Parameters = item.Info.GetParameters().Select( e => e.ParameterType ).ToArray()
 			}.WithAction(
 				( e ) => item.Info?.Invoke( null, e )
 			);
@@ -44,7 +46,8 @@ namespace Espionage.Engine
 			{
 				Name = item.Name,
 				Help = item.Help,
-				Info = item.Info
+				Info = item.Info,
+				Parameters = new[] { item.Info.PropertyType }
 			}.WithAction(
 				( parameters ) =>
 				{

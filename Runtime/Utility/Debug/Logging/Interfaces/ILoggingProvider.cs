@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Espionage.Engine.Internal.Logging;
+using Espionage.Engine.Logging;
 
-namespace Espionage.Engine.Internal.Logging
+namespace Espionage.Engine.Logging
 {
 	public interface ILoggingProvider
 	{
@@ -41,12 +41,12 @@ public static class LoggingProviderExtensions
 		} );
 	}
 
-	public static void Info<T>( this ILoggingProvider provider, T message )
+	public static void Info<T>( this ILoggingProvider provider, T message, string stack = null )
 	{
 		provider?.Add( new()
 		{
 			Message = message.ToString(),
-			StackTrace = Environment.StackTrace,
+			StackTrace = string.IsNullOrWhiteSpace( stack ) ? Environment.StackTrace : stack,
 			Type = Entry.Level.Info
 		} );
 	}

@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
-using Espionage.Engine.Internal.Logging;
+using Espionage.Engine.Logging;
 using Espionage.Engine.Internal.Commands;
 using Espionage.Engine.Internal.Overlay;
 using UnityEngine;

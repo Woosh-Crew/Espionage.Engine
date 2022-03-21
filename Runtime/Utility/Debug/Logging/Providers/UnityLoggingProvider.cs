@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Espionage.Engine.Internal.Logging
+namespace Espionage.Engine.Logging
 {
 	internal class UnityLoggingProvider : ILoggingProvider
 	{
@@ -17,11 +17,10 @@ namespace Espionage.Engine.Internal.Logging
 			// Setup Unity log callback
 			Application.logMessageReceived += ( message, stack, type ) =>
 			{
-				Add( new Entry()
+				Add( new()
 				{
 					Message = message,
 					StackTrace = stack,
-
 					Type = type switch
 					{
 						LogType.Log => Entry.Level.Info,
@@ -30,7 +29,7 @@ namespace Espionage.Engine.Internal.Logging
 						LogType.Assert => Entry.Level.Exception,
 						LogType.Exception => Entry.Level.Exception,
 
-						_ => Entry.Level.Warning,
+						_ => Entry.Level.Warning
 					}
 				} );
 			};
@@ -41,9 +40,7 @@ namespace Espionage.Engine.Internal.Logging
 			OnLogged?.Invoke( entry );
 		}
 
-		public void Clear()
-		{
-		}
+		public void Clear() { }
 	}
 }
 

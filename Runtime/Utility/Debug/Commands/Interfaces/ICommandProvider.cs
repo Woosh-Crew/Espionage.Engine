@@ -8,7 +8,7 @@ namespace Espionage.Engine.Internal.Commands
 	public interface ICommandProvider
 	{
 		void Add( Command command );
-		void Invoke( string command, params string[] args );
+		void Invoke( string command, string[] args );
 		Command Get( string command );
 
 		IEnumerable<Command> All { get; }

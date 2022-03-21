@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Espionage.Engine.Internal.Commands
 {
@@ -43,7 +44,14 @@ namespace Espionage.Engine.Internal.Commands
 				return;
 			}
 
-			consoleCommand.Invoke( Command.ConvertArgs( consoleCommand.Info, args ) );
+			try
+			{
+				consoleCommand.Invoke( Command.ConvertArgs( consoleCommand.Info, args ) );
+			}
+			catch ( Exception e )
+			{
+				Dev.Log.Exception( e );
+			}
 
 			// Add to history stack, for use later
 			_history.Add( $"{command} {string.Join( ' ', args )}" );
