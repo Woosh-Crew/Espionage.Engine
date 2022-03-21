@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ImGuiNET;
+using UnityEngine;
 
 namespace Espionage.Engine.Tools
 {
@@ -10,9 +11,19 @@ namespace Espionage.Engine.Tools
 		[Function( "tool.layout" ), Callback( "imgui.layout" )]
 		internal static void DoLayout()
 		{
-			foreach ( var tool in All )
+			Library toRemove = null;
+
+			foreach ( var (key, value) in All )
 			{
-				tool.Value.Layout();
+				if ( value.Layout() )
+				{
+					toRemove = key;
+				}
+			}
+
+			if ( toRemove != null )
+			{
+				All[toRemove].Delete();
 			}
 		}
 
@@ -55,14 +66,19 @@ namespace Espionage.Engine.Tools
 
 		private bool _open;
 
-		internal void Layout()
+		internal bool Layout()
 		{
-			if ( !ImGui.Begin( ClassInfo.Title, ImGuiWindowFlags.NoSavedSettings ) )
+			var delete = true;
+
+			ImGui.SetNextWindowSize( new( 256, 356 ), ImGuiCond.Once );
+			if ( ImGui.Begin( ClassInfo.Title, ref delete, ImGuiWindowFlags.NoSavedSettings ) )
 			{
-				ImGui.End();
+				OnLayout();
 			}
 
-			OnLayout();
+			ImGui.End();
+
+			return !delete;
 		}
 
 		public abstract void OnLayout();

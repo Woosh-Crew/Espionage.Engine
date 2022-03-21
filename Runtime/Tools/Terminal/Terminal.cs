@@ -8,12 +8,13 @@ namespace Espionage.Engine.Tools
 	public class Terminal : Tool
 	{
 		private string _input = string.Empty;
+		private bool _scrollToBottom;
 
 		public override void OnLayout()
 		{
 			// Log Output
 
-			if ( ImGui.BeginChild( "Output", new( 0, 512 ), true, ImGuiWindowFlags.ChildWindow ) )
+			ImGui.BeginChild( "Output", new( 0, 512 ), true, ImGuiWindowFlags.ChildWindow );
 			{
 				foreach ( var entry in Dev.Log.All )
 				{
@@ -24,16 +25,33 @@ namespace Espionage.Engine.Tools
 					}
 				}
 
-				ImGui.EndChild();
+				if ( _scrollToBottom && ImGui.GetScrollY() >= ImGui.GetScrollMaxY() )
+				{
+					ImGui.SetScrollHereY( 1.0f );
+				}
+
 			}
+			ImGui.EndChild();
+
+			ImGui.Separator();
 
 			// Command Line
+
+			var reclaimFocus = false;
 
 			if ( ImGui.InputTextWithHint( string.Empty, "Enter Command...", ref _input, 160, ImGuiInputTextFlags.EnterReturnsTrue ) )
 			{
 				Dev.Log.Info( _input, "Inputted Text" );
 				Dev.Terminal.Invoke( _input );
 				_input = string.Empty;
+				_scrollToBottom = true;
+				reclaimFocus = true;
+			}
+
+			ImGui.SetItemDefaultFocus();
+			if ( reclaimFocus )
+			{
+				ImGui.SetKeyboardFocusHere( -1 );
 			}
 
 			// Hinting
@@ -46,7 +64,12 @@ namespace Espionage.Engine.Tools
 			var lastItem = ImGui.GetItemRectMin();
 			ImGui.SetNextWindowPos( lastItem + new Vector2( 0, ImGui.GetItemRectSize().y ) );
 
-			const ImGuiWindowFlags flags = ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.Tooltip | ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoSavedSettings |
+			// Lotta Flags.. Kinda looks like a flag
+			const ImGuiWindowFlags flags = ImGuiWindowFlags.NoBackground |
+			                               ImGuiWindowFlags.Tooltip |
+			                               ImGuiWindowFlags.NoDecoration |
+			                               ImGuiWindowFlags.AlwaysAutoResize |
+			                               ImGuiWindowFlags.NoSavedSettings |
 			                               ImGuiWindowFlags.NoFocusOnAppearing |
 			                               ImGuiWindowFlags.NoNav;
 
