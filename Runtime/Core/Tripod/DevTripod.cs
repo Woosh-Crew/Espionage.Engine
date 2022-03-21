@@ -24,6 +24,8 @@ namespace Espionage.Engine.Tripods
 		private bool _changeFov;
 		private float _targetFov;
 
+		private Entity _frontEntity;
+
 		private float _speedMulti = 1;
 
 		void ITripod.Build( ref Tripod.Setup camSetup )
@@ -69,21 +71,14 @@ namespace Espionage.Engine.Tripods
 
 			camSetup.Position = _interpolate ? Vector3.Lerp( camSetup.Position, _targetPos, 2 * Time.deltaTime ) : Vector3.Lerp( camSetup.Position, _targetPos, 5 * Time.deltaTime );
 
-			// Do shit in front of us
-			Dev.Overlay.Box( new( 128, 24 ), "THE DEV TRIPOD!!" );
-
-			if ( Physics.Raycast( camSetup.Position, camSetup.Rotation * Vector3.forward, out var hit, 20 ) && hit.collider.TryGetComponent<Entity>( out var entity ) )
+			// Dev stuff in front of us.
+			if ( Physics.Raycast( camSetup.Position, camSetup.Rotation * Vector3.forward, out var hit, 20 ) )
 			{
-				Dev.Overlay.Box( new( 128, 48 ), $"[{entity.ClassInfo.Group}] {entity.ClassInfo.Title}\n[{entity.ClassInfo.Name}]" );
+				_frontEntity = null;
 
-				if ( entity is Pawn pawn )
+				if ( hit.collider != null && hit.collider.TryGetComponent<Entity>( out var entity ) )
 				{
-					Dev.Overlay.Box( new( 128, 16 ), "Possess Pawn with [F]" );
-					if ( Input.GetKeyDown( KeyCode.F ) )
-					{
-						Dev.Terminal.Invoke( "dev.tripod" );
-						Local.Client.Pawn = pawn;
-					}
+					_frontEntity = entity;
 				}
 			}
 		}
@@ -151,9 +146,26 @@ namespace Espionage.Engine.Tripods
 			ImGui.SetNextWindowBgAlpha( 0.35f );
 			if ( ImGui.Begin( "Dev Tripod", flags ) )
 			{
-				ImGui.Text( "Developer Tripod" );
+				ImGui.Text( "[ Developer Tripod ]" );
 				ImGui.Separator();
-				ImGui.Text( $"Fov: {_targetFov}, Speed: {_speedMulti}" );
+				ImGui.Text( $"Fov: {(int)_targetFov}\nSpeed: {_speedMulti}" );
+
+				if ( _frontEntity != null )
+				{
+					ImGui.Separator();
+					ImGui.Text( $"[{_frontEntity.ClassInfo.Group}] {_frontEntity.ClassInfo.Title}\n[{_frontEntity.ClassInfo.Name}]" );
+
+					if ( _frontEntity is Pawn pawn )
+					{
+						ImGui.Separator();
+						ImGui.Text( "Possess Pawn with [F]" );
+						if ( Input.GetKeyDown( KeyCode.F ) )
+						{
+							Dev.Terminal.Invoke( "dev.tripod" );
+							Local.Client.Pawn = pawn;
+						}
+					}
+				}
 			}
 
 			ImGui.End();
