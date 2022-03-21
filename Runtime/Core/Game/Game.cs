@@ -1,8 +1,6 @@
 ﻿using Espionage.Engine.Gamemodes;
-using Espionage.Engine.Resources;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
-using Espionage.Engine.Viewmodels;
 
 namespace Espionage.Engine
 {
@@ -156,16 +154,6 @@ namespace Espionage.Engine
 			// Add support for flares
 			camera.gameObject.AddComponent<FlareLayer>();
 
-			// Setup Post Processing
-			var postProcessLayer = camera.gameObject.AddComponent<PostProcessLayer>();
-			postProcessLayer.Init( UnityEngine.Resources.Load<PostProcessResources>( "PostProcessResources" ) );
-
-			postProcessLayer.volumeTrigger = camera.transform;
-			postProcessLayer.volumeLayer = LayerMask.GetMask( "TransparentFX" );
-			postProcessLayer.antialiasingMode = PostProcessLayer.Antialiasing.SubpixelMorphologicalAntialiasing;
-
-			var debug = camera.gameObject.AddComponent<PostProcessDebug>();
-			debug.postProcessLayer = postProcessLayer;
 		}
 
 		// Build Controls

@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Espionage.Engine.Services
 {
+	[Title( "Developer" )]
 	public class DevService : Service
 	{
 		public override void OnUpdate()

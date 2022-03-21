@@ -1,10 +1,9 @@
-﻿using Espionage.Engine.Tripods;
-using Espionage.Engine.Internal;
+﻿using Espionage.Engine.Internal;
 using UnityEngine;
 
 namespace Espionage.Engine.Services
 {
-	[Order( -5 )]
+	[Order( -5 ), Title( "Cameras" )]
 	public class CameraService : Service
 	{
 		public Camera Camera => _camController.Camera;
