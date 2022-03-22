@@ -18,6 +18,7 @@ namespace Espionage.Engine.Tripods
 				return;
 			}
 
+			camSetup.Viewer = null;
 			var pawn = Local.Pawn;
 
 			// Set Rot first cause we use it below

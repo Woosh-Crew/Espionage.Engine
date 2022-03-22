@@ -30,7 +30,7 @@ Transform:
   m_Children:
   - {fileID: 8657958254618683856}
   m_Father: {fileID: 7811846501213469238}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6588455279810503946
 GameObject:
@@ -45,10 +45,10 @@ GameObject:
   - component: {fileID: 1018398870550434286}
   - component: {fileID: 6257697963679273195}
   - component: {fileID: 7118727389276054331}
-  - component: {fileID: 3191258976054525598}
+  - component: {fileID: 1550344990045928547}
   - component: {fileID: -5532259837855969405}
+  - component: {fileID: 7706823038332879962}
   - component: {fileID: 8571425568235216450}
-  - component: {fileID: 8213110094436585677}
   - component: {fileID: 7229246937776732865}
   m_Layer: 7
   m_Name: Player
@@ -123,7 +123,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a7979bcfdcb4fb3b70d2bb5bfc12992, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &3191258976054525598
+--- !u!114 &1550344990045928547
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -135,9 +135,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 028b85bc1b9040dfbbdb08d319c6476f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tripods:
-  - {fileID: -5532259837855969405}
-  - {fileID: 8213110094436585677}
 --- !u!114 &-5532259837855969405
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -150,6 +147,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d422518a7ed54755982075079c49160e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  clamp: {x: -88, y: 88}
+  neckLength: 0.5
+--- !u!114 &7706823038332879962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6588455279810503946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7414e0ccf69245d18b124bd21a57c292, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clamp: {x: -88, y: 88}
+  offset: {x: 0, y: 0}
+  smoothing: 20
+  distance: 5
+  padding: 0.1
+  minDistance: 1
+  maxDistance: 15
+  damping: 15
 --- !u!114 &8571425568235216450
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -165,25 +184,6 @@ MonoBehaviour:
   eyeHeight: 1.65
   walkSpeed: 7
   sprintSpeed: 12
---- !u!114 &8213110094436585677
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6588455279810503946}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7414e0ccf69245d18b124bd21a57c292, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  offset: {x: 0, y: 0}
-  smoothing: 20
-  distance: 5
-  padding: 0.1
-  minDistance: 1
-  maxDistance: 15
-  damping: 15
 --- !u!143 &7229246937776732865
 CharacterController:
   m_ObjectHideFlags: 0
@@ -207,12 +207,11 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    serializedVersion: 2
     m_TransformParent: {fileID: 7910954118949577476}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 31a6b09a4c9106743a7a95cc214be341, type: 3}
       propertyPath: m_RootOrder
-      value: -1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 31a6b09a4c9106743a7a95cc214be341, type: 3}
       propertyPath: m_LocalPosition.x
@@ -259,7 +258,6 @@ PrefabInstance:
       value: Garry
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 31a6b09a4c9106743a7a95cc214be341, type: 3}
 --- !u!4 &8657958254618683856 stripped
 Transform:

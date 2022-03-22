@@ -21,12 +21,14 @@ namespace Espionage.Engine.Tripods
 		private Vector3 _viewAngles;
 		private Quaternion _targetRot;
 
+		private Transform _lastViewer;
+
 		void ITripod.Build( ref Tripod.Setup camSetup )
 		{
 			camSetup.Viewer = null;
-			if ( Local.Pawn != null )
+			if ( _lastViewer != null )
 			{
-				camSetup.Viewer = Local.Pawn.Visuals;
+				camSetup.Viewer = _lastViewer;
 			}
 
 			// Rotation
@@ -68,13 +70,19 @@ namespace Espionage.Engine.Tripods
 
 			_savedLock = Controls.Cursor.Locked;
 			_savedVis = Controls.Cursor.Visible;
+
+			_lastViewer = null;
+
+			if ( camSetup.Viewer != null )
+			{
+				_lastViewer = camSetup.Viewer;
+			}
 		}
 
 		public void Deactivated()
 		{
 			Controls.Cursor.Locked = _savedLock;
 			Controls.Cursor.Visible = _savedVis;
-
 		}
 
 		// Cursor

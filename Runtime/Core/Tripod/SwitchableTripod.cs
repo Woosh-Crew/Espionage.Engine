@@ -1,30 +1,32 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 namespace Espionage.Engine.Tripods
 {
-	public class SwitchableTripod : Component<Pawn>, ISimulated
+	public class SwitchableTripod : Component<Pawn>, Pawn.ICallbacks, ISimulated
 	{
-		private int _index;
+		private Tripod[] Tripods { get; set; }
 
-		protected override void OnAttached( Pawn item )
+		protected override void OnReady()
 		{
-			base.OnAttached( item );
-			Entity.Tripod = tripods[0];
+			Tripods = Entity.Components.GetAll<Tripod>().ToArray();
 		}
+
+		public void Possess( Client client )
+		{
+			Entity.Tripod = Tripods[_index];
+		}
+
+		private int _index = 0;
 
 		public void Simulate( Client cl )
 		{
 			if ( Input.GetKeyDown( KeyCode.C ) )
 			{
 				_index++;
-				_index %= tripods.Length;
-				Entity.Tripod = tripods[_index];
+				_index %= Tripods.Length;
+				Entity.Tripod = Tripods[_index];
 			}
 		}
-
-		// Fields
-
-		[SerializeField]
-		private Tripod[] tripods;
 	}
 }

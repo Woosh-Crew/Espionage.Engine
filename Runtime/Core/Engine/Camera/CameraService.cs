@@ -38,7 +38,6 @@ namespace Espionage.Engine.Services
 		{
 			// Default FOV
 			_lastSetup.FieldOfView = 68;
-			_lastSetup.Viewer = null;
 			_lastSetup.Clipping = new( 0.1f, 700 );
 			_lastSetup.Camera = _camController.Camera;
 
