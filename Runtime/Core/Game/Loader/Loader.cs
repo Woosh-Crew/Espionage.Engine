@@ -12,26 +12,18 @@ namespace Espionage.Engine
 	[Spawnable, Group( "Engine" )]
 	public class Loader
 	{
-		public Library ClassInfo { get; }
-
-		public Loader( string scene )
-		{
-			ClassInfo = Library.Database[GetType()];
-			Scene = scene;
-		}
+		public Loader( string scene ) { }
 
 		public Action Started { get; set; }
 		public Action Finished { get; set; }
-		public string Scene { get; }
 
 		// Queue
 
-		public bool IsLoading => Queue != null;
-		public Queue<ILoadable> Queue { get; private set; }
+		public ILoadable Current { get; private set; }
 
 		public virtual void Start( Queue<ILoadable> queue, Action onFinish = null )
 		{
-			if ( IsLoading )
+			if ( Queue != null )
 			{
 				throw new ApplicationException( "Already loading something" );
 			}
@@ -51,11 +43,24 @@ namespace Espionage.Engine
 			Started = null;
 
 			Queue = null;
+			Current = null;
 		}
+
+		private Queue<ILoadable> Queue { get; set; }
 
 		private void Load( ILoadable loadable )
 		{
-			loadable?.Load( () => { Load( Queue.Dequeue() ); } );
+			Current = loadable;
+			loadable?.Load( () =>
+			{
+				if ( Queue.Count == 0 )
+				{
+					Finish();
+					return;
+				}
+
+				Load( Queue.Dequeue() );
+			} );
 		}
 	}
 }

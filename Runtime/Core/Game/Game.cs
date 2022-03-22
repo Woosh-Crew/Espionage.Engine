@@ -12,6 +12,7 @@ namespace Espionage.Engine
 	public abstract partial class Game : ILibrary
 	{
 		public Library ClassInfo { get; }
+		public Loader Loader { get; protected set; }
 
 		public Game()
 		{
