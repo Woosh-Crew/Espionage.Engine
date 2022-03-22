@@ -18,6 +18,8 @@ namespace Espionage.Engine.Tripods
 		private Vector3 _direction;
 		private Vector3 _targetPos;
 
+		private float _targetFov;
+
 		private Vector3 _viewAngles;
 		private Quaternion _targetRot;
 
@@ -25,6 +27,11 @@ namespace Espionage.Engine.Tripods
 
 		void ITripod.Build( ref Tripod.Setup camSetup )
 		{
+			// Field Of View
+			camSetup.Damping = 10;
+			camSetup.FieldOfView = _targetFov;
+
+			// Viewer
 			camSetup.Viewer = null;
 			if ( _lastViewer != null )
 			{
@@ -71,6 +78,8 @@ namespace Espionage.Engine.Tripods
 			_savedLock = Controls.Cursor.Locked;
 			_savedVis = Controls.Cursor.Visible;
 
+			_targetFov = 68;
+
 			_lastViewer = null;
 
 			if ( camSetup.Viewer != null )
@@ -107,6 +116,9 @@ namespace Espionage.Engine.Tripods
 
 				_direction = new( setup.Horizontal, 0, setup.Forward );
 				_direction *= 1.5f;
+
+				_targetFov -= setup.Mouse.Wheel * 20;
+				_targetFov = Mathf.Clamp( _targetFov, 1, 120 );
 
 				if ( setup.Mouse.Delta.magnitude >= 0.045f )
 				{
