@@ -16,7 +16,7 @@ namespace Espionage.Engine.ImGUI
 	{
 		public static IRenderer Create( RenderType type, ShaderResourcesAsset shaders, TextureManager textures )
 		{
-			Assert.IsNotNull( shaders, "Shaders not assigned." );
+			// Assert.IsNotNull( shaders, "Shaders not assigned." );
 
 			switch ( type )
 			{

@@ -4,10 +4,7 @@ using UnityEngine;
 [Title( "Sneaky Killer" )]
 public class SneakyKiller : Game
 {
-	public SneakyKiller()
-	{
-		Loader = new( "Bum" );
-	}
+	public SneakyKiller() { }
 
 	public override void OnReady() { }
 	public override void OnShutdown() { }

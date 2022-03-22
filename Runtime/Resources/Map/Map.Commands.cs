@@ -26,10 +26,7 @@ namespace Espionage.Engine.Resources
 			}
 
 			var map = Find( path );
-			var queue = new Queue<ILoadable>();
-			queue.Enqueue( map );
-
-			Engine.Game.Loader.Start( queue, () => Dev.Log.Info( "Loaded" ) );
+			Engine.Game.Loader.Start( () => Dev.Log.Info( "Loaded" ) );
 		}
 
 		[Function( "map.reload" ), Terminal]

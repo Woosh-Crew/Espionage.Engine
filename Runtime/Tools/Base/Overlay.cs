@@ -20,9 +20,9 @@ namespace Espionage.Engine.Tools
 			const float padding = 16;
 			var viewport = ImGui.GetMainViewport();
 			var workPos = viewport.WorkPos;
-			var windowPos = new Vector2 { x = workPos.x + padding, y = viewport.Size.y - padding - (padding - Offset) - 8 * Index };
+			var windowPos = new Vector2 { x = workPos.x + viewport.Size.x - padding, y = workPos.y + padding + Offset + 4 * Index };
 
-			ImGui.SetNextWindowPos( windowPos, ImGuiCond.Always );
+			ImGui.SetNextWindowPos( windowPos, ImGuiCond.Always, new( 1f, 0f ) );
 
 			ImGui.SetNextWindowBgAlpha( 0.35f );
 			if ( ImGui.Begin( ClassInfo.Title, ref delete, windowFlags ) )

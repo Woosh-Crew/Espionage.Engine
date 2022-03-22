@@ -75,9 +75,9 @@ public static class LoggingProviderExtensions
 	{
 		provider?.Add( new()
 		{
-			Message = $"[EXCEPTION] {exception.Message}, {exception.StackTrace}",
-			StackTrace = Environment.StackTrace,
-			Type = Entry.Level.Error
+			Message = $"{exception.Message}",
+			StackTrace = exception.StackTrace,
+			Type = Entry.Level.Exception
 		} );
 	}
 }

@@ -32,8 +32,35 @@ namespace Espionage.Engine.Tools
 
 		public override void OnLayout()
 		{
+			ImGui.Text( $"Position: {_camera.transform.position}" );
 			ImGui.Text( $"Rotation: {_camera.transform.rotation}" );
 			ImGui.Text( $"Field Of View: {(int)_camera.fieldOfView}" );
+		}
+	}
+
+	public class LoaderStats : Overlay
+	{
+		public override void OnLayout()
+		{
+			var loader = Engine.Game.Loader;
+
+			if ( loader.Current == null )
+			{
+				ImGui.Text( "Nothing is being loaded." );
+
+				// Last Loaded
+				if ( loader.Timing != null )
+				{
+					ImGui.Separator();
+					var time = loader.Timing.Elapsed.Seconds > 0 ? $"{loader.Timing.Elapsed.TotalSeconds} seconds" : $"{loader.Timing.Elapsed.TotalMilliseconds} ms";
+					ImGui.Text( $"Load Time: {time}" );
+				}
+
+				return;
+			}
+
+			ImGui.Text( $"Loading: {loader.Current.Text}" );
+			ImGui.Text( $"Progress: {loader.Current.Progress}" );
 		}
 	}
 }

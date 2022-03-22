@@ -44,14 +44,7 @@ namespace Espionage.Engine.Internal.Commands
 				return;
 			}
 
-			try
-			{
-				consoleCommand.Invoke( Command.ConvertArgs( consoleCommand.Info, args ) );
-			}
-			catch ( Exception e )
-			{
-				Dev.Log.Exception( e );
-			}
+			consoleCommand.Invoke( Command.ConvertArgs( consoleCommand.Info, args ) );
 
 			// Add to history stack, for use later
 			_history.Add( $"{command} {string.Join( ' ', args )}" );

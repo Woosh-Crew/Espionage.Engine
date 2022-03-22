@@ -59,7 +59,7 @@ namespace Espionage.Engine.ImGUI.Platform
 
 		public virtual void PrepareFrame( ImGuiIOPtr io, Rect displayRect )
 		{
-			Assert.IsTrue( io.Fonts.IsBuilt(), "Font atlas not built! Generally built by the renderer. Missing call to renderer NewFrame() function?" );
+			Assert.IsFalse( io.Fonts.IsBuilt(), "Font atlas not built! Generally built by the renderer. Missing call to renderer NewFrame() function?" );
 
 			io.DisplaySize = displayRect.size; // TODO: dpi aware, scale, etc.
 

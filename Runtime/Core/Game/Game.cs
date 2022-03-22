@@ -16,6 +16,8 @@ namespace Espionage.Engine
 
 		public Game()
 		{
+			Loader = new();
+
 			// Doesn't go out of scope, no need
 			// to unregister it.
 			ClassInfo = Library.Register( this );

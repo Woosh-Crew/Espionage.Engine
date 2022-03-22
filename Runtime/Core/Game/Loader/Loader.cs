@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using UnityEngine.Assertions;
 
 namespace Espionage.Engine
 {
@@ -12,31 +14,51 @@ namespace Espionage.Engine
 	[Spawnable, Group( "Engine" )]
 	public class Loader
 	{
-		public Loader( string scene ) { }
+		public Loader() { }
 
 		public Action Started { get; set; }
 		public Action Finished { get; set; }
+
+		// Debug
+		public Stopwatch Timing { get; private set; }
 
 		// Queue
 
 		public ILoadable Current { get; private set; }
 
-		public virtual void Start( Queue<ILoadable> queue, Action onFinish = null )
+		public void Start( Action onFinish = null, params ILoadable[] request )
 		{
+			Assert.IsEmpty( request );
+
 			if ( Queue != null )
 			{
 				throw new ApplicationException( "Already loading something" );
 			}
 
-			Queue = queue;
+			Timing = Stopwatch.StartNew();
+
+			Finished += () => Timing.Stop();
+			Finished += onFinish;
+
+			// Enqueue the Request
+			Queue = new();
+			for ( var i = 0; i < request.Length; i++ )
+			{
+				Queue.Enqueue( request[i] );
+			}
+
+			// Start Loading
 			Load( Queue.Dequeue() );
 
+			OnStart();
 			Started?.Invoke();
-			Finished += onFinish;
 		}
 
-		protected virtual void Finish()
+		protected virtual void OnStart() { }
+
+		private void Finish()
 		{
+			OnFinish();
 			Finished?.Invoke();
 
 			Finished = null;
@@ -45,6 +67,8 @@ namespace Espionage.Engine
 			Queue = null;
 			Current = null;
 		}
+
+		protected virtual void OnFinish() { }
 
 		private Queue<ILoadable> Queue { get; set; }
 

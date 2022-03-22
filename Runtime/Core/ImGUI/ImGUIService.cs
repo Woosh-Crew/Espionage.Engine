@@ -91,10 +91,6 @@ namespace Espionage.Engine.ImGUI
 				UImGuiUtility.DoLayout( this );
 				Callback.Run( "imgui.layout" );
 			}
-			catch ( Exception e )
-			{
-				Dev.Log.Exception( e );
-			}
 			finally
 			{
 				ImGui.Render();
