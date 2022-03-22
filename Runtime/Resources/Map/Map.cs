@@ -34,6 +34,13 @@ namespace Espionage.Engine.Resources
 
 			Current = new( provider );
 			Callback.Run( "map.loaded" );
+
+			foreach ( var item in Files.Pathing.All( "maps://" ) )
+			{
+				// Cache Found Maps
+				Find( item );
+			}
+
 		}
 
 		/// <summary>
@@ -74,15 +81,15 @@ namespace Espionage.Engine.Resources
 		//
 
 		public Library ClassInfo { get; } = Library.Database[typeof( Map )];
-		public string Identifier => Provider.Identifier;
+		[Property] public string Identifier => Provider.Identifier;
 
 		public Components<Map> Components { get; }
 		private Binder Provider { get; }
 
 		// Loadable 
 
-		float ILoadable.Progress => Provider.Progress;
-		string ILoadable.Text => Components.TryGet( out Meta meta ) ? $"Loading {meta.Title}" : "Loading";
+		[Property] float ILoadable.Progress => Provider.Progress;
+		[Property] string ILoadable.Text => Components.TryGet( out Meta meta ) ? $"Loading {meta.Title}" : "Loading";
 
 		private Map( Binder provider )
 		{
@@ -95,6 +102,7 @@ namespace Espionage.Engine.Resources
 		public Action Loaded { get; set; }
 		public Action Unloaded { get; set; }
 
+		[Function, Button]
 		public void Load( Action loaded = null )
 		{
 			loaded += () => Callback.Run( "map.loaded" );
@@ -129,7 +137,7 @@ namespace Espionage.Engine.Resources
 			Provider.Load( loaded );
 		}
 
-		public void Unload( Action unloaded = null )
+		private void Unload( Action unloaded = null )
 		{
 			// Add Callback
 			unloaded += () => Callback.Run( "map.unloaded" );

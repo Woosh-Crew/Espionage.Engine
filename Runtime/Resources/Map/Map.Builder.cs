@@ -15,6 +15,12 @@ namespace Espionage.Engine.Resources
 		{
 			path = Files.Pathing.Absolute( path );
 
+			if ( !Files.Pathing.Exists( path ) )
+			{
+				Dev.Log.Info( $"Path [{path}], doesn't exist" );
+				return default;
+			}
+
 			// Use the Database Map if we have it
 			if ( Exists( path ) )
 			{

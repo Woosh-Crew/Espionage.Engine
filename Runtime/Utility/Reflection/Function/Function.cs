@@ -44,24 +44,43 @@ namespace Espionage.Engine
 		// Invokers
 		//
 
+		private object[] GetDefaultArgs( object[] args )
+		{
+			var parameters = Info.GetParameters();
+
+			if ( parameters.Length == 0 )
+			{
+				return null;
+			}
+
+			var finalArgs = new object[parameters.Length];
+
+			for ( var i = 0; i < parameters.Length; i++ )
+			{
+				finalArgs[i] = args?[i] == null || i >= args.Length ? parameters[i].DefaultValue : args[i];
+			}
+
+			return finalArgs;
+		}
+
 		public object Invoke( object target )
 		{
-			return Info.Invoke( target, null );
+			return Info.Invoke( target, GetDefaultArgs( null ) );
 		}
 
 		public T Invoke<T>( object target )
 		{
-			return (T)Info.Invoke( target, null );
+			return (T)Info.Invoke( target, GetDefaultArgs( null ) );
 		}
 
 		public object Invoke( object target, params object[] parameters )
 		{
-			return Info.Invoke( target, parameters );
+			return Info.Invoke( target, GetDefaultArgs( parameters ) );
 		}
 
 		public T Invoke<T>( object target, params object[] parameters )
 		{
-			return (T)Info.Invoke( target, parameters );
+			return (T)Info.Invoke( target, GetDefaultArgs( parameters ) );
 		}
 	}
 }

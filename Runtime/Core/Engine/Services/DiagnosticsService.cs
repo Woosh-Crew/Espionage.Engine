@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Espionage.Engine.Tools;
 using Espionage.Engine.Tripods;
 using ImGuiNET;
-using ImGuizmoNET;
 using UnityEngine;
 
 namespace Espionage.Engine.Services
@@ -15,9 +13,6 @@ namespace Espionage.Engine.Services
 	/// </summary>
 	public class DiagnosticsService : Service
 	{
-		public ILibrary Selection { get; set; }
-		public Entity Hovering { get; set; }
-
 		private Camera _camera;
 
 		public override void OnReady()
@@ -26,6 +21,18 @@ namespace Espionage.Engine.Services
 
 			_toolsGrouping = Library.Database.GetAll<Window>().Where( e => !e.Class.IsAbstract ).GroupBy( e => e.Group );
 		}
+
+		public ILibrary Selection
+		{
+			get => _selection;
+			set
+			{
+				Window.Show<Inspector>();
+				_selection = value;
+			}
+		}
+
+		public Entity Hovering { get; set; }
 
 		public override void OnUpdate()
 		{
@@ -63,7 +70,6 @@ namespace Espionage.Engine.Services
 
 					if ( hit.collider.TryGetComponent<Entity>( out var entity ) )
 					{
-						Window.Show<Inspector>();
 						Selection = entity;
 					}
 				}
@@ -92,6 +98,7 @@ namespace Espionage.Engine.Services
 		//
 
 		private IEnumerable<IGrouping<string, Library>> _toolsGrouping;
+		private ILibrary _selection;
 
 		[Function, Callback( "imgui.layout" )]
 		private void Layout()

@@ -145,5 +145,17 @@ namespace Espionage.Engine.IO
 			path = Absolute( path );
 			return Directory.Exists( path ) || File.Exists( path );
 		}
+
+		public string[] All( string path )
+		{
+			path = Absolute( path );
+
+			if ( !Exists( path ) )
+			{
+				return null;
+			}
+
+			return Directory.GetFiles( path );
+		}
 	}
 }

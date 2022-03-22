@@ -9,9 +9,20 @@ namespace Espionage.Engine.Tools
 	public abstract class Window : ILibrary
 	{
 		internal static Dictionary<Library, Window> All { get; } = new();
+		private static Queue<Window> Buffer { get; } = new();
+
+		private static bool _running;
 
 		internal static void Apply( DiagnosticsService service )
 		{
+			_running = true;
+
+			for ( var i = 0; i < Buffer.Count; i++ )
+			{
+				var value = Buffer.Dequeue();
+				All.Add( value.ClassInfo, value );
+			}
+
 			// This is bad..
 			Overlay.Offset = 0;
 			Overlay.Index = 0;
@@ -34,6 +45,8 @@ namespace Espionage.Engine.Tools
 			{
 				All[toRemove].Delete();
 			}
+
+			_running = false;
 		}
 
 		public static T Show<T>() where T : Window
@@ -57,7 +70,15 @@ namespace Espionage.Engine.Tools
 		public Window()
 		{
 			ClassInfo = Library.Register( this );
-			All.Add( ClassInfo, this );
+
+			if ( !_running )
+			{
+				All.Add( ClassInfo, this );
+			}
+			else
+			{
+				Buffer.Enqueue( this );
+			}
 		}
 
 		public void Delete()

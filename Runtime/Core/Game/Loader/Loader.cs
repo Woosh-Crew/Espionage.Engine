@@ -14,8 +14,6 @@ namespace Espionage.Engine
 	[Spawnable, Group( "Engine" )]
 	public class Loader
 	{
-		public Loader() { }
-
 		public Action Started { get; set; }
 		public Action Finished { get; set; }
 
@@ -25,6 +23,11 @@ namespace Espionage.Engine
 		// Queue
 
 		public ILoadable Current { get; private set; }
+
+		public void Start( params ILoadable[] request )
+		{
+			Start( null, request );
+		}
 
 		public void Start( Action onFinish = null, params ILoadable[] request )
 		{

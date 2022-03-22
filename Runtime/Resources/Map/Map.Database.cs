@@ -4,7 +4,7 @@ namespace Espionage.Engine.Resources
 {
 	public sealed partial class Map
 	{
-		private static IDatabase<Map, string> Database { get; } = new InternalDatabase();
+		public static IDatabase<Map, string> Database { get; } = new InternalDatabase();
 
 		private class InternalDatabase : IDatabase<Map, string>
 		{

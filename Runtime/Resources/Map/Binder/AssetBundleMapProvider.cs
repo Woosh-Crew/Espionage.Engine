@@ -11,7 +11,18 @@ namespace Espionage.Engine.Resources.Binders
 		public override string Identifier { get; }
 
 		// Loading Meta
-		public override float Progress => _bundleRequestOperation.progress / 2 + _sceneLoadOperation.progress / 2;
+		public override float Progress
+		{
+			get
+			{
+				if ( _bundleRequestOperation == null || _sceneLoadOperation == null )
+				{
+					return 0;
+				}
+
+				return _bundleRequestOperation.progress / 2 + _sceneLoadOperation.progress / 2;
+			}
+		}
 
 		public AssetBundleMapProvider( string path )
 		{

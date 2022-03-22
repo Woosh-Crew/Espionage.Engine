@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Espionage.Engine.Resources
+﻿namespace Espionage.Engine.Resources
 {
 	public sealed partial class Map
 	{
@@ -26,7 +24,13 @@ namespace Espionage.Engine.Resources
 			}
 
 			var map = Find( path );
-			Engine.Game.Loader.Start( () => Dev.Log.Info( "Loaded" ) );
+
+			if ( map == null )
+			{
+				return;
+			}
+
+			Engine.Game.Loader.Start( map );
 		}
 
 		[Function( "map.reload" ), Terminal]

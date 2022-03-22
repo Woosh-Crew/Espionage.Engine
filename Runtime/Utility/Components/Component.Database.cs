@@ -66,9 +66,9 @@ namespace Espionage.Engine.Components
 		// Accessors
 		//
 
-		public TComp Get<TComp>()
+		public TComp Get<TComp>() where TComp : class
 		{
-			return (TComp)All.FirstOrDefault( e => e is TComp );
+			return All.FirstOrDefault( e => e is TComp ) as TComp;
 		}
 
 		public TComp GetOrCreate<TComp>() where TComp : class, new()
@@ -76,7 +76,7 @@ namespace Espionage.Engine.Components
 			return TryGet<TComp>( out var comp ) ? comp : new();
 		}
 
-		public TComp GetOrCreate<TComp>( Func<TComp> creation )
+		public TComp GetOrCreate<TComp>( Func<TComp> creation ) where TComp : class
 		{
 			return TryGet<TComp>( out var comp ) ? comp : Create( creation );
 		}
@@ -116,7 +116,7 @@ namespace Espionage.Engine.Components
 			return All.OfType<TComp>();
 		}
 
-		public bool TryGet<TComp>( out TComp output )
+		public bool TryGet<TComp>( out TComp output ) where TComp : class
 		{
 			output = Get<TComp>();
 			return output != null;
