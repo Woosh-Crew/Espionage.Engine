@@ -5,12 +5,17 @@ using ImGuiNET;
 
 namespace Espionage.Engine.Tools
 {
+	[Group( "Windows" )]
 	public abstract class Window : ILibrary
 	{
-		private static Dictionary<Library, Window> All { get; } = new();
+		internal static Dictionary<Library, Window> All { get; } = new();
 
 		internal static void Apply( DiagnosticsService service )
 		{
+			// This is bad..
+			Overlay.Offset = 0;
+			Overlay.Index = 0;
+
 			// I'd assume you wouldn't be able 
 			// to remove more then 1 window on
 			// the same frame.
@@ -45,27 +50,6 @@ namespace Espionage.Engine.Tools
 			return item as T;
 		}
 
-		[Function( "tool.menu_bar" ), Callback( "dev.menu_bar.tools" )]
-		private static void MenuBarLayout()
-		{
-			var menuItems = Library.Database.GetAll<Window>().Where( e => !e.Class.IsAbstract );
-
-			// Post Processing Debug Overlays
-			foreach ( var value in menuItems )
-			{
-				if ( ImGui.MenuItem( value.Title, null, All.ContainsKey( value ) ) )
-				{
-					if ( All.ContainsKey( value ) )
-					{
-						All[value].Delete();
-						continue;
-					}
-
-					Library.Create( value );
-				}
-			}
-		}
-
 		// Instance
 
 		public Library ClassInfo { get; }
@@ -87,6 +71,11 @@ namespace Espionage.Engine.Tools
 
 		internal virtual bool Layout()
 		{
+			if ( !Service.Enabled )
+			{
+				return false;
+			}
+
 			var delete = true;
 
 			ImGui.SetNextWindowSize( new( 256, 356 ), ImGuiCond.Once );

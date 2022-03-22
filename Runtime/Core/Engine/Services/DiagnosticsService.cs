@@ -1,4 +1,7 @@
-﻿using Espionage.Engine.Tools;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using Espionage.Engine.Tools;
 using Espionage.Engine.Tripods;
 using ImGuiNET;
 using ImGuizmoNET;
@@ -20,6 +23,8 @@ namespace Espionage.Engine.Services
 		public override void OnReady()
 		{
 			_camera = Engine.Camera;
+
+			_toolsGrouping = Library.Database.GetAll<Window>().Where( e => !e.Class.IsAbstract ).GroupBy( e => e.Group );
 		}
 
 		public override void OnUpdate()
@@ -73,21 +78,23 @@ namespace Espionage.Engine.Services
 
 		private Collider _lastCollider;
 
-		private bool Enabled => Local.Client.Tripod is DevTripod;
+		public bool Enabled => Local.Client.Tripod is DevTripod;
 
 		//
 		// UI
 		//
 
+		private IEnumerable<IGrouping<string, Library>> _toolsGrouping;
+
 		[Function, Callback( "imgui.layout" )]
 		private void Layout()
 		{
+			Window.Apply( this );
+
 			if ( !Enabled )
 			{
 				return;
 			}
-
-			Window.Apply( this );
 
 			// Active Hovering Entity Tooltip
 			if ( Hovering != null )
@@ -117,7 +124,30 @@ namespace Espionage.Engine.Services
 
 				if ( ImGui.BeginMenu( "Tools" ) )
 				{
-					Callback.Run( "dev.menu_bar.tools" );
+
+					// Post Processing Debug Overlays
+					foreach ( var value in _toolsGrouping )
+					{
+						if ( ImGui.BeginMenu( value.Key ) )
+						{
+							foreach ( var item in value )
+							{
+								if ( ImGui.MenuItem( item.Title, null, Window.All.ContainsKey( item ) ) )
+								{
+									if ( Window.All.ContainsKey( item ) )
+									{
+										Window.All[item].Delete();
+										continue;
+									}
+
+									Library.Create( item );
+								}
+							}
+
+							ImGui.EndMenu();
+						}
+					}
+
 					ImGui.EndMenu();
 				}
 
