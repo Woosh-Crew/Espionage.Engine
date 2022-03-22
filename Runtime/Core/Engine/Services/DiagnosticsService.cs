@@ -51,6 +51,7 @@ namespace Espionage.Engine.Services
 
 					if ( hit.collider.TryGetComponent<Entity>( out var entity ) )
 					{
+						Window.Show<Inspector>();
 						Selection = entity;
 					}
 				}

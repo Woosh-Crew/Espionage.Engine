@@ -33,8 +33,15 @@ namespace Espionage.Engine.Tools
 
 		public static T Show<T>() where T : Window
 		{
+			var lib = Library.Database[typeof( T )];
+
+			if ( All.ContainsKey( lib ) )
+			{
+				return All[lib] as T;
+			}
+
 			// Gotta do this or the compiler has a fit?
-			var item = Library.Database.Create<Window>( typeof( T ) );
+			var item = Library.Database.Create<Window>( lib );
 			return item as T;
 		}
 
