@@ -11,7 +11,18 @@ namespace Espionage.Engine.Resources.Binders
 		public override string Identifier => $"index:{_buildIndex}";
 
 		// Loading Meta
-		public override float Progress => _operation.progress;
+		public override float Progress
+		{
+			get
+			{
+				if ( _operation == null )
+				{
+					return 0;
+				}
+
+				return _operation.progress;
+			}
+		}
 
 		public BuildIndexMapProvider( int index )
 		{

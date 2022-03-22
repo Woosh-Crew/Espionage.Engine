@@ -12,11 +12,23 @@ namespace Espionage.Engine.Tools
 			{
 				foreach ( var entry in Map.Database.All )
 				{
-					if ( ImGui.Selectable(entry.Identifier) )
+					if ( ImGui.Selectable( entry.Identifier ) )
 					{
 						Service.Selection = entry;
 					}
-					
+
+					if ( ImGui.BeginPopupContextItem() ) // <-- use last item id as popup id
+					{
+						if ( ImGui.Button( "Close" ) )
+						{
+							ImGui.CloseCurrentPopup();
+						}
+
+						ImGui.EndPopup();
+					}
+
+					ImGui.OpenPopupOnItemClick( "map_menu", ImGuiPopupFlags.MouseButtonRight );
+
 					if ( ImGui.IsItemHovered() && entry.Components.TryGet<Meta>( out var meta ) )
 					{
 						ImGui.BeginTooltip();

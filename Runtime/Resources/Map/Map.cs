@@ -102,9 +102,18 @@ namespace Espionage.Engine.Resources
 		public Action Loaded { get; set; }
 		public Action Unloaded { get; set; }
 
-		[Function, Button]
+		[Function, Button, Help( "Forcefully load Map" )]
 		public void Load( Action loaded = null )
 		{
+			if ( Engine.Game.Loader?.Current != this )
+			{
+				Dev.Log.Error( "Don't forcefully load a map without using the loader!" );
+				Dev.Log.Warning( "Forcefully reattempting map load through loader." );
+
+				Engine.Game.Loader?.Start( loaded, this );
+				return;
+			}
+
 			loaded += () => Callback.Run( "map.loaded" );
 			loaded += Loaded;
 
