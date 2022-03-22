@@ -66,7 +66,7 @@ namespace Espionage.Engine
 			{
 				if ( args[i].StartsWith( "+" ) )
 				{
-					Terminal.Invoke( args[i], new[] { args[i + 1] } );
+					Terminal.Invoke( args[i][1..], new[] { args[i + 1] } );
 				}
 			}
 		}
