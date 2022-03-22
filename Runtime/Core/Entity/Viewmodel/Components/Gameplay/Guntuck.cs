@@ -11,7 +11,7 @@ namespace Espionage.Engine.Viewmodels
 			var distance = Vector3.Distance( muzzle.position, setup.Position );
 			var start = muzzle.position + muzzle.rotation * Vector3.back * distance;
 
-			var hit = Physics.Raycast( new( start, muzzle.rotation * Vector3.forward ), out var info, distance, ~LayerMask.GetMask( "Viewmodel", "Pawn" ) );
+			var hit = Physics.Raycast( new( start, muzzle.rotation * Vector3.forward ), out var info, distance, ~LayerMask.GetMask( "Viewmodel", "Pawn" ), QueryTriggerInteraction.Ignore );
 
 			_dampedOffset = _dampedOffset.LerpTo( -(hit ? info.distance - distance : 0), damping * Time.deltaTime );
 

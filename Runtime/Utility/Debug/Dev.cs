@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using Espionage.Engine.Logging;
 using Espionage.Engine.Internal.Commands;
+using Steamworks.Ugc;
 using UnityEngine;
 
 namespace Espionage.Engine
@@ -82,6 +83,26 @@ namespace Espionage.Engine
 
 		[Terminal, Property( "application.sys_language" )]
 		private static string Language => Application.systemLanguage.ToString();
+
+		[Terminal, Function( "help" )]
+		private static void Help()
+		{
+			foreach ( var item in Terminal.All )
+			{
+				Log.Add( new()
+				{
+					Message = item.Name,
+					StackTrace = item.Help,
+					Type = Entry.Level.Info
+				} );
+			}
+		}
+
+		[Terminal, Function( "clear" )]
+		private static void Clear()
+		{
+			Log.Clear();
+		}
 
 		// Debug
 
