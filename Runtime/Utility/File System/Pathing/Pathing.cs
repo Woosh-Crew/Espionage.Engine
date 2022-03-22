@@ -146,6 +146,9 @@ namespace Espionage.Engine.IO
 			return Directory.Exists( path ) || File.Exists( path );
 		}
 
+		/// <summary>
+		/// Gets all files at the given path
+		/// </summary>
 		public string[] All( string path )
 		{
 			path = Absolute( path );
@@ -156,6 +159,17 @@ namespace Espionage.Engine.IO
 			}
 
 			return Directory.GetFiles( path );
+		}
+
+
+		/// <summary>
+		/// Gets the name of directory or file
+		/// at the given path
+		/// </summary>
+		public string Name( string path, bool withExtension = true )
+		{
+			path = Absolute( path );
+			return withExtension ? Path.GetFileName( path ) : Path.GetFileNameWithoutExtension( path );
 		}
 	}
 }

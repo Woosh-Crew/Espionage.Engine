@@ -71,6 +71,11 @@ namespace Espionage.Engine.Components
 			return All.FirstOrDefault( e => e is TComp ) as TComp;
 		}
 
+		public IComponent<T> Get( Type type )
+		{
+			return All.FirstOrDefault( e => e.GetType() == type );
+		}
+
 		public TComp GetOrCreate<TComp>() where TComp : class, new()
 		{
 			return TryGet<TComp>( out var comp ) ? comp : new();
@@ -125,6 +130,11 @@ namespace Espionage.Engine.Components
 		public bool Has<TComp>()
 		{
 			return All.OfType<TComp>().Any();
+		}
+
+		public bool Has( Type type )
+		{
+			return All.Any( e => e.GetType() == type );
 		}
 	}
 }

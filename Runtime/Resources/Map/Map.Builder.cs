@@ -143,8 +143,14 @@ namespace Espionage.Engine.Resources
 			{
 				var map = _provider == null ? Find( _path ) : new( _provider );
 
-				foreach ( var component in _components.Values )
+				foreach ( var (key, component) in _components )
 				{
+					if ( map.Components.Has( key ) )
+					{
+						map.Components.Replace( map.Components.Get( key ), component );
+						continue;
+					}
+
 					map.Components.Add( component );
 				}
 

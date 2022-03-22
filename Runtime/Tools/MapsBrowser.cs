@@ -12,7 +12,7 @@ namespace Espionage.Engine.Tools
 			{
 				foreach ( var entry in Map.Database.All )
 				{
-					if ( ImGui.Selectable( entry.Identifier ) )
+					if ( ImGui.Selectable( entry.Components.TryGet<Meta>( out var meta ) ? meta.Title : entry.Identifier ) )
 					{
 						Service.Selection = entry;
 					}
@@ -29,13 +29,10 @@ namespace Espionage.Engine.Tools
 
 					ImGui.OpenPopupOnItemClick( "map_menu", ImGuiPopupFlags.MouseButtonRight );
 
-					if ( ImGui.IsItemHovered() && entry.Components.TryGet<Meta>( out var meta ) )
+					if ( ImGui.IsItemHovered() && meta != null )
 					{
 						ImGui.BeginTooltip();
-						if ( !string.IsNullOrEmpty( meta.Title ) )
-						{
-							ImGui.Text( meta.Title );
-						}
+						ImGui.Text( entry.Identifier );
 
 						if ( !string.IsNullOrEmpty( meta.Description ) )
 						{

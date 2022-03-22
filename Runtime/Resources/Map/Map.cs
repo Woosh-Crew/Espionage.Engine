@@ -35,10 +35,17 @@ namespace Espionage.Engine.Resources
 			Current = new( provider );
 			Callback.Run( "map.loaded" );
 
+			// Cache Maps
+
+			for ( var i = 0; i < SceneManager.sceneCountInBuildSettings; i++ )
+			{
+				var scene = SceneManager.GetSceneByBuildIndex( i );
+				Setup( new BuildIndexMapProvider( i ) ).Meta( scene.name ).Build();
+			}
+
 			foreach ( var item in Files.Pathing.All( "maps://" ) )
 			{
-				// Cache Found Maps
-				Find( item );
+				Setup( item ).Meta( Files.Pathing.Name( item ) ).Build();
 			}
 
 		}
