@@ -30,6 +30,11 @@ namespace Espionage.Engine.Tools
 				{
 					button.Invoke( Service.Selection );
 				}
+
+				if ( ImGui.IsItemHovered() && !string.IsNullOrEmpty( button.Help ) )
+				{
+					ImGui.SetTooltip( button.Help );
+				}
 			}
 
 			ImGui.Separator();
