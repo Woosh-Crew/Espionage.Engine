@@ -65,9 +65,22 @@ namespace Espionage.Engine.Tripods
 			_targetRot = camSetup.Rotation;
 
 			_viewAngles = camSetup.Rotation.eulerAngles;
+
+			_savedLock = Controls.Cursor.Locked;
+			_savedVis = Controls.Cursor.Visible;
 		}
 
-		public void Deactivated() { }
+		public void Deactivated()
+		{
+			Controls.Cursor.Locked = _savedLock;
+			Controls.Cursor.Visible = _savedVis;
+
+		}
+
+		// Cursor
+
+		private bool _savedLock;
+		private bool _savedVis;
 
 		// Input
 

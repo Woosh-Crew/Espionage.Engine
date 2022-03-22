@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using ImGuiNET;
 using UnityEngine;
 
@@ -22,11 +23,13 @@ namespace Espionage.Engine.Tools
 			ImGui.Text( $"{lib.ClassInfo.Title}" );
 			ImGui.Text( $"{lib.ClassInfo.Name} - [{lib.ClassInfo.Group}]" );
 
-			if ( Service.Selection is Pawn pawn && ImGui.Button( "Possess Pawn" ) )
+			// Get Buttons
+			foreach ( var button in lib.ClassInfo.Functions.All )
 			{
-				Local.Client.Pawn = pawn;
-				Dev.Terminal.Invoke( "dev.tripod" );
-				Controls.Cursor.Locked = false;
+				if ( ImGui.Button( button.Title ) )
+				{
+					button.Invoke( Service.Selection );
+				}
 			}
 
 			ImGui.Separator();
