@@ -18,7 +18,6 @@ namespace Espionage.Engine.Services
 		public override void OnReady()
 		{
 			_camera = Engine.Camera;
-
 			_toolsGrouping = Library.Database.GetAll<Window>().Where( e => !e.Class.IsAbstract ).GroupBy( e => e.Group );
 		}
 
@@ -27,6 +26,11 @@ namespace Espionage.Engine.Services
 			get => _selection;
 			set
 			{
+				if ( value == null )
+				{
+					return;
+				}
+
 				Window.Show<Inspector>();
 				_selection = value;
 			}
