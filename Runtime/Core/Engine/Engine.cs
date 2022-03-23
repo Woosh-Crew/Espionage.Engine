@@ -98,6 +98,8 @@ namespace Espionage.Engine
 				Dev.Log.Error( "Game couldn't be found. Make sure to make a class inherited from Game" );
 				return;
 			}
+
+			Callback.Run( "editor.game_constructed" );
 		}
 
 		#endif
