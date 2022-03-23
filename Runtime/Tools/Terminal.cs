@@ -7,6 +7,8 @@ namespace Espionage.Engine.Tools
 {
 	public class Terminal : Window
 	{
+		public bool Focus { get; set; }
+
 		private string _input = string.Empty;
 		private bool _scrollToBottom;
 
@@ -37,20 +39,19 @@ namespace Espionage.Engine.Tools
 
 			// Command Line
 
-			var reclaimFocus = false;
-
 			if ( ImGui.InputTextWithHint( string.Empty, "Enter Command...", ref _input, 160, ImGuiInputTextFlags.EnterReturnsTrue ) )
 			{
 				Dev.Log.Info( _input, "Inputted Text" );
 				Dev.Terminal.Invoke( _input );
 				_input = string.Empty;
 				_scrollToBottom = true;
-				reclaimFocus = true;
+				Focus = true;
 			}
 
 			ImGui.SetItemDefaultFocus();
-			if ( reclaimFocus )
+			if ( Focus )
 			{
+				Focus = false;
 				ImGui.SetKeyboardFocusHere( -1 );
 			}
 
