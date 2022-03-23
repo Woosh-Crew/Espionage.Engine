@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 namespace Espionage.Engine.IO
@@ -149,7 +150,7 @@ namespace Espionage.Engine.IO
 		/// <summary>
 		/// Gets all files at the given path
 		/// </summary>
-		public string[] All( string path )
+		public IEnumerable<string> All( string path )
 		{
 			path = Absolute( path );
 
@@ -159,6 +160,22 @@ namespace Espionage.Engine.IO
 			}
 
 			return Directory.GetFiles( path );
+		}
+
+		/// <summary>
+		/// <inheritdoc cref="All(string)"/> with an extension
+		/// </summary>
+		public IEnumerable<string> All( string path, params string[] extension )
+		{
+			path = Absolute( path );
+
+			if ( !Exists( path ) )
+			{
+				return null;
+			}
+
+			return Directory.GetFiles( path, "*.*", SearchOption.AllDirectories )
+				.Where( file => Path.HasExtension( file ) && extension.Contains( Path.GetExtension( file )[1..] ) );
 		}
 
 

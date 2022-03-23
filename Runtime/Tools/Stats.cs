@@ -3,16 +3,16 @@ using UnityEngine;
 
 namespace Espionage.Engine.Tools
 {
-	public class FrameStats : Overlay
+	public class TimeStats : Overlay
 	{
 		public override void OnLayout()
 		{
-			ImGui.Text( $"Time: {Time.time}" );
+			ImGui.Text( $"Time: {(int)Time.time}" );
 			ImGui.Text( $"Time Scale: {Time.timeScale}" );
 		}
 	}
 
-	public class TimeStats : Overlay
+	public class FrameStats : Overlay
 	{
 		public override void OnLayout()
 		{

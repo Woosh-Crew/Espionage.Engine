@@ -47,7 +47,6 @@ namespace Espionage.Engine.Resources
 			{
 				Setup( item ).Meta( Files.Pathing.Name( item ) ).Build();
 			}
-
 		}
 
 		/// <summary>
