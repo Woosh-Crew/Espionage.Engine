@@ -19,7 +19,7 @@ namespace Espionage.Engine.Tools
 				foreach ( var entry in Dev.Log.All )
 				{
 					ImGui.TextColored( Entry.Colors[entry.Type], entry.Message );
-					if ( ImGui.IsItemHovered() )
+					if ( ImGui.IsItemHovered() && !string.IsNullOrEmpty( entry.StackTrace ) )
 					{
 						ImGui.SetTooltip( entry.StackTrace );
 					}
