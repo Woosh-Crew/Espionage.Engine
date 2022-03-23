@@ -14,6 +14,7 @@ namespace Espionage.Engine.Logging
 			[Level.Exception] = Color.red
 		};
 
+		public float Time;
 		public string Message;
 		public string StackTrace;
 		public Level Type;

@@ -146,6 +146,20 @@ namespace Espionage.Engine.Resources
 			Action<Scene> loaded = ( scene ) =>
 			{
 				SceneManager.SetActiveScene( scene );
+
+				foreach ( var gameObject in scene.GetRootGameObjects() )
+				{
+					foreach ( var camera in gameObject.GetComponentsInChildren<Camera>() )
+					{
+						camera.enabled = false;
+					}
+
+					foreach ( var listener in gameObject.GetComponentsInChildren<AudioListener>() )
+					{
+						listener.enabled = false;
+					}
+				}
+
 				onLoad?.Invoke();
 			};
 

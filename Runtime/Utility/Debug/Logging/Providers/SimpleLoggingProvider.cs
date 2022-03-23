@@ -44,6 +44,8 @@ namespace Espionage.Engine.Logging
 				return;
 			}
 
+			entry.Time = Time.time;
+
 			_logs.Add( entry );
 			OnLogged?.Invoke( entry );
 

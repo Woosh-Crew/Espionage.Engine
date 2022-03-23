@@ -15,12 +15,17 @@ namespace Espionage.Engine.Resources.Binders
 		{
 			get
 			{
-				if ( _bundleRequestOperation == null || _sceneLoadOperation == null )
+				if ( _bundleRequestOperation == null )
 				{
 					return 0;
 				}
 
-				return _bundleRequestOperation.progress / 2 + _sceneLoadOperation.progress / 2;
+				if ( _sceneLoadOperation == null )
+				{
+					return _bundleRequestOperation.progress / 2;
+				}
+
+				return _bundleRequestOperation.progress + _sceneLoadOperation.progress / 2;
 			}
 		}
 
@@ -40,27 +45,34 @@ namespace Espionage.Engine.Resources.Binders
 
 		public override void Load( Action<Scene> finished = null )
 		{
-			// Load Bundle
-			_bundleRequestOperation = AssetBundle.LoadFromFileAsync( Identifier );
-			_bundleRequestOperation.completed += ( _ ) =>
+			try
 			{
-				// When we've finished loading the asset
-				// bundle, go onto loading the scene itself
-				_bundle = _bundleRequestOperation.assetBundle;
-				Dev.Log.Info( "Finished Loading Bundle" );
-
-				// Load the scene by getting all scene
-				// paths from a bundle, and getting the first index
-				var scenePath = _bundle.GetAllScenePaths()[0];
-				_sceneLoadOperation = SceneManager.LoadSceneAsync( scenePath, LoadSceneMode.Additive );
-				_sceneLoadOperation.completed += ( _ ) =>
+				// Load Bundle
+				_bundleRequestOperation = AssetBundle.LoadFromFileAsync( Identifier );
+				_bundleRequestOperation.completed += ( _ ) =>
 				{
-					// We've finished loading the scene.
-					Dev.Log.Info( "Finished Loading Scene" );
-					Scene = SceneManager.GetSceneByPath( scenePath );
-					finished?.Invoke( Scene );
+					// When we've finished loading the asset
+					// bundle, go onto loading the scene itself
+					_bundle = _bundleRequestOperation.assetBundle;
+					Dev.Log.Info( "Finished Loading Bundle" );
+
+					// Load the scene by getting all scene
+					// paths from a bundle, and getting the first index
+					var scenePath = _bundle.GetAllScenePaths()[0];
+					_sceneLoadOperation = SceneManager.LoadSceneAsync( scenePath, LoadSceneMode.Additive );
+					_sceneLoadOperation.completed += ( _ ) =>
+					{
+						// We've finished loading the scene.
+						Dev.Log.Info( "Finished Loading Scene" );
+						Scene = SceneManager.GetSceneByPath( scenePath );
+						finished?.Invoke( Scene );
+					};
 				};
-			};
+			}
+			catch ( Exception e )
+			{
+				Dev.Log.Info( $"Unity is so shit, here's the log {e.Message}" );
+			}
 		}
 
 		public override void Unload( Action finished = null )
