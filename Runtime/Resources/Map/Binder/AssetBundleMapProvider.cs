@@ -25,7 +25,7 @@ namespace Espionage.Engine.Resources.Binders
 					return _bundleRequestOperation.progress / 2;
 				}
 
-				return _bundleRequestOperation.progress + _sceneLoadOperation.progress / 2;
+				return _bundleRequestOperation.progress / 2 + _sceneLoadOperation.progress / 2;
 			}
 		}
 

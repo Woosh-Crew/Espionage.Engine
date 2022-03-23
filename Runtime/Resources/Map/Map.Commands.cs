@@ -30,13 +30,17 @@
 				return;
 			}
 
-			Engine.Game.Loader.Start( map );
+			Loader.Start(
+				Load( map )
+			);
 		}
 
 		[Function( "map.reload" ), Terminal]
 		private static void Restart()
 		{
-			Current?.Load();
+			Loader.Start(
+				Load( Current )
+			);
 		}
 	}
 }

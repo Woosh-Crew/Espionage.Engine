@@ -14,6 +14,15 @@ namespace Espionage.Engine
 	[Spawnable, Group( "Engine" )]
 	public class Loader
 	{
+		public static void Start( params ILoadable[] request )
+		{
+			Engine.Game.Loader.Start( new( request ) );
+		}
+
+		//
+		// Instance
+		//
+
 		public Action Started { get; set; }
 		public Action Finished { get; set; }
 
@@ -24,14 +33,9 @@ namespace Espionage.Engine
 
 		public ILoadable Current { get; private set; }
 
-		public void Start( params ILoadable[] request )
+		public void Start( Queue<ILoadable> queue, Action onFinish = null )
 		{
-			Start( null, request );
-		}
-
-		public void Start( Action onFinish = null, params ILoadable[] request )
-		{
-			Assert.IsEmpty( request );
+			Assert.IsEmpty( queue );
 
 			if ( Queue != null )
 			{
@@ -43,12 +47,7 @@ namespace Espionage.Engine
 			Finished += () => Timing.Stop();
 			Finished += onFinish;
 
-			// Enqueue the Request
-			Queue = new();
-			for ( var i = 0; i < request.Length; i++ )
-			{
-				Queue.Enqueue( request[i] );
-			}
+			Queue = queue;
 
 			// Start Loading
 			Load( Queue.Dequeue() );
@@ -77,6 +76,14 @@ namespace Espionage.Engine
 
 		private void Load( ILoadable loadable )
 		{
+			if ( loadable == null )
+			{
+				Dev.Log.Error( "Loader Quited early... To load was NULL" );
+
+				Finish();
+				return;
+			}
+
 			Current = loadable;
 			loadable?.Load( () =>
 			{

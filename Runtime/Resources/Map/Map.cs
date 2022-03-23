@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Espionage.Engine.Components;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -82,6 +83,25 @@ namespace Espionage.Engine.Resources
 			return Database[path] != null;
 		}
 
+		/// <summary>
+		/// Sets up a load request for the the map at the given path.
+		/// Use Loader.Start(), to load the map
+		/// </summary>
+		public static ILoadable Load( string path )
+		{
+			var map = Find( path );
+			return map;
+		}
+
+		/// <summary>
+		/// Sets up a load request for a map.
+		/// Use Loader.Start(), to load the map
+		/// </summary>
+		public static ILoadable Load( Map map )
+		{
+			return map;
+		}
+
 		//
 		// Instance
 		//
@@ -108,15 +128,18 @@ namespace Espionage.Engine.Resources
 		public Action Loaded { get; set; }
 		public Action Unloaded { get; set; }
 
-		[Function, Button, Help( "Forcefully load Map" )]
-		public void Load( Action loaded = null )
+		[Function, Button, Title( "Force Load" ), Help( "Forcefully load Map" )]
+		void ILoadable.Load( Action loaded = null )
 		{
 			if ( Engine.Game.Loader?.Current != this )
 			{
 				Dev.Log.Error( "Don't forcefully load a map without using the loader!" );
 				Dev.Log.Warning( "Forcefully reattempting map load through loader." );
 
-				Engine.Game.Loader?.Start( loaded, this );
+				var queue = new Queue<ILoadable>();
+				queue.Enqueue( this );
+
+				Engine.Game.Loader?.Start( queue, loaded );
 				return;
 			}
 
@@ -129,7 +152,7 @@ namespace Espionage.Engine.Resources
 			if ( Current != null )
 			{
 				Dev.Log.Info( "Unloading, then loading" );
-				Current?.Unload( () => LoadRequest( loaded ) );
+				Current.Unload( () => LoadRequest( loaded ) );
 			}
 			else
 			{
