@@ -16,33 +16,9 @@ namespace Espionage.Engine
 	/// it can be loaded. (Like you probably guessed)
 	/// </para>
 	/// </summary>
-	[Spawnable, Group( "Engine" )]
+	[Spawnable, Singleton, Group( "Engine" )]
 	public class Loader : ILibrary
 	{
-		public static void Start( params ILoadable[] request )
-		{
-			// We're in editor, don't do anything...
-			if ( Engine.Game == null )
-			{
-				Dev.Log.Warning( "No Game is active." );
-				return;
-			}
-
-			// Build Stack
-			var stack = new Stack<ILoadable>();
-
-			for ( var i = request.Length - 1; i >= 0; i-- )
-			{
-				stack.Push( request[i] );
-			}
-
-			Engine.Game.Loader.Start( stack );
-		}
-
-		//
-		// Instance
-		//
-
 		public Library ClassInfo { get; }
 
 		public Loader()
@@ -64,22 +40,17 @@ namespace Espionage.Engine
 
 		// States
 
-		public void Start( Stack<ILoadable> request )
+		public void Start( params ILoadable[] request )
 		{
 			Assert.IsEmpty( request );
-
-			if ( Stack != null )
-			{
-				throw new ApplicationException( "Already loading something" );
-			}
+			Assert.IsNotNull( Stack, "Already loading something" );
 
 			Timing = Stopwatch.StartNew();
 
 			// Build Queue
-			Stack = request;
+			Stack = Build( request );
 			Amount = Stack.Count;
 
-			// Start Loading
 			Load();
 
 			OnStart();
@@ -94,9 +65,6 @@ namespace Espionage.Engine
 			Timing.Stop();
 			Finished?.Invoke();
 
-			Finished = null;
-			Started = null;
-
 			Stack = null;
 			Current = null;
 			Amount = 0;
@@ -104,32 +72,60 @@ namespace Espionage.Engine
 
 		protected virtual void OnFinish() { }
 
-		// Queue
+		// Stack
 
-		private Stack<ILoadable> Stack { get; set; }
+		private static Stack<Request> Build( ILoadable[] requests )
+		{
+			// Build Stack
+			var stack = new Stack<Request>();
+
+			for ( var i = requests.Length - 1; i >= 0; i-- )
+			{
+				stack.Push( new( requests[i] ) );
+			}
+
+			return stack;
+		}
+
+		private Stack<Request> Stack { get; set; }
 		private int Amount { get; set; }
 
 		// Loading
 
 		private void Load()
 		{
-			var possible = Stack.Peek();
-
-			// Peek, see if we should inject
-			var injection = possible.Inject();
-
-			if ( injection is { Length: > 0 } )
+			while ( true )
 			{
-				for ( var i = injection.Length - 1; i >= 0; i-- )
+				var possible = Stack.Peek();
+
+				// We've injected, just load this
+				if ( possible.Injected )
 				{
-					Stack.Push( injection[i] );
+					Loading( Stack.Pop().Loadable );
+					return;
 				}
 
-				Load();
-			}
+				// Peek, see if we should inject
+				var injection = possible.Loadable.Inject();
 
-			// If nothing to inject, start loading
-			Loading( Stack.Pop() );
+				if ( injection is { Length: > 0 } )
+				{
+					for ( var i = injection.Length - 1; i >= 0; i-- )
+					{
+						Stack.Push( new( injection[i] ) );
+					}
+
+					possible.Injected = true;
+
+					// Rerun function, to see if injected
+					// have more injections. injection inception..
+					continue;
+				}
+
+				// If nothing to inject, start loading
+				Loading( Stack.Pop().Loadable );
+				break;
+			}
 		}
 
 		private void Loading( ILoadable loadable )
@@ -153,6 +149,18 @@ namespace Espionage.Engine
 			}
 
 			Load();
+		}
+
+		private class Request
+		{
+			public bool Injected { get; set; }
+			public ILoadable Loadable { get; }
+
+			public Request( ILoadable request )
+			{
+				Loadable = request;
+				Injected = false;
+			}
 		}
 	}
 }
