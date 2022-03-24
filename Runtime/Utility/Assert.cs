@@ -10,50 +10,53 @@ namespace Espionage.Engine
 	/// </summary>
 	public static class Assert
 	{
-		[Conditional( "DEBUG" )]
-		public static void IsEmpty( ICollection collection, string message = null, [CallerLineNumber] int caller = default )
+		public static void IsEmpty( ICollection collection, string message = "Collection was Empty!", [CallerLineNumber] int caller = default )
 		{
 			if ( collection.Count == 0 )
 			{
-				Fail( $"Collection was Empty! [{caller}]" );
+				Fail( $"{message} [{caller}]" );
 			}
 		}
 
-		[Conditional( "DEBUG" )]
-		public static void IsNull<T>( T item, string message = null, [CallerLineNumber] int caller = default )
+		public static void IsNull<T>( T item, string message = "Item was NULL!", [CallerLineNumber] int caller = default )
 		{
 			if ( item == null )
 			{
-				Fail( $"Item was NULL! [{caller}]" );
+				Fail( $"{message} [{caller}]" );
+			}
+		}
+
+		public static void IsNotNull<T>( T item, string message = "Item was not NULL!", [CallerLineNumber] int caller = default )
+		{
+			if ( item != null )
+			{
+				Fail( $"{message} [{caller}]" );
 			}
 		}
 
 		// Bool
 
-		[Conditional( "DEBUG" )]
 		public static void IsEqual<T>( T item, T comparison, string message = null, [CallerLineNumber] int caller = default )
 		{
 			if ( item.Equals( comparison ) )
 			{
-				Fail( $"{typeof( T ).Name} was equals comparison! [{caller}]" );
+				Fail( $"{message} [{caller}]" );
 			}
 		}
 
-		[Conditional( "DEBUG" )]
-		public static void IsTrue( bool item, string message = null, [CallerLineNumber] int caller = default )
+		public static void IsTrue( bool item, string message = "Bool was True!", [CallerLineNumber] int caller = default )
 		{
 			if ( item )
 			{
-				Fail( $"Bool was True! [{caller}]" );
+				Fail( $"{message} [{caller}]" );
 			}
 		}
 
-		[Conditional( "DEBUG" )]
-		public static void IsFalse( bool item, string message = null, [CallerLineNumber] int caller = default )
+		public static void IsFalse( bool item, string message = "Bool was False!", [CallerLineNumber] int caller = default )
 		{
 			if ( item == false )
 			{
-				Fail( $"Bool was False! [{caller}]" );
+				Fail( $"{message} [{caller}]" );
 			}
 		}
 
