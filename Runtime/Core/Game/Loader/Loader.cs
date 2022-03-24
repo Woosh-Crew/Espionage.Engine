@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 
 namespace Espionage.Engine
 {
@@ -42,6 +43,30 @@ namespace Espionage.Engine
 
 		public void Start( params ILoadable[] request )
 		{
+			var final = new Request[request.Length];
+
+			for ( var i = 0; i < request.Length; i++ )
+			{
+				final[i] = new( request[i] );
+			}
+
+			Start( final );
+		}
+
+		public void Start( params Func<ILoadable>[] request )
+		{
+			var final = new Request[request.Length];
+
+			for ( var i = 0; i < request.Length; i++ )
+			{
+				final[i] = new( request[i] );
+			}
+
+			Start( final );
+		}
+
+		public void Start( params Request[] request )
+		{
 			Assert.IsEmpty( request );
 			Assert.IsNotNull( Stack, "Already loading something" );
 
@@ -65,6 +90,8 @@ namespace Espionage.Engine
 			Timing.Stop();
 			Finished?.Invoke();
 
+			Dev.Log.Info( "Finished" );
+
 			Stack = null;
 			Current = null;
 			Amount = 0;
@@ -74,14 +101,14 @@ namespace Espionage.Engine
 
 		// Stack
 
-		private static Stack<Request> Build( ILoadable[] requests )
+		private static Stack<Request> Build( Request[] requests )
 		{
 			// Build Stack
 			var stack = new Stack<Request>();
 
 			for ( var i = requests.Length - 1; i >= 0; i-- )
 			{
-				stack.Push( new( requests[i] ) );
+				stack.Push( requests[i] );
 			}
 
 			return stack;
@@ -151,14 +178,26 @@ namespace Espionage.Engine
 			Load();
 		}
 
-		private class Request
+		public class Request
 		{
 			public bool Injected { get; internal set; }
-			public ILoadable Loadable { get; }
+
+			// Loadable
+
+			private ILoadable _cached;
+
+			public ILoadable Loadable => _cached ??= Invoker.Invoke();
+			private Func<ILoadable> Invoker { get; }
+
+			public Request( Func<ILoadable> request )
+			{
+				Invoker = request;
+				Injected = false;
+			}
 
 			public Request( ILoadable request )
 			{
-				Loadable = request;
+				_cached = request;
 				Injected = false;
 			}
 		}
