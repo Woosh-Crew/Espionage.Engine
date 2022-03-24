@@ -3,50 +3,66 @@ using System.Threading.Tasks;
 
 namespace Espionage.Engine
 {
-	public class Operation : ILoadable
+	public static class Operation
 	{
-		private readonly Action<Action> _operation;
-		private readonly string _text;
-		private readonly Task _task;
-
 		public static ILoadable Create( Action<Action> loaded, string text )
 		{
-			return new Operation( loaded, text );
+			return new ActionBasedCallback( loaded, text );
 		}
 
 		public static ILoadable Create( Task loaded, string text )
 		{
-			return new Operation( loaded, text );
+			return new TaskBasedCallback( loaded, text );
 		}
 
-		private Operation( Task loaded, string text )
+		private class ActionBasedCallback : ILoadable
 		{
-			_text = text;
-			_task = loaded;
-		}
+			private readonly Action<Action> _operation;
 
-		private Operation( Action<Action> loaded, string text )
-		{
-			_text = text;
-			_operation = loaded;
-		}
-
-		// Loadable
-
-		float ILoadable.Progress => 0;
-		string ILoadable.Text => _text;
-
-		void ILoadable.Load( Action loaded )
-		{
-			if ( _task != null )
+			public ActionBasedCallback( Action<Action> loaded, string text )
 			{
-				_task.ContinueWith( t => loaded.Invoke() );
-				_task.Start();
-
-				return;
+				Text = text;
 			}
 
-			_operation.Invoke( loaded );
+			// Loadable
+
+			public float Progress { get; }
+			public string Text { get; }
+
+			public void Load( Action loaded )
+			{
+				_operation.Invoke( loaded );
+			}
+		}
+
+		private class TaskBasedCallback : ILoadable
+		{
+			private readonly Task _task;
+
+			public TaskBasedCallback( Task loaded, string text )
+			{
+				Text = text;
+				_task = loaded;
+			}
+
+			// Loadable
+
+			public float Progress { get; }
+			public string Text { get; }
+
+			public async void Load( Action loaded )
+			{
+				try
+				{
+					await _task;
+				}
+				catch ( Exception e )
+				{
+					Dev.Log.Exception( e );
+				}
+
+				loaded.Invoke();
+			}
 		}
 	}
 }
