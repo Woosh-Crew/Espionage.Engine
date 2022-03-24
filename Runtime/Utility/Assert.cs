@@ -10,53 +10,63 @@ namespace Espionage.Engine
 	/// </summary>
 	public static class Assert
 	{
-		public static void IsEmpty( ICollection collection, string message = "Collection was Empty!", [CallerLineNumber] int caller = default )
+		public static void IsEmpty( ICollection collection, string message = "Collection was Empty!" )
 		{
 			if ( collection.Count == 0 )
 			{
-				Fail( $"{message} [{caller}]" );
+				Fail( message );
 			}
 		}
 
-		public static void IsNull<T>( T item, string message = "Item was NULL!", [CallerLineNumber] int caller = default )
+		public static void IsNull<T>( T item, string message = "Item was NULL!" )
 		{
 			if ( item == null )
 			{
-				Fail( $"{message} [{caller}]" );
+				Fail( message );
 			}
 		}
 
-		public static void IsNotNull<T>( T item, string message = "Item was not NULL!", [CallerLineNumber] int caller = default )
+		public static void IsNotNull<T>( T item, string message = "Item was not NULL!" )
 		{
 			if ( item != null )
 			{
-				Fail( $"{message} [{caller}]" );
+				Fail( message );
+			}
+		}
+
+		// IDatabase
+
+		public static void Missing<T>( IDatabase<T> collection, T item, string message = "Database doesn't contain item!" )
+		{
+			if ( !collection.Contains( item ) )
+			{
+				Fail( message );
 			}
 		}
 
 		// Bool
 
-		public static void IsEqual<T>( T item, T comparison, string message = null, [CallerLineNumber] int caller = default )
+		public static void IsEqual<T>( T item, T comparison, string message = null )
 		{
 			if ( item.Equals( comparison ) )
 			{
-				Fail( $"{message} [{caller}]" );
+				Fail( message );
 			}
 		}
 
-		public static void IsTrue( bool item, string message = "Bool was True!", [CallerLineNumber] int caller = default )
+		public static void IsTrue( bool item, string message = "Bool was True!" )
 		{
 			if ( item )
 			{
-				Fail( $"{message} [{caller}]" );
+				Fail( message );
 			}
 		}
 
-		public static void IsFalse( bool item, string message = "Bool was False!", [CallerLineNumber] int caller = default )
+		public static void IsFalse( bool item, string message = "Bool was False!" )
 		{
 			if ( item == false )
 			{
-				Fail( $"{message} [{caller}]" );
+				Fail( message );
 			}
 		}
 

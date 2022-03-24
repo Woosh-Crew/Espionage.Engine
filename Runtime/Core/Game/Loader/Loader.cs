@@ -136,8 +136,6 @@ namespace Espionage.Engine
 				return;
 			}
 
-			Dev.Log.Info( $"Loading {loadable}" );
-
 			Current = loadable;
 			loadable?.Load( OnLoad );
 		}

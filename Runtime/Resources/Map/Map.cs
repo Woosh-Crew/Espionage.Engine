@@ -87,7 +87,7 @@ namespace Espionage.Engine.Resources
 		// Instance
 		//
 
-		[Property] public string Identifier => Source != null ? Source.Info.FullName : Provider.Identifier;
+		[Property] public string Identifier { get; private set; }
 		public Components<Map> Components { get; }
 
 		private File Source { get; set; }
@@ -120,6 +120,8 @@ namespace Espionage.Engine.Resources
 			Components = new( this );
 
 			Source = file;
+
+			Identifier = Source.Info.FullName;
 			Database.Add( this );
 		}
 
@@ -129,6 +131,8 @@ namespace Espionage.Engine.Resources
 			Components = new( this );
 
 			Provider = provider;
+
+			Identifier = Provider.Identifier;
 			Database.Add( this );
 		}
 
@@ -137,6 +141,8 @@ namespace Espionage.Engine.Resources
 
 		void ILoadable.Load( Action loaded )
 		{
+			Assert.Missing( Database, this );
+
 			loaded += OnLoad;
 
 			Callback.Run( "map.loading" );
@@ -157,12 +163,16 @@ namespace Espionage.Engine.Resources
 			Loaded?.Invoke();
 
 			SceneManager.SetActiveScene( Provider.Scene );
+
+			foreach ( var comp in Components.GetAll<ICallbacks>() )
+			{
+				comp.OnLoad( Provider.Scene );
+			}
 		}
 
 		private void Unload( Action unloaded = null )
 		{
-			unloaded += () => Callback.Run( "map.unloaded" );
-			unloaded += Unloaded;
+			unloaded += OnUnload;
 
 			if ( Current == this )
 			{
@@ -180,6 +190,17 @@ namespace Espionage.Engine.Resources
 			Source?.Unload( unloaded );
 		}
 
+		private void OnUnload()
+		{
+			Callback.Run( "map.unloaded" );
+			Unloaded?.Invoke();
+
+			foreach ( var comp in Components.GetAll<ICallbacks>() )
+			{
+				comp.OnUnload();
+			}
+		}
+
 		// Map Injection
 
 		ILoadable[] ILoadable.Inject()
@@ -192,6 +213,16 @@ namespace Espionage.Engine.Resources
 				queue.Enqueue( Operation.Create( Current.Unload, Current.Components.TryGet( out Meta meta ) ? $"Unloading {meta.Title}" : "Unloading" ) );
 			}
 
+			// Inject in components, if they have injections
+			foreach ( var comp in Components.GetAll<ICallbacks>() )
+			{
+				var inject = comp.Inject();
+				if ( inject != null )
+				{
+					queue.Enqueue( inject );
+				}
+			}
+
 			if ( Source != null )
 			{
 				// Load data from source file
@@ -199,6 +230,14 @@ namespace Espionage.Engine.Resources
 			}
 
 			return queue.ToArray();
+		}
+
+		public interface ICallbacks
+		{
+			void OnLoad( Scene scene );
+			void OnUnload();
+
+			ILoadable Inject() { return null; }
 		}
 	}
 }

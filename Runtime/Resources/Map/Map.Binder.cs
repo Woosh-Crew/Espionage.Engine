@@ -28,7 +28,7 @@ namespace Espionage.Engine.Resources
 			public virtual float Progress { get; protected set; }
 			public abstract string Identifier { get; }
 
-			public Scene Scene { get; set; }
+			public Scene Scene { get; protected set; }
 
 			public abstract void Load( Action onLoad );
 
