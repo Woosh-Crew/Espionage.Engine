@@ -125,6 +125,13 @@ namespace Espionage.Engine
 			{
 				var possible = Stack.Peek();
 
+				// If it doesn't exist, just continue
+				if ( possible.Loadable == null )
+				{
+					Stack.Pop();
+					continue;
+				}
+
 				// We've injected, just load this
 				if ( possible.Injected )
 				{
@@ -186,7 +193,19 @@ namespace Espionage.Engine
 
 			private ILoadable _cached;
 
-			public ILoadable Loadable => _cached ??= Invoker.Invoke();
+			public ILoadable Loadable
+			{
+				get
+				{
+					if ( _cached == null && Invoker == null )
+					{
+						return null;
+					}
+
+					return _cached ??= Invoker.Invoke();
+				}
+			}
+
 			private Func<ILoadable> Invoker { get; }
 
 			public Request( Func<ILoadable> request )

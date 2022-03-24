@@ -159,6 +159,14 @@ namespace Espionage.Engine.Resources
 
 		private void OnLoad()
 		{
+			void PissOff<T>( GameObject root ) where T : UnityEngine.Behaviour
+			{
+				foreach ( var component in root.GetComponentsInChildren<T>() )
+				{
+					component.enabled = false;
+				}
+			}
+
 			Callback.Run( "map.loaded" );
 			Loaded?.Invoke();
 
@@ -167,6 +175,13 @@ namespace Espionage.Engine.Resources
 			foreach ( var comp in Components.GetAll<ICallbacks>() )
 			{
 				comp.OnLoad( Provider.Scene );
+			}
+
+			// Piss off all the crap we don't need
+			foreach ( var gameObject in Provider.Scene.GetRootGameObjects() )
+			{
+				PissOff<Camera>( gameObject );
+				PissOff<AudioListener>( gameObject );
 			}
 		}
 
