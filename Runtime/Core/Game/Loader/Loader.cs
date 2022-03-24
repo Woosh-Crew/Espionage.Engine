@@ -1,56 +1,86 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using UnityEngine.Assertions;
 
 namespace Espionage.Engine
 {
 	/// <summary>
-	/// This is a class for managing the loading of Maps
-	/// or loading into a network game. It'll load the
-	/// target scene. From that its up to you to display
-	/// loading progress and text.
+	/// <para>
+	/// The loader is a callback based
+	/// sequential loader, that has a UI
+	/// representing its progress / status.
+	/// </para>
+	/// <para>
+	/// Loader asks for a <see cref="ILoadable"/>
+	/// which is an interface that tell the loader
+	/// it can be loaded. (Like you probably guessed)
+	/// </para>
 	/// </summary>
 	[Spawnable, Group( "Engine" )]
-	public class Loader
+	public class Loader : ILibrary
 	{
 		public static void Start( params ILoadable[] request )
 		{
-			Engine.Game.Loader.Start( new( request ) );
+			// We're in editor, don't do anything...
+			if ( Engine.Game == null )
+			{
+				Dev.Log.Warning( "No Game is active." );
+				return;
+			}
+
+			// Build Stack
+			var stack = new Stack<ILoadable>();
+
+			for ( var i = request.Length - 1; i >= 0; i-- )
+			{
+				stack.Push( request[i] );
+			}
+
+			Engine.Game.Loader.Start( stack );
 		}
 
 		//
 		// Instance
 		//
 
+		public Library ClassInfo { get; }
+
+		public Loader()
+		{
+			ClassInfo = Library.Register( this );
+		}
+
 		public Action Started { get; set; }
 		public Action Finished { get; set; }
 
 		// Debug
+
 		public Stopwatch Timing { get; private set; }
 
-		// Queue
+		// Current
 
 		public ILoadable Current { get; private set; }
+		public float Progress => Stack.Count / Amount + Current.Progress / Amount;
 
-		public void Start( Queue<ILoadable> queue, Action onFinish = null )
+		// States
+
+		public void Start( Stack<ILoadable> request )
 		{
-			Assert.IsEmpty( queue );
+			Assert.IsEmpty( request );
 
-			if ( Queue != null )
+			if ( Stack != null )
 			{
 				throw new ApplicationException( "Already loading something" );
 			}
 
 			Timing = Stopwatch.StartNew();
 
-			Finished += () => Timing.Stop();
-			Finished += onFinish;
-
-			Queue = queue;
+			// Build Queue
+			Stack = request;
+			Amount = Stack.Count;
 
 			// Start Loading
-			Load( Queue.Dequeue() );
+			Load();
 
 			OnStart();
 			Started?.Invoke();
@@ -61,40 +91,68 @@ namespace Espionage.Engine
 		private void Finish()
 		{
 			OnFinish();
+			Timing.Stop();
 			Finished?.Invoke();
 
 			Finished = null;
 			Started = null;
 
-			Queue = null;
+			Stack = null;
 			Current = null;
+			Amount = 0;
 		}
 
 		protected virtual void OnFinish() { }
 
-		private Queue<ILoadable> Queue { get; set; }
+		// Queue
 
-		private void Load( ILoadable loadable )
+		private Stack<ILoadable> Stack { get; set; }
+		private int Amount { get; set; }
+
+		// Loading
+
+		private void Load()
+		{
+			var possible = Stack.Peek();
+
+			// Peek, see if we should inject
+			var injection = possible.Inject();
+
+			if ( injection is { Length: > 0 } )
+			{
+				for ( var i = injection.Length - 1; i >= 0; i-- )
+				{
+					Stack.Push( injection[i] );
+				}
+
+				Load();
+			}
+
+			// If nothing to inject, start loading
+			Loading( Stack.Pop() );
+		}
+
+		private void Loading( ILoadable loadable )
 		{
 			if ( loadable == null )
 			{
-				Dev.Log.Error( "Loader Quited early... To load was NULL" );
-
-				Finish();
+				OnLoad();
 				return;
 			}
 
 			Current = loadable;
-			loadable?.Load( () =>
-			{
-				if ( Queue.Count == 0 )
-				{
-					Finish();
-					return;
-				}
+			loadable?.Load( OnLoad );
+		}
 
-				Load( Queue.Dequeue() );
-			} );
+		private void OnLoad()
+		{
+			if ( Stack.Count == 0 )
+			{
+				Finish();
+				return;
+			}
+
+			Load();
 		}
 	}
 }
