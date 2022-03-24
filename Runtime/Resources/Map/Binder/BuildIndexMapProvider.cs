@@ -41,25 +41,24 @@ namespace Espionage.Engine.Resources.Binders
 		private AsyncOperation _operation;
 		private readonly int _buildIndex;
 
-		public override void Load( Action<Scene> finished )
+		public override void Load( Action finished )
 		{
 			var operation = SceneManager.LoadSceneAsync( _buildIndex, LoadSceneMode.Additive );
 			operation.completed += ( _ ) =>
 			{
 				Scene = SceneManager.GetSceneByBuildIndex( _buildIndex );
-				finished?.Invoke( Scene );
+				finished?.Invoke();
 			};
 		}
 
-		public override void Unload( Action finished )
+		public override void Unload()
 		{
 			if ( Scene == default )
 			{
 				Scene = SceneManager.GetActiveScene();
 			}
 
-			var request = Scene.Unload();
-			request.completed += _ => finished?.Invoke();
+			Scene.Unload();
 		}
 	}
 }

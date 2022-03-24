@@ -39,7 +39,7 @@ namespace Espionage.Engine
 		/// wont know that its finished loading this
 		/// load request.
 		/// </param>
-		void Load( Action loaded = null );
+		void Load( Action loaded );
 
 		/// <summary>
 		/// Allows the injection of instructions before

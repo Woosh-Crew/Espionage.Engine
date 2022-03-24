@@ -5,7 +5,6 @@ namespace Espionage.Engine
 	[Group( "Files" )]
 	public interface IFile : ILibrary
 	{
-		FileInfo Source { get; set; }
-		void Load( FileStream fileStream );
+		FileInfo Info { get; set; }
 	}
 }

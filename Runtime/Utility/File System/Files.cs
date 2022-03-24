@@ -20,6 +20,25 @@ namespace Espionage.Engine
 		//
 
 		/// <summary>
+		/// Gets the class that represents the target files extension.
+		/// </summary>
+		public static T Grab<T>( string path, bool load = true ) where T : class, IFile
+		{
+			path = Pathing.Absolute( path );
+			Assert.IsFalse( Pathing.Exists( path ), "File doesn't exist" );
+
+			var info = new FileInfo( path );
+			var library = Library.Database.Find<T>( e => e.Components.Get<FileAttribute>()?.Extension == info.Extension[1..] );
+
+			Assert.IsNull( library, "No Valid Loaders for this File" );
+
+			var file = Library.Database.Create<T>( library.Class );
+			file.Info = info;
+
+			return file;
+		}
+
+		/// <summary>
 		/// Saves anything you want, (provided theres a
 		/// serializer for it) to the given path
 		/// </summary>

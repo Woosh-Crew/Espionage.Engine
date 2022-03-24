@@ -136,6 +136,8 @@ namespace Espionage.Engine
 				return;
 			}
 
+			Dev.Log.Info( $"Loading {loadable}" );
+
 			Current = loadable;
 			loadable?.Load( OnLoad );
 		}
@@ -153,7 +155,7 @@ namespace Espionage.Engine
 
 		private class Request
 		{
-			public bool Injected { get; set; }
+			public bool Injected { get; internal set; }
 			public ILoadable Loadable { get; }
 
 			public Request( ILoadable request )

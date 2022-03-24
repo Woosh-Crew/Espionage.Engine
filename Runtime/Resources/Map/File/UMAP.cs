@@ -12,10 +12,7 @@ using UnityEditor.SceneManagement;
 namespace Espionage.Engine.Resources.Formats
 {
 	[Title( "Unity Map File" ), File( Extension = "umap" )]
-	public sealed partial class UMAP : Map.File
-	{
-		public override Map.Binder Binder => new AssetBundleMapProvider( Source.FullName );
-	}
+	public sealed partial class UMAP : AssetBundleFile { }
 
 	#if UNITY_EDITOR
 

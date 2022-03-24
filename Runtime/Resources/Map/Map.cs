@@ -41,18 +41,18 @@ namespace Espionage.Engine.Resources
 			for ( var i = 0; i < SceneManager.sceneCountInBuildSettings; i++ )
 			{
 				var scene = SceneManager.GetSceneByBuildIndex( i );
-				Setup( new BuildIndexMapProvider( i ) ).Meta( scene.name ).Build();
+				Setup( new BuildIndexMapProvider( i ) ).Meta( scene.name ).Origin( "Game" ).Build();
 			}
 
 			foreach ( var item in Files.Pathing.All( "maps://" ) )
 			{
-				Setup( item ).Meta( Files.Pathing.Name( item ) ).Build();
+				Setup( item ).Meta( Files.Pathing.Name( item ) ).Origin( "Game" ).Build();
 			}
 		}
 
 		/// <summary>
 		/// Trys to find the map by path. If it couldn't find the map in the database,
-		/// it'll create a new reference to that map for use later.
+		/// it'll create a new reference to that map for use later if it exists.
 		/// </summary>
 		public static Map Find( string path )
 		{
@@ -64,14 +64,14 @@ namespace Espionage.Engine.Resources
 				return Database[path];
 			}
 
-			if ( !Files.Pathing.Exists( path ) )
+			if ( Files.Pathing.Exists( path ) )
 			{
-				Dev.Log.Error( $"Map Path [{Files.Pathing.Absolute( path )}], couldn't be found." );
-				return null;
+				return new( Files.Grab<File>( path, false ) );
 			}
 
-			var file = Files.Serialization.Load<File>( path );
-			return new( file.Binder );
+			Dev.Log.Error( $"Map Path [{Files.Pathing.Absolute( path )}], couldn't be found." );
+			return null;
+
 		}
 
 		/// <summary>
@@ -83,115 +83,84 @@ namespace Espionage.Engine.Resources
 			return Database[path] != null;
 		}
 
-		/// <summary>
-		/// Sets up a load request for the the map at the given path.
-		/// Use Loader.Start(), to load the map
-		/// </summary>
-		public static ILoadable Load( string path )
-		{
-			var map = Find( path );
-			return map;
-		}
-
-		/// <summary>
-		/// Sets up a load request for a map.
-		/// Use Loader.Start(), to load the map
-		/// </summary>
-		public static ILoadable Load( Map map )
-		{
-			return map;
-		}
-
 		//
 		// Instance
 		//
 
-		public Library ClassInfo { get; } = Library.Database[typeof( Map )];
-		[Property] public string Identifier => Provider.Identifier;
-
+		[Property] public string Identifier => Source != null ? Source.Info.FullName : Provider.Identifier;
 		public Components<Map> Components { get; }
-		private Binder Provider { get; }
+
+		private File Source { get; set; }
+		private Binder Provider { get; set; }
 
 		// Loadable 
 
-		[Property] float ILoadable.Progress => Provider.Progress;
-		[Property] string ILoadable.Text => Components.TryGet( out Meta meta ) ? $"Loading {meta.Title}" : "Loading";
+		[Property] float ILoadable.Progress => Provider?.Progress ?? 0;
+
+		[Property] string ILoadable.Text
+		{
+			get
+			{
+				if ( !string.IsNullOrWhiteSpace( Provider?.Text ) )
+				{
+					return Provider.Text;
+				}
+
+				return Components.TryGet( out Meta meta ) ? $"Loading {meta.Title}" : "Loading";
+			}
+		}
+
+		// Class
+
+		public Library ClassInfo { get; } = Library.Database[typeof( Map )];
+
+		private Map( File file )
+		{
+			Assert.IsNull( file );
+			Components = new( this );
+
+			Source = file;
+			Database.Add( this );
+		}
 
 		private Map( Binder provider )
 		{
+			Assert.IsNull( provider );
 			Components = new( this );
 
-			Provider = provider ?? throw new NullReferenceException();
+			Provider = provider;
 			Database.Add( this );
 		}
 
 		public Action Loaded { get; set; }
 		public Action Unloaded { get; set; }
 
-		[Function, Button, Title( "Force Load" ), Help( "Forcefully load Map" )]
-		void ILoadable.Load( Action loaded = null )
+		void ILoadable.Load( Action loaded )
 		{
-			if ( Engine.Game.Loader?.Current != this )
-			{
-				Dev.Log.Error( "Don't forcefully load a map without using the loader!" );
-				Dev.Log.Warning( "Forcefully reattempting map load through loader." );
-
-				var queue = new Queue<ILoadable>();
-				queue.Enqueue( this );
-
-				Engine.Game.Loader?.Start( queue, loaded );
-				return;
-			}
-
-			loaded += () => Callback.Run( "map.loaded" );
-			loaded += Loaded;
+			loaded += OnLoad;
 
 			Callback.Run( "map.loading" );
 
-			// Unload first, then load the next map
-			if ( Current != null )
+			// Get provider from source file
+			if ( Source != null )
 			{
-				Dev.Log.Info( "Unloading, then loading" );
-				Current.Unload( () => LoadRequest( loaded ) );
-			}
-			else
-			{
-				Dev.Log.Info( "Loading Map" );
-				LoadRequest( loaded );
+				Provider = Source.Binder;
 			}
 
+			Provider.Load( loaded );
 			Current = this;
 		}
 
-		private void LoadRequest( Action onLoad )
+		private void OnLoad()
 		{
-			// This maybe stupid?!
-			Action<Scene> loaded = ( scene ) =>
-			{
-				SceneManager.SetActiveScene( scene );
+			Callback.Run( "map.loaded" );
+			Loaded?.Invoke();
 
-				foreach ( var gameObject in scene.GetRootGameObjects() )
-				{
-					foreach ( var camera in gameObject.GetComponentsInChildren<Camera>() )
-					{
-						camera.enabled = false;
-					}
-
-					foreach ( var listener in gameObject.GetComponentsInChildren<AudioListener>() )
-					{
-						listener.enabled = false;
-					}
-				}
-
-				onLoad?.Invoke();
-			};
-
-			Provider.Load( loaded );
+			SceneManager.SetActiveScene( Provider.Scene );
 		}
 
 		private void Unload( Action unloaded = null )
 		{
-			// Add Callback
 			unloaded += () => Callback.Run( "map.unloaded" );
 			unloaded += Unloaded;
 
@@ -200,7 +169,36 @@ namespace Espionage.Engine.Resources
 				Current = null;
 			}
 
-			Provider.Unload( unloaded );
+			Provider.Unload();
+
+			if ( Source == null )
+			{
+				unloaded.Invoke();
+				return;
+			}
+
+			Source?.Unload( unloaded );
+		}
+
+		// Map Injection
+
+		ILoadable[] ILoadable.Inject()
+		{
+			var queue = new Queue<ILoadable>();
+
+			if ( Current != null )
+			{
+				// Lazy Unload Operation
+				queue.Enqueue( Operation.Create( Current.Unload, Current.Components.TryGet( out Meta meta ) ? $"Unloading {meta.Title}" : "Unloading" ) );
+			}
+
+			if ( Source != null )
+			{
+				// Load data from source file
+				queue.Enqueue( Source );
+			}
+
+			return queue.ToArray();
 		}
 	}
 }

@@ -9,82 +9,32 @@ namespace Espionage.Engine.Resources.Binders
 	public class AssetBundleMapProvider : Map.Binder
 	{
 		public override string Identifier { get; }
+		public override float Progress => _operation.progress;
 
-		// Loading Meta
-		public override float Progress
+		public AssetBundle Bundle { get; }
+
+		public AssetBundleMapProvider( AssetBundle bundle )
 		{
-			get
-			{
-				if ( _bundleRequestOperation == null )
-				{
-					return 0;
-				}
-
-				if ( _sceneLoadOperation == null )
-				{
-					return _bundleRequestOperation.progress / 2;
-				}
-
-				return _bundleRequestOperation.progress / 2 + _sceneLoadOperation.progress / 2;
-			}
-		}
-
-		public AssetBundleMapProvider( string path )
-		{
-			Identifier = path;
+			Bundle = bundle;
 		}
 
 		//
 		// Resource
 		//
 
-		private AssetBundleCreateRequest _bundleRequestOperation;
-		private AsyncOperation _sceneLoadOperation;
+		private AsyncOperation _operation;
 
-		private AssetBundle _bundle;
-
-		public override void Load( Action<Scene> finished = null )
+		public override void Load( Action finished )
 		{
-			try
+			// Load the scene by getting all scene
+			// paths from a bundle, and getting the first index
+			var scenePath = Bundle.GetAllScenePaths()[0];
+			_operation = SceneManager.LoadSceneAsync( scenePath, LoadSceneMode.Additive );
+			_operation.completed += ( _ ) =>
 			{
-				// Load Bundle
-				_bundleRequestOperation = AssetBundle.LoadFromFileAsync( Identifier );
-				_bundleRequestOperation.completed += ( _ ) =>
-				{
-					// When we've finished loading the asset
-					// bundle, go onto loading the scene itself
-					_bundle = _bundleRequestOperation.assetBundle;
-					Dev.Log.Info( "Finished Loading Bundle" );
-
-					// Load the scene by getting all scene
-					// paths from a bundle, and getting the first index
-					var scenePath = _bundle.GetAllScenePaths()[0];
-					_sceneLoadOperation = SceneManager.LoadSceneAsync( scenePath, LoadSceneMode.Additive );
-					_sceneLoadOperation.completed += ( _ ) =>
-					{
-						// We've finished loading the scene.
-						Dev.Log.Info( "Finished Loading Scene" );
-						Scene = SceneManager.GetSceneByPath( scenePath );
-						finished?.Invoke( Scene );
-					};
-				};
-			}
-			catch ( Exception e )
-			{
-				Dev.Log.Info( $"Unity is so shit, here's the log {e.Message}" );
-			}
-		}
-
-		public override void Unload( Action finished = null )
-		{
-			// Unload scene and bundle
-			Scene.Unload();
-			Scene = default;
-
-			var request = _bundle.UnloadAsync( true );
-			request.completed += ( e ) =>
-			{
-				Dev.Log.Info( "Finished Unloading Bundle" );
+				// We've finished loading the scene.
+				Dev.Log.Info( "Finished Loading Scene" );
+				Scene = SceneManager.GetSceneByPath( scenePath );
 				finished?.Invoke();
 			};
 		}

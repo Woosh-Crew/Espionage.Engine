@@ -17,8 +17,13 @@ namespace Espionage.Engine.Tools
 						Service.Selection = entry;
 					}
 
-					if ( ImGui.BeginPopupContextItem() ) // <-- use last item id as popup id
+					if ( ImGui.BeginPopupContextItem() )
 					{
+						if ( ImGui.Button( "Load" ) )
+						{
+							Engine.Game.Loader.Start( entry );
+						}
+
 						if ( ImGui.Button( "Close" ) )
 						{
 							ImGui.CloseCurrentPopup();
@@ -26,8 +31,6 @@ namespace Espionage.Engine.Tools
 
 						ImGui.EndPopup();
 					}
-
-					ImGui.OpenPopupOnItemClick( "map_menu", ImGuiPopupFlags.MouseButtonRight );
 
 					if ( ImGui.IsItemHovered() && meta != null )
 					{

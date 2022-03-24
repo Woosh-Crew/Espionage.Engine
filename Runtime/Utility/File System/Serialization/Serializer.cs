@@ -62,37 +62,6 @@ namespace Espionage.Engine.IO
 
 		// Deserialization
 
-		/// <summary>
-		/// Load and deserialize the data for us. Will try and find
-		/// the IFile that contains the respective extension.
-		/// </summary>
-		public T Load<T>( string path ) where T : class, IFile
-		{
-			// Get the actual path
-			path = Files.Pathing.Absolute( path );
-
-			if ( !Files.Pathing.Exists( path ) )
-			{
-				throw new FileLoadException( "File doesn't exist" );
-			}
-
-			var fileInfo = new FileInfo( path );
-			var library = Library.Database.Find<T>( e => e.Components.Get<FileAttribute>()?.Extension == fileInfo.Extension[1..] );
-
-			if ( library == null )
-			{
-				throw new FileLoadException( "No Valid Loaders for this File" );
-			}
-
-			var file = Library.Database.Create<T>( library.Class );
-
-			file.Source = fileInfo;
-
-			using FileStream stream = new( path, FileMode.Open, FileAccess.Read );
-			file.Load( stream );
-
-			return file;
-		}
 
 		/// <summary>
 		/// Deserializes data at the given path. Will

@@ -60,7 +60,7 @@ namespace Espionage.Engine.Tools
 			}
 
 			ImGui.Text( $"Loading: {loader.Current.Text}" );
-			ImGui.Text( $"Progress: {loader.Current.Progress}" );
+			ImGui.Text( $"Progress: {loader.Progress}" );
 		}
 	}
 }

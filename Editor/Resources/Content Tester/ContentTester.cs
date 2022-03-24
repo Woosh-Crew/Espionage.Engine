@@ -38,7 +38,7 @@ namespace Espionage.Engine.Resources.Editor
 				return;
 			}
 
-			Loader.Start( Map.Load( path ) );
+			Engine.Game.Loader.Start( Map.Find( path ) );
 		}
 
 		[Function, Menu( "Maps/Test Open Map" )]
