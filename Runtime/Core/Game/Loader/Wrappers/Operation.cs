@@ -12,7 +12,8 @@ namespace Espionage.Engine
 
 		public static ILoadable Create( Task loaded, string text )
 		{
-			return new TaskBasedCallback( loaded, text );
+			var operation = new TaskBasedCallback( loaded, text );
+			return operation;
 		}
 
 		private class ActionBasedCallback : ILoadable
@@ -22,6 +23,7 @@ namespace Espionage.Engine
 			public ActionBasedCallback( Action<Action> loaded, string text )
 			{
 				Text = text;
+				_operation = loaded;
 			}
 
 			// Loadable
@@ -47,7 +49,7 @@ namespace Espionage.Engine
 
 			// Loadable
 
-			public float Progress { get; }
+			public float Progress { get; set; }
 			public string Text { get; }
 
 			public async void Load( Action loaded )
