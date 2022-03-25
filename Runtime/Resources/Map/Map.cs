@@ -44,6 +44,12 @@ namespace Espionage.Engine.Resources
 				Setup( new BuildIndexMapProvider( i ) ).Meta( scene.name ).Origin( "Game" ).Build();
 			}
 
+			if ( !Files.Pathing.Exists( "maps://" ) )
+			{
+				// No Maps in the project
+				return;
+			}
+
 			foreach ( var item in Files.Pathing.All( "maps://" ) )
 			{
 				Setup( item ).Meta( Files.Pathing.Name( item ) ).Origin( "Game" ).Build();
