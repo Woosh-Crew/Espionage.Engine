@@ -6,8 +6,6 @@ namespace Espionage.Engine.Resources.Binders
 	[Library, Title( "Editor Map" ), Group( "Maps" )]
 	public class EditorSceneMapProvider : Map.Binder
 	{
-		public override string Identifier => "editor";
-
 		public EditorSceneMapProvider()
 		{
 			_sceneName = SceneManager.GetActiveScene().name;

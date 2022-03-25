@@ -41,7 +41,7 @@ namespace Espionage.Engine.Tools
 
 			if ( ImGui.InputTextWithHint( string.Empty, "Enter Command...", ref _input, 160, ImGuiInputTextFlags.EnterReturnsTrue ) )
 			{
-				Dev.Log.Info( _input, "Inputted Text" );
+				Dev.Log.Info( $"> {_input}", "Inputted Text" );
 				Dev.Terminal.Invoke( _input );
 				_input = string.Empty;
 				_scrollToBottom = true;

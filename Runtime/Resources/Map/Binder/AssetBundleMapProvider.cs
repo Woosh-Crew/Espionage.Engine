@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,7 +7,6 @@ namespace Espionage.Engine.Resources.Binders
 	[Library, Title( "Asset Bundle Map" ), Group( "Maps" )]
 	public class AssetBundleMapProvider : Map.Binder
 	{
-		public override string Identifier { get; }
 		public override float Progress => _operation.progress;
 
 		public AssetBundle Bundle { get; }
@@ -17,10 +15,6 @@ namespace Espionage.Engine.Resources.Binders
 		{
 			Bundle = bundle;
 		}
-
-		//
-		// Resource
-		//
 
 		private AsyncOperation _operation;
 

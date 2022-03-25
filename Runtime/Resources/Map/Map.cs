@@ -3,54 +3,13 @@ using System.Collections.Generic;
 using Espionage.Engine.Components;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Espionage.Engine.Resources.Binders;
 
 namespace Espionage.Engine.Resources
 {
 	[Group( "Maps" ), Path( "maps", "assets://Maps/" )]
 	public sealed partial class Map : IResource, ILibrary, ILoadable
 	{
-		public static Map Current { get; private set; }
-
-		[Function( "maps.init" ), Callback( "engine.getting_ready" )]
-		private static void Initialize()
-		{
-			Binder provider = Application.isEditor ? new EditorSceneMapProvider() : new BuildIndexMapProvider( 0 );
-
-			// Get main scene at start, that isn't engine layer.
-			for ( var i = 0; i < SceneManager.sceneCount; i++ )
-			{
-				var scene = SceneManager.GetSceneAt( i );
-
-				if ( scene.name != Engine.Scene.name )
-				{
-					SceneManager.SetActiveScene( scene );
-					break;
-				}
-			}
-
-			Current = new( provider );
-			Callback.Run( "map.loaded" );
-
-			// Cache Maps
-
-			for ( var i = 0; i < SceneManager.sceneCountInBuildSettings; i++ )
-			{
-				var scene = SceneManager.GetSceneByBuildIndex( i );
-				Setup.Index( i ).Meta( scene.name ).Origin( "Game" ).Build();
-			}
-
-			if ( !Files.Pathing.Exists( "maps://" ) )
-			{
-				// No Maps in the project
-				return;
-			}
-
-			foreach ( var item in Files.Pathing.All( "maps://" ) )
-			{
-				Setup.Path( item ).Meta( Files.Pathing.Name( item ) ).Origin( "Game" ).Build();
-			}
-		}
+		public static Map Current { get; internal set; }
 
 		/// <summary>
 		/// Trys to find the map by path. If it couldn't find the map in the database,
@@ -89,10 +48,10 @@ namespace Espionage.Engine.Resources
 		// Instance
 		//
 
-		[Property] public string Identifier { get; private set; }
+		[Property] public string Identifier { get; }
 		public Components<Map> Components { get; }
 
-		private File Source { get; set; }
+		private File Source { get; }
 		private Binder Provider { get; set; }
 
 		// Loadable 
@@ -116,7 +75,7 @@ namespace Espionage.Engine.Resources
 
 		public Library ClassInfo { get; } = Library.Database[typeof( Map )];
 
-		private Map( File file )
+		internal Map( File file )
 		{
 			Assert.IsNull( file );
 			Components = new( this );
@@ -127,14 +86,14 @@ namespace Espionage.Engine.Resources
 			Database.Add( this );
 		}
 
-		private Map( Binder provider )
+		internal Map( Binder provider, string id )
 		{
 			Assert.IsNull( provider );
-			Components = new( this );
 
+			Components = new( this );
 			Provider = provider;
 
-			Identifier = Provider.Identifier;
+			Identifier = id;
 			Database.Add( this );
 		}
 
@@ -221,7 +180,7 @@ namespace Espionage.Engine.Resources
 			if ( Current != null )
 			{
 				// Lazy Unload Operation
-				queue.Enqueue( Operation.Create( Current.Unload, Current.Components.TryGet( out Meta meta ) ? $"Unloading {meta.Title}" : "Unloading" ) );
+				queue.Enqueue( Operation.Create( Current.Unload, Current.Components.TryGet( out Meta meta ) ? $"Unloading {meta.Title}" : "Unloading Map" ) );
 			}
 
 			// Inject in components, if they have injections

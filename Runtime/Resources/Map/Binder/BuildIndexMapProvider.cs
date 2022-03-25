@@ -7,9 +7,6 @@ namespace Espionage.Engine.Resources.Binders
 	[Library, Title( "Build Index Map" ), Group( "Maps" )]
 	public class BuildIndexMapProvider : Map.Binder
 	{
-		// Id
-		public override string Identifier => $"index:{_buildIndex}";
-
 		// Loading Meta
 		public override float Progress
 		{

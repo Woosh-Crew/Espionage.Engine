@@ -56,6 +56,7 @@ namespace Espionage.Engine
 			{
 				try
 				{
+					// Not sure if this is a good idea?
 					await _task;
 				}
 				catch ( Exception e )

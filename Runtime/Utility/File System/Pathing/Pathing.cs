@@ -180,7 +180,7 @@ namespace Espionage.Engine.IO
 
 
 		/// <summary>
-		/// Gets the name of directory or file
+		/// Gets the name of last directory or file
 		/// at the given path
 		/// </summary>
 		public string Name( string path, bool withExtension = true )
