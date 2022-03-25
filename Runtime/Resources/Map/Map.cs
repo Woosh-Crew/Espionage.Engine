@@ -7,10 +7,6 @@ using Espionage.Engine.Resources.Binders;
 
 namespace Espionage.Engine.Resources
 {
-	/// <summary>
-	/// Allows the loading and unloading of maps at runtime.
-	/// You should be using this instead of UnityEngine.SceneManager.
-	/// </summary>
 	[Group( "Maps" ), Path( "maps", "assets://Maps/" )]
 	public sealed partial class Map : IResource, ILibrary, ILoadable
 	{
@@ -41,7 +37,7 @@ namespace Espionage.Engine.Resources
 			for ( var i = 0; i < SceneManager.sceneCountInBuildSettings; i++ )
 			{
 				var scene = SceneManager.GetSceneByBuildIndex( i );
-				Setup( new BuildIndexMapProvider( i ) ).Meta( scene.name ).Origin( "Game" ).Build();
+				Setup.Index( i ).Meta( scene.name ).Origin( "Game" ).Build();
 			}
 
 			if ( !Files.Pathing.Exists( "maps://" ) )
@@ -52,7 +48,7 @@ namespace Espionage.Engine.Resources
 
 			foreach ( var item in Files.Pathing.All( "maps://" ) )
 			{
-				Setup( item ).Meta( Files.Pathing.Name( item ) ).Origin( "Game" ).Build();
+				Setup.Path( item ).Meta( Files.Pathing.Name( item ) ).Origin( "Game" ).Build();
 			}
 		}
 
@@ -142,9 +138,6 @@ namespace Espionage.Engine.Resources
 			Database.Add( this );
 		}
 
-		public Action Loaded { get; set; }
-		public Action Unloaded { get; set; }
-
 		void ILoadable.Load( Action loaded )
 		{
 			Assert.Missing( Database, this );
@@ -174,8 +167,6 @@ namespace Espionage.Engine.Resources
 			}
 
 			Callback.Run( "map.loaded" );
-			Loaded?.Invoke();
-
 			SceneManager.SetActiveScene( Provider.Scene );
 
 			foreach ( var comp in Components.GetAll<ICallbacks>() )
@@ -214,7 +205,6 @@ namespace Espionage.Engine.Resources
 		private void OnUnload()
 		{
 			Callback.Run( "map.unloaded" );
-			Unloaded?.Invoke();
 
 			foreach ( var comp in Components.GetAll<ICallbacks>() )
 			{

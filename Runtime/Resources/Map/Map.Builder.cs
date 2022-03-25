@@ -7,46 +7,51 @@ namespace Espionage.Engine.Resources
 {
 	public sealed partial class Map
 	{
-		/// <summary>
-		/// Sets up a builder for the map using a path, Allowing you 
-		/// to easily control its data through a build setup.
-		/// </summary>
-		public static Builder Setup( string path )
-		{
-			path = Files.Pathing.Absolute( path );
+		public static Factory Setup { get; } = new();
 
-			if ( !Files.Pathing.Exists( path ) )
+		public readonly struct Factory
+		{
+			/// <summary>
+			/// Sets up a builder for the map using a path, Allowing you 
+			/// to easily control its data through a build setup.
+			/// </summary>
+			public Builder Path( string path )
 			{
-				Dev.Log.Info( $"Path [{path}], doesn't exist" );
-				return default;
+				path = Files.Pathing.Absolute( path );
+
+				if ( !Files.Pathing.Exists( path ) )
+				{
+					Dev.Log.Info( $"Path [{path}], doesn't exist" );
+					return default;
+				}
+
+				// Use the Database Map if we have it
+				if ( Exists( path ) )
+				{
+					Dev.Log.Info( $"Map [{path}], already exists" );
+					return default;
+				}
+
+				return new( path );
 			}
 
-			// Use the Database Map if we have it
-			if ( Exists( path ) )
+			/// <summary>
+			/// Sets up a builder for the map using a provider, Allowing you 
+			/// to easily control its data through a build setup.
+			/// </summary>
+			public Builder Binder( Binder binder )
 			{
-				Dev.Log.Info( $"Map [{path}], already exists" );
-				return default;
+				return new( binder );
 			}
 
-			return new( path );
-		}
-
-		/// <summary>
-		/// Sets up a builder for the map using a provider, Allowing you 
-		/// to easily control its data through a build setup.
-		/// </summary>
-		public static Builder Setup( Binder provider )
-		{
-			return new( provider );
-		}
-
-		/// <summary>
-		/// Sets up a builder for the map using a provider, Allowing you 
-		/// to easily control its data through a build setup.
-		/// </summary>
-		public static Builder Setup( int buildIndex )
-		{
-			return new( new BuildIndexMapProvider( buildIndex ) );
+			/// <summary>
+			/// Sets up a builder for the map using a provider, Allowing you 
+			/// to easily control its data through a build setup.
+			/// </summary>
+			public Builder Index( int buildIndex )
+			{
+				return new( new BuildIndexMapProvider( buildIndex ) );
+			}
 		}
 
 		public readonly struct Builder
