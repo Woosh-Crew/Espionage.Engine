@@ -24,7 +24,7 @@ namespace Espionage.Engine.Tools
 			ImGui.Text( $"{lib.ClassInfo.Name} - [{lib.ClassInfo.Group}]" );
 
 			// Get Buttons
-			foreach ( var button in lib.ClassInfo.Functions.All )
+			foreach ( var button in lib.ClassInfo.Functions.All.Where( e => e.Components.Has<ButtonAttribute>() ) )
 			{
 				if ( ImGui.Button( button.Title ) )
 				{

@@ -43,6 +43,8 @@ namespace Espionage.Engine
 
 		internal Library( [NotNull] Type type )
 		{
+			Assert.IsNull( type );
+
 			string BuildName( Type type )
 			{
 				var name = string.Concat( type.Name!.Select( x => char.IsUpper( x ) ? "_" + x : x.ToString() ) ).TrimStart( '_' );
@@ -90,7 +92,7 @@ namespace Espionage.Engine
 					continue;
 				}
 
-				var isStatic = propertyInfo.GetMethod.IsStatic;
+				var isStatic = propertyInfo.GetMethod?.IsStatic ?? propertyInfo.SetMethod.IsStatic;
 				var attribute = propertyInfo.GetCustomAttribute<PropertyAttribute>();
 
 				if ( isStatic )

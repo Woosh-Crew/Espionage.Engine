@@ -9,8 +9,6 @@ namespace Espionage.Engine.AI
 	{
 		protected override void OnAttached( Actor actor )
 		{
-			OnAwake();
-
 			if ( !TryGetComponent( out _agent ) )
 			{
 				_agent = gameObject.AddComponent<NavMeshAgent>();
@@ -25,14 +23,13 @@ namespace Espionage.Engine.AI
 			Senses = Entity.Components.GetAll<Sense>().ToArray();
 		}
 
-		public void Think()
+		private void Think()
 		{
-			if ( Local.Pawn != null )
-			{
-				_agent.destination = Local.Pawn.transform.position;
-			}
+			var randomDirection = Random.insideUnitSphere * 35;
+			NavMesh.SamplePosition( randomDirection, out var hit, 35, 1 );
+			_agent.SetDestination( hit.position );
 
-			Entity.Tick = 0.2f;
+			Entity.Tick = Random.Range( 1, 8 );
 		}
 
 		// Senses
