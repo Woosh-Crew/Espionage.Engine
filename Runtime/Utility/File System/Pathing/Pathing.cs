@@ -101,6 +101,8 @@ namespace Espionage.Engine.IO
 		/// </summary>
 		public string Absolute( string path )
 		{
+			Assert.IsNull( path );
+
 			// Change Keywords
 			if ( path.Contains( '<' ) )
 			{

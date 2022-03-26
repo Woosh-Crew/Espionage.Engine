@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Espionage.Engine.Components;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -141,26 +142,6 @@ namespace Espionage.Engine.Resources
 			}
 		}
 
-		private void Unload( Action unloaded = null )
-		{
-			unloaded += OnUnload;
-
-			if ( Current == this )
-			{
-				Current = null;
-			}
-
-			Provider.Unload();
-
-			if ( Source == null )
-			{
-				unloaded.Invoke();
-				return;
-			}
-
-			Source?.Unload( unloaded );
-		}
-
 		private void OnUnload()
 		{
 			Callback.Run( "map.unloaded" );
@@ -177,10 +158,26 @@ namespace Espionage.Engine.Resources
 		{
 			var queue = new Queue<ILoadable>();
 
+			// Unload Current Map
 			if ( Current != null )
 			{
 				// Lazy Unload Operation
-				queue.Enqueue( Operation.Create( Current.Unload, Current.Components.TryGet( out Meta meta ) ? $"Unloading {meta.Title}" : "Unloading Map" ) );
+				if ( Current.Provider != null )
+				{
+					queue.Enqueue( Operation.Create( Current.Provider.Unload, "Unloading Scene" ) );
+				}
+
+				if ( Current.Source != null )
+				{
+					queue.Enqueue( Operation.Create( Current.Source.Unload, $"Unloading File [{Current.Source.Info.Name}]" ) );
+				}
+
+				Current.OnUnload();
+
+				if ( Current == this )
+				{
+					Current = null;
+				}
 			}
 
 			// Inject in components, if they have injections
@@ -202,12 +199,103 @@ namespace Espionage.Engine.Resources
 			return queue.ToArray();
 		}
 
+		//
+		// Components
+		//
+
 		public interface ICallbacks
 		{
 			void OnLoad( Scene scene );
 			void OnUnload();
 
 			ILoadable Inject() { return null; }
+		}
+
+		//
+		// Binder
+		//
+
+		public abstract class Binder
+		{
+			public virtual string Text { get; protected set; }
+			public virtual float Progress { get; protected set; }
+
+			public Scene Scene { get; protected set; }
+
+			public abstract void Load( Action onLoad );
+
+			public virtual void Unload( Action finished )
+			{
+				Scene.Unload().completed += _ => finished.Invoke();
+				Scene = default;
+			}
+		}
+
+		[Group( "Maps" )]
+		public abstract class File : IFile, IAsset, ILoadable
+		{
+			public Binder Binder { get; protected set; }
+
+			public Library ClassInfo { get; }
+
+			public File()
+			{
+				ClassInfo = Library.Register( this );
+			}
+
+			public FileInfo Info { get; set; }
+
+			public abstract void Load( Action loaded );
+			public abstract void Unload( Action finished );
+
+			// ILoadable
+
+			public virtual float Progress { get; protected set; }
+			public virtual string Text => $"Loading File [{Info.Name}]";
+		}
+
+		//
+		// Database
+		//
+
+		public static IDatabase<Map, string> Database { get; } = new InternalDatabase();
+
+		private class InternalDatabase : IDatabase<Map, string>
+		{
+			public IEnumerable<Map> All => _records.Values;
+			public int Count => _records.Count;
+
+			public Map this[ string key ] => _records.ContainsKey( key ) ? _records[key] : null;
+
+			private readonly Dictionary<string, Map> _records = new();
+
+			public void Add( Map item )
+			{
+				// Store it in Database
+				if ( _records.ContainsKey( item.Identifier! ) )
+				{
+					_records[item.Identifier] = item;
+				}
+				else
+				{
+					_records.Add( item.Identifier!, item );
+				}
+			}
+
+			public void Clear()
+			{
+				_records.Clear();
+			}
+
+			public bool Contains( Map item )
+			{
+				return _records.ContainsKey( item.Identifier );
+			}
+
+			public void Remove( Map item )
+			{
+				_records.Remove( item.Identifier );
+			}
 		}
 	}
 }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Espionage.Engine.Components;
-using Espionage.Engine.Resources.Binders;
 
 namespace Espionage.Engine.Resources
 {

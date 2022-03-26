@@ -48,14 +48,14 @@ namespace Espionage.Engine.Resources.Binders
 			};
 		}
 
-		public override void Unload()
+		public override void Unload( Action finished )
 		{
 			if ( Scene == default )
 			{
 				Scene = SceneManager.GetActiveScene();
 			}
 
-			Scene.Unload();
+			base.Unload( finished );
 		}
 	}
 }

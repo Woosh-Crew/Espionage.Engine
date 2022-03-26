@@ -37,7 +37,7 @@ namespace Espionage.Engine
 		// Current
 
 		public ILoadable Current { get; private set; }
-		public float Progress => Stack.Count / Amount + Current.Progress / Amount;
+		public float Progress => Current.Progress;
 
 		// States
 
@@ -121,6 +121,12 @@ namespace Espionage.Engine
 
 		private void Load()
 		{
+			if ( Stack.Count == 0 )
+			{
+				Finish();
+				return;
+			}
+
 			while ( true )
 			{
 				var possible = Stack.Peek();
@@ -176,12 +182,6 @@ namespace Espionage.Engine
 
 		private void OnLoad()
 		{
-			if ( Stack.Count == 0 )
-			{
-				Finish();
-				return;
-			}
-
 			Load();
 		}
 

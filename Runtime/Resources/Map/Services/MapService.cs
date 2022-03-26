@@ -42,7 +42,7 @@ namespace Espionage.Engine.Resources.Services
 
 			foreach ( var item in Files.Pathing.All( "maps://" ) )
 			{
-				Map.Setup.Path( item ).Meta( Files.Pathing.Name( item ) ).Origin( "Game" ).Build();
+				Map.Setup.Path( item )?.Meta( Files.Pathing.Name( item ) ).Origin( "Game" ).Build();
 			}
 		}
 	}
