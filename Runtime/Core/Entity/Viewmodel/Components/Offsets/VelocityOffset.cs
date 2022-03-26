@@ -11,7 +11,7 @@ namespace Espionage.Engine.Viewmodels
 			var offset = Local.Pawn.Velocity.WithY( 0 );
 			_dampedOffset = _dampedOffset.LerpTo( offset, 6 * Time.deltaTime );
 
-			transform.position -= _dampedOffset * 1.1f;
+			Position -= _dampedOffset * 1.1f;
 		}
 	}
 }

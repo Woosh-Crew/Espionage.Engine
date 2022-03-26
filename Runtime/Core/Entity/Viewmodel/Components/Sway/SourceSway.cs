@@ -19,7 +19,7 @@ namespace Espionage.Engine.Viewmodels
 			vec.z = 0;
 
 			_lastPosition = _lastPosition.LerpTo( vec, 6 * Time.deltaTime );
-			transform.position += _lastPosition * intensity;
+			Position += _lastPosition * intensity;
 		}
 
 		// Fields

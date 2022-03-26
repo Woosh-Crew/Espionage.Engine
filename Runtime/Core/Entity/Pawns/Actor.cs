@@ -41,7 +41,7 @@
 
 		public Health Health => Components.GetOrCreate( () =>
 		{
-			var comp = gameObject.AddComponent<Health>();
+			var comp = Library.Database.Create<Health>();
 			comp.Max = 100;
 			return comp;
 		} );

@@ -9,9 +9,9 @@ namespace Espionage.Engine
 
 		protected override void OnAttached( Pawn item )
 		{
-			if ( !TryGetComponent( out _characterController ) )
+			if ( !item.TryGetComponent( out _characterController ) )
 			{
-				_characterController = gameObject.AddComponent<CharacterController>();
+				_characterController = item.gameObject.AddComponent<CharacterController>();
 				_characterController.height = 1.8f;
 				_characterController.center = _characterController.center.WithY( 1.8f / 2 );
 			}

@@ -45,30 +45,19 @@ namespace Espionage.Engine
 	/// A Component is a MonoBehaviour that
 	/// gets attached to an Entity
 	/// </summary>
-	public abstract class Component : Behaviour, IComponent<Entity>
+	public abstract class Component : ILibrary, IComponent<Entity>
 	{
-		// Sealed
+		public Library ClassInfo { get; }
 
-		internal void Ready()
+		public Component()
 		{
-			OnReady();
+			ClassInfo = Library.Register( this );
 		}
 
-		internal override void Start()
+		public void Delete()
 		{
-			if ( Entity == null )
-			{
-				Dev.Log.Error( "No Entity found on component" );
-			}
-		}
+			Library.Unregister( this );
 
-		protected sealed override void OnAwake()
-		{
-			base.OnAwake();
-		}
-
-		protected sealed override void OnDelete()
-		{
 			if ( Entity == null || Entity.Components == null )
 			{
 				OnDetached();
@@ -92,7 +81,6 @@ namespace Espionage.Engine
 		public virtual void OnAttached( Entity item )
 		{
 			Entity = item;
-			ClassInfo ??= Library.Register( this );
 		}
 
 		/// <summary>

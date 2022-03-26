@@ -27,10 +27,10 @@ namespace Espionage.Engine.Viewmodels
 
 			rot *= _dampedSpeed;
 
-			transform.rotation *= Quaternion.Euler( rot.z * 2, rot.y * 4, rot.x * 4 );
+			Rotation *= Quaternion.Euler( rot.z * 2, rot.y * 4, rot.x * 4 );
 
-			transform.position += transform.rotation * Vector3.up * rot.z / 40;
-			transform.position += transform.rotation * Vector3.left * rot.y * 1.25f / 40;
+			Position += Rotation * Vector3.up * rot.z / 40;
+			Position += Rotation * Vector3.left * rot.y * 1.25f / 40;
 		}
 
 		// Interpolated Randomness

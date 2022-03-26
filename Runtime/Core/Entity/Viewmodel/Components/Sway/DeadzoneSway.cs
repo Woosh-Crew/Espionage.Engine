@@ -20,10 +20,8 @@ namespace Espionage.Engine.Viewmodels
 
 			_lastDeadzoneRotation = Quaternion.Slerp( _lastDeadzoneRotation, Quaternion.Euler( _savedDeadzoneAxis.x, _savedDeadzoneAxis.y, 0 ), damping * Time.deltaTime );
 
-			var trans = transform;
-			trans.rotation *= _lastDeadzoneRotation;
-
-			trans.position += trans.rotation * Vector3.up * (_lastDeadzoneRotation.x / 100) + trans.rotation * Vector3.right * (_lastDeadzoneRotation.y / 100);
+			Rotation *= _lastDeadzoneRotation;
+			Position += Rotation * Vector3.up * (_lastDeadzoneRotation.x / 100) + Rotation * Vector3.right * (_lastDeadzoneRotation.y / 100);
 		}
 
 		private void DeadzoneAxis()

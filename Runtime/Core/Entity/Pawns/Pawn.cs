@@ -60,7 +60,7 @@ namespace Espionage.Engine
 
 		private Controller GetActiveController()
 		{
-			return DevController ? DevController : PawnController;
+			return DevController ?? PawnController;
 		}
 
 		/// <summary>

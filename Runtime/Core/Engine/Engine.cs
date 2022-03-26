@@ -42,7 +42,8 @@ namespace Espionage.Engine
 
 		/// <summary>
 		/// The Main Camera Espionage.Engine creates. We recommend you
-		/// cache this as this will do a services Get() call.
+		/// cache this as this will do a services Get() call, which
+		/// creates garbage (due to LINQ).
 		/// </summary>
 		public static Camera Camera => Services.Get<CameraService>().Camera;
 

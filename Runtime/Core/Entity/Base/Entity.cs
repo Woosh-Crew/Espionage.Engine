@@ -35,19 +35,13 @@ namespace Espionage.Engine
 
 			Components = new( this );
 
-			// Cache Components
+			// Cache Components that are MonoBehaviour
 			foreach ( var item in GetComponents<IComponent<Entity>>() )
 			{
 				Components.Add( item );
 			}
 
 			OnAwake();
-
-			// Stupid? yes.
-			foreach ( var item in Components.GetAll<Component>() )
-			{
-				item.Ready();
-			}
 
 			Components.OnAdded += OnComponentAdded;
 			Components.OnRemove += OnComponentRemoved;

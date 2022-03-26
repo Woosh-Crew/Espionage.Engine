@@ -17,10 +17,10 @@ namespace Espionage.Engine.Viewmodels
 			vec.y = Mathf.Cos( _breatheBobDelta * 1f ) * 1.3f;
 			vec.z = Mathf.Cos( _breatheBobDelta * 0.5f ) * 0.5f;
 
-			transform.rotation *= Quaternion.Euler( vec.y, vec.x, vec.z );
+			Rotation *= Quaternion.Euler( vec.y, vec.x, vec.z );
 
-			transform.position += transform.rotation * Vector3.up * vec.y * 0.01f;
-			transform.position += transform.rotation * Vector3.left * vec.x * 0.01f;
+			Position += Rotation * Vector3.up * vec.y * 0.01f;
+			Position += Rotation * Vector3.left * vec.x * 0.01f;
 		}
 	}
 }
