@@ -59,18 +59,7 @@ namespace Espionage.Engine.Resources
 
 		[Property] float ILoadable.Progress => Provider?.Progress ?? 0;
 
-		[Property] string ILoadable.Text
-		{
-			get
-			{
-				if ( !string.IsNullOrWhiteSpace( Provider?.Text ) )
-				{
-					return Provider.Text;
-				}
-
-				return Components.TryGet( out Meta meta ) ? $"Loading {meta.Title}" : "Loading";
-			}
-		}
+		[Property] string ILoadable.Text => Components.TryGet( out Meta meta ) ? $"Loading {meta.Title}" : "Loading";
 
 		// Class
 
@@ -217,22 +206,25 @@ namespace Espionage.Engine.Resources
 
 		public abstract class Binder
 		{
-			public virtual string Text { get; protected set; }
-			public virtual float Progress { get; protected set; }
-
 			public Scene Scene { get; protected set; }
+			public virtual float Progress { get; protected set; }
 
 			public abstract void Load( Action onLoad );
 
 			public virtual void Unload( Action finished )
 			{
+				if ( Scene == default )
+				{
+					return;
+				}
+
 				Scene.Unload().completed += _ => finished.Invoke();
 				Scene = default;
 			}
 		}
 
 		[Group( "Maps" )]
-		public abstract class File : IFile, IAsset, ILoadable
+		public abstract class File : IFile, ILoadable
 		{
 			public Binder Binder { get; protected set; }
 
@@ -274,6 +266,7 @@ namespace Espionage.Engine.Resources
 				// Store it in Database
 				if ( _records.ContainsKey( item.Identifier! ) )
 				{
+					Dev.Log.Warning( $"Replacing Map [{item.Identifier}]" );
 					_records[item.Identifier] = item;
 				}
 				else
