@@ -37,13 +37,13 @@ namespace Espionage.Engine.IO
 			["compiled"] = "exports://<game> <version>/"
 		};
 
-		private readonly Dictionary<string, string> _keywords = new()
+		private readonly Dictionary<string, Func<string>> _keywords = new()
 		{
 			// -- Game Specific
-			["game"] = Application.productName,
-			["version"] = Application.version,
-			["company"] = Application.companyName,
-			["user"] = Environment.UserName
+			["game"] = () => Application.productName,
+			["version"] = () => Application.version,
+			["company"] = () => Application.companyName,
+			["user"] = () => Environment.UserName
 		};
 
 		//
@@ -75,7 +75,7 @@ namespace Espionage.Engine.IO
 		//
 
 		/// <summary>
-		/// Add a shorthand / virtual path to the pathing database.
+		/// Add a shorthand / virtual path to the pathing database
 		/// for use later, you can't override already exising keys.
 		/// </summary>
 		public void Add( string key, string path )
@@ -87,6 +87,21 @@ namespace Espionage.Engine.IO
 			}
 
 			_paths.Add( key, path );
+		}
+
+		/// <summary>
+		/// Add a keyword to the pathing database for use later, 
+		///you can't override already exising keys.
+		/// </summary>
+		public void Add( string key, Func<string> word )
+		{
+			if ( _keywords.ContainsKey( key ) )
+			{
+				Dev.Log.Error( $"Pathing already contains keyword {key}" );
+				return;
+			}
+
+			_keywords.Add( key, word );
 		}
 
 		public bool Contains( string item )
@@ -108,7 +123,12 @@ namespace Espionage.Engine.IO
 			{
 				foreach ( var (key, value) in _keywords )
 				{
-					path = path.Replace( $"<{key}>", value );
+					if ( !path.Contains( $"<{key}>" ) )
+					{
+						continue;
+					}
+
+					path = path.Replace( $"<{key}>", value.Invoke() );
 				}
 			}
 
