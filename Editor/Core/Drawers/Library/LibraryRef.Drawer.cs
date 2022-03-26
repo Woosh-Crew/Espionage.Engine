@@ -19,7 +19,7 @@ namespace Espionage.Engine.Editor.Drawers
 			var style = new GUIStyle( EditorStyles.popup );
 			if ( GUI.Button( position, new GUIContent( string.IsNullOrEmpty( idProperty.stringValue ) ? "None" : idProperty.stringValue ), style ) )
 			{
-				var dropdown = new Dropdown( new AdvancedDropdownState(), idProperty );
+				var dropdown = new Dropdown( new(), idProperty );
 				dropdown.Show( position );
 			}
 
@@ -33,7 +33,7 @@ namespace Espionage.Engine.Editor.Drawers
 			public Dropdown( AdvancedDropdownState state, SerializedProperty property ) : base( state )
 			{
 				_property = property;
-				minimumSize = new Vector2( 0, 250 );
+				minimumSize = new( 0, 250 );
 			}
 
 			protected override void ItemSelected( AdvancedDropdownItem item )
@@ -46,7 +46,7 @@ namespace Espionage.Engine.Editor.Drawers
 			{
 				var root = new AdvancedDropdownItem( "Library Database" );
 
-				var groups = Library.Database.All.Where( e => e.Name != e.Class.FullName ).OrderBy( e => e.Name ).GroupBy( e => e.Group );
+				var groups = Library.Database.All.Where( e => e.Name != e.Info.FullName ).OrderBy( e => e.Name ).GroupBy( e => e.Group );
 
 				foreach ( var item in groups )
 				{
@@ -55,7 +55,7 @@ namespace Espionage.Engine.Editor.Drawers
 
 					foreach ( var library in item )
 					{
-						itemRoot.AddChild( new AdvancedDropdownItem( library.Name ) );
+						itemRoot.AddChild( new( library.Name ) );
 					}
 				}
 

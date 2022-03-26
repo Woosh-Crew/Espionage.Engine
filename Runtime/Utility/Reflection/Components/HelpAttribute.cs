@@ -7,7 +7,7 @@ namespace Espionage.Engine
 	/// Reflection Component that stores a help message or tooltip.
 	/// </summary>
 	[AttributeUsage( AttributeTargets.Class | AttributeTargets.Method | AttributeTargets.Property )]
-	public sealed class HelpAttribute : Attribute, IComponent<Library>, IComponent<Property>, IComponent<Function>
+	public sealed class HelpAttribute : Attribute, IComponent<IMeta>
 	{
 		public string URL { get; set; }
 
@@ -18,19 +18,9 @@ namespace Espionage.Engine
 
 		private readonly string _help;
 
-		public void OnAttached( Library library )
+		public void OnAttached( IMeta library )
 		{
 			library.Help = _help;
-		}
-
-		public void OnAttached( Property property )
-		{
-			property.Help = _help;
-		}
-
-		public void OnAttached( Function item )
-		{
-			item.Help = _help;
 		}
 	}
 }

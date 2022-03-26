@@ -19,7 +19,7 @@ namespace Espionage.Engine
 	/// </para>
 	/// </summary>
 	[Serializable]
-	public sealed partial class Library : ILibrary
+	public sealed partial class Library : ILibrary, IMeta
 	{
 		/// <summary>
 		/// This is here so we can reference a library like its a
@@ -56,7 +56,7 @@ namespace Espionage.Engine
 				return $"{prefix}.{name}".ToLower();
 			}
 
-			Class = type;
+			Info = type;
 			Spawnable = true;
 
 			Name = BuildName( type );
@@ -66,7 +66,7 @@ namespace Espionage.Engine
 
 			// This is really expensive (6ms)...
 			// Get Components attached to type
-			var attributes = Class.GetCustomAttributes();
+			var attributes = Info.GetCustomAttributes();
 			foreach ( var item in attributes )
 			{
 				if ( item is IComponent<Library> library )
@@ -81,9 +81,9 @@ namespace Espionage.Engine
 
 			// Properties
 
-			Properties = new MemberDatabase<Property>();
+			Properties = new MemberDatabase<Property>( this );
 
-			foreach ( var propertyInfo in Class.GetProperties( flags ) )
+			foreach ( var propertyInfo in Info.GetProperties( flags ) )
 			{
 				if ( !propertyInfo.IsDefined( typeof( PropertyAttribute ) ) )
 				{
@@ -106,9 +106,9 @@ namespace Espionage.Engine
 
 			// Functions
 
-			Functions = new MemberDatabase<Function>();
+			Functions = new MemberDatabase<Function>( this );
 
-			foreach ( var methodInfo in Class.GetMethods( flags ) )
+			foreach ( var methodInfo in Info.GetMethods( flags ) )
 			{
 				if ( !methodInfo.IsDefined( typeof( FunctionAttribute ) ) )
 				{
@@ -120,11 +120,11 @@ namespace Espionage.Engine
 
 				if ( methodInfo.IsStatic )
 				{
-					Global.Functions.Add( attribute.CreateRecord( Global, methodInfo ) );
+					Global.Functions.Add( attribute.CreateRecord( methodInfo ) );
 				}
 				else
 				{
-					Functions.Add( attribute.CreateRecord( this, methodInfo ) );
+					Functions.Add( attribute.CreateRecord( methodInfo ) );
 				}
 			}
 		}
@@ -134,10 +134,11 @@ namespace Espionage.Engine
 		public string Title { get; set; }
 		public string Group { get; set; }
 		public string Help { get; set; }
+
 		public bool Spawnable { get; set; }
 
 		// Owner & Identification
-		public Type Class { get; }
+		public Type Info { get; }
 		public Guid Id => GenerateID( $"{Group}/{Name}" );
 
 		//
@@ -162,10 +163,19 @@ namespace Espionage.Engine
 			private readonly Dictionary<string, T> _all = new();
 			public IEnumerable<T> All => _all.Values;
 
+			private readonly Library _owner;
+
+			public MemberDatabase( Library owner )
+			{
+				_owner = owner;
+			}
+
 			public T this[ string key ] => _all.ContainsKey( key ) ? _all[key] : null;
 
 			public void Add( T item )
 			{
+				item.Owner = _owner;
+
 				if ( _all.ContainsKey( item.Name ) )
 				{
 					Dev.Log.Warning( $"Replacing {item.Name}" );

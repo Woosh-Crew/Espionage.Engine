@@ -8,7 +8,7 @@ namespace Espionage.Engine
 	/// Will override the Library.Group value.
 	/// </summary>
 	[AttributeUsage( AttributeTargets.Class | AttributeTargets.Property | AttributeTargets.Method | AttributeTargets.Interface, Inherited = true )]
-	public sealed class GroupAttribute : Attribute, IComponent<Library>, IComponent<Property>, IComponent<Function>
+	public sealed class GroupAttribute : Attribute, IComponent<IMeta>
 	{
 		private readonly string _group;
 
@@ -17,19 +17,9 @@ namespace Espionage.Engine
 			_group = group;
 		}
 
-		public void OnAttached( Library library )
+		public void OnAttached( IMeta library )
 		{
 			library.Group = _group;
-		}
-
-		public void OnAttached( Property property )
-		{
-			property.Group = _group;
-		}
-
-		public void OnAttached( Function item )
-		{
-			item.Group = _group;
 		}
 	}
 }

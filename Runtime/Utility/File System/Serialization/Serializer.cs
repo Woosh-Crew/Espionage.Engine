@@ -13,7 +13,7 @@ namespace Espionage.Engine.IO
 				throw new FileLoadException( "No Valid Descriptors for this File" );
 			}
 
-			return Library.Database.Create<T>( library.Class );
+			return Library.Database.Create<T>( library.Info );
 		}
 
 		//

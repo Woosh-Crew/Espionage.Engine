@@ -68,7 +68,7 @@ public static class LibraryDatabaseExtensions
 
 	public static Library Get<T>( this IDatabase<Library> database ) where T : class
 	{
-		return database.All.FirstOrDefault( e => e.Class == typeof( T ) );
+		return database.All.FirstOrDefault( e => e.Info == typeof( T ) );
 	}
 
 	public static Library Get( this IDatabase<Library> database, string name )
@@ -78,7 +78,7 @@ public static class LibraryDatabaseExtensions
 
 	public static Library Get( this IDatabase<Library> database, Type type )
 	{
-		return database.All.FirstOrDefault( e => e.Class == type );
+		return database.All.FirstOrDefault( e => e.Info == type );
 	}
 
 	public static Library Get( this IDatabase<Library> database, Guid id )
@@ -93,18 +93,18 @@ public static class LibraryDatabaseExtensions
 	public static Library Find( this IDatabase<Library> database, Type type )
 	{
 		return type.IsInterface
-			? database.All.FirstOrDefault( e => e.Class.HasInterface( type ) && !e.Class.IsAbstract )
+			? database.All.FirstOrDefault( e => e.Info.HasInterface( type ) && !e.Info.IsAbstract )
 			: database.All.FirstOrDefault( e =>
-				(type == e.Class || e.Class.IsSubclassOf( type )) && !e.Class.IsAbstract );
+				(type == e.Info || e.Info.IsSubclassOf( type )) && !e.Info.IsAbstract );
 	}
 
 	public static Library Find( this IDatabase<Library> database, Type type, Func<Library, bool> search )
 	{
 		return type.IsInterface
 			? database.All.FirstOrDefault( e =>
-				e.Class.HasInterface( type ) && !e.Class.IsAbstract && search.Invoke( e ) )
+				e.Info.HasInterface( type ) && !e.Info.IsAbstract && search.Invoke( e ) )
 			: database.All.FirstOrDefault( e =>
-				(type == e.Class || e.Class.IsSubclassOf( type )) && !e.Class.IsAbstract && search.Invoke( e ) );
+				(type == e.Info || e.Info.IsSubclassOf( type )) && !e.Info.IsAbstract && search.Invoke( e ) );
 	}
 
 	public static Library Find<T>( this IDatabase<Library> database ) where T : class
@@ -123,25 +123,25 @@ public static class LibraryDatabaseExtensions
 
 		if ( type.IsInterface )
 		{
-			return database.All.Where( e => e.Class.HasInterface<T>() );
+			return database.All.Where( e => e.Info.HasInterface<T>() );
 		}
 
-		return !database.TryGet<T>( out var item ) ? null : database.All.Where( e => e.Class.IsSubclassOf( item.Class ) );
+		return !database.TryGet<T>( out var item ) ? null : database.All.Where( e => e.Info.IsSubclassOf( item.Info ) );
 	}
 
 	public static IEnumerable<Library> GetAll( this IDatabase<Library> database, Type type )
 	{
-		return !database.TryGet( type, out var item ) ? null : database.All.Where( e => e.Class.IsSubclassOf( item.Class ) );
+		return !database.TryGet( type, out var item ) ? null : database.All.Where( e => e.Info.IsSubclassOf( item.Info ) );
 	}
 
 	public static IEnumerable<Library> GetAll( this IDatabase<Library> database, string name )
 	{
-		return !database.TryGet( name, out var item ) ? null : database.All.Where( e => e.Class.IsSubclassOf( item.Class ) );
+		return !database.TryGet( name, out var item ) ? null : database.All.Where( e => e.Info.IsSubclassOf( item.Info ) );
 	}
 
 	public static IEnumerable<Library> GetAll( this IDatabase<Library> database, Guid id )
 	{
-		return !database.TryGet( id, out var item ) ? null : database.All.Where( e => e.Class.IsSubclassOf( item.Class ) );
+		return !database.TryGet( id, out var item ) ? null : database.All.Where( e => e.Info.IsSubclassOf( item.Info ) );
 	}
 
 	//

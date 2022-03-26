@@ -25,7 +25,7 @@ namespace Espionage.Engine
 
 		public void OnAttached( Library library )
 		{
-			var method = library.Class.GetMethod( _targetMethod, BindingFlags.FlattenHierarchy | BindingFlags.Static | BindingFlags.Public );
+			var method = library.Info.GetMethod( _targetMethod, BindingFlags.FlattenHierarchy | BindingFlags.Static | BindingFlags.Public );
 
 			if ( method is null )
 			{

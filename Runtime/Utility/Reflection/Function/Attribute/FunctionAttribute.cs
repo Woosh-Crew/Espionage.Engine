@@ -9,7 +9,8 @@ namespace Espionage.Engine
 	[AttributeUsage( AttributeTargets.Method, Inherited = true, AllowMultiple = false )]
 	public sealed class FunctionAttribute : Attribute
 	{
-		public string Name { get; set; }
+		private string Name { get; }
+
 		public FunctionAttribute() { }
 
 		public FunctionAttribute( string name )
@@ -17,9 +18,9 @@ namespace Espionage.Engine
 			Name = name;
 		}
 
-		public Function CreateRecord( Library library, MethodInfo info )
+		public Function CreateRecord( MethodInfo info )
 		{
-			return new( library, info, string.IsNullOrEmpty( Name ) ? info.Name : Name );
+			return new( info, string.IsNullOrEmpty( Name ) ? info.Name : Name );
 		}
 	}
 }

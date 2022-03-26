@@ -17,7 +17,7 @@ namespace Espionage.Engine.Editor
 			if ( ClassInfo.Components.TryGet<SingletonAttribute>( out _ ) )
 			{
 				// Find all objects of Type.
-				var objects = FindObjectsOfType( ClassInfo.Class );
+				var objects = FindObjectsOfType( ClassInfo.Info );
 
 				foreach ( var o in objects )
 				{

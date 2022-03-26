@@ -25,13 +25,13 @@ namespace Espionage.Engine
 			// Check if Library is Singleton
 			if ( lib.Components.Has<SingletonAttribute>() )
 			{
-				if ( Singletons.ContainsKey( lib.Class ) )
+				if ( Singletons.ContainsKey( lib.Info ) )
 				{
 					Dev.Log.Error( $"You are trying to register another Singleton? How???? -- [{lib.Name}]" );
 					return null;
 				}
 
-				Singletons.Add( lib.Class, value );
+				Singletons.Add( lib.Info, value );
 			}
 
 			Callback.Register( value );
@@ -76,9 +76,9 @@ namespace Espionage.Engine
 			// If we are a singleton, Check if an instance already exists 
 			if ( library.Components.Has<SingletonAttribute>() )
 			{
-				if ( Singletons.ContainsKey( library.Class ) )
+				if ( Singletons.ContainsKey( library.Info ) )
 				{
-					return Singletons[library.Class];
+					return Singletons[library.Info];
 				}
 
 				var newSingleton = Construct( library );
@@ -96,9 +96,9 @@ namespace Espionage.Engine
 				return constructor.Invoke() as ILibrary;
 			}
 
-			if ( !library.Class.IsAbstract )
+			if ( !library.Info.IsAbstract )
 			{
-				return Activator.CreateInstance( library.Class ) as ILibrary;
+				return Activator.CreateInstance( library.Info ) as ILibrary;
 			}
 
 			Dev.Log.Error( $"Can't construct {library.Name}, is abstract and doesn't have constructor predefined." );

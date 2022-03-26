@@ -114,7 +114,7 @@ namespace Espionage.Engine
 				return false;
 			}
 
-			Game = Library.Database.Create<Game>( target.Class );
+			Game = Library.Database.Create<Game>( target.Info );
 
 			Callback.Run( "game.ready" );
 

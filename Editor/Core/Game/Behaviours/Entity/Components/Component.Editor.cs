@@ -11,7 +11,7 @@ namespace Espionage.Engine.Editor
 			base.OnEnable();
 			EditorInjection.Titles[target.GetType()] = $"{ClassInfo.Title}  <size=10>-</size> <size=10>Component</size>";
 
-			var type = ClassInfo.Class;
+			var type = ClassInfo.Info;
 			var isGeneric = false;
 
 			while ( type != typeof( Component ) )
@@ -33,7 +33,7 @@ namespace Espionage.Engine.Editor
 			var required = Library.Database[type.GetGenericArguments()[0]];
 
 			// Check if we actually can add this component
-			if ( !((Component)target).TryGetComponent( required.Class, out var comp ) )
+			if ( !((Component)target).TryGetComponent( required.Info, out var comp ) )
 			{
 				EditorUtility.DisplayDialog(
 					$"Missing required Entity ({required.Title})",

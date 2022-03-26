@@ -17,7 +17,7 @@ namespace Espionage.Engine.Tools.Editor
 		{
 			ClassInfo = Library.Register( this );
 
-			titleContent = new GUIContent( ClassInfo.Title, ClassInfo.Help );
+			titleContent = new( ClassInfo.Title, ClassInfo.Help );
 
 			if ( ClassInfo.Components.TryGet<IconAttribute>( out var icon ) )
 			{
@@ -62,7 +62,7 @@ namespace Espionage.Engine.Tools.Editor
 
 		private void CreateMenuBar( MenuBar.Position pos )
 		{
-			_menuBar = new MenuBar( pos );
+			_menuBar = new( pos );
 			rootVisualElement.Add( _menuBar );
 
 			// Function base Menus
@@ -75,7 +75,7 @@ namespace Espionage.Engine.Tools.Editor
 				foreach ( var function in grouping )
 				{
 					var menuComp = function.Components.Get<MenuAttribute>();
-					menuItem.AddItem( new GUIContent( menuComp.Path.Remove( 0, grouping.Key.Length + 1 ) ), false, () => function.Invoke( function.IsStatic ? null : this, null ) );
+					menuItem.AddItem( new( menuComp.Path.Remove( 0, grouping.Key.Length + 1 ) ), false, () => function.Invoke( function.IsStatic ? null : this, null ) );
 				}
 
 				_menuBar.Add( grouping.Key, menuItem );
@@ -89,7 +89,7 @@ namespace Espionage.Engine.Tools.Editor
 			{
 				if ( !string.Equals( item.Group, "hidden", StringComparison.CurrentCultureIgnoreCase ) )
 				{
-					toolsMenu.AddItem( new GUIContent( string.IsNullOrEmpty( item.Group ) ? "" : $"{item.Group}/" + item.Title ), false, () => GetWindow( item.Class ) );
+					toolsMenu.AddItem( new( string.IsNullOrEmpty( item.Group ) ? "" : $"{item.Group}/" + item.Title ), false, () => GetWindow( item.Info ) );
 				}
 			}
 
@@ -97,11 +97,11 @@ namespace Espionage.Engine.Tools.Editor
 			var helpMenu = new GenericMenu();
 
 			// About
-			helpMenu.AddItem( new GUIContent( "About" ), false, AboutWindow.ShowWindow );
+			helpMenu.AddItem( new( "About" ), false, AboutWindow.ShowWindow );
 
 			// Wiki
 			var helpUrl = ClassInfo.Components.Get<HelpAttribute>()?.URL ?? "https://github.com/Woosh-Crew/Espionage.Engine/wiki";
-			helpMenu.AddItem( new GUIContent( "Wiki" ), false, () => Application.OpenURL( helpUrl ) );
+			helpMenu.AddItem( new( "Wiki" ), false, () => Application.OpenURL( helpUrl ) );
 			_menuBar.Add( "Help", helpMenu );
 		}
 

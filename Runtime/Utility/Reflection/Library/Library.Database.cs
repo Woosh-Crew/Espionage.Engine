@@ -26,7 +26,7 @@ namespace Espionage.Engine
 				if ( string.IsNullOrEmpty( item.Title ) )
 				{
 					// Do space before uppercase char 
-					var type = item.Class;
+					var type = item.Info;
 
 					// This is so aids...
 					if ( type.IsGenericType )
@@ -41,7 +41,7 @@ namespace Espionage.Engine
 
 				if ( string.IsNullOrEmpty( item.Group ) )
 				{
-					item.Group = item.Class.Namespace;
+					item.Group = item.Info.Namespace;
 				}
 
 				// Store it in Database

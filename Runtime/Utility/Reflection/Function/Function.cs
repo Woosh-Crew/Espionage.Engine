@@ -5,19 +5,16 @@ namespace Espionage.Engine
 {
 	public sealed class Function : IMember
 	{
-		public Library Owner { get; }
+		public Library Owner { get; set; }
 
 		public MethodInfo Info { get; }
 		public Components<Function> Components { get; }
 
-		internal Function( Library owner, MethodInfo info, string name )
+		internal Function( MethodInfo info, string name )
 		{
-			Owner = owner;
 			Info = info;
-
 			Name = name;
 			Title = info.Name;
-			Group = owner.Title;
 
 			// Components
 			Components = new( this );

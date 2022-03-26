@@ -6,7 +6,7 @@ namespace Espionage.Engine
 {
 	public sealed class Property : IMember
 	{
-		public Library Owner { get; }
+		public Library Owner { get; set; }
 
 		internal Property( Library owner, PropertyInfo info, string name, object value )
 		{
