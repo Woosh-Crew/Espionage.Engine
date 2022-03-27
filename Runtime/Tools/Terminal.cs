@@ -35,10 +35,9 @@ namespace Espionage.Engine.Tools
 		{
 			// Log Output
 
-			ImGui.SetNextItemWidth( ImGui.GetWindowWidth() - 48 * 2 - 28 );
+			ImGui.SetNextItemWidth( ImGui.GetWindowWidth() - 16 );
 
-			ImGui.SetItemDefaultFocus();
-			ImGui.InputTextWithHint( "Search", "Search Output...", ref _search, 160 );
+			ImGui.InputTextWithHint( "Search", "Log Search...", ref _search, 160 );
 
 			// Us doing this removes the title.. but we gotta or else the scrolling just doesnt work
 			if ( ImGui.BeginChild( "out", new( 0, ImGui.GetWindowHeight() - 96 ), false ) )
@@ -94,11 +93,12 @@ namespace Espionage.Engine.Tools
 			{
 				ImGui.SetNextItemWidth( ImGui.GetWindowWidth() - 48 * 2 - 28 );
 
-				ImGui.SetItemDefaultFocus();
 				if ( ImGui.InputTextWithHint( string.Empty, "Enter Command...", ref _input, 160, ImGuiInputTextFlags.EnterReturnsTrue ) )
 				{
 					Send();
 				}
+
+				ImGui.SetItemDefaultFocus();
 
 				if ( Focus )
 				{
