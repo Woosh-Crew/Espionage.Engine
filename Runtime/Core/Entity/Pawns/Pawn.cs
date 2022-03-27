@@ -9,7 +9,7 @@ namespace Espionage.Engine
 	[Group( "Pawns" )]
 	public partial class Pawn : Entity, ISimulated, IControls
 	{
-		public Vector3 Velocity { get; set; }
+		public Vector3 Velocity { get; private set; }
 
 		protected override void OnAwake()
 		{

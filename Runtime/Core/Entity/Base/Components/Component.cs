@@ -45,6 +45,7 @@ namespace Espionage.Engine
 	/// A Component is a MonoBehaviour that
 	/// gets attached to an Entity
 	/// </summary>
+	[Group( "Components" )]
 	public abstract class Component : ILibrary, IComponent<Entity>
 	{
 		public Library ClassInfo { get; }
