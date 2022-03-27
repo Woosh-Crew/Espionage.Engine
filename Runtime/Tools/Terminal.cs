@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System;
+using System.Linq;
+using System.Text;
 using ImGuiNET;
 using UnityEngine;
 
@@ -9,6 +11,7 @@ namespace Espionage.Engine.Tools
 		public bool Focus { get; set; }
 
 		private string _input = string.Empty;
+		private string _search = string.Empty;
 		private bool _scrollToBottom;
 
 		private void Send()
@@ -32,6 +35,11 @@ namespace Espionage.Engine.Tools
 		{
 			// Log Output
 
+			ImGui.SetNextItemWidth( ImGui.GetWindowWidth() - 48 * 2 - 28 );
+
+			ImGui.SetItemDefaultFocus();
+			ImGui.InputTextWithHint( "Search", "Search Output...", ref _search, 160 );
+
 			if ( ImGui.BeginChild( "out", new( 0, ImGui.GetWindowHeight() - 72 ), false ) )
 			{
 				if ( ImGui.BeginTable( "Output", 2, ImGuiTableFlags.Borders | ImGuiTableFlags.RowBg | ImGuiTableFlags.Resizable | ImGuiTableFlags.Reorderable ) )
@@ -42,7 +50,7 @@ namespace Espionage.Engine.Tools
 
 					ImGui.TableHeadersRow();
 
-					foreach ( var entry in Dev.Log.All )
+					foreach ( var entry in string.IsNullOrEmpty( _search ) ? Dev.Log.All : Dev.Log.All.Where( e => e.Message.Contains( _search, StringComparison.CurrentCultureIgnoreCase ) ) )
 					{
 						// Log Type
 						ImGui.TableNextColumn();
