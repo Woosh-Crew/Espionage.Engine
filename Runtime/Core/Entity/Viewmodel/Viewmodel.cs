@@ -108,8 +108,8 @@ namespace Espionage.Engine
 		[Group( "Viewmodels" )]
 		public abstract class Modifier : Component<Viewmodel>
 		{
-			public Vector3 Position { get => Entity.Position; set => Entity.Position = value; }
-			public Quaternion Rotation { get => Entity.Rotation; set => Entity.Rotation = value; }
+			protected Vector3 Position { get => Entity.Position; set => Entity.Position = value; }
+			protected Quaternion Rotation { get => Entity.Rotation; set => Entity.Rotation = value; }
 
 			public abstract void PostCameraSetup( ref Tripod.Setup setup );
 		}

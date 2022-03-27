@@ -79,7 +79,7 @@ namespace Espionage.Engine
 		// Camera
 		//
 
-		[Property] public ITripod Tripod { get; set; }
+		[Property] public Tripod Tripod { get; set; }
 
 		public virtual void PostCameraSetup( ref Tripod.Setup setup )
 		{

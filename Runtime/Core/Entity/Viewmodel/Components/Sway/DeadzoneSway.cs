@@ -5,6 +5,14 @@ namespace Espionage.Engine.Viewmodels
 {
 	public class DeadzoneSway : Viewmodel.Modifier
 	{
+		[Property] private bool AutoCenter { get; set; } = true;
+		[Property] private float ReturnSpeed { get; set; } = 2;
+		[Property] private float Damping { get; set; } = 8;
+		[Property] private float Multiplier { get; set; } = 1;
+		[Property] private Vector2 Deadzone { get; set; } = new( 8, 8 );
+
+		// Sway
+
 		private Vector2 _savedDeadzoneAxis;
 		private Quaternion _lastDeadzoneRotation;
 
@@ -12,13 +20,13 @@ namespace Espionage.Engine.Viewmodels
 		{
 			DeadzoneAxis();
 
-			if ( autoCenter )
+			if ( AutoCenter )
 			{
-				_savedDeadzoneAxis.x = Easing.Linear( _savedDeadzoneAxis.x, 0, returnSpeed * Time.deltaTime );
-				_savedDeadzoneAxis.y = Easing.Linear( _savedDeadzoneAxis.y, 0, returnSpeed * Time.deltaTime );
+				_savedDeadzoneAxis.x = Easing.Linear( _savedDeadzoneAxis.x, 0, ReturnSpeed * Time.deltaTime );
+				_savedDeadzoneAxis.y = Easing.Linear( _savedDeadzoneAxis.y, 0, ReturnSpeed * Time.deltaTime );
 			}
 
-			_lastDeadzoneRotation = Quaternion.Slerp( _lastDeadzoneRotation, Quaternion.Euler( _savedDeadzoneAxis.x, _savedDeadzoneAxis.y, 0 ), damping * Time.deltaTime );
+			_lastDeadzoneRotation = Quaternion.Slerp( _lastDeadzoneRotation, Quaternion.Euler( _savedDeadzoneAxis.x, _savedDeadzoneAxis.y, 0 ), Damping * Time.deltaTime );
 
 			Rotation *= _lastDeadzoneRotation;
 			Position += Rotation * Vector3.up * (_lastDeadzoneRotation.x / 100) + Rotation * Vector3.right * (_lastDeadzoneRotation.y / 100);
@@ -28,28 +36,11 @@ namespace Espionage.Engine.Viewmodels
 		{
 			var mouse = Local.Client.Input.Mouse.Delta / Time.deltaTime;
 
-			_savedDeadzoneAxis.x += -mouse.y * multiplier * Time.deltaTime;
-			_savedDeadzoneAxis.x = Mathf.Clamp( _savedDeadzoneAxis.x, -deadzone.x, deadzone.x );
+			_savedDeadzoneAxis.x += -mouse.y * Multiplier * Time.deltaTime;
+			_savedDeadzoneAxis.x = Mathf.Clamp( _savedDeadzoneAxis.x, -Deadzone.x, Deadzone.x );
 
-			_savedDeadzoneAxis.y += mouse.x * multiplier * Time.deltaTime;
-			_savedDeadzoneAxis.y = Mathf.Clamp( _savedDeadzoneAxis.y, -deadzone.y, deadzone.y );
+			_savedDeadzoneAxis.y += mouse.x * Multiplier * Time.deltaTime;
+			_savedDeadzoneAxis.y = Mathf.Clamp( _savedDeadzoneAxis.y, -Deadzone.y, Deadzone.y );
 		}
-
-		// Fields
-
-		[SerializeField]
-		private bool autoCenter = true;
-
-		[SerializeField]
-		private float returnSpeed = 2;
-
-		[SerializeField]
-		private float damping = 8;
-
-		[SerializeField]
-		private float multiplier = 1;
-
-		[SerializeField]
-		private Vector2 deadzone = new( 8, 8 );
 	}
 }
