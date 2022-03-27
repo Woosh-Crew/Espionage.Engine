@@ -21,13 +21,13 @@ namespace Espionage.Engine.Logging
 					{
 						Message = condition,
 						StackTrace = trace,
-						Type = type switch
+						Level = type switch
 						{
-							LogType.Error => Entry.Level.Error,
-							LogType.Assert => Entry.Level.Error,
-							LogType.Warning => Entry.Level.Warning,
-							LogType.Log => Entry.Level.Info,
-							LogType.Exception => Entry.Level.Error,
+							LogType.Error => "Error",
+							LogType.Assert => "Assert",
+							LogType.Warning => "Warning",
+							LogType.Log => "Info",
+							LogType.Exception => "Exception",
 							_ => throw new ArgumentOutOfRangeException( nameof( type ), type, null )
 						}
 					} );
@@ -59,27 +59,7 @@ namespace Espionage.Engine.Logging
 				return;
 			}
 
-			switch ( message.Type )
-			{
-				case Entry.Level.Debug :
-				case Entry.Level.Info :
-					Debug.Log( message.Message );
-					break;
-
-				case Entry.Level.Warning :
-					Debug.LogWarning( message.Message );
-					break;
-
-				case Entry.Level.Error :
-					Debug.LogError( message.Message );
-					break;
-
-				case Entry.Level.Exception :
-					Debug.LogError( message.Message );
-					break;
-				default :
-					throw new ArgumentOutOfRangeException();
-			}
+			Debug.Log( message.Message );
 		}
 
 		public void Clear()

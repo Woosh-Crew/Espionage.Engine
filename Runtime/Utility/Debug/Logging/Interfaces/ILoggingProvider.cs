@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Espionage.Engine.Logging;
+using UnityEngine;
 
 namespace Espionage.Engine.Logging
 {
@@ -21,23 +22,14 @@ namespace Espionage.Engine.Logging
 
 public static class LoggingProviderExtensions
 {
-	public static void Debug( this ILoggingProvider provider, object message )
-	{
-		provider?.Add( new()
-		{
-			Message = message.ToString(),
-			StackTrace = Environment.StackTrace,
-			Type = Entry.Level.Debug
-		} );
-	}
-
 	public static void Verbose<T>( this ILoggingProvider provider, T message )
 	{
 		provider?.Add( new()
 		{
 			Message = message.ToString(),
 			StackTrace = Environment.StackTrace,
-			Type = Entry.Level.Debug
+			Level = "Verbose",
+			Color = Color.gray
 		} );
 	}
 
@@ -47,7 +39,8 @@ public static class LoggingProviderExtensions
 		{
 			Message = message.ToString(),
 			StackTrace = string.IsNullOrWhiteSpace( stack ) ? Environment.StackTrace : stack,
-			Type = Entry.Level.Info
+			Level = "Info",
+			Color = Color.white
 		} );
 	}
 
@@ -57,7 +50,8 @@ public static class LoggingProviderExtensions
 		{
 			Message = message.ToString(),
 			StackTrace = Environment.StackTrace,
-			Type = Entry.Level.Warning
+			Level = "Warning",
+			Color = Color.yellow
 		} );
 	}
 
@@ -67,7 +61,8 @@ public static class LoggingProviderExtensions
 		{
 			Message = message.ToString(),
 			StackTrace = Environment.StackTrace,
-			Type = Entry.Level.Error
+			Level = "Error",
+			Color = Color.red
 		} );
 	}
 
@@ -77,7 +72,8 @@ public static class LoggingProviderExtensions
 		{
 			Message = $"{exception.Message}",
 			StackTrace = exception.StackTrace,
-			Type = Entry.Level.Exception
+			Level = "Exception",
+			Color = Color.red
 		} );
 	}
 }

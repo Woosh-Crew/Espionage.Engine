@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using Espionage.Engine.Logging;
 using ImGuiNET;
 using UnityEngine;
 
@@ -12,48 +11,99 @@ namespace Espionage.Engine.Tools
 		private string _input = string.Empty;
 		private bool _scrollToBottom;
 
+		private void Send()
+		{
+			Dev.Log.Add( new()
+			{
+				Message = $"> {_input}",
+				StackTrace = "Inputted Text",
+				Color = Color.cyan
+			} );
+
+			Dev.Terminal.Invoke( _input );
+
+			_input = string.Empty;
+			_scrollToBottom = true;
+			Focus = true;
+		}
+
 		public override void OnLayout()
 		{
 			// Log Output
 
-			ImGui.BeginChild( "Output", new( 0, 512 ), true, ImGuiWindowFlags.ChildWindow );
+			if ( ImGui.BeginChild( "outout", new( 0, ImGui.GetWindowHeight() - 72 ) ) )
 			{
-				foreach ( var entry in Dev.Log.All )
+				ImGui.PushStyleColor( ImGuiCol.TableBorderLight, Color.black );
+
+				if ( ImGui.BeginTable( "Output", 2, ImGuiTableFlags.ScrollY | ImGuiTableFlags.Borders | ImGuiTableFlags.RowBg ) )
 				{
-					ImGui.TextColored( Entry.Colors[entry.Type], entry.Message );
-					if ( ImGui.IsItemHovered() && !string.IsNullOrEmpty( entry.StackTrace ) )
+					ImGui.TableSetBgColor( ImGuiTableBgTarget.RowBg0, 0 );
+					ImGui.TableSetupColumn( "Type", ImGuiTableColumnFlags.WidthFixed, 96 );
+					ImGui.TableSetupColumn( "Message" );
+
+					ImGui.TableHeadersRow();
+
+					foreach ( var entry in Dev.Log.All )
 					{
-						ImGui.SetTooltip( entry.StackTrace );
+						// Log Type
+						ImGui.TableNextColumn();
+						ImGui.TextColored( entry.Color == default ? Color.white : entry.Color, $" {entry.Level}" );
+
+						// Message
+						ImGui.TableNextColumn();
+						ImGui.TextWrapped( entry.Message );
+
+						if ( ImGui.IsItemHovered() && !string.IsNullOrEmpty( entry.StackTrace ) )
+						{
+							ImGui.SetTooltip( entry.StackTrace );
+						}
+
+						ImGui.TableNextRow();
+					}
+
+					if ( _scrollToBottom && ImGui.GetScrollY() >= ImGui.GetScrollMaxY() )
+					{
+						ImGui.SetScrollHereY( 1.0f );
 					}
 				}
 
-				if ( _scrollToBottom && ImGui.GetScrollY() >= ImGui.GetScrollMaxY() )
-				{
-					ImGui.SetScrollHereY( 1.0f );
-				}
+				ImGui.PopStyleColor();
 
+				ImGui.EndTable();
 			}
+
 			ImGui.EndChild();
+
 
 			ImGui.Separator();
 
 			// Command Line
 
-			if ( ImGui.InputTextWithHint( string.Empty, "Enter Command...", ref _input, 160, ImGuiInputTextFlags.EnterReturnsTrue ) )
+			ImGui.BeginGroup();
 			{
-				Dev.Log.Info( $"> {_input}", "Inputted Text" );
-				Dev.Terminal.Invoke( _input );
-				_input = string.Empty;
-				_scrollToBottom = true;
-				Focus = true;
-			}
+				ImGui.SetNextItemWidth( ImGui.GetWindowWidth() - 48 - 26 );
 
-			ImGui.SetItemDefaultFocus();
-			if ( Focus )
-			{
-				Focus = false;
-				ImGui.SetKeyboardFocusHere( -1 );
+				if ( ImGui.InputTextWithHint( string.Empty, "Enter Command...", ref _input, 160, ImGuiInputTextFlags.EnterReturnsTrue ) )
+				{
+					Send();
+				}
+
+				ImGui.SameLine();
+
+				ImGui.SetNextItemWidth( 48 );
+				if ( ImGui.Button( "Submit" ) )
+				{
+					Send();
+				}
+
+				ImGui.SetItemDefaultFocus();
+				if ( Focus )
+				{
+					Focus = false;
+					ImGui.SetKeyboardFocusHere( -1 );
+				}
 			}
+			ImGui.EndGroup();
 
 			// Hinting
 
@@ -63,16 +113,19 @@ namespace Espionage.Engine.Tools
 			}
 
 			var lastItem = ImGui.GetItemRectMin();
-			ImGui.SetNextWindowPos( lastItem + new Vector2( 0, ImGui.GetItemRectSize().y ) );
+
+			ImGui.SetNextWindowPos( lastItem + new Vector2( 0, ImGui.GetItemRectSize().y + 8 ) );
 
 			// Lotta Flags.. Kinda looks like a flag
-			const ImGuiWindowFlags flags = ImGuiWindowFlags.NoBackground |
-			                               ImGuiWindowFlags.Tooltip |
-			                               ImGuiWindowFlags.NoDecoration |
-			                               ImGuiWindowFlags.AlwaysAutoResize |
-			                               ImGuiWindowFlags.NoSavedSettings |
-			                               ImGuiWindowFlags.NoFocusOnAppearing |
-			                               ImGuiWindowFlags.NoNav;
+			const ImGuiWindowFlags flags =
+				ImGuiWindowFlags.Tooltip |
+				ImGuiWindowFlags.NoDecoration |
+				ImGuiWindowFlags.AlwaysAutoResize |
+				ImGuiWindowFlags.NoSavedSettings |
+				ImGuiWindowFlags.NoFocusOnAppearing |
+				ImGuiWindowFlags.NoNav;
+
+			ImGui.SetNextWindowBgAlpha( 0.5f );
 
 			if ( ImGui.Begin( string.Empty, flags ) )
 			{

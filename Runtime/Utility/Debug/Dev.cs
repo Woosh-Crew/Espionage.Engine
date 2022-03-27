@@ -93,7 +93,7 @@ namespace Espionage.Engine
 				{
 					Message = item.Name,
 					StackTrace = item.Help,
-					Type = Entry.Level.Info
+					Level = "Response"
 				} );
 			}
 		}

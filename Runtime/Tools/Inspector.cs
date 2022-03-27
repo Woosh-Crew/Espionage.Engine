@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Linq;
 using ImGuiNET;
-using UnityEngine;
 
 namespace Espionage.Engine.Tools
 {
-	[Title( "ILibrary Inspector" )]
-	public class Inspector : Window
+	[Title( "Inspector" )]
+	public partial class Inspector : Window
 	{
 		public override void OnLayout()
 		{
@@ -17,117 +15,44 @@ namespace Espionage.Engine.Tools
 				return;
 			}
 
-			var lib = Service.Selection;
-
-			// Entity Class Info
-			ImGui.Text( $"{lib.ClassInfo.Title}" );
-			ImGui.Text( $"{lib.ClassInfo.Name} - [{lib.ClassInfo.Group}]" );
-
-			// Get Buttons
-			foreach ( var button in lib.ClassInfo.Functions.All.Where( e => e.Components.Has<ButtonAttribute>() ) )
-			{
-				if ( ImGui.Button( button.Title ) )
-				{
-					button.Invoke( Service.Selection );
-				}
-
-				if ( ImGui.IsItemHovered() && !string.IsNullOrEmpty( button.Help ) )
-				{
-					ImGui.SetTooltip( button.Help );
-				}
-			}
-
+			HeaderGUI();
 			ImGui.Separator();
 
-			// Entity Property Inspector
-			ImGui.TextColored( Color.green, "Properties" );
-			ImGui.BeginGroup();
-			{
-				foreach ( var property in lib.ClassInfo.Properties.All )
-				{
-					PropertyUI( property, lib );
-				}
-			}
-			ImGui.EndGroup();
-
-			ImGui.Separator();
-
-			// Entity Functions
-			ImGui.TextColored( Color.green, "Functions" );
-			ImGui.BeginGroup();
-			{
-				foreach ( var function in lib.ClassInfo.Functions.All )
-				{
-					FunctionUI( function, lib );
-				}
-			}
-			ImGui.EndGroup();
-
-			// Do Components Inspector Lazily
-			if ( lib is Entity entity )
-			{
-				ImGui.Separator();
-				// Component Property Inspector
-				ImGui.TextColored( Color.green, "Components" );
-				ImGui.BeginGroup();
-				{
-					for ( var i = 0; i < entity.Components.Count; i++ )
-					{
-						ComponentUI( entity.Components[i] as Component, i );
-					}
-				}
-				ImGui.EndGroup();
-			}
+			// Draw UI
+			DefaultGUI( Service.Selection );
 		}
 
-		private void ComponentUI( Component component, int index )
+		public void SelectionChanged( ILibrary selection ) { }
+
+		private void HeaderGUI()
 		{
-			if ( component == null )
-			{
-				return;
-			}
-
-			if ( ImGui.TreeNode( new IntPtr( index ), $"{component.ClassInfo.Name} - [{component.ClassInfo.Group}]" ) )
-			{
-				foreach ( var property in component.ClassInfo.Properties.All )
-				{
-					PropertyUI( property, component );
-				}
-
-				ImGui.TreePop();
-			}
-
-			if ( ImGui.IsItemHovered() && !string.IsNullOrEmpty( component.ClassInfo.Help ) )
-			{
-				ImGui.SetTooltip( component.ClassInfo.Help );
-			}
-		}
-
-		private void PropertyUI( Property property, ILibrary scope )
-		{
-			if ( scope is Library )
-			{
-				ImGui.Text( $"{property.Name}" );
-			}
-			else
-			{
-				ImGui.Text( $"{property.Name} = [{property[scope]}]" );
-			}
+			ImGui.Text( $"Viewing {Service.Selection.ClassInfo.Title}" + (Service.Selection is Library ? " (ClassInfo)" : "") );
 
 			if ( ImGui.IsItemHovered() )
 			{
-				ImGui.SetTooltip( $"Owner = {property.Owner?.Name ?? "NULL?"}" );
+				ImGui.SetTooltip( $"Name : {Service.ClassInfo.Name ?? "NULL"}\nTitle : {Service.ClassInfo.Title ?? "NULL"}\nGroup : {Service.ClassInfo.Group ?? "NULL"}\nHelp : {Service.ClassInfo.Help ?? "NULL"}" );
+			}
+
+			if ( ImGui.Selectable( "Class Info" ) )
+			{
+				Service.Selection = Service.Selection.ClassInfo;
+			}
+
+		}
+
+		private void DefaultGUI( ILibrary item )
+		{
+			foreach ( var property in item.ClassInfo.Properties.All )
+			{
+				PropertyGUI( property );
 			}
 		}
 
-		private void FunctionUI( Function function, ILibrary scope )
+		private void PropertyGUI( Property property )
 		{
-			ImGui.Text( $"{function.Name}" );
-
-			if ( ImGui.IsItemHovered() && !string.IsNullOrEmpty( function.Help ) )
-			{
-				ImGui.SetTooltip( function.Help );
-			}
+			ImGui.Text( property.Name );
+			ImGui.SameLine();
+			ImGui.Value( "", 25 );
 		}
 	}
 }

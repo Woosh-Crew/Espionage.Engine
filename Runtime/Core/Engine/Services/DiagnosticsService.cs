@@ -26,13 +26,15 @@ namespace Espionage.Engine.Services
 			get => _selection;
 			set
 			{
-				if ( value == null )
+				if ( value == null || value == _selection )
 				{
 					return;
 				}
 
-				Window.Show<Inspector>();
 				_selection = value;
+
+				var inspector = Window.Show<Inspector>();
+				inspector.SelectionChanged( value );
 			}
 		}
 
