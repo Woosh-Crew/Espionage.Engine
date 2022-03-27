@@ -6,7 +6,7 @@
 	/// and other gameplay specific things.
 	/// </summary>
 	[Help( "Actor is designed to be a pawn used in gameplay, AI and Clients control this. AI will look for Actors instead of pawns is well." )]
-	public partial class Actor : Pawn
+	public abstract partial class Actor : Pawn
 	{
 		public Inventory Inventory => Components.Get<Inventory>();
 

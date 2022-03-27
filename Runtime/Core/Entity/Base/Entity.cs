@@ -5,9 +5,7 @@ using UnityEngine;
 namespace Espionage.Engine
 {
 	/// <summary>
-	/// An Entity is the Root of a MonoBehaviour tree. Entity will cache all Components that implement
-	/// the <see cref="IComponent{Entity}"/> interface or inherited from <see cref="Component{T}"/>. Entities
-	/// also contain IO / Actions logic.
+	/// An Entity is the Root of a MonoBehaviour tree. Entities also contain IO / Actions logic.
 	/// </summary>
 	[DisallowMultipleComponent, Group( "Entities" ), Constructor( nameof( Constructor ) ), Spawnable, SelectionBase]
 	public abstract partial class Entity : Behaviour
@@ -94,6 +92,7 @@ namespace Espionage.Engine
 		{
 			if ( this is T )
 			{
+				// It works, dont complain
 				return this as T;
 			}
 
@@ -128,6 +127,7 @@ namespace Espionage.Engine
 		/// <summary> Is this Entity currently Enabled? </summary>
 		public bool Enabled
 		{
+			// I hate Unity, this is so stupid
 			get => gameObject.activeInHierarchy;
 			set => gameObject.SetActive( value );
 		}
