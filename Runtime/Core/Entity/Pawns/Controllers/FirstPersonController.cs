@@ -17,6 +17,9 @@ namespace Espionage.Engine
 			if ( !item.TryGetComponent( out _characterController ) )
 			{
 				_characterController = item.gameObject.AddComponent<CharacterController>();
+
+				_characterController.skinWidth = 0.004f;
+				_characterController.radius = 0.4f;
 				_characterController.height = 1.8f;
 				_characterController.center = _characterController.center.WithY( 1.8f / 2 );
 			}
