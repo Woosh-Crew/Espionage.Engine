@@ -17,6 +17,7 @@ namespace Espionage.Engine.Tools
 			{
 				Message = $"> {_input}",
 				StackTrace = "Inputted Text",
+				Level = "Input",
 				Color = Color.cyan
 			} );
 
@@ -31,11 +32,9 @@ namespace Espionage.Engine.Tools
 		{
 			// Log Output
 
-			if ( ImGui.BeginChild( "outout", new( 0, ImGui.GetWindowHeight() - 72 ) ) )
+			if ( ImGui.BeginChild( "out", new( 0, ImGui.GetWindowHeight() - 72 ), false ) )
 			{
-				ImGui.PushStyleColor( ImGuiCol.TableBorderLight, Color.black );
-
-				if ( ImGui.BeginTable( "Output", 2, ImGuiTableFlags.ScrollY | ImGuiTableFlags.Borders | ImGuiTableFlags.RowBg ) )
+				if ( ImGui.BeginTable( "Output", 2, ImGuiTableFlags.Borders | ImGuiTableFlags.RowBg | ImGuiTableFlags.Resizable | ImGuiTableFlags.Reorderable ) )
 				{
 					ImGui.TableSetBgColor( ImGuiTableBgTarget.RowBg0, 0 );
 					ImGui.TableSetupColumn( "Type", ImGuiTableColumnFlags.WidthFixed, 96 );
@@ -47,11 +46,11 @@ namespace Espionage.Engine.Tools
 					{
 						// Log Type
 						ImGui.TableNextColumn();
-						ImGui.TextColored( entry.Color == default ? Color.white : entry.Color, $" {entry.Level}" );
+						ImGui.TextColored( entry.Color == default ? Color.white : entry.Color, entry.Level ?? "None" );
 
 						// Message
 						ImGui.TableNextColumn();
-						ImGui.TextWrapped( entry.Message );
+						ImGui.TextWrapped( entry.Message ?? "None" );
 
 						if ( ImGui.IsItemHovered() && !string.IsNullOrEmpty( entry.StackTrace ) )
 						{
@@ -60,20 +59,17 @@ namespace Espionage.Engine.Tools
 
 						ImGui.TableNextRow();
 					}
-
-					if ( _scrollToBottom && ImGui.GetScrollY() >= ImGui.GetScrollMaxY() )
-					{
-						ImGui.SetScrollHereY( 1.0f );
-					}
 				}
 
-				ImGui.PopStyleColor();
-
 				ImGui.EndTable();
+
+				if ( _scrollToBottom && ImGui.GetScrollY() >= ImGui.GetScrollMaxY() )
+				{
+					ImGui.SetScrollHereY( 1.0f );
+				}
 			}
 
 			ImGui.EndChild();
-
 
 			ImGui.Separator();
 
@@ -81,11 +77,18 @@ namespace Espionage.Engine.Tools
 
 			ImGui.BeginGroup();
 			{
-				ImGui.SetNextItemWidth( ImGui.GetWindowWidth() - 48 - 26 );
+				ImGui.SetNextItemWidth( ImGui.GetWindowWidth() - 48 * 2 - 28 );
 
+				ImGui.SetItemDefaultFocus();
 				if ( ImGui.InputTextWithHint( string.Empty, "Enter Command...", ref _input, 160, ImGuiInputTextFlags.EnterReturnsTrue ) )
 				{
 					Send();
+				}
+
+				if ( Focus )
+				{
+					Focus = false;
+					ImGui.SetKeyboardFocusHere( -1 );
 				}
 
 				ImGui.SameLine();
@@ -96,11 +99,12 @@ namespace Espionage.Engine.Tools
 					Send();
 				}
 
-				ImGui.SetItemDefaultFocus();
-				if ( Focus )
+				ImGui.SameLine();
+
+				ImGui.SetNextItemWidth( 48 );
+				if ( ImGui.Button( "Clear" ) )
 				{
-					Focus = false;
-					ImGui.SetKeyboardFocusHere( -1 );
+					Dev.Terminal.Invoke( "clear" );
 				}
 			}
 			ImGui.EndGroup();

@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Text;
 using Espionage.Engine.Logging;
 using Espionage.Engine.Internal.Commands;
 using Steamworks.Ugc;
@@ -87,15 +88,14 @@ namespace Espionage.Engine
 		[Terminal, Function( "help" )]
 		private static void Help()
 		{
+			var builder = new StringBuilder();
+
 			foreach ( var item in Terminal.All )
 			{
-				Log.Add( new()
-				{
-					Message = item.Name,
-					StackTrace = item.Help,
-					Level = "Response"
-				} );
+				builder.AppendLine( $"{item.Name} : {item.Help}" );
 			}
+
+			Log.Add( new() { Message = builder.ToString(), Level = "Response" } );
 		}
 
 		[Terminal, Function( "clear" )]
