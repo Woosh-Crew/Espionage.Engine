@@ -1,5 +1,12 @@
-﻿namespace Espionage.Engine
+﻿using System.Reflection;
+
+namespace Espionage.Engine
 {
+	public interface IMember<T> : IMember where T : MemberInfo
+	{
+		T Info { get; }
+	}
+
 	public interface IMember : IMeta
 	{
 		Library Owner { get; set; }

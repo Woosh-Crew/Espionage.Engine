@@ -3,12 +3,12 @@ using Espionage.Engine.Components;
 
 namespace Espionage.Engine
 {
-	public sealed class Function : IMember
+	public sealed class Function : IMember<MethodInfo>
 	{
 		public Library Owner { get; set; }
 
-		public MethodInfo Info { get; }
 		public Components<Function> Components { get; }
+		public MethodInfo Info { get; }
 
 		internal Function( MethodInfo info, string name )
 		{

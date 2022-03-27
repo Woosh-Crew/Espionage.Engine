@@ -6,7 +6,7 @@ namespace Espionage.Engine
 	public abstract class MonoComponent<T> : MonoComponent where T : Entity
 	{
 		/// <summary> <inheritdoc cref="Component.Entity"/> </summary>
-		public new T Entity => base.Entity as T;
+		[Skip] public new T Entity => base.Entity as T;
 
 		// Attaching
 
@@ -40,7 +40,7 @@ namespace Espionage.Engine
 		/// <summary> <inheritdoc cref="CanAttach"/> </summary>
 		protected virtual bool CanAttach( T item ) { return true; }
 	}
-	
+
 	/// <summary>
 	/// A MonoComponent is a component that is created and added through
 	/// the Unity Editor. You shouldn't be using this at all. Unless its

@@ -4,14 +4,12 @@ using Espionage.Engine.Components;
 
 namespace Espionage.Engine
 {
-	public sealed class Property : IMember
+	public sealed class Property : IMember<PropertyInfo>
 	{
 		public Library Owner { get; set; }
 
-		internal Property( Library owner, PropertyInfo info, string name, object value )
+		internal Property( PropertyInfo info, string name, object value, bool getComps = false )
 		{
-			// Ownership
-			Owner = owner;
 			Info = info;
 
 			// Required
@@ -20,7 +18,6 @@ namespace Espionage.Engine
 
 			// Meta
 			Title = info.Name;
-			Group = owner.Title;
 			Editable = info.SetMethod != null;
 
 			// Set the Default Value if we are static.
@@ -31,6 +28,11 @@ namespace Espionage.Engine
 
 			// Components
 			Components = new( this );
+
+			if ( !getComps )
+			{
+				return;
+			}
 
 			// This is really expensive (6ms)...
 			// Get Components attached to type
@@ -58,15 +60,15 @@ namespace Espionage.Engine
 
 		// Helpers
 
-		public bool IsStatic => Info.GetMethod.IsStatic;
+		public bool IsStatic => Info.GetMethod?.IsStatic ?? Info.SetMethod.IsStatic;
 		public Type Type => Info.PropertyType;
 
 		public object this[ object from ]
 		{
-			get => Info.GetValue( from );
+			get => Info.GetMethod == null ? null : Info.GetValue( from );
 			set
 			{
-				if ( !Editable )
+				if ( !Editable || Info.SetMethod == null )
 				{
 					Dev.Log.Error( $"Can't edit {Name}" );
 					return;

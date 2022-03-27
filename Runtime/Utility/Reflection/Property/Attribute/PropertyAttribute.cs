@@ -20,9 +20,9 @@ namespace Espionage.Engine
 			Default = defaultValue;
 		}
 
-		public Property CreateRecord( Library library, PropertyInfo info )
+		public Property CreateRecord( PropertyInfo info )
 		{
-			return new( library, info, !string.IsNullOrEmpty( Name ) ? Name : info.Name, Default );
+			return new( info, !string.IsNullOrEmpty( Name ) ? Name : info.Name, Default, true );
 		}
 	}
 }

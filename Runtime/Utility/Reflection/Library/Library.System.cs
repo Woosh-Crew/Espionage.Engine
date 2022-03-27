@@ -151,11 +151,16 @@ namespace Espionage.Engine
 			{
 				var type = types[typeIndex];
 
-				if ( type.HasInterface( typeof( ILibrary ) ) || type.IsDefined( typeof( LibraryAttribute ), true ) )
+				if ( IsValid( type ) )
 				{
 					Database.Add( CreateRecord( type ) );
 				}
 			}
+		}
+
+		internal static bool IsValid( Type type )
+		{
+			return type.HasInterface( typeof( ILibrary ) ) || type.IsDefined( typeof( LibraryAttribute ), true );
 		}
 
 		private static Library CreateRecord( Type type )

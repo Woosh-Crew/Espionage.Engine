@@ -114,9 +114,9 @@ namespace Espionage.Engine.Tools
 				ImGui.Text( $"{property.Name} = [{property[scope]}]" );
 			}
 
-			if ( ImGui.IsItemHovered() && !string.IsNullOrEmpty( property.Help ) )
+			if ( ImGui.IsItemHovered() )
 			{
-				ImGui.SetTooltip( property.Help );
+				ImGui.SetTooltip( $"Owner = {property.Owner?.Name ?? "NULL?"}" );
 			}
 		}
 

@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Espionage.Engine.Components;
+using UnityEngine;
 
 namespace Espionage.Engine
 {
@@ -77,61 +78,84 @@ namespace Espionage.Engine
 				}
 			}
 
-			// Grab Class Members
+			Properties = new MemberDatabase<Property, PropertyInfo>( this );
+			Functions = new MemberDatabase<Function, MethodInfo>( this );
 
-			const BindingFlags flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic;
-
-			// Properties
-
-			Properties = new MemberDatabase<Property>( this );
-
-			foreach ( var propertyInfo in Info.GetProperties( flags ) )
+			foreach ( var info in Info.GetMembers( BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.NonPublic ) )
 			{
-				if ( !propertyInfo.IsDefined( typeof( PropertyAttribute ) ) )
+				switch ( info )
 				{
-					continue;
-				}
-
-				var isStatic = propertyInfo.GetMethod?.IsStatic ?? propertyInfo.SetMethod.IsStatic;
-				var attribute = propertyInfo.GetCustomAttribute<PropertyAttribute>();
-
-				if ( isStatic )
-				{
-					Global.Properties.Add( attribute.CreateRecord( Global, propertyInfo ) );
-				}
-				else
-				{
-					// Only add property if it has the attribute
-					Properties.Add( attribute.CreateRecord( this, propertyInfo ) );
-				}
-			}
-
-			// Functions
-
-			Functions = new MemberDatabase<Function>( this );
-
-			foreach ( var methodInfo in Info.GetMethods( flags ) )
-			{
-				if ( !methodInfo.IsDefined( typeof( FunctionAttribute ) ) )
-				{
-					continue;
-				}
-
-				// Only add property if it has the attribute
-				var attribute = methodInfo.GetCustomAttribute<FunctionAttribute>();
-
-				if ( methodInfo.IsStatic )
-				{
-					Global.Functions.Add( attribute.CreateRecord( methodInfo ) );
-				}
-				else
-				{
-					Functions.Add( attribute.CreateRecord( methodInfo ) );
+					case PropertyInfo prop :
+						CacheProperty( prop );
+						break;
+					case MethodInfo method :
+						CacheFunction( method );
+						break;
 				}
 			}
 		}
 
+		private void CacheProperty( PropertyInfo info )
+		{
+			// If this property came from a class outside the scope of ILibrary
+			// Ignore it. We don't care about it. 
+			if ( !IsValid( info.DeclaringType ) || info.HasAttribute<SkipAttribute>( true ) )
+			{
+				return;
+			}
+
+			var reg = MemberDatabase<Property, PropertyInfo>.Registry;
+
+			if ( reg.ContainsKey( info.DeclaringType ) )
+			{
+				var potential = reg[info.DeclaringType].FirstOrDefault( e => e.Name == info.Name );
+
+				if ( potential != null )
+				{
+					Properties.Add( potential );
+					return;
+				}
+			}
+
+			if ( info.IsDefined( typeof( PropertyAttribute ) ) )
+			{
+				var isStatic = info.GetMethod?.IsStatic ?? info.SetMethod.IsStatic;
+				(isStatic ? Global : this).Properties.Add( info.GetCustomAttribute<PropertyAttribute>().CreateRecord( info ) );
+
+				return;
+			}
+
+			Properties.Add( new( info, info.Name, default ) );
+		}
+
+		private void CacheFunction( MethodInfo info )
+		{
+			if ( !info.IsDefined( typeof( FunctionAttribute ) ) || info.HasAttribute<SkipAttribute>( true ) )
+			{
+				return;
+			}
+
+			var reg = MemberDatabase<Function, MethodInfo>.Registry;
+
+			if ( reg.ContainsKey( info.DeclaringType ) )
+			{
+				var potential = reg[info.DeclaringType].FirstOrDefault( e => e.Name == info.Name );
+
+				if ( potential != null )
+				{
+					Functions.Add( potential );
+					return;
+				}
+			}
+
+			var attribute = info.GetCustomAttribute<FunctionAttribute>();
+			(info.IsStatic ? Global : this).Functions.Add( attribute.CreateRecord( info ) );
+		}
+
+		//
 		// Meta
+		//
+
 		public string Name { get; set; }
 		public string Title { get; set; }
 		public string Group { get; set; }
@@ -160,8 +184,10 @@ namespace Espionage.Engine
 		/// </summary>
 		public IDatabase<Function, string> Functions { get; private set; }
 
-		private class MemberDatabase<T> : IDatabase<T, string> where T : class, IMember
+		private class MemberDatabase<T, TInfo> : IDatabase<T, string> where T : class, IMember<TInfo> where TInfo : MemberInfo
 		{
+			internal static readonly Dictionary<Type, HashSet<T>> Registry = new();
+
 			private readonly Dictionary<string, T> _all = new();
 			public IEnumerable<T> All => _all.Values;
 
@@ -176,13 +202,32 @@ namespace Espionage.Engine
 
 			public void Add( T item )
 			{
-				item.Owner = _owner;
+				// Add the Key to the registry, if its null
+				if ( !Registry.ContainsKey( item.Info.DeclaringType ) )
+				{
+					Registry.Add( item.Info.DeclaringType, new() );
+				}
 
+				// See if we can add it to the registry, so it prevents duplicate members
+				if ( Registry[item.Info.DeclaringType].All( e => e.Name != item.Name ) )
+				{
+					Registry[item.Info.DeclaringType].Add( item );
+				}
+
+				// Assign Proper owner, if we're the owner.
+				if ( item.Owner == null && item.Info.DeclaringType == _owner.Info )
+				{
+					item.Owner = _owner;
+
+					if ( string.IsNullOrEmpty( item.Group ) )
+					{
+						item.Group = _owner.Title;
+					}
+				}
+
+				// Now add it to the instance
 				if ( _all.ContainsKey( item.Name ) )
 				{
-					Dev.Log.Warning( $"Replacing {item.Name}" );
-					_all[item.Name] = item;
-
 					return;
 				}
 
