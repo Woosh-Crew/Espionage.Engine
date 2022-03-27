@@ -40,24 +40,30 @@ namespace Espionage.Engine.Tools
 			ImGui.SetItemDefaultFocus();
 			ImGui.InputTextWithHint( "Search", "Search Output...", ref _search, 160 );
 
-			if ( ImGui.BeginChild( "out", new( 0, ImGui.GetWindowHeight() - 72 ), false ) )
+			if ( ImGui.BeginChild( "out", new( 0, ImGui.GetWindowHeight() - 96 ), false ) )
 			{
-				if ( ImGui.BeginTable( "Output", 2, ImGuiTableFlags.Borders | ImGuiTableFlags.RowBg | ImGuiTableFlags.Resizable | ImGuiTableFlags.Reorderable ) )
+				if ( ImGui.BeginTable( "Output", 3, ImGuiTableFlags.Borders | ImGuiTableFlags.RowBg | ImGuiTableFlags.Resizable | ImGuiTableFlags.Reorderable ) )
 				{
-					ImGui.TableSetBgColor( ImGuiTableBgTarget.RowBg0, 0 );
+					ImGui.TableSetupColumn( "Time", ImGuiTableColumnFlags.WidthFixed, 72 );
 					ImGui.TableSetupColumn( "Type", ImGuiTableColumnFlags.WidthFixed, 96 );
 					ImGui.TableSetupColumn( "Message" );
 
 					ImGui.TableHeadersRow();
 
-					foreach ( var entry in string.IsNullOrEmpty( _search ) ? Dev.Log.All : Dev.Log.All.Where( e => e.Message.Contains( _search, StringComparison.CurrentCultureIgnoreCase ) ) )
+					foreach ( var entry in string.IsNullOrEmpty( _search )
+						         ? Dev.Log.All
+						         : Dev.Log.All.Where( e => e.Message.Contains( _search, StringComparison.CurrentCultureIgnoreCase ) || e.Level.StartsWith( _search, StringComparison.CurrentCultureIgnoreCase ) ) )
 					{
+						ImGui.TableNextColumn();
+						ImGui.TextColored( Color.gray, $"[{DateTime.Now.ToShortTimeString()}]" );
+
 						// Log Type
 						ImGui.TableNextColumn();
 						ImGui.TextColored( entry.Color == default ? Color.white : entry.Color, entry.Level ?? "None" );
 
 						// Message
 						ImGui.TableNextColumn();
+
 						ImGui.TextWrapped( entry.Message ?? "None" );
 
 						if ( ImGui.IsItemHovered() && !string.IsNullOrEmpty( entry.StackTrace ) )
@@ -143,15 +149,22 @@ namespace Espionage.Engine.Tools
 			{
 				foreach ( var item in Dev.Terminal.Find( _input ) )
 				{
-					var stringBuilder = new StringBuilder( $"{item} ( " );
+					var stringBuilder = new StringBuilder( $"{item}" );
 					var command = Dev.Terminal.Get( item );
 
-					foreach ( var parameter in command.Parameters )
+					if ( command.Parameters.Length > 0 )
 					{
-						stringBuilder.Append( $"{parameter} " );
+						stringBuilder.Append( " [ " );
+
+						foreach ( var parameter in command.Parameters )
+						{
+							stringBuilder.Append( $"{parameter.Name} " );
+						}
+
+						stringBuilder.Append( "]" );
 					}
 
-					ImGui.Text( $"{stringBuilder})" );
+					ImGui.Text( stringBuilder.ToString() );
 				}
 
 				ImGui.End();
