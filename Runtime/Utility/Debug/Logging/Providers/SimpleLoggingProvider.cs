@@ -20,7 +20,7 @@ namespace Espionage.Engine.Logging
 					Add( new()
 					{
 						Message = condition,
-						StackTrace = trace,
+						Trace = trace,
 						Level = type switch
 						{
 							LogType.Error => "Error",

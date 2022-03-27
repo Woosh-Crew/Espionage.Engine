@@ -27,7 +27,7 @@ public static class LoggingProviderExtensions
 		provider?.Add( new()
 		{
 			Message = message.ToString(),
-			StackTrace = Environment.StackTrace,
+			Trace = Environment.StackTrace,
 			Level = "Verbose",
 			Color = Color.gray
 		} );
@@ -38,7 +38,7 @@ public static class LoggingProviderExtensions
 		provider?.Add( new()
 		{
 			Message = message.ToString(),
-			StackTrace = string.IsNullOrWhiteSpace( stack ) ? Environment.StackTrace : stack,
+			Trace = string.IsNullOrWhiteSpace( stack ) ? Environment.StackTrace : stack,
 			Level = "Info",
 			Color = Color.white
 		} );
@@ -49,7 +49,7 @@ public static class LoggingProviderExtensions
 		provider?.Add( new()
 		{
 			Message = message.ToString(),
-			StackTrace = Environment.StackTrace,
+			Trace = Environment.StackTrace,
 			Level = "Warning",
 			Color = Color.yellow
 		} );
@@ -60,7 +60,7 @@ public static class LoggingProviderExtensions
 		provider?.Add( new()
 		{
 			Message = message.ToString(),
-			StackTrace = Environment.StackTrace,
+			Trace = Environment.StackTrace,
 			Level = "Error",
 			Color = Color.red
 		} );
@@ -71,7 +71,7 @@ public static class LoggingProviderExtensions
 		provider?.Add( new()
 		{
 			Message = $"{exception.Message}",
-			StackTrace = exception.StackTrace,
+			Trace = exception.StackTrace,
 			Level = "Exception",
 			Color = Color.red
 		} );

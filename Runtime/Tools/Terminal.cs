@@ -19,7 +19,7 @@ namespace Espionage.Engine.Tools
 			Dev.Log.Add( new()
 			{
 				Message = $"> {_input}",
-				StackTrace = "Inputted Text",
+				Trace = "Inputted Text",
 				Level = "Input",
 				Color = Color.cyan
 			} );
@@ -40,6 +40,7 @@ namespace Espionage.Engine.Tools
 			ImGui.SetItemDefaultFocus();
 			ImGui.InputTextWithHint( "Search", "Search Output...", ref _search, 160 );
 
+			// Us doing this removes the title.. but we gotta or else the scrolling just doesnt work
 			if ( ImGui.BeginChild( "out", new( 0, ImGui.GetWindowHeight() - 96 ), false ) )
 			{
 				if ( ImGui.BeginTable( "Output", 3, ImGuiTableFlags.Borders | ImGuiTableFlags.RowBg | ImGuiTableFlags.Resizable | ImGuiTableFlags.Reorderable ) )
@@ -66,9 +67,9 @@ namespace Espionage.Engine.Tools
 
 						ImGui.TextWrapped( entry.Message ?? "None" );
 
-						if ( ImGui.IsItemHovered() && !string.IsNullOrEmpty( entry.StackTrace ) )
+						if ( ImGui.IsItemHovered() && !string.IsNullOrEmpty( entry.Trace ) )
 						{
-							ImGui.SetTooltip( entry.StackTrace );
+							ImGui.SetTooltip( entry.Trace );
 						}
 
 						ImGui.TableNextRow();
