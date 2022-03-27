@@ -14,6 +14,8 @@ namespace Espionage.Engine
 	[Group( "Tripods" )]
 	public abstract class Tripod : Component<Pawn>, ITripod, IControls
 	{
+		public Vector2 Clamp { get; set; } = new( -88, 88 );
+
 		// Tripod
 
 		/// <summary> <inheritdoc cref="ITripod.Activated"/> </summary>
@@ -41,13 +43,8 @@ namespace Espionage.Engine
 		protected virtual void OnBuildControls( Controls.Setup setup )
 		{
 			setup.ViewAngles += new Vector3( -setup.Mouse.Delta.y, setup.Mouse.Delta.x, 0 );
-			setup.ViewAngles = setup.ViewAngles.WithX( Mathf.Clamp( setup.ViewAngles.x, clamp.x, clamp.y ) );
+			setup.ViewAngles = setup.ViewAngles.WithX( Mathf.Clamp( setup.ViewAngles.x, Clamp.x, Clamp.y ) );
 		}
-
-		// Fields
-
-		[SerializeField]
-		private Vector2 clamp = new( -88, 88 );
 
 		/// <summary>
 		/// A Tripod.Setup is responsible for controlling how the

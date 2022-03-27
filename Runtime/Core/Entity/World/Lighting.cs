@@ -3,7 +3,7 @@
 namespace Espionage.Engine
 {
 	[Library( "env.lighting" )]
-	public class Lighting : Component<World>
+	public class Lighting : MonoComponent<World>
 	{
 		// Fields
 

@@ -5,8 +5,8 @@ namespace Espionage.Engine
 {
 	public class FirstPersonController : Pawn.Controller
 	{
-		[Property] public float WalkSpeed { get; set; } = 7;
-		[Property] public float SprintSpeed { get; set; } = 12;
+		public float WalkSpeed { get; set; } = 7;
+		public float SprintSpeed { get; set; } = 12;
 
 		// Logic
 

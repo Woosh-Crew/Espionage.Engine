@@ -7,6 +7,8 @@ namespace Espionage.Engine.AI
 	[Group( "AI" ), Title( "AI Brain" )]
 	public class Brain : Component<Actor>, Pawn.ICallbacks, Actor.ICallbacks
 	{
+		public bool Enabled { get; private set; }
+
 		protected override void OnAttached( Actor actor )
 		{
 			if ( !actor.TryGetComponent( out _agent ) )
@@ -26,6 +28,10 @@ namespace Espionage.Engine.AI
 
 			Entity.Tick = Random.Range( 1, 8 );
 		}
+
+		// AI
+
+		private NavMeshAgent _agent;
 
 		// Senses
 
@@ -47,18 +53,18 @@ namespace Espionage.Engine.AI
 
 		void Pawn.ICallbacks.Possess( Client client )
 		{
+			Enabled = false;
+
 			_agent.enabled = false;
 			Entity.Thinking.Remove( Think );
 		}
 
 		void Pawn.ICallbacks.UnPossess()
 		{
+			Enabled = true;
+
 			_agent.enabled = true;
 			Entity.Thinking.Add( Think, 0.2f );
 		}
-
-		// Fields
-
-		private NavMeshAgent _agent;
 	}
 }

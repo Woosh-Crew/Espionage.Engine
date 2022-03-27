@@ -4,9 +4,9 @@ namespace Espionage.Engine.Viewmodels
 {
 	public sealed class SimpleSway : Viewmodel.Modifier
 	{
-		[Property] private float Tilting { get; set; } = 1;
-		[Property] private Vector2 Scale { get; set; } = new( 10, 10 );
-		[Property] private float Smoothing { get; set; } = 10;
+		private float Tilting { get; set; } = 1;
+		private Vector2 Scale { get; set; } = new( 10, 10 );
+		private float Smoothing { get; set; } = 10;
 
 		// Sway
 
@@ -22,7 +22,7 @@ namespace Espionage.Engine.Viewmodels
 			var rotationY = Quaternion.AngleAxis( _lastMouseDelta.x * Scale.x, Vector3.up );
 
 			Rotation *= rotationX * rotationY * Quaternion.AngleAxis( _lastMouseDelta.x * Tilting, Vector3.forward );
-			Position += Rotation * Vector3.down * _lastMouseDelta.y * (Scale.y / 100) + Rotation * Vector3.left * _lastMouseDelta.x * (Scale.x / 100);
+			Position += Rotation.Down() * _lastMouseDelta.y * (Scale.y / 100) + Rotation.Left() * _lastMouseDelta.x * (Scale.x / 100);
 		}
 	}
 }

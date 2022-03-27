@@ -5,6 +5,12 @@ namespace Espionage.Engine.Tripods
 	[Library( "tripod.third_person_scrollable" )]
 	public class ScrollableThirdPersonTripod : ThirdPersonTripod
 	{
+		public float MinDistance { get; set; } = 1;
+		public float MaxDistance { get; set; } = 15;
+		public float Damping { get; set; } = 15;
+
+		// Logic
+
 		private float _targetDistance;
 		private float _smoothedDistance;
 
@@ -12,8 +18,8 @@ namespace Espionage.Engine.Tripods
 		{
 			base.Activated( ref camSetup );
 
-			_targetDistance = distance;
-			_smoothedDistance = distance;
+			_targetDistance = Distance;
+			_smoothedDistance = Distance;
 		}
 
 		protected override void OnBuildControls( Controls.Setup setup )
@@ -21,22 +27,11 @@ namespace Espionage.Engine.Tripods
 			base.OnBuildControls( setup );
 
 			_targetDistance -= setup.Mouse.Wheel * 4;
-			_targetDistance = Mathf.Clamp( _targetDistance, minDistance, maxDistance );
+			_targetDistance = Mathf.Clamp( _targetDistance, MinDistance, MaxDistance );
 
-			_smoothedDistance = _smoothedDistance.LerpTo( _targetDistance, damping * Time.deltaTime );
-			distance = _smoothedDistance;
+			_smoothedDistance = _smoothedDistance.LerpTo( _targetDistance, Damping * Time.deltaTime );
+			Distance = _smoothedDistance;
 
 		}
-
-		// Properties
-
-		[SerializeField]
-		private float minDistance = 1;
-
-		[SerializeField]
-		private float maxDistance = 15;
-
-		[SerializeField]
-		private float damping = 15;
 	}
 }

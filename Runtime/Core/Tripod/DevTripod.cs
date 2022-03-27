@@ -47,11 +47,6 @@ namespace Espionage.Engine.Tripods
 
 			if ( Input.GetMouseButton( 1 ) )
 			{
-				if ( Input.GetKey( KeyCode.LeftShift ) )
-				{
-					vel *= 2;
-				}
-
 				if ( Input.GetKey( KeyCode.E ) )
 				{
 					vel += Vector3.up * 5;
@@ -60,6 +55,11 @@ namespace Espionage.Engine.Tripods
 				if ( Input.GetKey( KeyCode.Q ) )
 				{
 					vel += Vector3.down * 5;
+				}
+
+				if ( Input.GetKey( KeyCode.LeftShift ) )
+				{
+					vel *= 2;
 				}
 			}
 
