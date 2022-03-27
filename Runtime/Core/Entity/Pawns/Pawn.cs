@@ -14,6 +14,15 @@ namespace Espionage.Engine
 		protected override void OnAwake()
 		{
 			gameObject.layer = LayerMask.NameToLayer( "Pawn" );
+
+			if ( Visuals == null )
+			{
+				var go = new GameObject( "Visuals" );
+				go.transform.SetParent( transform );
+				go.transform.localPosition = Vector3.zero;
+
+				visuals = go.transform;
+			}
 		}
 
 		public void Simulate( Client client )
@@ -114,7 +123,7 @@ namespace Espionage.Engine
 		/// on a tripod, when updating the camera. This will just
 		/// disable all Renderers in its children tree.
 		/// </summary>
-		public Transform Visuals => visuals;
+		public Transform Visuals { get => visuals; set => visuals = value; }
 
 		/// <summary>
 		/// Is this pawn currently being possessed
