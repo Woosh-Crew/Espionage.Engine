@@ -42,9 +42,6 @@ namespace Espionage.Engine
 			}
 
 			OnAwake();
-
-			Components.OnAdded += OnComponentAdded;
-			Components.OnRemove += OnComponentRemoved;
 		}
 
 		protected override void OnAwake() { }
@@ -52,13 +49,6 @@ namespace Espionage.Engine
 		protected sealed override void OnDestroy()
 		{
 			All.Remove( this );
-
-			// Sometimes its null? wtf?
-			if ( Components != null )
-			{
-				Components.OnAdded -= OnComponentAdded;
-				Components.OnRemove -= OnComponentRemoved;
-			}
 
 			base.OnDestroy();
 
@@ -95,8 +85,20 @@ namespace Espionage.Engine
 		/// <summary> Components that are currently attached to this Entity </summary>
 		public Components<Entity> Components { get; private set; }
 
-		protected virtual void OnComponentAdded( IComponent<Entity> component ) { }
-		protected virtual void OnComponentRemoved( IComponent<Entity> component ) { }
+		/// <summary>
+		/// This is used for interfaces. Checks if the entity if not checks the components
+		/// and returns one of those. This is great if you use interfaces both in 
+		/// components and entities (Such as IUse, IDamageable or IHealable)
+		/// </summary>
+		public T Get<T>() where T : class
+		{
+			if ( this is T )
+			{
+				return this as T;
+			}
+
+			return Components.Get<T>();
+		}
 
 		//
 		// Helpers
