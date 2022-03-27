@@ -6,6 +6,10 @@ namespace Espionage.Engine.Tripods
 	[Library( "tripod.first_person" )]
 	public class FirstPersonTripod : Tripod
 	{
+		[Property] public float NeckLength { get; set; } = 0.5f;
+
+		// Logic
+
 		public override void Activated( ref Setup camSetup )
 		{
 			camSetup.Rotation = Local.Pawn.EyeRot;
@@ -25,7 +29,7 @@ namespace Espionage.Engine.Tripods
 			camSetup.Position = Local.Pawn.EyePos;
 
 			var pitch = camSetup.Rotation.Pitch() - (camSetup.Rotation.Pitch() > 270 ? 360 : 0);
-			camSetup.Position += Local.Pawn.Rotation * Vector3.forward * pitch.Remap( -90, 90, -neckLength * Local.Pawn.Scale.magnitude, neckLength * Local.Pawn.Scale.magnitude );
+			camSetup.Position += Local.Pawn.Rotation * Vector3.forward * pitch.Remap( -90, 90, -NeckLength * Local.Pawn.Scale.magnitude, NeckLength * Local.Pawn.Scale.magnitude );
 		}
 
 		protected override void OnBuildControls( Controls.Setup setup )
@@ -37,10 +41,5 @@ namespace Espionage.Engine.Tripods
 				base.OnBuildControls( setup );
 			}
 		}
-
-		// Fields
-
-		[SerializeField]
-		private float neckLength = 0.5f;
 	}
 }

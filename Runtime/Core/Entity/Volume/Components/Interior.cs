@@ -1,7 +1,7 @@
 ﻿namespace Espionage.Engine.Volumes
 {
 	[Help( "Interiors are used for defining spaces where wind and other outside forces can't go" )]
-	public class Interior : Component<Volume>, Volume.ICallbacks
+	public class Interior : MonoComponent<Volume>, Volume.ICallbacks
 	{
 		public void OnEnter( Entity entity ) { }
 

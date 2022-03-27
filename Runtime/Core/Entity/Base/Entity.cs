@@ -5,9 +5,7 @@ using UnityEngine;
 namespace Espionage.Engine
 {
 	/// <summary>
-	/// An Entity is the Root of a MonoBehaviour tree. Entity will cache all Components that implement
-	/// the <see cref="IComponent{Entity}"/> interface or inherited from <see cref="Component{T}"/>. Entities
-	/// also contain IO / Actions logic.
+	/// An Entity is the Root of a MonoBehaviour tree. Entities also contain IO / Actions logic.
 	/// </summary>
 	[DisallowMultipleComponent, Group( "Entities" ), Constructor( nameof( Constructor ) ), Spawnable, SelectionBase]
 	public abstract partial class Entity : Behaviour
@@ -35,22 +33,13 @@ namespace Espionage.Engine
 
 			Components = new( this );
 
-			// Cache Components
+			// Cache Components that are MonoBehaviour
 			foreach ( var item in GetComponents<IComponent<Entity>>() )
 			{
 				Components.Add( item );
 			}
 
 			OnAwake();
-
-			// Stupid? yes.
-			foreach ( var item in Components.GetAll<Component>() )
-			{
-				item.Ready();
-			}
-
-			Components.OnAdded += OnComponentAdded;
-			Components.OnRemove += OnComponentRemoved;
 		}
 
 		protected override void OnAwake() { }
@@ -58,13 +47,6 @@ namespace Espionage.Engine
 		protected sealed override void OnDestroy()
 		{
 			All.Remove( this );
-
-			// Sometimes its null? wtf?
-			if ( Components != null )
-			{
-				Components.OnAdded -= OnComponentAdded;
-				Components.OnRemove -= OnComponentRemoved;
-			}
 
 			base.OnDestroy();
 
@@ -101,8 +83,21 @@ namespace Espionage.Engine
 		/// <summary> Components that are currently attached to this Entity </summary>
 		public Components<Entity> Components { get; private set; }
 
-		protected virtual void OnComponentAdded( IComponent<Entity> component ) { }
-		protected virtual void OnComponentRemoved( IComponent<Entity> component ) { }
+		/// <summary>
+		/// This is used for interfaces. Checks if the entity if not checks the components
+		/// and returns one of those. This is great if you use interfaces both in 
+		/// components and entities (Such as IUse, IDamageable or IHealable)
+		/// </summary>
+		public T Get<T>() where T : class
+		{
+			if ( this is T )
+			{
+				// It works, dont complain
+				return this as T;
+			}
+
+			return Components.Get<T>();
+		}
 
 		//
 		// Helpers
@@ -132,6 +127,7 @@ namespace Espionage.Engine
 		/// <summary> Is this Entity currently Enabled? </summary>
 		public bool Enabled
 		{
+			// I hate Unity, this is so stupid
 			get => gameObject.activeInHierarchy;
 			set => gameObject.SetActive( value );
 		}

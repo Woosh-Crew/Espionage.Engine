@@ -2,8 +2,8 @@
 
 namespace Espionage.Engine
 {
-	/// <summary> <inheritdoc cref="Component"/>, but with a T constraint </summary>
-	public abstract class Component<T> : Component where T : Entity
+	/// <summary> <inheritdoc cref="MonoComponent"/>, but with a T constraint </summary>
+	public abstract class MonoComponent<T> : MonoComponent where T : Entity
 	{
 		/// <summary> <inheritdoc cref="Component.Entity"/> </summary>
 		public new T Entity => base.Entity as T;
@@ -40,63 +40,31 @@ namespace Espionage.Engine
 		/// <summary> <inheritdoc cref="CanAttach"/> </summary>
 		protected virtual bool CanAttach( T item ) { return true; }
 	}
-
+	
 	/// <summary>
-	/// A Component is a MonoBehaviour that
-	/// gets attached to an Entity
+	/// A MonoComponent is a component that is created and added through
+	/// the Unity Editor. You shouldn't be using this at all. Unless its
+	/// level specific components, (e.g. Volume Components)
 	/// </summary>
 	[Group( "Components" )]
-	public abstract class Component : ILibrary, IComponent<Entity>
+	public abstract class MonoComponent : Behaviour, IComponent<Entity>
 	{
-		public Library ClassInfo { get; }
-
-		public Component()
-		{
-			ClassInfo = Library.Register( this );
-		}
-
-		public void Delete()
-		{
-			Library.Unregister( this );
-
-			if ( Entity == null || Entity.Components == null )
-			{
-				OnDetached();
-			}
-			else
-			{
-				Entity.Components?.Remove( this );
-			}
-
-		}
-
-		// Component
-
 		/// <summary> The Entity this Component is attached too. </summary>
 		public Entity Entity { get; private set; }
 
-		/// <summary>
-		/// What should we do when this component
-		/// is attached to an Entity
-		/// </summary>
+		/// <inheritdoc cref="Component.OnAttached"/> 
 		public virtual void OnAttached( Entity item )
 		{
 			Entity = item;
 		}
 
-		/// <summary>
-		/// What should we do when this component
-		/// is detached to from an Entity.
-		/// </summary>
+		/// <inheritdoc cref="Component.OnDetached"/> 
 		public virtual void OnDetached()
 		{
 			Entity = null;
 		}
 
-		/// <summary>
-		/// Can this component be attached
-		/// to this Entity?
-		/// </summary>
+		/// <inheritdoc cref="Component.CanAttach"/> 
 		public virtual bool CanAttach( Entity item )
 		{
 			return true;

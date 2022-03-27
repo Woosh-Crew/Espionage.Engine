@@ -13,11 +13,7 @@ namespace Espionage.Engine
 		public int Current { get; private set; }
 
 		[Property, Help( "The Max Health of this Entity" )]
-		public int Max
-		{
-			get => max;
-			set => max = value;
-		}
+		public int Max { get; set; } = 100;
 
 		/// <summary> Damage this Entity, using some useful meta data. </summary>
 		public void Damage( IDamageable.Info info )
@@ -80,10 +76,5 @@ namespace Espionage.Engine
 			Alive,
 			Dead
 		}
-
-		// Fields
-
-		[SerializeField]
-		private int max;
 	}
 }

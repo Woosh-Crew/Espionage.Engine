@@ -3,20 +3,20 @@ using UnityEditor;
 
 namespace Espionage.Engine.Editor
 {
-	[CustomEditor( typeof( Component ), true )]
-	internal class ComponentEditor : BehaviourEditor
+	[CustomEditor( typeof( MonoComponent ), true )]
+	internal class MonoComponentEditor : BehaviourEditor
 	{
 		protected override void OnEnable()
 		{
 			base.OnEnable();
-			EditorInjection.Titles[target.GetType()] = $"{ClassInfo.Title}  <size=10>-</size> <size=10>Component</size>";
+			EditorInjection.Titles[target.GetType()] = $"{ClassInfo.Title}  <size=10>-</size> <size=10>Mono Component</size>";
 
 			var type = ClassInfo.Info;
 			var isGeneric = false;
 
-			while ( type != typeof( Component ) )
+			while ( type != typeof( MonoComponent ) )
 			{
-				if ( type.IsGenericType && type.GetGenericTypeDefinition() == typeof( Component<> ) )
+				if ( type.IsGenericType && type.GetGenericTypeDefinition() == typeof( MonoComponent<> ) )
 				{
 					isGeneric = true;
 					break;
@@ -33,7 +33,7 @@ namespace Espionage.Engine.Editor
 			var required = Library.Database[type.GetGenericArguments()[0]];
 
 			// Check if we actually can add this component
-			if ( !((Component)target).TryGetComponent( required.Info, out var comp ) )
+			if ( !((MonoComponent)target).TryGetComponent( required.Info, out var comp ) )
 			{
 				EditorUtility.DisplayDialog(
 					$"Missing required Entity ({required.Title})",
@@ -52,7 +52,7 @@ namespace Espionage.Engine.Editor
 				inherited += $"   <color=#8a8a8a>[{obj}]</color>";
 			}
 
-			EditorInjection.Titles[target.GetType()] = $"{ClassInfo.Title}  <size=10>-</size> <size=10>Component for {inherited}</size>";
+			EditorInjection.Titles[target.GetType()] = $"{ClassInfo.Title}  <size=10>-</size> <size=10>Mono Component for {inherited}</size>";
 		}
 	}
 }

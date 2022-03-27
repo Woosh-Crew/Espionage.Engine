@@ -9,17 +9,12 @@ namespace Espionage.Engine.AI
 	{
 		protected override void OnAttached( Actor actor )
 		{
-			if ( !TryGetComponent( out _agent ) )
+			if ( !actor.TryGetComponent( out _agent ) )
 			{
-				_agent = gameObject.AddComponent<NavMeshAgent>();
+				_agent = actor.gameObject.AddComponent<NavMeshAgent>();
 			}
 
 			Entity.Thinking.Add( Think, 0.2f );
-		}
-
-		protected override void OnReady()
-		{
-			// Cache Sensors			
 			Senses = Entity.Components.GetAll<Sense>().ToArray();
 		}
 
@@ -65,8 +60,5 @@ namespace Espionage.Engine.AI
 		// Fields
 
 		private NavMeshAgent _agent;
-
-		[SerializeField]
-		private string graphPath;
 	}
 }

@@ -63,7 +63,7 @@ namespace Espionage.Engine.Components
 		}
 
 		//
-		// Accessors
+		// Utility
 		//
 
 		public TComp Get<TComp>() where TComp : class
@@ -84,6 +84,13 @@ namespace Espionage.Engine.Components
 		public TComp GetOrCreate<TComp>( Func<TComp> creation ) where TComp : class
 		{
 			return TryGet<TComp>( out var comp ) ? comp : Create( creation );
+		}
+
+		public TComp Create<TComp>() where TComp : class, IComponent<T>, new()
+		{
+			var newComp = new TComp();
+			Add( newComp );
+			return newComp;
 		}
 
 		public TComp Create<TComp>( Func<TComp> creation )

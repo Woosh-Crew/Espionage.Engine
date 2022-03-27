@@ -9,11 +9,20 @@ namespace Espionage.Engine
 	[Group( "Pawns" )]
 	public partial class Pawn : Entity, ISimulated, IControls
 	{
-		public Vector3 Velocity { get; set; }
+		public Vector3 Velocity { get; private set; }
 
 		protected override void OnAwake()
 		{
 			gameObject.layer = LayerMask.NameToLayer( "Pawn" );
+
+			if ( Visuals == null )
+			{
+				var go = new GameObject( "Visuals" );
+				go.transform.SetParent( transform );
+				go.transform.localPosition = Vector3.zero;
+
+				visuals = go.transform;
+			}
 		}
 
 		public void Simulate( Client client )
@@ -60,7 +69,7 @@ namespace Espionage.Engine
 
 		private Controller GetActiveController()
 		{
-			return DevController ? DevController : PawnController;
+			return DevController ?? PawnController;
 		}
 
 		/// <summary>
@@ -79,7 +88,7 @@ namespace Espionage.Engine
 		// Camera
 		//
 
-		[Property] public ITripod Tripod { get; set; }
+		[Property] public Tripod Tripod { get; set; }
 
 		public virtual void PostCameraSetup( ref Tripod.Setup setup )
 		{
@@ -114,7 +123,7 @@ namespace Espionage.Engine
 		/// on a tripod, when updating the camera. This will just
 		/// disable all Renderers in its children tree.
 		/// </summary>
-		public Transform Visuals => visuals;
+		public Transform Visuals { get => visuals; set => visuals = value; }
 
 		/// <summary>
 		/// Is this pawn currently being possessed

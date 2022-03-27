@@ -7,6 +7,8 @@ namespace Espionage.Engine
 	{
 		public abstract class Controller : Component<Pawn>, IControls
 		{
+			public float EyeHeight { get; set; } = 1.65f;
+
 			public void Simulate( Client client )
 			{
 				Client = client;
@@ -16,7 +18,7 @@ namespace Espionage.Engine
 				Finalise( Entity );
 			}
 
-			protected void Grab( Pawn pawn )
+			private void Grab( Pawn pawn )
 			{
 				Velocity = pawn.Velocity;
 
@@ -27,7 +29,7 @@ namespace Espionage.Engine
 				EyeRot = pawn.EyeRot;
 			}
 
-			protected void Finalise( Pawn pawn )
+			private void Finalise( Pawn pawn )
 			{
 				pawn.Velocity = Velocity;
 				pawn.transform.localRotation = Rotation;
@@ -43,8 +45,8 @@ namespace Espionage.Engine
 			protected Quaternion Rotation { get; set; }
 			protected Vector3 Position { get; private set; }
 
-			public Vector3 EyePos { get; set; }
-			public Quaternion EyeRot { get; set; }
+			protected Vector3 EyePos { get; set; }
+			protected Quaternion EyeRot { get; set; }
 
 			// Controller
 
@@ -54,7 +56,7 @@ namespace Espionage.Engine
 			protected virtual void Simulate()
 			{
 				EyeRot = Quaternion.Euler( Client.Input.ViewAngles );
-				EyePos = Position + Vector3.Scale( Vector3.up, Entity.Scale ) * eyeHeight;
+				EyePos = Position + Vector3.Scale( Vector3.up, Entity.Scale ) * EyeHeight;
 
 				Rotation = Quaternion.AngleAxis( EyeRot.eulerAngles.y, Vector3.up );
 			}
@@ -62,11 +64,6 @@ namespace Espionage.Engine
 			// Input
 
 			public virtual void Build( Controls.Setup setup ) { }
-
-			// Fields
-
-			[SerializeField]
-			protected float eyeHeight = 1.65f;
 		}
 	}
 }

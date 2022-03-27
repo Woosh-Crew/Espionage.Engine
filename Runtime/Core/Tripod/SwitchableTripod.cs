@@ -7,7 +7,7 @@ namespace Espionage.Engine.Tripods
 	{
 		private Tripod[] Tripods { get; set; }
 
-		protected override void OnReady()
+		protected override void OnAttached( Pawn pawn )
 		{
 			Tripods = Entity.Components.GetAll<Tripod>().ToArray();
 		}

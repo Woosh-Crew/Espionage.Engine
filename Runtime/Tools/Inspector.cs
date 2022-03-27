@@ -41,41 +41,42 @@ namespace Espionage.Engine.Tools
 
 			// Entity Property Inspector
 			ImGui.TextColored( Color.green, "Properties" );
-			ImGui.BeginChild( $"{lib.ClassInfo.Title} Values", new( 0, 128 ), true, ImGuiWindowFlags.ChildWindow );
+			ImGui.BeginGroup();
 			{
 				foreach ( var property in lib.ClassInfo.Properties.All )
 				{
 					PropertyUI( property, lib );
 				}
 			}
-			ImGui.EndChild();
+			ImGui.EndGroup();
 
-			ImGui.TextColored( Color.green, "Functions" );
+			ImGui.Separator();
+
 			// Entity Functions
-			ImGui.BeginChild( $"{lib.ClassInfo.Title} Functions", new( 0, 128 ), true, ImGuiWindowFlags.ChildWindow );
+			ImGui.TextColored( Color.green, "Functions" );
+			ImGui.BeginGroup();
 			{
 				foreach ( var function in lib.ClassInfo.Functions.All )
 				{
 					FunctionUI( function, lib );
 				}
 			}
-			ImGui.EndChild();
+			ImGui.EndGroup();
 
 			// Do Components Inspector Lazily
 			if ( lib is Entity entity )
 			{
 				ImGui.Separator();
-
 				// Component Property Inspector
 				ImGui.TextColored( Color.green, "Components" );
-				ImGui.BeginChild( "Entity Components", new( 0, 128 ), true, ImGuiWindowFlags.ChildWindow );
+				ImGui.BeginGroup();
 				{
 					for ( var i = 0; i < entity.Components.Count; i++ )
 					{
 						ComponentUI( entity.Components[i] as Component, i );
 					}
 				}
-				ImGui.EndChild();
+				ImGui.EndGroup();
 			}
 		}
 

@@ -15,7 +15,7 @@ namespace Espionage.Engine.Viewmodels
 
 			_dampedOffset = _dampedOffset.LerpTo( -(hit ? info.distance - distance : 0), damping * Time.deltaTime );
 
-			transform.position += setup.Rotation * new Vector3( 0, -_dampedOffset / 2, -_dampedOffset );
+			Position += setup.Rotation * new Vector3( 0, -_dampedOffset / 2, -_dampedOffset );
 		}
 
 		// Fields 

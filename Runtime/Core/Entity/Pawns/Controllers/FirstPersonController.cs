@@ -5,13 +5,21 @@ namespace Espionage.Engine
 {
 	public class FirstPersonController : Pawn.Controller
 	{
+		[Property] public float WalkSpeed { get; set; } = 7;
+		[Property] public float SprintSpeed { get; set; } = 12;
+
+		// Logic
+
 		private CharacterController _characterController;
 
 		protected override void OnAttached( Pawn item )
 		{
-			if ( !TryGetComponent( out _characterController ) )
+			if ( !item.TryGetComponent( out _characterController ) )
 			{
-				_characterController = gameObject.AddComponent<CharacterController>();
+				_characterController = item.gameObject.AddComponent<CharacterController>();
+
+				_characterController.skinWidth = 0.004f;
+				_characterController.radius = 0.4f;
 				_characterController.height = 1.8f;
 				_characterController.center = _characterController.center.WithY( 1.8f / 2 );
 			}
@@ -39,23 +47,14 @@ namespace Espionage.Engine
 			_characterController.Move( Velocity );
 		}
 
-		public float Speed()
+		private float Speed()
 		{
 			if ( Input.GetKey( KeyCode.LeftShift ) )
 			{
-				return sprintSpeed;
+				return SprintSpeed;
 			}
 
-			return walkSpeed;
+			return WalkSpeed;
 		}
-
-
-		// Fields
-
-		[SerializeField]
-		private float walkSpeed = 7;
-
-		[SerializeField]
-		private float sprintSpeed = 12;
 	}
 }
