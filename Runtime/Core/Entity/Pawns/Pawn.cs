@@ -29,6 +29,13 @@ namespace Espionage.Engine
 		{
 			GetActiveController()?.Simulate( client );
 
+			// This should be in a think. So AI can use it
+			Ground = Ground.Get( Position );
+			if ( Ground.IsGrounded && Ground.Surface != null )
+			{
+				Dev.Log.Info( Ground.Surface.Friction );
+			}
+
 			foreach ( var item in Components.GetAll<ISimulated>() )
 			{
 				item.Simulate( client );
@@ -39,8 +46,9 @@ namespace Espionage.Engine
 		// Pawn
 		//
 
-		[Property] public Vector3 EyePos { get; internal set; }
-		[Property] public Quaternion EyeRot { get; internal set; }
+		public Ground Ground { get; private set; }
+		public Vector3 EyePos { get; internal set; }
+		public Quaternion EyeRot { get; internal set; }
 
 		public virtual void Posses( Client client )
 		{
