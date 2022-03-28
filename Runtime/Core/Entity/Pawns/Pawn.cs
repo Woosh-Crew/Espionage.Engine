@@ -29,12 +29,7 @@ namespace Espionage.Engine
 		{
 			GetActiveController()?.Simulate( client );
 
-			// This should be in a think. So AI can use it
 			Ground = Ground.Get( Position );
-			if ( Ground.IsGrounded && Ground.Surface != null )
-			{
-				Dev.Log.Info( Ground.Surface.Friction );
-			}
 
 			foreach ( var item in Components.GetAll<ISimulated>() )
 			{

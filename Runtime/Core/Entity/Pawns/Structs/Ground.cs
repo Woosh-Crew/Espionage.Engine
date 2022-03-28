@@ -6,7 +6,7 @@ namespace Espionage.Engine
 	{
 		public static Ground Get( Vector3 position )
 		{
-			var hit = Physics.Raycast( position + Vector3.up * 0.05f, Vector3.down, out var info, 0.1f, ~LayerMask.GetMask( "Ignore Raycast" ), QueryTriggerInteraction.Ignore );
+			var hit = Physics.Raycast( position + Vector3.up * 0.05f, Vector3.down, out var info, 0.1f, ~LayerMask.GetMask( "Ignore Raycast", "Pawn" ), QueryTriggerInteraction.Ignore );
 			return new( hit, info );
 		}
 
