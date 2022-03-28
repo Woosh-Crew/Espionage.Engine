@@ -1,10 +1,10 @@
-﻿using ImGuiNET;
-using UnityEngine;
+﻿using System;
+using ImGuiNET;
 
 namespace Espionage.Engine.Tools
 {
-	[Target( typeof( bool ) )]
-	internal class BoolDrawer : Inspector.Drawer
+	[Target( typeof( int ) )]
+	internal class IntDrawer : Inspector.Drawer
 	{
 		public override void OnLayout( Property item, ILibrary instance )
 		{
@@ -15,14 +15,11 @@ namespace Espionage.Engine.Tools
 				ImGui.Text( "Null" );
 				return;
 			}
-
-			var lastValue = (bool)currentValue;
+			
+			var lastValue = (int)currentValue;
 			var value = lastValue;
-
-			ImGui.Checkbox( string.Empty, ref value );
-
-			ImGui.SameLine();
-			ImGui.TextColored( Color.gray, value ? "Enabled" : "Disabled" );
+			
+			ImGui.InputInt( string.Empty, ref value );
 
 			if ( value != lastValue )
 			{

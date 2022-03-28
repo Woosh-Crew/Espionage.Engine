@@ -21,12 +21,7 @@ namespace Espionage.Engine
 	[Serializable]
 	public sealed partial class Library : ILibrary, IMeta
 	{
-		/// <summary>
-		/// This is here so we can reference a library like its a
-		/// ILibrary object. You can loop this very easily, so make
-		/// sure you don't do that... 
-		/// </summary>
-		public Library ClassInfo => this;
+		public Library ClassInfo => Database[typeof( Library )];
 
 		/// <summary>
 		/// All static Properties and Functions can be found in the Globals Library
@@ -155,8 +150,12 @@ namespace Espionage.Engine
 		// Meta
 		//
 
+		[Editable( false )]
 		public string Name { get; set; }
+
+		[Editable( false )]
 		public string Title { get; set; }
+
 		public string Group { get; set; }
 		public string Help { get; set; }
 
@@ -164,7 +163,21 @@ namespace Espionage.Engine
 
 		// Owner & Identification
 		public Type Info { get; }
-		public Guid Id => GenerateID( $"{Group}/{Name}" );
+
+		private Guid _id;
+
+		public Guid Id
+		{
+			get
+			{
+				if ( _id == default )
+				{
+					_id = GenerateID( Name );
+				}
+
+				return _id;
+			}
+		}
 
 		//
 		// Properties

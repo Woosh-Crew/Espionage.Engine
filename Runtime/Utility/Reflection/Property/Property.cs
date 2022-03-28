@@ -8,7 +8,7 @@ namespace Espionage.Engine
 	{
 		public Library Owner { get; set; }
 
-		internal Property( PropertyInfo info, string name, object value, bool getComps = false )
+		internal Property( PropertyInfo info, string name, object value )
 		{
 			Info = info;
 
@@ -28,11 +28,6 @@ namespace Espionage.Engine
 
 			// Components
 			Components = new( this );
-
-			if ( !getComps )
-			{
-				return;
-			}
 
 			// This is really expensive (6ms)...
 			// Get Components attached to type
@@ -65,7 +60,7 @@ namespace Espionage.Engine
 
 		public object this[ object from ]
 		{
-			get => Info.GetMethod == null ? null : Info.GetValue( from );
+			get => Info.GetMethod == null ? default : Info.GetValue( from );
 			set
 			{
 				if ( !Editable || Info.SetMethod == null )

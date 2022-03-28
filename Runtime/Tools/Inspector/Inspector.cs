@@ -20,29 +20,78 @@ namespace Espionage.Engine.Tools
 			ImGui.Separator();
 
 			// Draw UI
-			DefaultGUI( Service.Selection );
+			if ( ImGui.BeginTabBar( "Inspector Bar" ) )
+			{
+				if ( ImGui.TabItemButton( "Default" ) )
+				{
+					State = Mode.Default;
+				}
+
+				if ( ImGui.TabItemButton( "Raw" ) )
+				{
+					State = Mode.Raw;
+				}
+			}
+
+			ImGui.EndTabBar();
+
+			switch ( State )
+			{
+				case Mode.Default :
+					DrawGUI( Service.Selection );
+					break;
+				case Mode.Raw :
+					RawGUI( Service.Selection );
+					break;
+			}
+
 		}
+
+		private Mode State { get; set; }
+
+		private enum Mode { Default, Raw }
 
 		public void SelectionChanged( ILibrary selection ) { }
 
 		private void HeaderGUI()
 		{
 			ImGui.Text( $"Viewing {Service.Selection.ClassInfo.Title}" + (Service.Selection is Library ? " (ClassInfo)" : "") );
-
-			if ( ImGui.IsItemHovered() )
-			{
-				ImGui.SetTooltip( $"Name : {Service.ClassInfo.Name ?? "NULL"}\nTitle : {Service.ClassInfo.Title ?? "NULL"}\nGroup : {Service.ClassInfo.Group ?? "NULL"}\nHelp : {Service.ClassInfo.Help ?? "NULL"}" );
-			}
-
-			if ( ImGui.Selectable( "Class Info" ) )
-			{
-				Service.Selection = Service.Selection.ClassInfo;
-			}
-
 		}
 
-		private void DefaultGUI( ILibrary item )
+		private void DrawGUI( ILibrary item )
 		{
+			if ( Editors.ContainsKey( item.GetType() ) )
+			{
+				if ( Editors[item.GetType()] != null )
+				{
+					ImGui.BeginGroup();
+
+					ImGui.PushID( item.ClassInfo.Name );
+					Editors[item.GetType()].OnLayout( item );
+					ImGui.PopID();
+
+					ImGui.EndGroup();
+				}
+				else
+				{
+					RawGUI( item );
+				}
+
+				return;
+			}
+
+			// Get Editor, if we haven't already
+			Editors.Add( item.GetType(), GrabEditor( item is Library ? typeof( Library ) : item.ClassInfo.Info ) );
+		}
+
+		private void RawGUI( ILibrary item )
+		{
+			if ( item.ClassInfo == null )
+			{
+				ImGui.Text( "Nulled ClassInfo" );
+				return;
+			}
+
 			// Us doing this removes the title.. but we gotta or else the scrolling just doesnt work
 			if ( ImGui.BeginChild( "out", new( 0, ImGui.GetWindowHeight() - 96 ), false ) )
 			{
@@ -55,6 +104,11 @@ namespace Espionage.Engine.Tools
 
 					foreach ( var property in item.ClassInfo.Properties.All )
 					{
+						ImGui.TableNextColumn();
+						ImGui.Text( property.Title );
+
+						ImGui.TableNextColumn();
+						ImGui.SetNextItemWidth( ImGui.GetColumnWidth( 1 ) );
 						PropertyGUI( property, item );
 					}
 				}
@@ -65,24 +119,24 @@ namespace Espionage.Engine.Tools
 			ImGui.EndChild();
 		}
 
-		private void PropertyGUI( Property property, ILibrary instance )
+		public static void PropertyGUI( Property property, ILibrary instance )
 		{
-			ImGui.TableNextColumn();
-			ImGui.Text( property.Name );
-
-			ImGui.TableNextColumn();
-
-			if ( _drawers.ContainsKey( property.Type ) )
+			if ( Drawers.ContainsKey( property.Type ) )
 			{
-				if ( _drawers[property.Type] != null )
+				if ( Drawers[property.Type] != null )
 				{
 					ImGui.BeginGroup();
 
 					ImGui.PushID( property.Name );
-					_drawers[property.Type].OnLayout( property, instance );
+					Drawers[property.Type].OnLayout( property, instance );
 					ImGui.PopID();
 
 					ImGui.EndGroup();
+
+					if ( ImGui.IsItemHovered() && !string.IsNullOrWhiteSpace( property.Help ) )
+					{
+						ImGui.SetTooltip( property.Help );
+					}
 				}
 				else
 				{
@@ -92,22 +146,69 @@ namespace Espionage.Engine.Tools
 				return;
 			}
 
-			_drawers.Add( property.Type, GrabDrawer( property.Type ) );
+			// Get Drawer, if we haven't already
+			Drawers.Add( property.Type, GrabDrawer( property.Type ) );
 		}
 
-		private Drawer GrabDrawer( Type type )
+		private static Editor GrabEditor( Type type )
 		{
-			var lib = Library.Database.Find<Drawer>( e => e.Components.Get<TargetAttribute>()?.Type == type );
+			var lib = Library.Database.Find<Editor>( e =>
+			{
+				var comp = e.Components.Get<TargetAttribute>();
+
+				if ( comp == null )
+				{
+					return false;
+				}
+
+				if ( comp.Type.IsInterface )
+				{
+					// Generic interface
+					return type.HasInterface( comp.Type );
+				}
+
+				return type == comp.Type;
+			} );
+
+			return lib == null ? null : Library.Database.Create<Editor>( lib.Info );
+		}
+
+		private static Drawer GrabDrawer( Type type )
+		{
+			var lib = Library.Database.Find<Drawer>( e =>
+			{
+				var comp = e.Components.Get<TargetAttribute>();
+
+				if ( comp == null )
+				{
+					return false;
+				}
+
+				if ( comp.Type.IsInterface )
+				{
+					// Generic interface
+
+					return type.HasInterface( comp.Type );
+				}
+
+				return type == comp.Type;
+			} );
+
+			if ( lib == null )
+			{
+				// See if we have one from ILibrary
+				return type.HasInterface<ILibrary>() ? Library.Database.Create<ILibraryDrawer>() : null;
+			}
 
 			return lib == null ? null : Library.Database.Create<Drawer>( lib.Info );
-
 		}
 
 		//
 		// UI
 		// 
 
-		private static Dictionary<Type, Drawer> _drawers = new();
+		private static readonly Dictionary<Type, Drawer> Drawers = new();
+		private static readonly Dictionary<Type, Editor> Editors = new();
 
 		[Singleton, Group( "Inspector" )]
 		public abstract class Drawer : ILibrary
@@ -120,6 +221,19 @@ namespace Espionage.Engine.Tools
 			}
 
 			public abstract void OnLayout( Property property, ILibrary instance );
+		}
+
+		[Singleton, Group( "Inspector" )]
+		public abstract class Editor : ILibrary
+		{
+			public Library ClassInfo { get; }
+
+			public Editor()
+			{
+				ClassInfo = Library.Register( this );
+			}
+
+			public abstract void OnLayout( ILibrary item );
 		}
 	}
 }

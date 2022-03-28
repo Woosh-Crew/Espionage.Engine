@@ -3,8 +3,8 @@ using ImGuiNET;
 
 namespace Espionage.Engine.Tools
 {
-	[Target( typeof( float ) )]
-	internal class FloatDrawer : Inspector.Drawer
+	[Target( typeof( string ) )]
+	internal class StringDrawer : Inspector.Drawer
 	{
 		public override void OnLayout( Property item, ILibrary instance )
 		{
@@ -16,13 +16,21 @@ namespace Espionage.Engine.Tools
 				return;
 			}
 
-			var lastValue = (float)currentValue;
+			var lastValue = (string)currentValue;
+
+			if ( !item.Editable )
+			{
+				ImGui.TextWrapped( lastValue );
+				return;
+			}
+
 			var value = lastValue;
 
-			ImGui.InputFloat( string.Empty, ref value );
+			ImGui.InputText( string.Empty, ref value, 160 );
 
-			if ( Math.Abs( value - lastValue ) > 0.0001f )
+			if ( value != lastValue )
 			{
+				Dev.Log.Info("Value Changed");
 				item[instance] = value;
 			}
 		}
