@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ImGuiNET;
+using UnityEngine;
 
 namespace Espionage.Engine.Tools
 {
@@ -55,7 +56,7 @@ namespace Espionage.Engine.Tools
 
 		private void HeaderGUI()
 		{
-			// ImGui.Text( $"Viewing {Service.Selection}" );
+			ImGui.Text( $"Viewing {Service.Selection}" );
 		}
 
 		private void DrawGUI( ILibrary item )
@@ -88,14 +89,17 @@ namespace Espionage.Engine.Tools
 		{
 			if ( item.ClassInfo == null )
 			{
-				ImGui.Text( "Nulled ClassInfo" );
+				ImGui.TextColored( Color.red, "NULL ClassInfo" );
 				return;
 			}
 
 			// Us doing this removes the title.. but we gotta or else the scrolling just doesnt work
 			if ( ImGui.BeginChild( "out", new( 0, ImGui.GetWindowHeight() - 96 ), false ) )
 			{
-				if ( ImGui.BeginTable( "Output", 2, ImGuiTableFlags.Borders | ImGuiTableFlags.RowBg | ImGuiTableFlags.Resizable | ImGuiTableFlags.Reorderable ) )
+				ImGui.Text( "Properties" );
+
+				// Properties
+				if ( ImGui.BeginTable( "Properties", 2, ImGuiTableFlags.Borders | ImGuiTableFlags.RowBg | ImGuiTableFlags.Resizable | ImGuiTableFlags.Reorderable ) )
 				{
 					ImGui.TableSetupColumn( "Name", ImGuiTableColumnFlags.WidthFixed, 96 );
 					ImGui.TableSetupColumn( "Value" );
@@ -110,6 +114,34 @@ namespace Espionage.Engine.Tools
 						ImGui.TableNextColumn();
 						ImGui.SetNextItemWidth( ImGui.GetColumnWidth( 1 ) );
 						PropertyGUI( property, item );
+					}
+				}
+
+				ImGui.EndTable();
+
+				ImGui.Separator();
+
+				ImGui.Text( "Functions" );
+
+				// Functions
+				if ( ImGui.BeginTable( "Functions", 2, ImGuiTableFlags.Borders | ImGuiTableFlags.RowBg | ImGuiTableFlags.Resizable | ImGuiTableFlags.Reorderable ) )
+				{
+					ImGui.TableSetupColumn( "Name", ImGuiTableColumnFlags.WidthFixed, 96 );
+					ImGui.TableSetupColumn( "Invoke" );
+
+					ImGui.TableHeadersRow();
+
+					foreach ( var function in item.ClassInfo.Functions.All )
+					{
+						ImGui.TableNextColumn();
+						ImGui.Text( function.Title );
+
+						ImGui.TableNextColumn();
+						ImGui.SetNextItemWidth( ImGui.GetColumnWidth( 1 ) );
+						if ( ImGui.Selectable( "Invoke" ) )
+						{
+							function.Invoke( item );
+						}
 					}
 				}
 

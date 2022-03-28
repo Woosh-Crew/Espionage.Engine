@@ -7,7 +7,7 @@ namespace Espionage.Engine.AI
 	[Group( "AI" ), Title( "AI Brain" )]
 	public class Brain : Component<Actor>, Pawn.ICallbacks, Actor.ICallbacks
 	{
-		public bool Enabled { get; private set; }
+		public bool Enabled { get; private set; } = true;
 
 		protected override void OnAttached( Actor actor )
 		{

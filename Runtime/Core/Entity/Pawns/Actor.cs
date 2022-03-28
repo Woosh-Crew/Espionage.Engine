@@ -9,6 +9,7 @@
 	public abstract partial class Actor : Pawn
 	{
 		public Inventory Inventory => Components.Get<Inventory>();
+		public bool IsBot => Components.Get<AI.Brain>()?.Enabled ?? false;
 
 		protected override void OnAwake()
 		{
