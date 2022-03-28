@@ -207,6 +207,11 @@ namespace Espionage.Engine.Tools
 
 		private static Drawer GrabDrawer( Type type )
 		{
+			if ( type.IsEnum )
+			{
+				return Library.Database.Create<EnumDrawer>();
+			}
+
 			var lib = Library.Database.Find<Drawer>( e =>
 			{
 				var comp = e.Components.Get<TargetAttribute>();
