@@ -4,7 +4,7 @@ namespace Espionage.Engine
 {
 	public readonly struct Ground : ILibrary
 	{
-		public Library ClassInfo { get; }
+		public Library ClassInfo => Library.Database[typeof( Ground )];
 
 		public static Ground Get( Vector3 position )
 		{
@@ -14,8 +14,6 @@ namespace Espionage.Engine
 
 		private Ground( bool landed, RaycastHit hit )
 		{
-			ClassInfo = Library.Database[typeof( Ground )];
-
 			IsGrounded = landed;
 			Hit = hit;
 			Entity = null;
@@ -44,6 +42,11 @@ namespace Espionage.Engine
 			{
 				Surface = surface.Surface;
 			}
+		}
+
+		public override string ToString()
+		{
+			return $"Normal: {Normal}, Floored: {IsGrounded}";
 		}
 
 		public RaycastHit Hit { get; }

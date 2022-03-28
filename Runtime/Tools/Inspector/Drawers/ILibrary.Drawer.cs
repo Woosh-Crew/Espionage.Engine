@@ -1,5 +1,6 @@
 ﻿using Espionage.Engine.Services;
 using ImGuiNET;
+using UnityEngine;
 
 namespace Espionage.Engine.Tools
 {
@@ -8,6 +9,7 @@ namespace Espionage.Engine.Tools
 		public override void OnLayout( Property property, ILibrary instance )
 		{
 			var currentValue = property[instance];
+			var castedValue = (ILibrary)currentValue;
 
 			if ( currentValue == null )
 			{
@@ -15,12 +17,13 @@ namespace Espionage.Engine.Tools
 				return;
 			}
 
-			var castedValue = (ILibrary)currentValue;
-			
-			if ( ImGui.Selectable( castedValue.ClassInfo.Title ) )
+			if ( ImGui.Selectable( currentValue.ToString() ) )
 			{
 				Engine.Services.Get<DiagnosticsService>().Selection = castedValue;
 			}
+
+			ImGui.SameLine();
+			ImGui.TextColored( Color.gray, $" [{castedValue.ClassInfo.Title}]" );
 		}
 	}
 }

@@ -55,7 +55,7 @@ namespace Espionage.Engine.Tools
 
 		private void HeaderGUI()
 		{
-			ImGui.Text( $"Viewing {Service.Selection.ClassInfo.Title}" + (Service.Selection is Library ? " (ClassInfo)" : "") );
+			// ImGui.Text( $"Viewing {Service.Selection}" );
 		}
 
 		private void DrawGUI( ILibrary item )
