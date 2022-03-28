@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace Espionage.Engine.Tools
 {
-	[Target( typeof( Vector3 ) )]
-	internal class Vector3Drawer : Inspector.Drawer
+	[Target( typeof( Vector4 ) )]
+	internal class Vector4Drawer : Inspector.Drawer
 	{
 		public override void OnLayout( Property item, ILibrary instance )
 		{
@@ -16,10 +16,10 @@ namespace Espionage.Engine.Tools
 				return;
 			}
 
-			var lastValue = (Vector3)currentValue;
+			var lastValue = (Vector4)currentValue;
 			var value = lastValue;
 
-			ImGui.InputFloat3( string.Empty, ref value );
+			ImGui.InputFloat4( string.Empty, ref value );
 
 			if ( value != lastValue )
 			{

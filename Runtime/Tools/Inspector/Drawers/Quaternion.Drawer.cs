@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace Espionage.Engine.Tools
 {
-	[Target( typeof( Vector3 ) )]
-	internal class Vector3Drawer : Inspector.Drawer
+	[Target( typeof( Quaternion ) )]
+	internal class QuaternionDrawer : Inspector.Drawer
 	{
 		public override void OnLayout( Property item, ILibrary instance )
 		{
@@ -16,15 +16,7 @@ namespace Espionage.Engine.Tools
 				return;
 			}
 
-			var lastValue = (Vector3)currentValue;
-			var value = lastValue;
-
-			ImGui.InputFloat3( string.Empty, ref value );
-
-			if ( value != lastValue )
-			{
-				item[instance] = value;
-			}
+			ImGui.Text( currentValue.ToString() );
 		}
 	}
 }

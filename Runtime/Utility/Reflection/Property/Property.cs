@@ -63,7 +63,7 @@ namespace Espionage.Engine
 			get => Info.GetMethod == null ? default : Info.GetValue( from );
 			set
 			{
-				if ( !Editable || Info.SetMethod == null )
+				if ( !Editable )
 				{
 					Dev.Log.Error( $"Can't edit {Name}" );
 					return;
