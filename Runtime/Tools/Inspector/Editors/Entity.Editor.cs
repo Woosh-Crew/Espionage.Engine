@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Espionage.Engine.Tools.Editors
 {
 	[Target( typeof( Entity ) )]
-	public class EntityEditor : Inspector.Editor
+	internal class EntityEditor : Inspector.Editor
 	{
 		private IEnumerable<IGrouping<string, Property>> _grouping;
 

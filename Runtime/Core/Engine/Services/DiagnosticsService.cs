@@ -39,6 +39,7 @@ namespace Espionage.Engine.Services
 		}
 
 		public Entity Hovering { get; set; }
+		private Collider _lastCollider;
 
 		public override void OnUpdate()
 		{
@@ -51,7 +52,7 @@ namespace Espionage.Engine.Services
 			// Use Dev Tripod
 			if ( Input.GetKeyDown( KeyCode.BackQuote ) )
 			{
-				if ( !Enabled )
+				if ( Local.Client.Tripod is not DevTripod )
 				{
 					Dev.Terminal.Invoke( "dev.tripod" );
 				}
@@ -100,9 +101,8 @@ namespace Espionage.Engine.Services
 			}
 		}
 
-		private Collider _lastCollider;
-
-		public bool Enabled => Local.Client.Tripod is DevTripod;
+		public bool Show { get; set; }
+		public bool Enabled => Local.Client.Tripod is DevTripod || Show;
 
 		//
 		// UI
@@ -114,6 +114,7 @@ namespace Espionage.Engine.Services
 		[Function, Callback( "imgui.layout" )]
 		private void Layout()
 		{
+			ImGui.DockSpaceOverViewport( ImGui.GetMainViewport(), ImGuiDockNodeFlags.PassthruCentralNode );
 			Window.Apply( this );
 
 			if ( !Enabled )
@@ -147,9 +148,18 @@ namespace Espionage.Engine.Services
 
 				ImGui.Separator();
 
+				if ( ImGui.BeginMenu( "View" ) )
+				{
+					if ( ImGui.MenuItem( "Always Show Windows", string.Empty, Show ) )
+					{
+						Show = !Show;
+					}
+
+					ImGui.EndMenu();
+				}
+
 				if ( ImGui.BeginMenu( "Tools" ) )
 				{
-
 					// Post Processing Debug Overlays
 					foreach ( var value in _toolsGrouping )
 					{

@@ -20,29 +20,6 @@ namespace Espionage.Engine.ImGUI
 
 		internal static Context Context;
 
-		#region Events
-
-		public static event Action<ImGUIService> Layout;
-		public static event Action<ImGUIService> OnInitialize;
-		public static event Action<ImGUIService> OnDeinitialize;
-
-		internal static void DoLayout( ImGUIService uimgui )
-		{
-			Layout?.Invoke( uimgui );
-		}
-
-		internal static void DoOnInitialize( ImGUIService uimgui )
-		{
-			OnInitialize?.Invoke( uimgui );
-		}
-
-		internal static void DoOnDeinitialize( ImGUIService uimgui )
-		{
-			OnDeinitialize?.Invoke( uimgui );
-		}
-
-		#endregion
-
 		internal static unsafe Context CreateContext()
 		{
 			return new()

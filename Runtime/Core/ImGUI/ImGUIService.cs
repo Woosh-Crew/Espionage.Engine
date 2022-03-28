@@ -48,8 +48,8 @@ namespace Espionage.Engine.ImGUI
 			UImGuiUtility.SetCurrentContext( _context );
 
 			var io = ImGui.GetIO();
-
 			_initialConfiguration.ApplyTo( io );
+
 			Style.ApplyTo( ImGui.GetStyle() );
 
 			_context.TextureManager.BuildFontAtlas( io, _fontAtlasConfiguration, _fontCustomInitializer );
@@ -67,8 +67,6 @@ namespace Espionage.Engine.ImGUI
 			{
 				Fail( nameof( _renderer ) );
 			}
-
-			UImGuiUtility.DoOnInitialize( this );
 		}
 
 		public override void OnUpdate()
@@ -88,7 +86,6 @@ namespace Espionage.Engine.ImGUI
 
 			try
 			{
-				UImGuiUtility.DoLayout( this );
 				Callback.Run( "imgui.layout" );
 			}
 			finally
@@ -96,6 +93,7 @@ namespace Espionage.Engine.ImGUI
 				ImGui.Render();
 				Constants.LayoutMarker.End();
 			}
+
 
 			Constants.DrawListMarker.Begin();
 			_renderCommandBuffer.Clear();
@@ -129,17 +127,8 @@ namespace Espionage.Engine.ImGUI
 
 			_renderCommandBuffer = null;
 
-			UImGuiUtility.DoOnDeinitialize( this );
-
 			// Finish
 			UImGuiUtility.DestroyContext( _context );
-		}
-
-		public void SetUserData( IntPtr userDataPtr )
-		{
-			_initialConfiguration.UserData = userDataPtr;
-			var io = ImGui.GetIO();
-			_initialConfiguration.ApplyTo( io );
 		}
 
 		private void SetRenderer( IRenderer renderer, ImGuiIOPtr io )
@@ -173,7 +162,7 @@ namespace Espionage.Engine.ImGUI
 		[Header( "Configuration" ), SerializeField]
 		private UIOConfig _initialConfiguration = new()
 		{
-			ImGuiConfig = ImGuiConfigFlags.NavEnableKeyboard | ImGuiConfigFlags.DockingEnable,
+			ImGuiConfig = ImGuiConfigFlags.NavEnableKeyboard | ImGuiConfigFlags.DockingEnable | ImGuiConfigFlags.ViewportsEnable,
 			DoubleClickTime = 0.30f,
 			DoubleClickMaxDist = 6.0f,
 			DragThreshold = 6.0f,
