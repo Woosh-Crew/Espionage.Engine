@@ -3,13 +3,20 @@ using UnityEngine;
 namespace Espionage.Engine
 {
 	[CreateAssetMenu( menuName = "Espionage.Engine/Surface" )]
-	public class Surface : ScriptableObject
+	public sealed class Surface : ScriptableObject, ILibrary
 	{
+		public Library ClassInfo { get; private set; }
+
 		public float Friction => friction;
 		public float Density => density;
 		public AudioClip[] Footsteps => footstepSounds;
 		public AudioClip[] ImpactSounds => impactSounds;
 		public ParticleSystem[] ImpactEffects => impactEffects;
+
+		private void OnEnable()
+		{
+			ClassInfo = Library.Database[typeof( Surface )];
+		}
 
 		// Fields
 

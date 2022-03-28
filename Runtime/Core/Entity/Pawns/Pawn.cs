@@ -41,8 +41,6 @@ namespace Espionage.Engine
 		// Pawn
 		//
 
-		public Color Color { get; set; }
-
 		public Ground Ground { get; private set; }
 		public Vector3 EyePos { get; internal set; }
 		public Quaternion EyeRot { get; internal set; }

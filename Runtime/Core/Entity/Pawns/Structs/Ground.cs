@@ -2,24 +2,20 @@
 
 namespace Espionage.Engine
 {
-	public readonly struct Ground
+	public readonly struct Ground : ILibrary
 	{
+		public Library ClassInfo { get; }
+
 		public static Ground Get( Vector3 position )
 		{
 			var hit = Physics.Raycast( position + Vector3.up * 0.05f, Vector3.down, out var info, 0.1f, ~LayerMask.GetMask( "Ignore Raycast", "Pawn" ), QueryTriggerInteraction.Ignore );
 			return new( hit, info );
 		}
 
-		public RaycastHit Hit { get; }
-
-		public bool IsGrounded { get; }
-		public Vector3 Normal => Hit.normal;
-
-		public Entity Entity { get; }
-		public Surface Surface { get; }
-
-		public Ground( bool landed, RaycastHit hit )
+		private Ground( bool landed, RaycastHit hit )
 		{
+			ClassInfo = Library.Database[typeof( Ground )];
+
 			IsGrounded = landed;
 			Hit = hit;
 			Entity = null;
@@ -49,5 +45,13 @@ namespace Espionage.Engine
 				Surface = surface.Surface;
 			}
 		}
+
+		public RaycastHit Hit { get; }
+
+		public bool IsGrounded { get; }
+		public Vector3 Normal => Hit.normal;
+
+		public Entity Entity { get; }
+		public Surface Surface { get; }
 	}
 }
