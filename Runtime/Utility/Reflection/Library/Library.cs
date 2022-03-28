@@ -57,6 +57,7 @@ namespace Espionage.Engine
 			Spawnable = true;
 
 			Name = BuildName( type );
+			Title = type.Name;
 
 			// Components
 			Components = new( this );
@@ -231,7 +232,7 @@ namespace Espionage.Engine
 				{
 					item.Owner = _owner;
 
-					if ( string.IsNullOrEmpty( item.Group ) )
+					if ( string.IsNullOrWhiteSpace( item.Group ) )
 					{
 						item.Group = _owner.Title;
 					}

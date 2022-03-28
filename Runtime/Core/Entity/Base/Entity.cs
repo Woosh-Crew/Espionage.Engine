@@ -104,6 +104,7 @@ namespace Espionage.Engine
 		//
 
 		/// <summary> The Position of this Entity. </summary>
+		[Group( "Transform" ), Order( -15 )]
 		public Vector3 Position
 		{
 			get => transform.position;
@@ -111,6 +112,7 @@ namespace Espionage.Engine
 		}
 
 		/// <summary> The Rotation of this Entity. </summary>
+		[Group( "Transform" )]
 		public Quaternion Rotation
 		{
 			get => transform.rotation;
@@ -118,6 +120,7 @@ namespace Espionage.Engine
 		}
 
 		/// <summary> The Local Scale of this Entity. </summary>
+		[Group( "Transform" )]
 		public Vector3 Scale
 		{
 			get => transform.lossyScale;

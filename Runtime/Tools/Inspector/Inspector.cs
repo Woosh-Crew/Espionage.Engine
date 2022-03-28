@@ -52,7 +52,15 @@ namespace Espionage.Engine.Tools
 
 		private enum Mode { Default, Raw }
 
-		public void SelectionChanged( ILibrary selection ) { }
+		public void SelectionChanged( ILibrary selection )
+		{
+			if ( !Editors.ContainsKey( selection.GetType() ) )
+			{
+				Editors.Add( selection.GetType(), GrabEditor( selection is Library ? typeof( Library ) : selection.ClassInfo.Info ) );
+			}
+
+			Editors[selection.GetType()]?.OnActive( selection );
+		}
 
 		private void HeaderGUI()
 		{
@@ -199,7 +207,7 @@ namespace Espionage.Engine.Tools
 					return type.HasInterface( comp.Type );
 				}
 
-				return type == comp.Type;
+				return type == comp.Type || type.IsSubclassOf( comp.Type );
 			} );
 
 			return lib == null ? null : Library.Database.Create<Editor>( lib.Info );
@@ -270,6 +278,7 @@ namespace Espionage.Engine.Tools
 				ClassInfo = Library.Register( this );
 			}
 
+			public virtual void OnActive( ILibrary item ) { }
 			public abstract void OnLayout( ILibrary item );
 		}
 	}
