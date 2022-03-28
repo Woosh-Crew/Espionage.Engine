@@ -62,7 +62,7 @@ namespace Espionage.Engine.Services
 			}
 
 			// If were in Dev Tripod
-			if ( !Enabled )
+			if ( Local.Client.Tripod is not DevTripod )
 			{
 				return;
 			}
