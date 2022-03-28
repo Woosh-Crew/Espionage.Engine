@@ -7,6 +7,11 @@ namespace Espionage.Engine
 	{
 		public float Friction => friction;
 		public float Density => density;
+		public AudioClip[] Footsteps => footstepSounds;
+		public AudioClip[] ImpactSounds => impactSounds;
+		public ParticleSystem[] ImpactEffects => impactEffects;
+
+		// Fields
 
 		[SerializeField]
 		private float friction = 1f;
@@ -28,7 +33,7 @@ namespace Espionage.Engine
 			return new( surface.name ) { staticFriction = surface.friction };
 		}
 	}
-	
+
 	public interface ISurface
 	{
 		Surface Surface { get; }
