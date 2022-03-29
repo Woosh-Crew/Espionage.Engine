@@ -106,7 +106,7 @@ namespace Espionage.Engine.Editor
 
 			//Draw the tool bar
 			_currentTab = GUILayout.Toolbar(_currentTab, _tabNames.ToArray());
-
+			EditorGUILayout.Space(10f);
 
 			if(EditorGUI.EndChangeCheck()){
 				_soTarget.ApplyModifiedProperties();
@@ -120,7 +120,7 @@ namespace Espionage.Engine.Editor
 			if(_tabs.Count > 0){
 				//Draw each property field
 				Tab current = _tabs[_currentTab];
-				foreach(SerializedProperty field in current.Fields){
+				foreach(SerializedProperty field in current.Fields.OrderBy(x => x.name)){
 
 					EditorGUILayout.PropertyField(field);
 				}
