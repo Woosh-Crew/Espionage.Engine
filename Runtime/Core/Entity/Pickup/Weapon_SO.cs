@@ -10,6 +10,8 @@ namespace Espionage.Engine
 	[CreateAssetMenu(fileName = "Weapon", menuName = "Pickups/Holdables/Weapons/Weapon", order = 1)]
 	public class Weapon_SO : Holdable_SO
 	{	
+
+		[Tab("Weapon")]
 		/// <summary>The given damage a weapon does</summary>
 		public float Damage;
 
