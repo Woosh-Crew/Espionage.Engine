@@ -29,15 +29,5 @@
 			return true;
 		}
 
-		public override void LoadStats()
-		{
-			//An example of a weapon loading its stats
-			if(Stats is Weapon_SO stat){
-				Damage = stat.Damage;
-			}
-		}
-
-
-
 	}
 }
