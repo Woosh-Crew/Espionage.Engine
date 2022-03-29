@@ -57,7 +57,7 @@ namespace Espionage.Engine
 			Spawnable = true;
 
 			Name = BuildName( type );
-			Title = type.Name;
+			Title = string.Concat( type.Name.Select( x => char.IsUpper( x ) ? " " + x : x.ToString() ) ).TrimStart( ' ' );
 
 			// Components
 			Components = new( this );

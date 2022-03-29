@@ -49,7 +49,7 @@ namespace Espionage.Engine.Resources
 		// Instance
 		//
 
-		[Property] public string Identifier { get; }
+		public string Identifier { get; }
 		public Components<Map> Components { get; }
 
 		private File Source { get; }
@@ -57,9 +57,11 @@ namespace Espionage.Engine.Resources
 
 		// Loadable 
 
-		[Property] float ILoadable.Progress => Provider?.Progress ?? 0;
+		[Title( "Progress" )]
+		float ILoadable.Progress => Provider?.Progress ?? 0;
 
-		[Property] string ILoadable.Text => Components.TryGet( out Meta meta ) ? $"Loading {meta.Title}" : "Loading";
+		[Title( "Text" )]
+		string ILoadable.Text => Components.TryGet( out Meta meta ) ? $"Loading {meta.Title}" : "Loading";
 
 		// Class
 

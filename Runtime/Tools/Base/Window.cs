@@ -89,6 +89,7 @@ namespace Espionage.Engine.Tools
 		}
 
 		protected DiagnosticsService Service { get; private set; }
+		public virtual ImGuiWindowFlags Flags { get; }
 
 		internal virtual bool Layout()
 		{
@@ -100,7 +101,7 @@ namespace Espionage.Engine.Tools
 			var delete = true;
 
 			ImGui.SetNextWindowSize( new( 256, 356 ), ImGuiCond.Once );
-			if ( ImGui.Begin( ClassInfo.Title, ref delete, ImGuiWindowFlags.NoSavedSettings ) )
+			if ( ImGui.Begin( ClassInfo.Title, ref delete, ImGuiWindowFlags.NoSavedSettings | Flags ) )
 			{
 				OnLayout();
 			}

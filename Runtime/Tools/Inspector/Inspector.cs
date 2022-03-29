@@ -245,7 +245,7 @@ namespace Espionage.Engine.Tools
 				return type.HasInterface<ILibrary>() ? Library.Database.Create<ILibraryDrawer>() : null;
 			}
 
-			return lib == null ? null : Library.Database.Create<Drawer>( lib.Info );
+			return Library.Database.Create<Drawer>( lib.Info );
 		}
 
 		//

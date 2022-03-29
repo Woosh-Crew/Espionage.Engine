@@ -10,9 +10,16 @@ namespace Espionage.Engine.Tools
 			{
 				foreach ( var entity in Entity.All )
 				{
-					if ( ImGui.Selectable( $"{entity.name} [{entity.ClassInfo.Title}]" ) )
+					var opened = ImGui.TreeNodeEx( entity.name, ImGuiTreeNodeFlags.OpenOnArrow );
+
+					if ( ImGui.IsItemClicked() )
 					{
 						Service.Selection = entity;
+					}
+
+					if ( opened )
+					{
+						ImGui.TreePop();
 					}
 				}
 			}
