@@ -100,8 +100,22 @@ namespace Espionage.Engine.Editor
 		}
 
         public override void OnInspectorGUI(){
+
+			//Check for changes
+			EditorGUI.BeginChangeCheck();
+
 			//Draw the tool bar
 			_currentTab = GUILayout.Toolbar(_currentTab, _tabNames.ToArray());
+
+
+			if(EditorGUI.EndChangeCheck()){
+				_soTarget.ApplyModifiedProperties();
+				GUI.FocusControl(null);
+			}
+
+
+			EditorGUI.BeginChangeCheck();
+
 			//If we have tabs
 			if(_tabs.Count > 0){
 				//Draw each property field
@@ -110,6 +124,10 @@ namespace Espionage.Engine.Editor
 
 					EditorGUILayout.PropertyField(field);
 				}
+			}
+
+			if(EditorGUI.EndChangeCheck()){
+				_soTarget.ApplyModifiedProperties();
 			}
 
 		}
