@@ -6,7 +6,7 @@ namespace Espionage.Engine.Tools
 	[Target( typeof( Vector3 ) )]
 	internal class Vector3Drawer : Inspector.Drawer
 	{
-		public override void OnLayout( Property item, ILibrary instance )
+		public override void OnLayout( Property item, object instance )
 		{
 			var currentValue = item[instance];
 

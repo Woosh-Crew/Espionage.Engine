@@ -16,8 +16,8 @@ MonoBehaviour:
   WindowPadding: {x: 8, y: 8}
   WindowRounding: 4
   WindowBorderSize: 1
-  WindowMinSize: {x: 32, y: 32}
-  WindowTitleAlign: {x: 0, y: 0.5}
+  WindowMinSize: {x: 64, y: 64}
+  WindowTitleAlign: {x: 0.5, y: 0.5}
   WindowMenuButtonPosition: 0
   ChildRounding: 0
   ChildBorderSize: 1
@@ -39,7 +39,7 @@ MonoBehaviour:
   LogSliderDeadzone: 0
   TabRounding: 4
   TabBorderSize: 0
-  ColorButtonPosition: 1
+  ColorButtonPosition: 0
   ButtonTextAlign: {x: 0.5, y: 0.5}
   SelectableTextAlign: {x: 0, y: 0}
   DisplayWindowPadding: {x: 19, y: 19}

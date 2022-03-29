@@ -21,7 +21,9 @@ namespace Espionage.Engine.Services
 			_toolsGrouping = Library.Database.GetAll<Window>().Where( e => !e.Info.IsAbstract ).GroupBy( e => e.Group );
 		}
 
-		public ILibrary Selection
+		private object _selection;
+
+		public object Selection
 		{
 			get => _selection;
 			set
@@ -109,7 +111,6 @@ namespace Espionage.Engine.Services
 		//
 
 		private IEnumerable<IGrouping<string, Library>> _toolsGrouping;
-		private ILibrary _selection;
 
 		[Function, Callback( "imgui.layout" )]
 		private void Layout()

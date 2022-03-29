@@ -36,12 +36,16 @@ namespace Espionage.Engine
 			input = input.normalized;
 
 			var wishDirection = Rotation * (Vector3.right * input.x + Vector3.forward * input.y);
+
+			var length = wishDirection.magnitude;
 			wishDirection *= Speed();
+
+			wishDirection = wishDirection.normalized;
 			wishDirection *= Time.deltaTime;
 
-			_dampedWishDir = _dampedWishDir.LerpTo( wishDirection, 12 * Time.deltaTime );
+			wishDirection *= length;
 
-			Velocity = _dampedWishDir;
+			Velocity = wishDirection;
 			Velocity += new Vector3( 0, -9, 0 ) * Time.deltaTime;
 
 			_characterController.Move( Velocity );

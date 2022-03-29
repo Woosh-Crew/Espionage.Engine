@@ -7,7 +7,7 @@ namespace Espionage.Engine.Tools
 	[Target( typeof( Library ) )]
 	internal class ClassInfoDrawer : Inspector.Drawer
 	{
-		public override void OnLayout( Property item, ILibrary instance )
+		public override void OnLayout( Property item, object instance )
 		{
 			var lib = item[instance] as Library;
 			

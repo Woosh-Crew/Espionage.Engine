@@ -6,7 +6,7 @@ namespace Espionage.Engine.Tools
 	[Target( typeof( Enum ) )]
 	internal class EnumDrawer : Inspector.Drawer
 	{
-		public override void OnLayout( Property item, ILibrary instance )
+		public override void OnLayout( Property item, object instance )
 		{
 			if ( ImGui.Selectable( item[instance].ToString() ) ) { }
 

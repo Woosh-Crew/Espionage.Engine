@@ -6,7 +6,7 @@ namespace Espionage.Engine.Tools
 	[Target( typeof( string ) )]
 	internal class StringDrawer : Inspector.Drawer
 	{
-		public override void OnLayout( Property item, ILibrary instance )
+		public override void OnLayout( Property item, object instance )
 		{
 			var currentValue = item[instance];
 

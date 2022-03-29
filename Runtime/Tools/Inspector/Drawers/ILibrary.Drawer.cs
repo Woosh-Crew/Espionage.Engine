@@ -4,26 +4,26 @@ using UnityEngine;
 
 namespace Espionage.Engine.Tools
 {
-	public class ILibraryDrawer : Inspector.Drawer
+	[Target( typeof( ILibrary ) )]
+	internal class ILibraryDrawer : Inspector.Drawer
 	{
-		public override void OnLayout( Property property, ILibrary instance )
+		public override void OnLayout( Property property, object instance )
 		{
 			var currentValue = property[instance];
-			var castedValue = (ILibrary)currentValue;
 
-			if ( currentValue == null )
+			if ( currentValue is not ILibrary library )
 			{
-				ImGui.Text( "Null" );
+				ImGui.Text( "Error" );
 				return;
 			}
 
 			if ( ImGui.Selectable( currentValue.ToString() ) )
 			{
-				Engine.Services.Get<DiagnosticsService>().Selection = castedValue;
+				Engine.Services.Get<DiagnosticsService>().Selection = currentValue;
 			}
 
 			ImGui.SameLine();
-			ImGui.TextColored( Color.gray, $" [{castedValue.ClassInfo.Title}]" );
+			ImGui.TextColored( Color.gray, $" [{library.ClassInfo.Title}]" );
 		}
 	}
 }

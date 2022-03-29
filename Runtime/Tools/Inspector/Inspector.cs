@@ -5,8 +5,7 @@ using UnityEngine;
 
 namespace Espionage.Engine.Tools
 {
-	[Title( "Inspector" )]
-	public partial class Inspector : Window
+	public sealed class Inspector : Window
 	{
 		public override void OnLayout()
 		{
@@ -36,36 +35,45 @@ namespace Espionage.Engine.Tools
 
 			ImGui.EndTabBar();
 
-			switch ( State )
+			if ( Service.Selection is ILibrary lib )
 			{
-				case Mode.Default :
-					DrawGUI( Service.Selection );
-					break;
-				case Mode.Raw :
-					RawGUI( Service.Selection );
-					break;
+				switch ( State )
+				{
+					case Mode.Default :
+						DrawGUI( lib );
+						break;
+					case Mode.Raw :
+						RawGUI( lib );
+						break;
+				}
 			}
-
 		}
 
 		private Mode State { get; set; }
 
 		private enum Mode { Default, Raw }
 
-		public void SelectionChanged( ILibrary selection )
+		public void SelectionChanged( object selection )
 		{
-			if ( !Editors.ContainsKey( selection.GetType() ) )
+			if ( selection is ILibrary lib )
 			{
-				Editors.Add( selection.GetType(), GrabEditor( selection is Library ? typeof( Library ) : selection.ClassInfo.Info ) );
-			}
+				if ( !Editors.ContainsKey( selection.GetType() ) )
+				{
+					Editors.Add( selection.GetType(), GrabEditor( lib is Library ? typeof( Library ) : lib.ClassInfo.Info ) );
+				}
 
-			Editors[selection.GetType()]?.OnActive( selection );
+				Editors[selection.GetType()]?.OnActive( lib );
+			}
 		}
 
 		private void HeaderGUI()
 		{
 			ImGui.Text( $"Viewing {Service.Selection}" );
 		}
+
+		//
+		// ILibrary Inspector
+		//
 
 		private void DrawGUI( ILibrary item )
 		{
@@ -232,7 +240,6 @@ namespace Espionage.Engine.Tools
 				if ( comp.Type.IsInterface )
 				{
 					// Generic interface
-
 					return type.HasInterface( comp.Type );
 				}
 
@@ -265,7 +272,7 @@ namespace Espionage.Engine.Tools
 				ClassInfo = Library.Register( this );
 			}
 
-			public abstract void OnLayout( Property property, ILibrary instance );
+			public abstract void OnLayout( Property property, object instance );
 		}
 
 		[Singleton, Group( "Inspector" )]
