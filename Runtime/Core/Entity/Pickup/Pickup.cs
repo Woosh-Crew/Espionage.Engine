@@ -24,9 +24,5 @@
 			Carrier = null;
 		}
 
-		/// <summary>Method used for taking data from stats and setting fields on a given pickup</summary>
-		public virtual void LoadStats(){
-
-		}
 	}
 }

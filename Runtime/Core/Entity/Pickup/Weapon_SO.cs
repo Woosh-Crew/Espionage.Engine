@@ -12,5 +12,6 @@ namespace Espionage.Engine
 	{	
 		/// <summary>The given damage a weapon does</summary>
 		public float Damage;
+
 	}
 }
