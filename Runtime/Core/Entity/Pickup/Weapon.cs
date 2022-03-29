@@ -3,7 +3,13 @@
 	public abstract class Weapon : Holdable
 	{
 		/// <summary>The damage a given weapon does</summary>
-		public virtual float Damage => 1f;
+		public virtual float Damage{get; set;} = 1f;
+
+		/// <summary>Time since our primary attack</summary>
+		private TimeSince TimeSincePrimaryAttack;
+
+		/// <summary>Time since our secondary attack</summary>
+		private TimeSince TimeSinceSecondaryAttack;
 
 		/// <summary>The primary attack for this weapon</summary>
 		public virtual void PrimaryAttack(){
@@ -14,6 +20,24 @@
 		public virtual void SecondaryAttack(){
 
 		}
+		
+		public virtual bool CanPrimaryAttack(){
+			return true;
+		}
+
+		public virtual bool CanSecondaryAttack(){
+			return true;
+		}
+
+		public override void LoadStats()
+		{
+			//An example of a weapon loading its stats
+			if(Stats is Weapon_SO stat){
+				Damage = stat.Damage;
+			}
+		}
+
+
 
 	}
 }
