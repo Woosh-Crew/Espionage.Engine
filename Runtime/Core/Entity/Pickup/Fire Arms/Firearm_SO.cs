@@ -27,5 +27,16 @@ namespace Espionage.Engine
 		
 		[Tab("Weapon")]
 		public float ReloadTime;
+
+		[Tab("Weapon")]
+		public GameObject Projectile;
+
+		[Tab("Weapon")]
+		[Range(0f,1f)]
+		public float Spread;
+
+		[Tab("Weapon")]
+		/// <summary>Defines what layers can and cannot be hit by bullet raycasts</summary>
+		public LayerMask BulletMask;
 	}
 }

@@ -25,4 +25,5 @@ namespace Espionage.Engine
 		public AudioClip[] Sounds;
 		public Vector2 PitchVariance; 
 	}
+	
 }

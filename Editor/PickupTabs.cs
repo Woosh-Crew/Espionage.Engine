@@ -120,7 +120,7 @@ namespace Espionage.Engine.Editor
 			if(_tabs.Count > 0){
 				//Draw each property field
 				Tab current = _tabs[_currentTab];
-				foreach(SerializedProperty field in current.Fields.OrderBy(x => x.name)){
+				foreach(SerializedProperty field in current.Fields){
 
 					EditorGUILayout.PropertyField(field);
 				}
