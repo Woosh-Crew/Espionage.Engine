@@ -11,6 +11,12 @@ namespace Espionage.Engine.Tools
 		{
 			var currentValue = property[instance];
 
+			if ( currentValue == null )
+			{
+				ImGui.Text( "Null" );
+				return;
+			}
+
 			if ( currentValue is not ILibrary library )
 			{
 				ImGui.Text( "Error" );

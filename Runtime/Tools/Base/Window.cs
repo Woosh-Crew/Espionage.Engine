@@ -55,7 +55,8 @@ namespace Espionage.Engine.Tools
 
 			if ( All.ContainsKey( lib ) )
 			{
-				return All[lib] as T;
+				var window = All[lib] as T;
+				return window;
 			}
 
 			// Gotta do this or the compiler has a fit?

@@ -6,7 +6,7 @@ namespace Espionage.Engine.Tools.Editors
 	[Target( typeof( Map ) )]
 	internal class MapEditor : Inspector.Editor
 	{
-		public override void OnLayout( ILibrary item )
+		public override void OnLayout( object item )
 		{
 			if ( item is not Map map )
 			{

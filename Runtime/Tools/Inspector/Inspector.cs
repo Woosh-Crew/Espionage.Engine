@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ImGuiNET;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Espionage.Engine.Tools
 {
@@ -19,24 +20,25 @@ namespace Espionage.Engine.Tools
 			HeaderGUI();
 			ImGui.Separator();
 
-			// Draw UI
-			if ( ImGui.BeginTabBar( "Inspector Bar" ) )
-			{
-				if ( ImGui.TabItemButton( "Default" ) )
-				{
-					State = Mode.Default;
-				}
-
-				if ( ImGui.TabItemButton( "Raw" ) )
-				{
-					State = Mode.Raw;
-				}
-			}
-
-			ImGui.EndTabBar();
-
+			// Library UI
 			if ( Service.Selection is ILibrary lib )
 			{
+				// Draw UI
+				if ( ImGui.BeginTabBar( "Inspector Bar" ) )
+				{
+					if ( ImGui.TabItemButton( "Default" ) )
+					{
+						State = Mode.Default;
+					}
+
+					if ( ImGui.TabItemButton( "Raw" ) )
+					{
+						State = Mode.Raw;
+					}
+				}
+
+				ImGui.EndTabBar();
+
 				switch ( State )
 				{
 					case Mode.Default :
@@ -46,6 +48,12 @@ namespace Espionage.Engine.Tools
 						RawGUI( lib );
 						break;
 				}
+			}
+
+			// Unity UI
+			else if ( Service.Selection is Object obj )
+			{
+				DrawUnityGUI( obj );
 			}
 		}
 
@@ -72,10 +80,19 @@ namespace Espionage.Engine.Tools
 		}
 
 		//
+		// Unity Inspector ( UnityEngine.Object )
+		//
+
+		private void DrawUnityGUI( Object item )
+		{
+			DrawGUI( item );
+		}
+
+		//
 		// ILibrary Inspector
 		//
 
-		private void DrawGUI( ILibrary item )
+		private void DrawGUI( object item )
 		{
 			if ( Editors.ContainsKey( item.GetType() ) )
 			{
@@ -83,7 +100,7 @@ namespace Espionage.Engine.Tools
 				{
 					ImGui.BeginGroup();
 
-					ImGui.PushID( item.ClassInfo.Name );
+					ImGui.PushID( item.ToString() );
 					Editors[item.GetType()].OnLayout( item );
 					ImGui.PopID();
 
@@ -91,14 +108,17 @@ namespace Espionage.Engine.Tools
 				}
 				else
 				{
-					RawGUI( item );
+					if ( item is ILibrary library )
+					{
+						RawGUI( library );
+					}
 				}
 
 				return;
 			}
 
 			// Get Editor, if we haven't already
-			Editors.Add( item.GetType(), GrabEditor( item is Library ? typeof( Library ) : item.ClassInfo.Info ) );
+			Editors.Add( item.GetType(), GrabEditor( item is Library ? typeof( Library ) : item.GetType() ) );
 		}
 
 		private void RawGUI( ILibrary item )
@@ -285,8 +305,8 @@ namespace Espionage.Engine.Tools
 				ClassInfo = Library.Register( this );
 			}
 
-			public virtual void OnActive( ILibrary item ) { }
-			public abstract void OnLayout( ILibrary item );
+			public virtual void OnActive( object item ) { }
+			public abstract void OnLayout( object instance );
 		}
 	}
 }

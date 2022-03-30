@@ -10,16 +10,26 @@ namespace Espionage.Engine.Tools.Editors
 	{
 		private IEnumerable<IGrouping<string, Property>> _grouping;
 
-		public override void OnActive( ILibrary library )
+		public override void OnActive( object item )
 		{
-			_grouping = library.ClassInfo.Properties.All.OrderBy( e => e.Components.Get<OrderAttribute>()?.Order ?? 5 ).GroupBy( e => e.Group );
+			if ( item is not Entity entity )
+			{
+				return;
+			}
+
+			_grouping = entity.ClassInfo.Properties.All.OrderBy( e => e.Components.Get<OrderAttribute>()?.Order ?? 5 ).GroupBy( e => e.Group );
 		}
 
-		public override void OnLayout( ILibrary item )
+		public override void OnLayout( object item )
 		{
+			if ( item is not Entity entity )
+			{
+				return;
+			}
+
 			ImGui.Text( "Entity" );
 			ImGui.SameLine();
-			ImGui.TextColored( Color.gray, $"[{item.ClassInfo.Name} / {item.ClassInfo.Group}]" );
+			ImGui.TextColored( Color.gray, $"[{entity.ClassInfo.Name} / {entity.ClassInfo.Group}]" );
 
 			foreach ( var group in _grouping )
 			{
@@ -30,7 +40,7 @@ namespace Espionage.Engine.Tools.Editors
 						ImGui.SetNextItemWidth( 256 );
 						ImGui.Text( property.Title );
 						ImGui.SameLine();
-						Inspector.PropertyGUI( property, item );
+						Inspector.PropertyGUI( property, entity );
 					}
 				}
 			}
