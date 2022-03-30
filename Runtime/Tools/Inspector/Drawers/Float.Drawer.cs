@@ -19,7 +19,15 @@ namespace Espionage.Engine.Tools
 			var lastValue = (float)currentValue;
 			var value = lastValue;
 
-			ImGui.InputFloat( string.Empty, ref value );
+			// GUI
+			if ( item.Components.TryGet<SliderAttribute>( out var attribute ) )
+			{
+				ImGui.SliderFloat( string.Empty, ref value, attribute.Min, attribute.Max );
+			}
+			else
+			{
+				ImGui.InputFloat( string.Empty, ref value );
+			}
 
 			if ( Math.Abs( value - lastValue ) > 0.0001f )
 			{
