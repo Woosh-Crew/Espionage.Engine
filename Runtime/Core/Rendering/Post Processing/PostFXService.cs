@@ -107,7 +107,6 @@ namespace Espionage.Engine.PostProcessing
 		[Function( "postfx.apply" ), Terminal, Callback( "map.loaded" ), Callback( "cookies.saved" )]
 		private static void SetPostFX()
 		{
-			// We don't need to set shit if its quiting
 			if ( Engine.IsQuitting )
 			{
 				return;
@@ -115,6 +114,7 @@ namespace Espionage.Engine.PostProcessing
 
 			// Get all Post FX.
 			var all = Object.FindObjectsOfType<PostProcessVolume>();
+			Dev.Log.Info( "Adjusting Post FX Profiles" );
 
 			foreach ( var volume in all )
 			{
@@ -123,7 +123,7 @@ namespace Espionage.Engine.PostProcessing
 					continue;
 				}
 
-				AdjustProfile( volume.sharedProfile );
+				AdjustProfile( volume.profile );
 			}
 		}
 

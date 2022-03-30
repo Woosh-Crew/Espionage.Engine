@@ -181,7 +181,7 @@ namespace Espionage.Engine.Components
 			{
 				var item = _storage[index];
 
-				if ( item.GetType() == type )
+				if ( item.GetType() == type || item.GetType().IsSubclassOf( type ) )
 				{
 					return true;
 				}
