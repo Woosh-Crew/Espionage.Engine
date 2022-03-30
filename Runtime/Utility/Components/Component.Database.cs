@@ -5,13 +5,14 @@ using System.Linq;
 
 namespace Espionage.Engine.Components
 {
-	public class Components<T> : IDatabase<IComponent<T>, int> where T : class
+	public class Components<T> : IDatabase<IComponent<T>, int, Type> where T : class
 	{
 		// IDatabase
 
 		public int Count => _storage.Count;
 
 		public IComponent<T> this[ int key ] => _storage[key];
+		public IComponent<T> this[ Type key ] => Get( key );
 
 		// Instance
 

@@ -22,8 +22,8 @@ namespace Espionage.Engine.Viewmodels
 
 			if ( AutoCenter )
 			{
-				_savedDeadzoneAxis.x = Easing.Linear( _savedDeadzoneAxis.x, 0, ReturnSpeed * Time.deltaTime );
-				_savedDeadzoneAxis.y = Easing.Linear( _savedDeadzoneAxis.y, 0, ReturnSpeed * Time.deltaTime );
+				_savedDeadzoneAxis.x = _savedDeadzoneAxis.x.LerpTo( 0, ReturnSpeed * Time.deltaTime );
+				_savedDeadzoneAxis.y = _savedDeadzoneAxis.y.LerpTo( 0, ReturnSpeed * Time.deltaTime );
 			}
 
 			_lastDeadzoneRotation = Quaternion.Slerp( _lastDeadzoneRotation, Quaternion.Euler( _savedDeadzoneAxis.x, _savedDeadzoneAxis.y, 0 ), Damping * Time.deltaTime );
