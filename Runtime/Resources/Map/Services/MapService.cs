@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 namespace Espionage.Engine.Resources.Services
 {
+	[Order( 150 )] // Load after everything
 	internal class MapService : Service
 	{
 		public override void OnReady()
