@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using ImGuiNET;
 using UnityEngine;
 
@@ -16,10 +17,10 @@ namespace Espionage.Engine.Tools
 				change = null;
 				return false;
 			}
-			
-			var tree = ImGui.TreeNode( Property.Name ) ;
+
+			var tree = ImGui.TreeNode( Property.Name );
 			ImGui.SameLine();
-			ImGui.TextColored(Color.gray, "[Readonly]");
+			ImGui.TextColored( Color.gray, "[Readonly]" );
 
 			if ( tree )
 			{
@@ -42,12 +43,7 @@ namespace Espionage.Engine.Tools
 						{
 							ImGui.PushID( Property.Name + index );
 
-							Inspector.PropertyGUI( value.GetType().GetGenericArguments()[0], Property, instance, item, out var hasChanged, out var changed );
-
-							if ( hasChanged )
-							{
-								Dev.Log.Info( "Value Changed" );
-							}
+							Inspector.PropertyGUI( item.GetType(), Property, instance, item, out _, out _ );
 
 							ImGui.PopID();
 						}

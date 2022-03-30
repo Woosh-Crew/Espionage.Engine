@@ -354,11 +354,19 @@ namespace Espionage.Engine.Tools
 					return false;
 				}
 
-				if ( OnLayout( instance, (T)value, out var changed ) )
+				try
 				{
-					change = changed;
-					return true;
+					if ( OnLayout( instance, (T)value, out var changed ) )
+					{
+						change = changed;
+						return true;
+					}
 				}
+				catch ( InvalidCastException e )
+				{
+					Dev.Log.Info( $"Tried casting {value.GetType()} to {typeof( T ).Name} " );
+				}
+
 
 				change = null;
 				return false;
@@ -382,4 +390,5 @@ namespace Espionage.Engine.Tools
 			public abstract void OnLayout( object instance );
 		}
 	}
+
 }
