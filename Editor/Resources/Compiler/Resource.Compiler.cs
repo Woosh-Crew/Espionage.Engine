@@ -9,9 +9,7 @@ namespace Espionage.Engine.Resources.Editor
 		private static bool CompileValidate()
 		{
 			return Selection.activeObject != null && Exists( Selection.activeObject.GetType() );
-
 		}
-
 
 		[MenuItem( "Assets/Compile Selected Asset", priority = -500 )]
 		private static void Compile()
