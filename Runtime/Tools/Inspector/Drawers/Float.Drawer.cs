@@ -4,35 +4,30 @@ using ImGuiNET;
 namespace Espionage.Engine.Tools
 {
 	[Target( typeof( float ) )]
-	internal class FloatDrawer : Inspector.Drawer
+	internal class FloatDrawer : Inspector.Drawer<float>
 	{
-		public override void OnLayout( Property item, object instance )
+		protected override bool OnLayout( object instance, in float value, out float change )
 		{
-			var currentValue = item[instance];
-
-			if ( currentValue == null )
-			{
-				ImGui.Text( "Null" );
-				return;
-			}
-
-			var lastValue = (float)currentValue;
-			var value = lastValue;
+			var newValue = value;
 
 			// GUI
-			if ( item.Components.TryGet<SliderAttribute>( out var attribute ) )
+			if ( Property != null && Property.Components.TryGet<SliderAttribute>( out var attribute ) )
 			{
-				ImGui.SliderFloat( string.Empty, ref value, attribute.Min, attribute.Max );
+				ImGui.SliderFloat( string.Empty, ref newValue, attribute.Min, attribute.Max );
 			}
 			else
 			{
-				ImGui.InputFloat( string.Empty, ref value );
+				ImGui.InputFloat( string.Empty, ref newValue );
 			}
 
-			if ( Math.Abs( value - lastValue ) > 0.0001f )
+			if ( Math.Abs( newValue - value ) > 0.0001f )
 			{
-				item[instance] = value;
+				change = newValue;
+				return true;
 			}
+
+			change = default;
+			return false;
 		}
 	}
 }

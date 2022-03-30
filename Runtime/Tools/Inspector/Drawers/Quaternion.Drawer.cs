@@ -4,19 +4,15 @@ using UnityEngine;
 namespace Espionage.Engine.Tools
 {
 	[Target( typeof( Quaternion ) )]
-	internal class QuaternionDrawer : Inspector.Drawer
+	internal class QuaternionDrawer : Inspector.Drawer<Quaternion>
 	{
-		public override void OnLayout( Property item, object instance )
+
+		protected override bool OnLayout( object instance, in Quaternion value, out Quaternion change )
 		{
-			var currentValue = item[instance];
+			ImGui.Text( value.ToString() );
 
-			if ( currentValue == null )
-			{
-				ImGui.Text( "Null" );
-				return;
-			}
-
-			ImGui.Text( currentValue.ToString() );
+			change = Quaternion.identity;
+			return false;
 		}
 	}
 }

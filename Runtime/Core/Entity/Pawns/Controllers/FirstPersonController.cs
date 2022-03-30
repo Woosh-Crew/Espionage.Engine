@@ -37,8 +37,8 @@ namespace Espionage.Engine
 
 			var wishDirection = Rotation * (Vector3.right * input.x + Vector3.forward * input.y);
 
-			var length = wishDirection.magnitude;
 			wishDirection *= Speed();
+			var length = wishDirection.magnitude;
 
 			wishDirection = wishDirection.normalized;
 			wishDirection *= Time.deltaTime;

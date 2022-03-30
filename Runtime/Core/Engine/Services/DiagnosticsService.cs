@@ -54,7 +54,7 @@ namespace Espionage.Engine.Services
 			// Use Dev Tripod
 			if ( Input.GetKeyDown( KeyCode.BackQuote ) )
 			{
-				if ( Local.Client.Tripod is not DevTripod )
+				if ( !Local.Client.Tripod.Is<DevTripod>() )
 				{
 					Dev.Terminal.Invoke( "dev.tripod" );
 				}
@@ -64,7 +64,7 @@ namespace Espionage.Engine.Services
 			}
 
 			// If were in Dev Tripod
-			if ( Local.Client.Tripod is not DevTripod )
+			if ( !Local.Client.Tripod.Is<DevTripod>() )
 			{
 				return;
 			}
@@ -104,7 +104,7 @@ namespace Espionage.Engine.Services
 		}
 
 		public bool Show { get; set; }
-		public bool Enabled => Local.Client.Tripod is DevTripod || Show;
+		public bool Enabled => Local.Client.Tripod.Is<DevTripod>() || Show;
 
 		//
 		// UI

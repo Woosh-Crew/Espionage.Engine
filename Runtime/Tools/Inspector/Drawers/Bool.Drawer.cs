@@ -4,30 +4,24 @@ using UnityEngine;
 namespace Espionage.Engine.Tools
 {
 	[Target( typeof( bool ) )]
-	internal class BoolDrawer : Inspector.Drawer
+	internal class BoolDrawer : Inspector.Drawer<bool>
 	{
-		public override void OnLayout( Property item, object instance )
+		protected override bool OnLayout( object instance, in bool value, out bool change )
 		{
-			var currentValue = item[instance];
+			var newValue = value;
 
-			if ( currentValue == null )
-			{
-				ImGui.Text( "Null" );
-				return;
-			}
-
-			var lastValue = (bool)currentValue;
-			var value = lastValue;
-
-			ImGui.Checkbox( string.Empty, ref value );
-
+			ImGui.Checkbox( string.Empty, ref newValue );
 			ImGui.SameLine();
 			ImGui.TextColored( Color.gray, value ? "Enabled" : "Disabled" );
 
-			if ( value != lastValue )
+			if ( value != newValue )
 			{
-				item[instance] = value;
+				change = newValue;
+				return true;
 			}
+
+			change = default;
+			return false;
 		}
 	}
 }

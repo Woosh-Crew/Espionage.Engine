@@ -6,7 +6,10 @@ namespace Espionage.Engine
 {
 	public static class Local
 	{
-		public static Client Client { get; set; }
+		public static Client Client { get; internal set; }
+
+		// Client Helpers
 		public static Pawn Pawn => Client.Pawn;
+		public static Tripod.Stack Tripod => Client.Tripod;
 	}
 }

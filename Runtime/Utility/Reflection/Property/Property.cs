@@ -4,9 +4,11 @@ using Espionage.Engine.Components;
 
 namespace Espionage.Engine
 {
-	public sealed class Property : IMember<PropertyInfo>
+	public sealed class Property : IMember<PropertyInfo>, ILibrary
 	{
 		public Library Owner { get; set; }
+		public Library ClassInfo => Library.Database[typeof( Property )];
+
 
 		internal Property( PropertyInfo info, string name, object value )
 		{
@@ -38,6 +40,11 @@ namespace Espionage.Engine
 					Components.Add( property );
 				}
 			}
+		}
+
+		public override string ToString()
+		{
+			return $"{Name}";
 		}
 
 		public PropertyInfo Info { get; }

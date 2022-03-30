@@ -85,9 +85,9 @@ namespace Espionage.Engine
 		/// </returns>
 		protected virtual ITripod FindActiveCamera()
 		{
-			if ( Local.Client.Tripod != null )
+			if ( Local.Client.Tripod.Peek() != null )
 			{
-				return Local.Client.Tripod;
+				return Local.Client.Tripod.Peek();
 			}
 
 			if ( Local.Client.Pawn != null && Local.Client.Pawn.Tripod != null )

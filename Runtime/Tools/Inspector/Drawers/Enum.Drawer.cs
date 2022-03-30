@@ -6,25 +6,31 @@ namespace Espionage.Engine.Tools
 	[Target( typeof( Enum ) )]
 	internal class EnumDrawer : Inspector.Drawer
 	{
-		public override void OnLayout( Property item, object instance )
+		public override bool OnLayout( object instance, in object value, out object change )
 		{
-			if ( ImGui.Selectable( item[instance].ToString() ) ) { }
+			if ( ImGui.Selectable( value.ToString() ) ) { }
 
 			if ( ImGui.BeginPopupContextItem( "enum_choice", ImGuiPopupFlags.MouseButtonLeft ) )
 			{
-				ImGui.Text( item.Type.Name );
+				ImGui.Text( Type.Name );
 				ImGui.Separator();
 
-				foreach ( var name in Enum.GetNames( item.Type ) )
+				foreach ( var name in Enum.GetNames( Type ) )
 				{
-					if ( ImGui.Selectable( name ) )
+					if ( !ImGui.Selectable( name ) )
 					{
-						item[instance] = Enum.Parse( item.Type, name );
+						continue;
 					}
+
+					change = Enum.Parse( Type, name );
+					return true;
 				}
 
 				ImGui.EndPopup();
 			}
+
+			change = null;
+			return false;
 		}
 	}
 }

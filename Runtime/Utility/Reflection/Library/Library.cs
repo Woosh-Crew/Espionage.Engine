@@ -95,7 +95,7 @@ namespace Espionage.Engine
 		{
 			// If this property came from a class outside the scope of ILibrary
 			// Ignore it. We don't care about it. 
-			if ( !IsValid( info.DeclaringType ) || info.HasAttribute<SkipAttribute>( true ) || info.HasAttribute<ObsoleteAttribute>() )
+			if ( info.GetIndexParameters().Length > 0 || !IsValid( info.DeclaringType ) || info.HasAttribute<SkipAttribute>( true ) || info.HasAttribute<ObsoleteAttribute>() )
 			{
 				return;
 			}

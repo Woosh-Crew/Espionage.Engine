@@ -5,27 +5,22 @@ using UnityEngine;
 namespace Espionage.Engine.Tools
 {
 	[Target( typeof( Color ) )]
-	internal class ColorDrawer : Inspector.Drawer
+	internal class ColorDrawer : Inspector.Drawer<Color>
 	{
-		public override void OnLayout( Property item, object instance )
+		protected override bool OnLayout( object instance, in Color value, out Color change )
 		{
-			var currentValue = item[instance];
+			var newValue = new Vector4( value.r * 255, value.g * 255, value.b * 255, value.a );
 
-			if ( currentValue == null )
+			ImGui.ColorEdit4( string.Empty, ref newValue );
+
+			if ( (Vector4)value != newValue )
 			{
-				ImGui.Text( "Null" );
-				return;
+				change = new( newValue.x / 255, newValue.y / 255, newValue.z / 255, newValue.w );
+				return true;
 			}
 
-			var lastValue = (Color)currentValue;
-
-			var value = new Vector4( lastValue.r * 255, lastValue.g * 255, lastValue.b * 255, lastValue.a );
-			ImGui.ColorEdit4( string.Empty, ref value );
-
-			if ( value != (Vector4)lastValue )
-			{
-				item[instance] = new Color( value.x / 255, value.y / 255, value.z / 255, value.w );
-			}
+			change = default;
+			return false;
 		}
 	}
 }

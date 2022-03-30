@@ -5,31 +5,28 @@ using UnityEngine;
 namespace Espionage.Engine.Tools
 {
 	[Target( typeof( ILibrary ) )]
-	internal class ILibraryDrawer : Inspector.Drawer
+	internal class ILibraryDrawer : Inspector.Drawer<ILibrary>
 	{
-		public override void OnLayout( Property property, object instance )
+		protected override bool OnLayout( object instance, in ILibrary value, out ILibrary change )
 		{
-			var currentValue = property[instance];
-
-			if ( currentValue == null )
+			if ( value == null )
 			{
 				ImGui.Text( "Null" );
-				return;
+
+				change = null;
+				return false;
 			}
 
-			if ( currentValue is not ILibrary library )
+			if ( ImGui.Selectable( value.ToString() ) )
 			{
-				ImGui.Text( "Error" );
-				return;
-			}
-
-			if ( ImGui.Selectable( currentValue.ToString() ) )
-			{
-				Engine.Services.Get<DiagnosticsService>().Selection = currentValue;
+				Engine.Services.Get<DiagnosticsService>().Selection = value;
 			}
 
 			ImGui.SameLine();
-			ImGui.TextColored( Color.gray, $" [{library.ClassInfo.Title}]" );
+			ImGui.TextColored( Color.gray, $" [{value.ClassInfo.Title}]" );
+
+			change = null;
+			return false;
 		}
 	}
 }

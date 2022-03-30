@@ -4,27 +4,22 @@ using UnityEngine;
 namespace Espionage.Engine.Tools
 {
 	[Target( typeof( Vector2 ) )]
-	internal class Vector2Drawer : Inspector.Drawer
+	internal class Vector2Drawer : Inspector.Drawer<Vector2>
 	{
-		public override void OnLayout( Property item, object instance )
+		protected override bool OnLayout( object instance, in Vector2 value, out Vector2 change )
 		{
-			var currentValue = item[instance];
+			var newValue = value;
 
-			if ( currentValue == null )
-			{
-				ImGui.Text( "Null" );
-				return;
-			}
-			
-			var lastValue = (Vector2)currentValue;
-			var value = lastValue;
-			
-			ImGui.InputFloat2( string.Empty, ref value );
+			ImGui.InputFloat2( string.Empty, ref newValue );
 
-			if ( value != lastValue )
+			if ( value != newValue )
 			{
-				item[instance] = value;
+				change = newValue;
+				return true;
 			}
+
+			change = default;
+			return false;
 		}
 	}
 }

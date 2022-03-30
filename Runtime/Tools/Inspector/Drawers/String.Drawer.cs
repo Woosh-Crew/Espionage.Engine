@@ -1,38 +1,38 @@
-﻿using System;
-using ImGuiNET;
+﻿using ImGuiNET;
 
 namespace Espionage.Engine.Tools
 {
 	[Target( typeof( string ) )]
-	internal class StringDrawer : Inspector.Drawer
+	internal class StringDrawer : Inspector.Drawer<string>
 	{
-		public override void OnLayout( Property item, object instance )
+		protected override bool OnLayout( object instance, in string value, out string change )
 		{
-			var currentValue = item[instance];
-
-			if ( currentValue == null )
+			if ( value == null )
 			{
-				ImGui.Text( "Null" );
-				return;
+				change = string.Empty;
+				return true;
 			}
 
-			var lastValue = (string)currentValue;
+			var newValue = value;
 
-			if ( !item.Editable )
+			if ( Property is { Editable: false } )
 			{
-				ImGui.TextWrapped( lastValue );
-				return;
+				ImGui.TextWrapped( value );
+
+				change = default;
+				return false;
 			}
 
-			var value = lastValue;
+			ImGui.InputText( string.Empty, ref newValue, 160 );
 
-			ImGui.InputText( string.Empty, ref value, 160 );
-
-			if ( value != lastValue )
+			if ( value != newValue )
 			{
-				Dev.Log.Info("Value Changed");
-				item[instance] = value;
+				change = newValue;
+				return true;
 			}
+
+			change = default;
+			return false;
 		}
 	}
 }

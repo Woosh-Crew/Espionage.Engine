@@ -42,7 +42,7 @@ namespace Espionage.Engine
 		/// The clients active tripod.
 		/// This overrides the current pawns tripod
 		/// </summary>
-		public ITripod Tripod { get; set; }
+		public Tripod.Stack Tripod { get; } = new();
 
 		//
 		// Input

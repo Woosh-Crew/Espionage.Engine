@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using Espionage.Engine.Services;
 using ImGuiNET;
+using JetBrains.Annotations;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -187,35 +190,59 @@ namespace Espionage.Engine.Tools
 			ImGui.EndChild();
 		}
 
-		public static void PropertyGUI( Property property, ILibrary instance )
+		public static void PropertyGUI( Property property, object instance )
 		{
-			if ( Drawers.ContainsKey( property.Type ) )
+			PropertyGUI( property.Type, property, instance, property[instance], out var hasChanged, out var newValue );
+
+			if ( hasChanged )
 			{
-				if ( Drawers[property.Type] != null )
-				{
-					ImGui.BeginGroup();
+				property[instance] = newValue;
+			}
+		}
 
-					ImGui.PushID( property.Name );
-					Drawers[property.Type].OnLayout( property, instance );
-					ImGui.PopID();
+		public static void PropertyGUI( Type target, Property property, object instance, object value, out bool hasChanged, out object changed )
+		{
+			if ( !Drawers.ContainsKey( target ) )
+			{
+				Drawers.Add( target, GrabDrawer( target ) );
 
-					ImGui.EndGroup();
-
-					if ( ImGui.IsItemHovered() && !string.IsNullOrWhiteSpace( property.Help ) )
-					{
-						ImGui.SetTooltip( property.Help );
-					}
-				}
-				else
-				{
-					ImGui.Text( property[instance]?.ToString() ?? "NULL" );
-				}
-
+				changed = null;
+				hasChanged = false;
 				return;
 			}
 
-			// Get Drawer, if we haven't already
-			Drawers.Add( property.Type, GrabDrawer( property.Type ) );
+			if ( Drawers[target] == null )
+			{
+				ImGui.TextDisabled( value?.ToString() ?? "Null" );
+				if ( ImGui.IsItemHovered() )
+				{
+					ImGui.SetTooltip( "Item is not inherited from ILibrary, or there is no valid drawer" );
+				}
+
+				changed = null;
+				hasChanged = false;
+				return;
+			}
+
+			// Normal Drawer
+			ImGui.BeginGroup();
+			{
+				ImGui.PushID( property.Name );
+
+				var drawer = Drawers[target];
+				drawer.Type = target;
+				drawer.Property = property;
+
+				hasChanged = drawer.OnLayout( instance, value, out changed );
+
+				ImGui.PopID();
+			}
+			ImGui.EndGroup();
+
+			if ( ImGui.IsItemHovered() && !string.IsNullOrWhiteSpace( property.Help ) )
+			{
+				ImGui.SetTooltip( property.Help );
+			}
 		}
 
 		private static Editor GrabEditor( Type type )
@@ -248,7 +275,20 @@ namespace Espionage.Engine.Tools
 				return Library.Database.Create<EnumDrawer>();
 			}
 
+			if ( type.IsArray )
+			{
+				return Library.Database.Create<ArrayDrawer>();
+			}
+
+			// See if we can use Type Bound.
 			var lib = Library.Database.Find<Drawer>( e =>
+			{
+				var comp = e.Components.Get<TargetAttribute>();
+				return type == comp?.Type;
+			} );
+
+			// Now see if we can use interface bound if its null.
+			lib ??= Library.Database.Find<Drawer>( e =>
 			{
 				var comp = e.Components.Get<TargetAttribute>();
 
@@ -257,13 +297,7 @@ namespace Espionage.Engine.Tools
 					return false;
 				}
 
-				if ( comp.Type.IsInterface )
-				{
-					// Generic interface
-					return type.HasInterface( comp.Type );
-				}
-
-				return type == comp.Type;
+				return comp.Type.IsInterface && type.HasInterface( comp.Type );
 			} );
 
 			if ( lib == null )
@@ -285,6 +319,13 @@ namespace Espionage.Engine.Tools
 		[Singleton, Group( "Inspector" )]
 		public abstract class Drawer : ILibrary
 		{
+			// Data
+
+			public Type Type { get; internal set; }
+			public Property Property { get; internal set; }
+
+			// Instance
+
 			public Library ClassInfo { get; }
 
 			public Drawer()
@@ -292,7 +333,39 @@ namespace Espionage.Engine.Tools
 				ClassInfo = Library.Register( this );
 			}
 
-			public abstract void OnLayout( Property property, object instance );
+			/// <param name="property"> [Nullable] the property that owns this drawer</param>
+			/// <param name="instance"> The current instance we're iterating through </param>
+			/// <param name="value"> The current value of this property </param>
+			/// <param name="change"> The value we should change to if this returns true. </param>
+			/// <returns>True if the value of this property has changed</returns>
+			public abstract bool OnLayout( object instance, in object value, out object change );
+		}
+
+		public abstract class Drawer<T> : Drawer
+		{
+			public override bool OnLayout( object instance, in object value, out object change )
+			{
+				// String has its own NULL stuff. This is hacky, but can't do much about that.
+				if ( typeof( T ) != typeof( string ) && value == null )
+				{
+					ImGui.Text( "Null" );
+
+					change = null;
+					return false;
+				}
+
+				if ( OnLayout( instance, (T)value, out var changed ) )
+				{
+					change = changed;
+					return true;
+				}
+
+				change = null;
+				return false;
+			}
+
+			/// <inheritdoc cref="Drawer.OnLayout"/>
+			protected abstract bool OnLayout( object instance, in T value, out T change );
 		}
 
 		[Singleton, Group( "Inspector" )]

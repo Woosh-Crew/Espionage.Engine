@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Espionage.Engine
@@ -81,6 +82,84 @@ namespace Espionage.Engine
 			{
 				public float FieldOfView;
 				public Vector2 Clipping;
+			}
+		}
+
+		public sealed class Stack : IEnumerable<ITripod>, ILibrary
+		{
+			public Library ClassInfo => Library.Database[typeof( Stack )];
+
+			private readonly Stack<ITripod> _storage = new();
+
+			// Push
+
+			public void Push( ITripod tripod )
+			{
+				_storage.Push( tripod );
+			}
+
+			public void Push<T>() where T : class, ITripod, new()
+			{
+				_storage.Push( Library.Database.Create<T>() );
+			}
+
+			// Peek
+
+			public ITripod Peek()
+			{
+				// Null safe Peek
+				return _storage.TryPeek( out var item ) ? item : null;
+
+			}
+
+			public T Peek<T>() where T : class, ITripod
+			{
+				return Peek() as T;
+			}
+
+			// Pop
+
+			public void Pop()
+			{
+				Pull()?.Delete();
+			}
+
+			// Pull
+
+			public ITripod Pull()
+			{
+				return _storage.TryPop( out var item ) ? item : null;
+			}
+
+			public T Pull<T>() where T : class, ITripod
+			{
+				return Pull() as T;
+			}
+
+			// Enumerator
+
+			public IEnumerator<ITripod> GetEnumerator()
+			{
+				return _storage.GetEnumerator();
+			}
+
+			IEnumerator IEnumerable.GetEnumerator()
+			{
+				return GetEnumerator();
+			}
+
+			// Utility
+
+			public bool Is<T>() where T : class, ITripod
+			{
+				return Peek() is T;
+			}
+
+			// Conversions for Tripod, since we can't return an interface
+
+			public static implicit operator Tripod( Stack stack )
+			{
+				return stack.Peek<Tripod>();
 			}
 		}
 

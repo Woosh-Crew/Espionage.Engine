@@ -64,6 +64,20 @@ namespace Espionage.Engine.Tools
 			return item as T;
 		}
 
+		public static T Grab<T>() where T : Window
+		{
+			var lib = Library.Database[typeof( T )];
+
+			if ( !All.ContainsKey( lib ) )
+			{
+				return null;
+			}
+
+			var window = All[lib] as T;
+			return window;
+
+		}
+
 		// Instance
 
 		public Library ClassInfo { get; }
