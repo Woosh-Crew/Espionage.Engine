@@ -66,7 +66,7 @@ namespace Espionage.Engine.Tools.Editor
 			rootVisualElement.Add( _menuBar );
 
 			// Function base Menus
-			var menuItems = ClassInfo.Functions.All.Where( e => e.Components.Has<MenuAttribute>() ).GroupBy( e => e.Components.Get<MenuAttribute>().Path.Split( '/' )[0] );
+			var menuItems = ClassInfo.Functions.Where( e => e.Components.Has<MenuAttribute>() ).GroupBy( e => e.Components.Get<MenuAttribute>().Path.Split( '/' )[0] );
 
 			foreach ( var grouping in menuItems )
 			{

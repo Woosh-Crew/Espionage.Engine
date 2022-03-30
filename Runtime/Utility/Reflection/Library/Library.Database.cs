@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,12 +15,25 @@ namespace Espionage.Engine
 
 		private class InternalDatabase : IDatabase<Library, string, Type>
 		{
-			public IEnumerable<Library> All => _records.Values;
 			private readonly Dictionary<string, Library> _records = new();
 
 			public Library this[ string key ] => _records[key];
 			public Library this[ Type key ] => this.Get( key );
 
+			// Enumerator
+
+			public IEnumerator<Library> GetEnumerator()
+			{
+				// This shouldn't box. _store.GetEnumerator Does. but Enumerable.Empty shouldn't.
+				return Count == 0 ? Enumerable.Empty<Library>().GetEnumerator() : _records.Values.GetEnumerator();
+			}
+
+			IEnumerator IEnumerable.GetEnumerator()
+			{
+				return GetEnumerator();
+			}
+
+			// API
 
 			public void Add( Library item )
 			{

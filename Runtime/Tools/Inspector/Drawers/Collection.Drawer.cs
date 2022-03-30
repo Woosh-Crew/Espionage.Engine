@@ -3,7 +3,7 @@ using ImGuiNET;
 
 namespace Espionage.Engine.Tools
 {
-	[Target( typeof( IDatabase<> ) )]
+	[Target( typeof( IEnumerable ) )]
 	public class CollectionDrawer : Inspector.Drawer
 	{
 		public override void OnLayout( Property property, object instance )

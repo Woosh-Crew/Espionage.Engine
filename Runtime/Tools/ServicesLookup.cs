@@ -9,7 +9,7 @@ namespace Espionage.Engine.Tools
 		{
 			ImGui.BeginChild( "Output", new( 0, 0 ), true, ImGuiWindowFlags.ChildWindow );
 			{
-				foreach ( var service in Engine.Services.All )
+				foreach ( var service in Engine.Services )
 				{
 					if ( ImGui.Selectable( $"{service.ClassInfo.Title}" ) )
 					{

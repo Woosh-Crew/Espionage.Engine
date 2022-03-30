@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,25 +7,38 @@ namespace Espionage.Engine.Components
 {
 	public class Components<T> : IDatabase<IComponent<T>, int> where T : class
 	{
-		public IEnumerable<IComponent<T>> All => _storage;
-		public int Count => _storage.Count;
+		// IDatabase
 
-		public event Action<IComponent<T>> OnAdded;
-		public event Action<IComponent<T>> OnRemove;
+		public int Count => _storage.Count;
 
 		public IComponent<T> this[ int key ] => _storage[key];
 
-		//
 		// Instance
-		//
 
 		public Components( T item )
 		{
 			_owner = item;
 		}
 
+		// Database
+
 		private readonly T _owner;
 		private readonly List<IComponent<T>> _storage = new();
+
+		// Enumerator
+
+		public IEnumerator<IComponent<T>> GetEnumerator()
+		{
+			// This shouldn't box. _store.GetEnumerator Does. but Enumerable.Empty shouldn't.
+			return Count == 0 ? Enumerable.Empty<IComponent<T>>().GetEnumerator() : _storage.GetEnumerator();
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
+		}
+
+		// Controllers
 
 		public void Add( IComponent<T> item )
 		{
@@ -35,8 +49,6 @@ namespace Espionage.Engine.Components
 
 			_storage.Add( item );
 			item.OnAttached( _owner );
-
-			OnAdded?.Invoke( item );
 		}
 
 		public bool Contains( IComponent<T> item )
@@ -48,8 +60,6 @@ namespace Espionage.Engine.Components
 		{
 			_storage.Remove( item );
 			item.OnDetached();
-
-			OnRemove?.Invoke( item );
 		}
 
 		public void Clear()
@@ -62,18 +72,42 @@ namespace Espionage.Engine.Components
 			_storage.Clear();
 		}
 
-		//
 		// Utility
-		//
 
 		public TComp Get<TComp>() where TComp : class
 		{
-			return All.FirstOrDefault( e => e is TComp ) as TComp;
+			var index = 0;
+			while ( index <= Count - 1 )
+			{
+				var item = _storage[index];
+
+				if ( item is TComp comp )
+				{
+					return comp;
+				}
+
+				index++;
+			}
+
+			return null;
 		}
 
 		public IComponent<T> Get( Type type )
 		{
-			return All.FirstOrDefault( e => e.GetType() == type );
+			var index = 0;
+			while ( index <= Count - 1 )
+			{
+				var item = _storage[index];
+
+				if ( item.GetType() == type )
+				{
+					return item;
+				}
+
+				index++;
+			}
+
+			return null;
 		}
 
 		public TComp GetOrCreate<TComp>() where TComp : class, new()
@@ -125,7 +159,7 @@ namespace Espionage.Engine.Components
 
 		public IEnumerable<TComp> GetAll<TComp>()
 		{
-			return All.OfType<TComp>();
+			return this.OfType<TComp>();
 		}
 
 		public bool TryGet<TComp>( out TComp output ) where TComp : class
@@ -136,12 +170,25 @@ namespace Espionage.Engine.Components
 
 		public bool Has<TComp>()
 		{
-			return All.OfType<TComp>().Any();
+			return Has( typeof( TComp ) );
 		}
 
 		public bool Has( Type type )
 		{
-			return All.Any( e => e.GetType() == type );
+			var index = 0;
+			while ( index <= Count - 1 )
+			{
+				var item = _storage[index];
+
+				if ( item.GetType() == type )
+				{
+					return true;
+				}
+
+				index++;
+			}
+
+			return false;
 		}
 	}
 }

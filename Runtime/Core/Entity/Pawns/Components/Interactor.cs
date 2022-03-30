@@ -4,6 +4,7 @@ namespace Espionage.Engine
 {
 	public class Interactor : Component<Actor>, ISimulated
 	{
+		[Slider( 0.1f, 10 )]
 		public float Distance { get; set; } = 2;
 
 		// Logic

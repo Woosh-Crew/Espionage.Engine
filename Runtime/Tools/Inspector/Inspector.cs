@@ -142,7 +142,7 @@ namespace Espionage.Engine.Tools
 
 					ImGui.TableHeadersRow();
 
-					foreach ( var property in item.ClassInfo.Properties.All )
+					foreach ( var property in item.ClassInfo.Properties )
 					{
 						ImGui.TableNextColumn();
 						ImGui.Text( property.Title );
@@ -167,7 +167,7 @@ namespace Espionage.Engine.Tools
 
 					ImGui.TableHeadersRow();
 
-					foreach ( var function in item.ClassInfo.Functions.All )
+					foreach ( var function in item.ClassInfo.Functions )
 					{
 						ImGui.TableNextColumn();
 						ImGui.Text( function.Title );

@@ -17,7 +17,7 @@ namespace Espionage.Engine.Tools.Editors
 				return;
 			}
 
-			_grouping = entity.ClassInfo.Properties.All.OrderBy( e => e.Components.Get<OrderAttribute>()?.Order ?? 5 ).GroupBy( e => e.Group );
+			_grouping = entity.ClassInfo.Properties.OrderBy( e => e.Components.Get<OrderAttribute>()?.Order ?? 5 ).GroupBy( e => e.Group );
 		}
 
 		public override void OnLayout( object item )

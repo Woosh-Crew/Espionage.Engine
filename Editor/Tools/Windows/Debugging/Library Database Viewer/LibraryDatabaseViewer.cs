@@ -26,17 +26,11 @@ namespace Espionage.Engine.Tools.Editor
 
 		protected override void OnCreateGUI()
 		{
-			var all = Library.Database.All.GroupBy( e => e.Group ).OrderBy( e => e.Key );
+			var all = Library.Database.GroupBy( e => e.Group ).OrderBy( e => e.Key );
 
 			var treeContainer = new ScrollView( ScrollViewMode.Vertical );
 
-			var titleBar = new TitleBar( "Library Database", null, "Bottom" )
-			{
-				style =
-				{
-					marginBottom = 8
-				}
-			};
+			var titleBar = new TitleBar( "Library Database", null, "Bottom" ) { style = { marginBottom = 8 } };
 			treeContainer.Add( titleBar );
 
 			foreach ( var item in all )
@@ -98,7 +92,7 @@ namespace Espionage.Engine.Tools.Editor
 			root.Add( new Label( "Library Components" ) );
 
 			// Components
-			foreach ( var component in library.Components.All )
+			foreach ( var component in library.Components )
 			{
 				root.Add( new Label( component.GetType().Name.Replace( "Attribute", "" ) ) );
 			}
@@ -106,7 +100,7 @@ namespace Espionage.Engine.Tools.Editor
 			root.Add( new Label( "Properties" ) );
 
 			// Properties
-			foreach ( var property in library.Properties.All )
+			foreach ( var property in library.Properties )
 			{
 				root.Add( new Label( property.Name ) );
 			}
@@ -114,7 +108,7 @@ namespace Espionage.Engine.Tools.Editor
 			root.Add( new Label( "Functions" ) );
 
 			// Functions
-			foreach ( var function in library.Functions.All )
+			foreach ( var function in library.Functions )
 			{
 				root.Add( new Label( function.Name ) );
 			}

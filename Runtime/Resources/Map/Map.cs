@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Espionage.Engine.Components;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -256,12 +258,29 @@ namespace Espionage.Engine.Resources
 
 		private class InternalDatabase : IDatabase<Map, string>
 		{
-			public IEnumerable<Map> All => _records.Values;
-			public int Count => _records.Count;
+			// IDatabase
 
+			public int Count => _records.Count;
 			public Map this[ string key ] => _records.ContainsKey( key ) ? _records[key] : null;
 
+			// Instance
+
 			private readonly Dictionary<string, Map> _records = new();
+
+			// Enumerator
+
+			public IEnumerator<Map> GetEnumerator()
+			{
+				// This shouldn't box. _store.GetEnumerator Does. but Enumerable.Empty shouldn't.
+				return Count == 0 ? Enumerable.Empty<Map>().GetEnumerator() : _records.Values.GetEnumerator();
+			}
+
+			IEnumerator IEnumerable.GetEnumerator()
+			{
+				return GetEnumerator();
+			}
+
+			// API
 
 			public void Add( Map item )
 			{

@@ -21,28 +21,6 @@ namespace Espionage.Engine.Resources
 		{
 			Unload();
 		}
-
-		//
-		// Database
-		//
-
-		public static IDatabase<Resource<T>, string> Database { get; } = new ResourceDatabase<T>();
-
-		private class ResourceDatabase<TResource> : IDatabase<Resource<TResource>, string> where TResource : class
-		{
-			public IEnumerable<Resource<TResource>> All { get; }
-			public int Count { get; }
-
-			public Resource<TResource> this[ string key ] => throw new NotImplementedException();
-
-			public void Add( Resource<TResource> item ) { }
-
-			public bool Contains( Resource<TResource> item ) { return false; }
-
-			public void Remove( Resource<TResource> item ) { }
-
-			public void Clear() { }
-		}
 	}
 
 }

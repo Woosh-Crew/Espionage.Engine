@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -8,12 +9,9 @@ namespace Espionage.Engine.Services
 	{
 		public sealed class Database : IDatabase<IService>
 		{
-			public IEnumerable<IService> All => _services;
 			public int Count => _services.Count;
 
-			private readonly List<IService> _services = new();
-
-			public Database()
+			internal Database()
 			{
 				foreach ( var service in Library.Database.GetAll<IService>() )
 				{
@@ -26,9 +24,23 @@ namespace Espionage.Engine.Services
 				}
 			}
 
-			//
+			private readonly List<IService> _services = new();
+
+			// Enumerator
+
+			public IEnumerator<IService> GetEnumerator()
+			{
+				// This shouldn't box. _store.GetEnumerator Does. but Enumerable.Empty shouldn't.
+				return Count == 0 ? Enumerable.Empty<IService>().GetEnumerator() : _services.GetEnumerator();
+			}
+
+			IEnumerator IEnumerable.GetEnumerator()
+			{
+				return GetEnumerator();
+			}
+
+
 			// Engine
-			//
 
 			internal void Ready()
 			{
@@ -65,9 +77,7 @@ namespace Espionage.Engine.Services
 				}
 			}
 
-			//
 			// API
-			//
 
 			public void Add( IService item )
 			{
@@ -97,12 +107,12 @@ namespace Espionage.Engine.Services
 
 			public T Get<T>() where T : class, IService
 			{
-				return All.FirstOrDefault( e => e is T ) as T;
+				return this.FirstOrDefault( e => e is T ) as T;
 			}
 
 			public bool Has<T>() where T : class, IService
 			{
-				return All.OfType<T>().Any();
+				return this.OfType<T>().Any();
 			}
 		}
 	}

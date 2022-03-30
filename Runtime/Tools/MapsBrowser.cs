@@ -10,7 +10,7 @@ namespace Espionage.Engine.Tools
 			// Maps!
 			ImGui.BeginChild( "Output", new( 0, 0 ), true, ImGuiWindowFlags.ChildWindow );
 			{
-				foreach ( var entry in Map.Database.All )
+				foreach ( var entry in Map.Database )
 				{
 					if ( ImGui.Selectable( entry.Components.TryGet<Meta>( out var meta ) ? meta.Title : entry.Identifier ) )
 					{

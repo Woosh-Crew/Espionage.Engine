@@ -4,7 +4,7 @@ using Espionage.Engine.Components;
 
 namespace Espionage.Engine
 {
-	public class Inventory : Component<Actor>, IDatabase<Pickup>
+	public class Inventory : Component<Actor>
 	{
 		public IEnumerable<Pickup> All => Items;
 		public int Count => Items.Count;

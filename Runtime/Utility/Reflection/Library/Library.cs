@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -201,17 +202,35 @@ namespace Espionage.Engine
 		{
 			internal static readonly Dictionary<Type, HashSet<T>> Registry = new();
 
-			private readonly Dictionary<string, T> _all = new();
-			public IEnumerable<T> All => _all.Values;
-
-			private readonly Library _owner;
-
 			public MemberDatabase( Library owner )
 			{
 				_owner = owner;
 			}
 
+			// IDatabase
+
+			public int Count => _all.Count;
 			public T this[ string key ] => _all.ContainsKey( key ) ? _all[key] : null;
+
+			// Instance
+
+			private readonly Dictionary<string, T> _all = new();
+			private readonly Library _owner;
+
+			// Enumerator
+
+			public IEnumerator<T> GetEnumerator()
+			{
+				// This shouldn't box. _store.GetEnumerator Does. but Enumerable.Empty shouldn't.
+				return Count == 0 ? Enumerable.Empty<T>().GetEnumerator() : _all.Values.GetEnumerator();
+			}
+
+			IEnumerator IEnumerable.GetEnumerator()
+			{
+				return GetEnumerator();
+			}
+
+			// API
 
 			public void Add( T item )
 			{
@@ -262,8 +281,6 @@ namespace Espionage.Engine
 			{
 				_all.Clear();
 			}
-
-			public int Count => _all.Count;
 		}
 	}
 }

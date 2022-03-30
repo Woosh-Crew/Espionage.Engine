@@ -8,7 +8,7 @@ namespace Espionage.Engine.Tools
 		{
 			ImGui.BeginChild( "Output", new( 0, 0 ), true, ImGuiWindowFlags.ChildWindow );
 			{
-				foreach ( var library in Library.Database.All )
+				foreach ( var library in Library.Database )
 				{
 					if ( ImGui.Selectable( $"{library.Title}" ) )
 					{
