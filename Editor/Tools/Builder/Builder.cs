@@ -31,12 +31,11 @@ namespace Espionage.Engine.Tools.Editor
 			var info = Engine.Game.ClassInfo;
 
 			PlayerSettings.productName = info.Title;
-			PlayerSettings.bundleVersion = version.ToString();
 
 			// Setup BuildPipeline
 			var buildSettings = new BuildPlayerOptions()
 			{
-				locationPathName = $"Exports/{info.Title} v{version}/{info.Name}.exe",
+				locationPathName = $"Exports/{info.Title}/{info.Name}.exe",
 				options = options,
 				target = target,
 				targetGroup = BuildTargetGroup.Standalone
@@ -44,17 +43,12 @@ namespace Espionage.Engine.Tools.Editor
 
 			Callback.Run( "project_builder.building", target, buildSettings );
 			var report = UnityEditor.BuildPipeline.BuildPlayer( buildSettings );
-
-			if ( report != null )
-			{
-				version++;
-			}
 		}
 
 		public void Play( string launchArgs = null )
 		{
 			var info = Engine.Game.ClassInfo;
-			Process.Start( Files.Pathing.Absolute( $"Exports/{info.Title} v{version - 1}/{info.Name}.exe" ), launchArgs );
+			Process.Start( Files.Pathing.Absolute( $"Exports/{info.Title}/{info.Name}.exe" ), launchArgs );
 		}
 
 #endif
@@ -63,9 +57,6 @@ namespace Espionage.Engine.Tools.Editor
 
 		[SerializeField]
 		private bool master;
-
-		[SerializeField]
-		private int version;
 	}
 
 	#if UNITY_EDITOR

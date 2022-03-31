@@ -34,14 +34,13 @@ namespace Espionage.Engine.IO
 			// -- Editor Specific
 			["project"] = $"{Application.dataPath}/../",
 			["exports"] = "project://Exports/",
-			["compiled"] = "exports://<game> <version>/"
+			["compiled"] = "exports://<game>/"
 		};
 
 		private readonly Dictionary<string, Func<string>> _keywords = new()
 		{
 			// -- Game Specific
-			["game"] = () => Application.productName,
-			["version"] = () => Application.version,
+			["game"] = () => Engine.Game.ClassInfo.Title,
 			["company"] = () => Application.companyName,
 			["user"] = () => Environment.UserName
 		};

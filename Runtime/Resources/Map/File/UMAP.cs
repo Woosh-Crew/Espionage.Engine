@@ -16,8 +16,14 @@ namespace Espionage.Engine.Resources.Formats
 
 	#if UNITY_EDITOR
 
-	public partial class UMAP : ICompiler<SceneAsset>
+	public partial class UMAP : ICompiler<SceneAsset>, ITester<SceneAsset>
 	{
+		public string Test( string asset )
+		{
+			Dev.Log.Info( $"+map \"{Files.Pathing.Absolute( $"maps://{Files.Pathing.Name( asset, false )}.umap" )}\"" );
+			return $"+map \"{Files.Pathing.Absolute( $"maps://{Files.Pathing.Name( asset, false )}.umap" )}\"";
+		}
+
 		public void Compile( string scenePath )
 		{
 			// Ask the user if they want to save the scene, if not don't export!

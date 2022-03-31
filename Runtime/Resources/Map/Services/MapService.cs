@@ -1,4 +1,5 @@
-﻿using Espionage.Engine.Resources.Binders;
+﻿using System.Linq;
+using Espionage.Engine.Resources.Binders;
 using Espionage.Engine.Services;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -41,9 +42,13 @@ namespace Espionage.Engine.Resources.Services
 				return;
 			}
 
-			foreach ( var item in Files.Pathing.All( "maps://" ) )
+			var extensions = Library.Database.GetAll<Map.File>().Select( e => e.Components.Get<FileAttribute>()?.Extension ).ToArray();
+			foreach ( var item in Files.Pathing.All( "maps://", extensions ) )
 			{
-				Map.Setup.Path( item )?.Meta( Files.Pathing.Name( item ) ).Origin( "Game" ).Build();
+				Map.Setup.Path( item )?
+					.Meta( Files.Pathing.Name( item ) )
+					.Origin( "Game" )
+					.Build();
 			}
 		}
 	}

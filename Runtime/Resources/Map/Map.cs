@@ -33,7 +33,7 @@ namespace Espionage.Engine.Resources
 				return new( Files.Grab<File>( path, false ) );
 			}
 
-			Dev.Log.Error( $"Map Path [{Files.Pathing.Absolute( path )}], couldn't be found." );
+			Dev.Log.Error( $"Map Path [{path}], couldn't be found." );
 			return null;
 
 		}
@@ -250,6 +250,25 @@ namespace Espionage.Engine.Resources
 
 			public virtual float Progress { get; protected set; }
 			public virtual string Text => $"Loading File [{Info.Name}]";
+		}
+
+		//
+		// Commands
+		//
+
+		[Function( "map" ), Terminal]
+		private static void GrabOrLaunchMap( string path = null )
+		{
+			if ( string.IsNullOrEmpty( path ) )
+			{
+				Dev.Log.Info( $"Map: {Current.Identifier}" );
+				return;
+			}
+
+			// Load new Map
+			Engine.Game.Loader.Start(
+				Find( path )
+			);
 		}
 
 		//

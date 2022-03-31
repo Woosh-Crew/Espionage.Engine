@@ -1,17 +1,23 @@
 ﻿using System;
+using System.Diagnostics;
 using UnityEditor;
 
 namespace Espionage.Engine.Resources.Editor
 {
-	public static class ResourceCompiler
+	public static class ResourceTester
 	{
-		[MenuItem( "Assets/Compile Asset", true )]
+		[MenuItem( "Assets/Test Asset", true )]
 		private static bool CompileValidate()
 		{
+			if ( !Files.Pathing.Exists( "compiled://" ) )
+			{
+				return false;
+			}
+			
 			return Selection.activeObject != null && Exists( Selection.activeObject.GetType() );
 		}
 
-		[MenuItem( "Assets/Compile Asset", priority = -500 )]
+		[MenuItem( "Assets/Test Asset", priority = -500 )]
 		private static void Compile()
 		{
 			// Find Compiler, and Create it.	
@@ -23,7 +29,7 @@ namespace Espionage.Engine.Resources.Editor
 
 		private static bool Exists( Type type )
 		{
-			var interfaceType = typeof( ICompiler<> ).MakeGenericType( type );
+			var interfaceType = typeof( ITester<> ).MakeGenericType( type );
 			var library = Library.Database.Find( interfaceType );
 
 			return library != null;
@@ -33,7 +39,7 @@ namespace Espionage.Engine.Resources.Editor
 		{
 			// JAKE: This is so aids.... But can't do much about that.
 
-			var interfaceType = typeof( ICompiler<> ).MakeGenericType( type );
+			var interfaceType = typeof( ITester<> ).MakeGenericType( type );
 			var library = Library.Database.Find( interfaceType );
 
 			if ( library == null )
@@ -42,15 +48,18 @@ namespace Espionage.Engine.Resources.Editor
 			}
 
 			var converter = Library.Database.Create( library.Info );
-			var method = interfaceType.GetMethod( "Compile" );
+			var method = interfaceType.GetMethod( "Test" );
 
 			try
 			{
-				method?.Invoke( converter, new object[] { asset } );
+				var launchArgs = method?.Invoke( converter, new object[] { asset } );
+				
+				// We should test if the game is already open.
+				Process.Start( Files.Pathing.Absolute( $"compiled://{Engine.Game.ClassInfo.Name}.exe" ), (string)launchArgs );
 			}
 			catch ( Exception e )
 			{
-				Dev.Log.Exception( e );
+				UnityEngine.Debug.LogException(e);
 			}
 		}
 	}

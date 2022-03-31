@@ -4,4 +4,9 @@
 	{
 		void Compile( string asset );
 	}
+
+	public interface ITester<T>
+	{
+		string Test( string asset );
+	}
 }
