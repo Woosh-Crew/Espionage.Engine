@@ -1,16 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using ImGuiNET;
-using Object = UnityEngine.Object;
+using UnityEngine;
 
 namespace Espionage.Engine.Tools.Editors
 {
-	[Target( typeof( Object ) )]
-	internal class ObjectEditor : Inspector.Editor<Object>
+	[Target( typeof( object ) )]
+	internal class ObjectEditor : Inspector.Editor
 	{
-		protected override void OnActive( Object item )
+		public override void OnActive( object item )
 		{
 			_fields = item.GetType().GetFields( BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic )
 				.Where( e => !e.IsDefined( typeof( ObsoleteAttribute ) ) )
@@ -28,12 +27,16 @@ namespace Espionage.Engine.Tools.Editors
 		// User Interface
 		//
 
-		public override void OnHeader( Object item )
+		public override void OnHeader( object item )
 		{
-			ImGui.TextWrapped( "You shouldn't be editing UnityEngine.Object, its here anyway so use at your own risk." );
+			ImGui.Text( item.GetType().Name );
+			ImGui.SameLine();
+			ImGui.TextColored( Color.gray, $"[{item.GetType().Name} / {item.GetType().Namespace}]" );
+
+			ImGui.Text( item.ToString() );
 		}
 
-		protected override void OnLayout( Object item )
+		public override void OnLayout( object item )
 		{
 			if ( ImGui.BeginChild( "out", new( 0, ImGui.GetWindowHeight() - 96 ), false ) )
 			{
@@ -57,9 +60,10 @@ namespace Espionage.Engine.Tools.Editors
 							ImGui.TableNextColumn();
 							ImGui.SetNextItemWidth( ImGui.GetColumnWidth( 1 ) );
 
-							if ( Inspector.PropertyGUI( property.PropertyType, null, item, property.GetValue( item ), out var changed ) )
+							ImGui.TextDisabled( property.GetValue( item )?.ToString() ?? "Null" );
+							if ( ImGui.IsItemHovered() )
 							{
-								property.SetValue( item, changed );
+								ImGui.SetTooltip( "Item is Read Only, since this object is just a straight object" );
 							}
 						}
 
@@ -90,9 +94,10 @@ namespace Espionage.Engine.Tools.Editors
 							ImGui.TableNextColumn();
 							ImGui.SetNextItemWidth( ImGui.GetColumnWidth( 1 ) );
 
-							if ( Inspector.PropertyGUI( field.FieldType, null, item, field.GetValue( item ), out var changed ) )
+							ImGui.TextDisabled( field.GetValue( item )?.ToString() ?? "Null" );
+							if ( ImGui.IsItemHovered() )
 							{
-								field.SetValue( item, changed );
+								ImGui.SetTooltip( "Item is Read Only, since this object is just a straight object" );
 							}
 						}
 
