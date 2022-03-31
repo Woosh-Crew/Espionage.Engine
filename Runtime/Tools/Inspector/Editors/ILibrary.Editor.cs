@@ -26,56 +26,73 @@ namespace Espionage.Engine.Tools.Editors
 			// Us doing this removes the title.. but we gotta or else the scrolling just doesnt work
 			if ( ImGui.BeginChild( "out", new( 0, ImGui.GetWindowHeight() - 96 ), false ) )
 			{
-				ImGui.Text( "Properties" );
-
-				// Properties
-				if ( ImGui.BeginTable( "Properties", 2, ImGuiTableFlags.Borders | ImGuiTableFlags.RowBg | ImGuiTableFlags.Resizable | ImGuiTableFlags.Reorderable ) )
+				if ( ImGui.TreeNodeEx( "Properties", ImGuiTreeNodeFlags.DefaultOpen ) )
 				{
-					ImGui.TableSetupColumn( "Name", ImGuiTableColumnFlags.WidthFixed, 96 );
-					ImGui.TableSetupColumn( "Value" );
+					ImGui.Unindent();
 
-					ImGui.TableHeadersRow();
-
-					foreach ( var property in item.ClassInfo.Properties )
+					// Properties
+					if ( ImGui.BeginTable( "table_properties", 2, ImGuiTableFlags.Borders | ImGuiTableFlags.RowBg | ImGuiTableFlags.Resizable | ImGuiTableFlags.Reorderable ) )
 					{
-						ImGui.TableNextColumn();
-						ImGui.Text( property.Title );
+						ImGui.TableSetupColumn( "Name", ImGuiTableColumnFlags.WidthFixed, 96 );
+						ImGui.TableSetupColumn( "Value" );
 
-						ImGui.TableNextColumn();
-						ImGui.SetNextItemWidth( ImGui.GetColumnWidth( 1 ) );
-						Inspector.PropertyGUI( property, item );
+						ImGui.TableHeadersRow();
+
+						foreach ( var property in item.ClassInfo.Properties )
+						{
+							ImGui.TableNextColumn();
+							ImGui.Text( property.Title );
+
+							ImGui.TableNextColumn();
+							ImGui.SetNextItemWidth( ImGui.GetColumnWidth( 1 ) );
+							Inspector.PropertyGUI( property, item );
+						}
+
+						ImGui.EndTable();
 					}
+
+					ImGui.Indent();
+					ImGui.TreePop();
 				}
 
-				ImGui.EndTable();
 
 				ImGui.Separator();
 
-				ImGui.Text( "Functions" );
-
-				// Functions
-				if ( ImGui.BeginTable( "Functions", 2, ImGuiTableFlags.Borders | ImGuiTableFlags.RowBg | ImGuiTableFlags.Resizable | ImGuiTableFlags.Reorderable ) )
+				if ( ImGui.TreeNodeEx( "Functions", ImGuiTreeNodeFlags.DefaultOpen ) )
 				{
-					ImGui.TableSetupColumn( "Name", ImGuiTableColumnFlags.WidthFixed, 96 );
-					ImGui.TableSetupColumn( "Invoke" );
+					ImGui.Unindent();
 
-					ImGui.TableHeadersRow();
-
-					foreach ( var function in item.ClassInfo.Functions )
+					if ( ImGui.BeginTable( "table_functions", 2, ImGuiTableFlags.Borders | ImGuiTableFlags.RowBg | ImGuiTableFlags.Resizable | ImGuiTableFlags.Reorderable ) )
 					{
-						ImGui.TableNextColumn();
-						ImGui.Text( function.Title );
+						ImGui.TableSetupColumn( "Name", ImGuiTableColumnFlags.WidthFixed, 96 );
+						ImGui.TableSetupColumn( "Function" );
 
-						ImGui.TableNextColumn();
-						ImGui.SetNextItemWidth( ImGui.GetColumnWidth( 1 ) );
-						if ( ImGui.Selectable( "Invoke" ) )
+						ImGui.TableHeadersRow();
+
+						foreach ( var function in item.ClassInfo.Functions )
 						{
-							function.Invoke( item );
-						}
-					}
-				}
+							ImGui.TableNextColumn();
+							ImGui.Text( function.Title );
 
-				ImGui.EndTable();
+							ImGui.TableNextColumn();
+							ImGui.SetNextItemWidth( ImGui.GetColumnWidth( 1 ) );
+
+							ImGui.PushID( function.Title );
+							if ( ImGui.Button( "Invoke" ) )
+							{
+								Dev.Log.Info( $"Invoking {function.Title}" );
+								function.Invoke( item );
+							}
+
+							ImGui.PopID();
+						}
+
+						ImGui.EndTable();
+					}
+
+					ImGui.Indent();
+					ImGui.TreePop();
+				}
 			}
 
 			ImGui.EndChild();
