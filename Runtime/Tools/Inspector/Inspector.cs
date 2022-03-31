@@ -349,7 +349,7 @@ namespace Espionage.Engine.Tools
 						return true;
 					}
 				}
-				catch ( InvalidCastException e )
+				catch ( InvalidCastException )
 				{
 					Dev.Log.Info( $"Tried casting {value.GetType()} to {typeof( T ).Name} " );
 				}

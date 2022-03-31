@@ -40,6 +40,12 @@ namespace Espionage.Engine.Services
 			}
 		}
 
+		[Function, Callback( "map.unloading" )]
+		private void OnMapLoad()
+		{
+			_selection = null;
+		}
+
 		public Entity Hovering { get; set; }
 		private Collider _lastCollider;
 

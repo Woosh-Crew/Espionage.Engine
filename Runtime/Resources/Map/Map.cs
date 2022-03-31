@@ -223,6 +223,7 @@ namespace Espionage.Engine.Resources
 					return;
 				}
 
+				Callback.Run( "map.unloading" );
 				Scene.Unload().completed += _ => finished.Invoke();
 				Scene = default;
 			}
