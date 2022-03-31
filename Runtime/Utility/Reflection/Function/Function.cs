@@ -31,6 +31,11 @@ namespace Espionage.Engine
 			}
 		}
 
+		public override string ToString()
+		{
+			return Name;
+		}
+
 		public string Name { get; set; }
 		public string Title { get; set; }
 		public string Group { get; set; }

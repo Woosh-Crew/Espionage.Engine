@@ -43,7 +43,7 @@ namespace Espionage.Engine.Tools
 						{
 							ImGui.PushID( Property.Name + index );
 
-							Inspector.PropertyGUI( item.GetType(), Property, instance, item, out _, out _ );
+							Inspector.PropertyGUI( item.GetType(), Property, instance, item, out _ );
 
 							ImGui.PopID();
 						}

@@ -16,7 +16,7 @@ namespace Espionage.Engine.Tools
 			if ( tree )
 			{
 				var underlyingType = Type.GetElementType();
-				
+
 				try
 				{
 					for ( var i = 0; i < value.Length; i++ )
@@ -28,9 +28,7 @@ namespace Espionage.Engine.Tools
 						{
 							ImGui.PushID( Property.Name + i );
 
-							Inspector.PropertyGUI( underlyingType, Property, instance, item, out var hasChanged, out var changed );
-
-							if ( hasChanged )
+							if ( Inspector.PropertyGUI( underlyingType, Property, instance, item, out var changed ) )
 							{
 								value.SetValue( changed, i );
 							}

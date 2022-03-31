@@ -56,7 +56,7 @@ namespace Espionage.Engine.Tools
 			// Unity UI
 			else if ( Service.Selection is Object obj )
 			{
-				DrawUnityGUI( obj );
+				// DrawUnityGUI( obj );
 			}
 		}
 
@@ -80,15 +80,6 @@ namespace Espionage.Engine.Tools
 		private void HeaderGUI()
 		{
 			ImGui.Text( $"Viewing {Service.Selection}" );
-		}
-
-		//
-		// Unity Inspector ( UnityEngine.Object )
-		//
-
-		private void DrawUnityGUI( Object item )
-		{
-			DrawGUI( item );
 		}
 
 		//
@@ -192,23 +183,20 @@ namespace Espionage.Engine.Tools
 
 		public static void PropertyGUI( Property property, object instance )
 		{
-			PropertyGUI( property.Type, property, instance, property[instance], out var hasChanged, out var newValue );
-
-			if ( hasChanged )
+			if ( PropertyGUI( property.Type, property, instance, property[instance], out var changed ) )
 			{
-				property[instance] = newValue;
+				property[instance] = changed;
 			}
 		}
 
-		public static void PropertyGUI( Type target, Property property, object instance, object value, out bool hasChanged, out object changed )
+		public static bool PropertyGUI( Type target, Property property, object instance, object value, out object changed )
 		{
 			if ( !Drawers.ContainsKey( target ) )
 			{
 				Drawers.Add( target, GrabDrawer( target ) );
 
 				changed = null;
-				hasChanged = false;
-				return;
+				return false;
 			}
 
 			if ( Drawers[target] == null )
@@ -220,29 +208,30 @@ namespace Espionage.Engine.Tools
 				}
 
 				changed = null;
-				hasChanged = false;
-				return;
+				return false;
 			}
 
 			// Normal Drawer
 			ImGui.BeginGroup();
 			{
-				ImGui.PushID( property.Name );
+				ImGui.PushID( property?.Name ?? target.Name );
 
 				var drawer = Drawers[target];
 				drawer.Type = target;
 				drawer.Property = property;
 
-				hasChanged = drawer.OnLayout( instance, value, out changed );
+				drawer.OnLayout( instance, value, out changed );
 
 				ImGui.PopID();
 			}
 			ImGui.EndGroup();
 
-			if ( ImGui.IsItemHovered() && !string.IsNullOrWhiteSpace( property.Help ) )
+			if ( ImGui.IsItemHovered() && !string.IsNullOrWhiteSpace( property?.Help ) )
 			{
 				ImGui.SetTooltip( property.Help );
 			}
+
+			return changed != default;
 		}
 
 		private static Editor GrabEditor( Type type )
@@ -272,20 +261,18 @@ namespace Espionage.Engine.Tools
 		{
 			if ( type.IsEnum )
 			{
+				// Explicit Enum Drawer
 				return Library.Database.Create<EnumDrawer>();
 			}
 
 			if ( type.IsArray )
 			{
+				// Explicit Array Drawer
 				return Library.Database.Create<ArrayDrawer>();
 			}
 
 			// See if we can use Type Bound.
-			var lib = Library.Database.Find<Drawer>( e =>
-			{
-				var comp = e.Components.Get<TargetAttribute>();
-				return type == comp?.Type;
-			} );
+			var lib = Library.Database.Find<Drawer>( e => type == e.Components.Get<TargetAttribute>()?.Type );
 
 			// Now see if we can use interface bound if its null.
 			lib ??= Library.Database.Find<Drawer>( e =>
