@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using Espionage.Engine.Services;
 using ImGuiNET;
-using JetBrains.Annotations;
-using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace Espionage.Engine.Tools
 {
@@ -20,49 +15,9 @@ namespace Espionage.Engine.Tools
 				return;
 			}
 
-			HeaderGUI();
-			ImGui.Separator();
-
-			// Library UI
-			if ( Service.Selection is ILibrary lib )
-			{
-				// Draw UI
-				if ( ImGui.BeginTabBar( "Inspector Bar" ) )
-				{
-					if ( ImGui.TabItemButton( "Default" ) )
-					{
-						State = Mode.Default;
-					}
-
-					if ( ImGui.TabItemButton( "Raw" ) )
-					{
-						State = Mode.Raw;
-					}
-				}
-
-				ImGui.EndTabBar();
-
-				switch ( State )
-				{
-					case Mode.Default :
-						DrawGUI( lib );
-						break;
-					case Mode.Raw :
-						RawGUI( lib );
-						break;
-				}
-			}
-
-			// Unity UI
-			else if ( Service.Selection is Object obj )
-			{
-				// DrawUnityGUI( obj );
-			}
+			HeaderGUI( Service.Selection );
+			DrawGUI( Service.Selection );
 		}
-
-		private Mode State { get; set; }
-
-		private enum Mode { Default, Raw }
 
 		public void SelectionChanged( object selection )
 		{
@@ -77,9 +32,28 @@ namespace Espionage.Engine.Tools
 			}
 		}
 
-		private void HeaderGUI()
+		private void HeaderGUI( object selection )
 		{
-			ImGui.Text( $"Viewing {Service.Selection}" );
+			if ( Editors.ContainsKey( selection.GetType() ) )
+			{
+				if ( Editors[selection.GetType()] != null )
+				{
+					ImGui.BeginGroup();
+
+					ImGui.PushID( selection.ToString() );
+					Editors[selection.GetType()].OnHeader( selection );
+					ImGui.PopID();
+
+					ImGui.EndGroup();
+
+					ImGui.Separator();
+				}
+
+				return;
+			}
+
+			// Get Editor, if we haven't already
+			Editors.Add( selection.GetType(), GrabEditor( selection is Library ? typeof( Library ) : selection.GetType() ) );
 		}
 
 		//
@@ -100,85 +74,12 @@ namespace Espionage.Engine.Tools
 
 					ImGui.EndGroup();
 				}
-				else
-				{
-					if ( item is ILibrary library )
-					{
-						RawGUI( library );
-					}
-				}
 
 				return;
 			}
 
 			// Get Editor, if we haven't already
 			Editors.Add( item.GetType(), GrabEditor( item is Library ? typeof( Library ) : item.GetType() ) );
-		}
-
-		private void RawGUI( ILibrary item )
-		{
-			if ( item.ClassInfo == null )
-			{
-				ImGui.TextColored( Color.red, "NULL ClassInfo" );
-				return;
-			}
-
-			// Us doing this removes the title.. but we gotta or else the scrolling just doesnt work
-			if ( ImGui.BeginChild( "out", new( 0, ImGui.GetWindowHeight() - 96 ), false ) )
-			{
-				ImGui.Text( "Properties" );
-
-				// Properties
-				if ( ImGui.BeginTable( "Properties", 2, ImGuiTableFlags.Borders | ImGuiTableFlags.RowBg | ImGuiTableFlags.Resizable | ImGuiTableFlags.Reorderable ) )
-				{
-					ImGui.TableSetupColumn( "Name", ImGuiTableColumnFlags.WidthFixed, 96 );
-					ImGui.TableSetupColumn( "Value" );
-
-					ImGui.TableHeadersRow();
-
-					foreach ( var property in item.ClassInfo.Properties )
-					{
-						ImGui.TableNextColumn();
-						ImGui.Text( property.Title );
-
-						ImGui.TableNextColumn();
-						ImGui.SetNextItemWidth( ImGui.GetColumnWidth( 1 ) );
-						PropertyGUI( property, item );
-					}
-				}
-
-				ImGui.EndTable();
-
-				ImGui.Separator();
-
-				ImGui.Text( "Functions" );
-
-				// Functions
-				if ( ImGui.BeginTable( "Functions", 2, ImGuiTableFlags.Borders | ImGuiTableFlags.RowBg | ImGuiTableFlags.Resizable | ImGuiTableFlags.Reorderable ) )
-				{
-					ImGui.TableSetupColumn( "Name", ImGuiTableColumnFlags.WidthFixed, 96 );
-					ImGui.TableSetupColumn( "Invoke" );
-
-					ImGui.TableHeadersRow();
-
-					foreach ( var function in item.ClassInfo.Functions )
-					{
-						ImGui.TableNextColumn();
-						ImGui.Text( function.Title );
-
-						ImGui.TableNextColumn();
-						ImGui.SetNextItemWidth( ImGui.GetColumnWidth( 1 ) );
-						if ( ImGui.Selectable( "Invoke" ) )
-						{
-							function.Invoke( item );
-						}
-					}
-				}
-
-				ImGui.EndTable();
-			}
-
-			ImGui.EndChild();
 		}
 
 		public static void PropertyGUI( Property property, object instance )
@@ -236,7 +137,11 @@ namespace Espionage.Engine.Tools
 
 		private static Editor GrabEditor( Type type )
 		{
-			var lib = Library.Database.Find<Editor>( e =>
+			// See if we can use Type Bound.
+			var lib = Library.Database.Find<Editor>( e => type == e.Components.Get<TargetAttribute>()?.Type );
+
+			// Now see if we can use interface bound if its null.
+			lib ??= Library.Database.Find<Editor>( e =>
 			{
 				var comp = e.Components.Get<TargetAttribute>();
 
@@ -245,13 +150,7 @@ namespace Espionage.Engine.Tools
 					return false;
 				}
 
-				if ( comp.Type.IsInterface )
-				{
-					// Generic interface
-					return type.HasInterface( comp.Type );
-				}
-
-				return type == comp.Type || type.IsSubclassOf( comp.Type );
+				return comp.Type.IsInterface && type.HasInterface( comp.Type );
 			} );
 
 			return lib == null ? null : Library.Database.Create<Editor>( lib.Info );
@@ -374,23 +273,31 @@ namespace Espionage.Engine.Tools
 			}
 
 			public virtual void OnActive( object item ) { }
+			public virtual void OnHeader( object item ) { }
+
 			public abstract void OnLayout( object instance );
 		}
 
 		public abstract class Editor<T> : Editor
 		{
-			public override void OnActive( object item )
+			public sealed override void OnActive( object item )
 			{
 				OnActive( (T)item );
 			}
 
-			public override void OnLayout( object instance )
+			public sealed override void OnHeader( object item )
+			{
+				OnHeader( (T)item );
+			}
+
+			public sealed override void OnLayout( object instance )
 			{
 				OnLayout( (T)instance );
 			}
 
 			protected virtual void OnActive( T item ) { }
-			protected abstract void OnLayout( T instance );
+			public virtual void OnHeader( T item ) { }
+			protected abstract void OnLayout( T item );
 		}
 	}
 
