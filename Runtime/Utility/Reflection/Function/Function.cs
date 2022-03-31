@@ -3,9 +3,10 @@ using Espionage.Engine.Components;
 
 namespace Espionage.Engine
 {
-	public sealed class Function : IMember<MethodInfo>
+	public sealed class Function : IMember<MethodInfo>, ILibrary
 	{
 		public Library Owner { get; set; }
+		public Library ClassInfo => Library.Database[typeof( Function )];
 
 		public Components<Function> Components { get; }
 		public MethodInfo Info { get; }

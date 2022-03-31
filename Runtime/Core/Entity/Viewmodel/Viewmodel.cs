@@ -81,7 +81,7 @@ namespace Espionage.Engine
 		{
 			// Basically if the current tripod is not the 
 			// Pawns one, don't move...
-			if ( Local.Client.Tripod != null )
+			if ( Local.Client.Tripod.Peek() != null )
 			{
 				return;
 			}
