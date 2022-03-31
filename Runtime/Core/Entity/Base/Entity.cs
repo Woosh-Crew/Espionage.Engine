@@ -11,7 +11,9 @@ namespace Espionage.Engine
 	public abstract partial class Entity : Behaviour
 	{
 		/// <summary> All the entities that exists in the game world. </summary>
-		public static List<Entity> All { get; } = new();
+		public static IReadOnlyList<Entity> All => _all;
+
+		private static readonly List<Entity> _all = new();
 
 		/// <summary> Constructs the Entity, based off the Library </summary>
 		public static object Constructor( Library library )
@@ -23,13 +25,24 @@ namespace Espionage.Engine
 		// Instance
 		//
 
+		/// <summary>
+		/// Used for grabbing entities by their names, such as when we
+		/// are trying to invoke an output, we will use its id, so multiple
+		/// can be triggered at the same time.
+		/// </summary>
+		public string Identifier
+		{
+			get => identifier;
+			set => identifier = value;
+		}
+
 		/// <summary> The client that has authority over this Entity </summary>
 		public Client Client { get; internal set; }
 
 		internal sealed override void Awake()
 		{
 			ClassInfo = Library.Register( this );
-			All.Add( this );
+			_all.Add( this );
 
 			Components = new( this );
 
@@ -46,7 +59,7 @@ namespace Espionage.Engine
 
 		protected sealed override void OnDestroy()
 		{
-			All.Remove( this );
+			_all.Remove( this );
 
 			base.OnDestroy();
 
@@ -135,5 +148,9 @@ namespace Espionage.Engine
 			set => gameObject.SetActive( value );
 		}
 
+		// Fields
+
+		[SerializeField]
+		private string identifier = string.Empty;
 	}
 }
