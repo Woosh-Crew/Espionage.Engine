@@ -9,7 +9,7 @@ namespace Espionage.Engine.Tools
 	{
 		protected override bool OnLayout( object instance, in Array value, out Array change )
 		{
-			var tree = ImGui.TreeNode( Property.Name );
+			var tree = ImGui.TreeNode( Property?.Name ?? Type.Name );
 			ImGui.SameLine();
 			ImGui.TextColored( Color.gray, $"[Length: {value.Length}]" );
 
@@ -26,7 +26,7 @@ namespace Espionage.Engine.Tools
 						// Normal Drawer
 						ImGui.BeginGroup();
 						{
-							ImGui.PushID( Property.Name + i );
+							ImGui.PushID( (Property?.Name ?? Type.Name) + i );
 
 							if ( Inspector.PropertyGUI( underlyingType, Property, instance, item, out var changed ) )
 							{
@@ -37,7 +37,7 @@ namespace Espionage.Engine.Tools
 						}
 						ImGui.EndGroup();
 
-						if ( ImGui.IsItemHovered() && !string.IsNullOrWhiteSpace( Property.Help ) )
+						if ( ImGui.IsItemHovered() && !string.IsNullOrWhiteSpace( Property?.Help ) )
 						{
 							ImGui.SetTooltip( Property.Help );
 						}

@@ -4,8 +4,6 @@ namespace Espionage.Engine.ImGUI
 {
 	internal static class Constants
 	{
-		public static readonly uint Version = (3 << 16) | (2 << 8) | (4);
-
 		internal static readonly string UImGuiCommandBuffer = "UImGui";
 
 		// TODO: Test all profile markers.

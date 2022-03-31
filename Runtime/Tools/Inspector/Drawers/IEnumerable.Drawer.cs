@@ -10,7 +10,7 @@ namespace Espionage.Engine.Tools
 	{
 		protected override bool OnLayout( object instance, in IEnumerable value, out IEnumerable change )
 		{
-			if ( Property.IsStatic )
+			if ( Property?.IsStatic ?? false )
 			{
 				ImGui.Text( "Static Property. Not Enumerating" );
 
@@ -18,7 +18,7 @@ namespace Espionage.Engine.Tools
 				return false;
 			}
 
-			var tree = ImGui.TreeNode( Property.Name );
+			var tree = ImGui.TreeNode( Property?.Name ?? Type.Name );
 			ImGui.SameLine();
 			ImGui.TextColored( Color.gray, "[Readonly]" );
 
@@ -41,7 +41,7 @@ namespace Espionage.Engine.Tools
 						// Normal Drawer
 						ImGui.BeginGroup();
 						{
-							ImGui.PushID( Property.Name + index );
+							ImGui.PushID( (Property?.Name ?? Type.Name) + index );
 
 							Inspector.PropertyGUI( item.GetType(), Property, instance, item, out _ );
 
@@ -49,7 +49,7 @@ namespace Espionage.Engine.Tools
 						}
 						ImGui.EndGroup();
 
-						if ( ImGui.IsItemHovered() && !string.IsNullOrWhiteSpace( Property.Help ) )
+						if ( ImGui.IsItemHovered() && !string.IsNullOrWhiteSpace( Property?.Help ) )
 						{
 							ImGui.SetTooltip( Property.Help );
 						}

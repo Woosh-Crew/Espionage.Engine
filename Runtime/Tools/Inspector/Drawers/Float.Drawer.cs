@@ -17,7 +17,7 @@ namespace Espionage.Engine.Tools
 			}
 			else
 			{
-				ImGui.InputFloat( string.Empty, ref newValue );
+				ImGui.DragFloat( string.Empty, ref newValue, 0.1f );
 			}
 
 			if ( Math.Abs( newValue - value ) > 0.0001f )

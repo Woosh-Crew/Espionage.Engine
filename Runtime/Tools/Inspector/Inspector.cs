@@ -21,15 +21,12 @@ namespace Espionage.Engine.Tools
 
 		public void SelectionChanged( object selection )
 		{
-			if ( selection is ILibrary lib )
+			if ( !Editors.ContainsKey( selection.GetType() ) )
 			{
-				if ( !Editors.ContainsKey( selection.GetType() ) )
-				{
-					Editors.Add( selection.GetType(), GrabEditor( lib is Library ? typeof( Library ) : lib.ClassInfo.Info ) );
-				}
-
-				Editors[selection.GetType()]?.OnActive( lib );
+				Editors.Add( selection.GetType(), GrabEditor( selection.GetType() ) );
 			}
+
+			Editors[selection.GetType()]?.OnActive( selection );
 		}
 
 		private void HeaderGUI( object selection )
@@ -152,6 +149,15 @@ namespace Espionage.Engine.Tools
 
 				return comp.Type.IsInterface && type.HasInterface( comp.Type );
 			} );
+
+			// Still NULL? See if we can find a inherited type
+			lib ??= Library.Database.Find<Editor>( e =>
+			{
+				var comp = e.Components.Get<TargetAttribute>();
+				return comp != null && type.IsSubclassOf( comp.Type );
+			} );
+
+			Dev.Log.Info( lib?.Name );
 
 			return lib == null ? null : Library.Database.Create<Editor>( lib.Info );
 		}

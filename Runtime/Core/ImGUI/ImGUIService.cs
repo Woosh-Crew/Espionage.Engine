@@ -5,6 +5,7 @@ using Espionage.Engine.ImGUI.Platform;
 using Espionage.Engine.ImGUI.Renderer;
 using Espionage.Engine.Services;
 using ImGuiNET;
+using ImGuizmoNET;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -36,12 +37,6 @@ namespace Espionage.Engine.ImGUI
 			// Create the Context
 			_context = UImGuiUtility.CreateContext();
 
-			// OnEnable
-			void Fail( string reason )
-			{
-				throw new( $"Failed to start: {reason}." );
-			}
-
 			_renderCommandBuffer = RenderUtility.GetCommandBuffer( Constants.UImGuiCommandBuffer );
 			_camera.AddCommandBuffer( CameraEvent.AfterEverything, _renderCommandBuffer );
 
@@ -57,16 +52,10 @@ namespace Espionage.Engine.ImGUI
 
 			var platform = PlatformUtility.Create( _platformType, Cursor, _iniSettings );
 			SetPlatform( platform, io );
-			if ( _platform == null )
-			{
-				Fail( nameof( _platform ) );
-			}
+			Assert.IsNull( _platform );
 
 			SetRenderer( RenderUtility.Create( _rendererType, Shaders, _context.TextureManager ), io );
-			if ( _renderer == null )
-			{
-				Fail( nameof( _renderer ) );
-			}
+			Assert.IsNull( _renderer );
 		}
 
 		public override void OnUpdate()
@@ -79,13 +68,19 @@ namespace Espionage.Engine.ImGUI
 			_platform.PrepareFrame( io, _camera.pixelRect );
 			ImGui.NewFrame();
 #if !UIMGUI_REMOVE_IMGUIZMO
-			ImGuizmoNET.ImGuizmo.BeginFrame();
+			ImGuizmo.BeginFrame();
 #endif
 			Constants.PrepareFrameMarker.End();
 			Constants.LayoutMarker.Begin();
 
 			try
 			{
+				var view = _camera.worldToCameraMatrix.inverse[0];
+				var projection = GL.GetGPUProjectionMatrix( _camera.projectionMatrix, false )[0];
+				var matrix = Matrix4x4.TRS( Vector3.zero, Quaternion.identity, Vector3.one )[0];
+
+				ImGuizmo.Manipulate( ref view, ref projection, OPERATION.TRANSLATE, MODE.WORLD, ref matrix );
+
 				Callback.Run( "imgui.layout" );
 			}
 			finally
@@ -93,7 +88,6 @@ namespace Espionage.Engine.ImGUI
 				ImGui.Render();
 				Constants.LayoutMarker.End();
 			}
-
 
 			Constants.DrawListMarker.Begin();
 			_renderCommandBuffer.Clear();
