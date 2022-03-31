@@ -1,4 +1,4 @@
-﻿using Espionage.Engine.Resources.Binders;
+﻿using Espionage.Engine.Resources.Maps;
 
 namespace Espionage.Engine.Resources
 {

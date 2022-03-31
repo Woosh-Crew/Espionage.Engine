@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using Espionage.Engine.Resources.Binders;
-
-namespace Espionage.Engine.Resources.Formats
+﻿namespace Espionage.Engine.Resources.Maps
 {
 	[Title( "Ravenfield Level File" ), File( Extension = "rfl" )]
 	public sealed class RFL : AssetBundleFile { }

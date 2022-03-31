@@ -2,14 +2,13 @@
 using System.IO;
 using System.Linq;
 using UnityEngine.SceneManagement;
-using Espionage.Engine.Resources.Binders;
 
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.SceneManagement;
 #endif
 
-namespace Espionage.Engine.Resources.Formats
+namespace Espionage.Engine.Resources.Maps
 {
 	[Title( "Unity Map File" ), File( Extension = "umap" )]
 	public sealed partial class UMAP : AssetBundleFile { }

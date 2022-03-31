@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Espionage.Engine.Resources.Binders
+namespace Espionage.Engine.Resources.Maps
 {
 	[Library, Title( "Asset Bundle Map" ), Group( "Maps" )]
 	public class AssetBundleMapProvider : Map.Binder
@@ -26,11 +26,17 @@ namespace Espionage.Engine.Resources.Binders
 			_operation = SceneManager.LoadSceneAsync( scenePath, LoadSceneMode.Additive );
 			_operation.completed += ( _ ) =>
 			{
+				Scene = SceneManager.GetSceneByPath( scenePath );
+				SceneManager.SetActiveScene( Scene );
+
+				OnLoad();
+
 				// We've finished loading the scene.
 				Dev.Log.Info( "Finished Loading Scene" );
-				Scene = SceneManager.GetSceneByPath( scenePath );
 				finished?.Invoke();
 			};
 		}
+
+		protected virtual void OnLoad() { }
 	}
 }

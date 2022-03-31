@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Espionage.Engine.Resources.Maps
+namespace Espionage.Engine.Resources.Models
 {
 	public class AssetBundleFile : Map.File
 	{
@@ -17,8 +17,7 @@ namespace Espionage.Engine.Resources.Maps
 			_request.completed += _ =>
 			{
 				Bundle = _request.assetBundle;
-				Binder = new AssetBundleMapProvider( Bundle );
-
+				
 				Dev.Log.Info( $"Finished Loading Asset Bundle [{Info.Name}]" );
 				loaded.Invoke();
 			};

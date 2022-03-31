@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine.SceneManagement;
 
-namespace Espionage.Engine.Resources.Binders
+namespace Espionage.Engine.Resources.Maps
 {
 	[Library, Title( "Editor Map" ), Group( "Maps" )]
 	public class EditorSceneMapProvider : Map.Binder

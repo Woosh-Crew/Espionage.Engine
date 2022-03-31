@@ -1,10 +1,9 @@
 ﻿using System.Linq;
-using Espionage.Engine.Resources.Binders;
 using Espionage.Engine.Services;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace Espionage.Engine.Resources.Services
+namespace Espionage.Engine.Resources.Maps
 {
 	[Order( 150 )] // Load after everything
 	internal class MapService : Service

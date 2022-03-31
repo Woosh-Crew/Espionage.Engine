@@ -84,7 +84,7 @@ namespace Espionage.Engine
 		public Components<Entity> Components { get; private set; }
 
 		/// <summary>
-		/// This is used for interfaces. Checks if the entity if not checks the components
+		/// This is used for interfaces. Checks if the entity is T, if not checks the components
 		/// and returns one of those. This is great if you use interfaces both in 
 		/// components and entities (Such as IUse, IDamageable or IHealable)
 		/// </summary>
