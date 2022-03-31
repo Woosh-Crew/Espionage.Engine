@@ -69,7 +69,7 @@ namespace Espionage.Engine.Resources
 
 		public Library ClassInfo { get; } = Library.Database[typeof( Map )];
 
-		internal Map( File file )
+		private Map( File file )
 		{
 			Assert.IsNull( file );
 			Components = new( this );
@@ -119,7 +119,6 @@ namespace Espionage.Engine.Resources
 				}
 			}
 
-			Callback.Run( "map.loaded" );
 			SceneManager.SetActiveScene( Provider.Scene );
 
 			foreach ( var comp in Components.GetAll<ICallbacks>() )
@@ -133,6 +132,8 @@ namespace Espionage.Engine.Resources
 				PissOff<Camera>( gameObject );
 				PissOff<AudioListener>( gameObject );
 			}
+
+			Callback.Run( "map.loaded" );
 		}
 
 		private void OnUnload()
