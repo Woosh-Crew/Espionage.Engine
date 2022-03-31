@@ -1,10 +1,10 @@
 ﻿namespace Espionage.Engine.Tools
 {
-	public abstract class Tool : ILibrary
+	public abstract class Gizmo : ILibrary
 	{
 		public Library ClassInfo { get; }
 
-		public Tool()
+		public Gizmo()
 		{
 			ClassInfo = Library.Register( this );
 		}

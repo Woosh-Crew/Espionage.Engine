@@ -2,36 +2,9 @@
 using System.Linq;
 using ImGuiNET;
 using ImPlotNET;
-using UnityEngine;
 
 namespace Espionage.Engine.Tools
 {
-	public class TimeStats : Overlay
-	{
-		public override void OnLayout()
-		{
-			ImGui.Text( $"Time: {(int)Time.time}" );
-			ImGui.Text( $"Time Scale: {Time.timeScale}" );
-		}
-	}
-
-	public class CameraStats : Overlay
-	{
-		private readonly Camera _camera;
-
-		public CameraStats()
-		{
-			_camera = Engine.Camera;
-		}
-
-		public override void OnLayout()
-		{
-			ImGui.Text( $"Position: {_camera.transform.position}" );
-			ImGui.Text( $"Rotation: {_camera.transform.rotation}" );
-			ImGui.Text( $"Field Of View: {(int)_camera.fieldOfView}" );
-		}
-	}
-
 	public class LoaderStats : Overlay
 	{
 		public override void OnLayout()

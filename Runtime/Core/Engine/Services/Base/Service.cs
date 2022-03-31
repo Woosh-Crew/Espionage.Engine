@@ -10,20 +10,14 @@
 			ClassInfo = Library.Register( this );
 		}
 
-		// Service
-
 		public float Time { get; set; }
 
+		// State
 		public virtual void OnReady() { }
-
-		public virtual void OnUpdate() { }
-		public virtual void OnPostUpdate() { }
-
 		public virtual void OnShutdown() { }
 
-		public virtual void Dispose()
-		{
-			OnShutdown();
-		}
+		// Update
+		public virtual void OnUpdate() { }
+		public virtual void OnPostUpdate() { }
 	}
 }

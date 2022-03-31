@@ -6,12 +6,12 @@ namespace Espionage.Engine.Tools
 	[Group( "Overlays" )]
 	public abstract class Overlay : Window
 	{
-		public static float Offset;
-		public static int Index;
+		internal static float offset;
+		internal static int index;
 
 		internal override bool Layout()
 		{
-			Index++;
+			index++;
 
 			var delete = true;
 
@@ -20,7 +20,7 @@ namespace Espionage.Engine.Tools
 			const float padding = 16;
 			var viewport = ImGui.GetMainViewport();
 			var workPos = viewport.WorkPos;
-			var windowPos = new Vector2 { x = workPos.x + viewport.Size.x - padding, y = workPos.y + padding + Offset + 4 * Index };
+			var windowPos = new Vector2 { x = workPos.x + viewport.Size.x - padding, y = workPos.y + padding + offset + 4 * index };
 
 			ImGui.SetNextWindowPos( windowPos, ImGuiCond.Always, new( 1f, 0f ) );
 
@@ -30,7 +30,7 @@ namespace Espionage.Engine.Tools
 				OnLayout();
 			}
 
-			Offset += ImGui.GetWindowSize().y;
+			offset += ImGui.GetWindowSize().y;
 
 			ImGui.End();
 

@@ -57,7 +57,7 @@ namespace Espionage.Engine.Tools
 		// ILibrary Inspector
 		//
 
-		private void DrawGUI( object item )
+		private static void DrawGUI( object item )
 		{
 			if ( Editors.ContainsKey( item.GetType() ) )
 			{
@@ -156,8 +156,6 @@ namespace Espionage.Engine.Tools
 				var comp = e.Components.Get<TargetAttribute>();
 				return comp != null && type.IsSubclassOf( comp.Type );
 			} );
-
-			Dev.Log.Info( lib?.Name );
 
 			return lib == null ? null : Library.Database.Create<Editor>( lib.Info );
 		}

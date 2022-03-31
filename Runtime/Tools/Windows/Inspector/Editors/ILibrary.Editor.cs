@@ -1,4 +1,6 @@
-﻿using ImGuiNET;
+﻿using System;
+using System.Linq;
+using ImGuiNET;
 using UnityEngine;
 
 namespace Espionage.Engine.Tools.Editors
@@ -6,6 +8,15 @@ namespace Espionage.Engine.Tools.Editors
 	[Target( typeof( ILibrary ) )]
 	public class ILibraryEditor : Inspector.Editor<ILibrary>
 	{
+		protected override void OnActive( ILibrary item )
+		{
+			_search = string.Empty;
+		}
+
+		//
+		// User Interface
+		//
+
 		public override void OnHeader( ILibrary item )
 		{
 			ImGui.Text( item.ClassInfo.Title );
@@ -15,6 +26,8 @@ namespace Espionage.Engine.Tools.Editors
 			ImGui.Text( item.ToString() );
 		}
 
+		private string _search = string.Empty;
+
 		protected override void OnLayout( ILibrary item )
 		{
 			if ( item.ClassInfo == null )
@@ -22,6 +35,9 @@ namespace Espionage.Engine.Tools.Editors
 				ImGui.TextColored( Color.red, "NULL ClassInfo" );
 				return;
 			}
+
+			ImGui.SetNextItemWidth( ImGui.GetWindowWidth() - 16 );
+			ImGui.InputTextWithHint( "Search", "Member Search...", ref _search, 160 );
 
 			// Us doing this removes the title.. but we gotta or else the scrolling just doesnt work
 			if ( ImGui.BeginChild( "out", new( 0, ImGui.GetWindowHeight() - 96 ), false ) )
@@ -38,7 +54,9 @@ namespace Espionage.Engine.Tools.Editors
 
 						ImGui.TableHeadersRow();
 
-						foreach ( var property in item.ClassInfo.Properties )
+						foreach ( var property in string.IsNullOrEmpty( _search )
+							         ? item.ClassInfo.Properties
+							         : item.ClassInfo.Properties.Where( e => e.Name.Contains( _search, StringComparison.CurrentCultureIgnoreCase ) ) )
 						{
 							ImGui.TableNextColumn();
 							ImGui.Text( property.Title );
@@ -69,7 +87,9 @@ namespace Espionage.Engine.Tools.Editors
 
 						ImGui.TableHeadersRow();
 
-						foreach ( var function in item.ClassInfo.Functions )
+						foreach ( var function in string.IsNullOrEmpty( _search )
+							         ? item.ClassInfo.Functions
+							         : item.ClassInfo.Functions.Where( e => e.Name.Contains( _search, StringComparison.CurrentCultureIgnoreCase ) ) )
 						{
 							ImGui.TableNextColumn();
 							ImGui.Text( function.Title );

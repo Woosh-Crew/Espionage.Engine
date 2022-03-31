@@ -24,8 +24,8 @@ namespace Espionage.Engine.Tools
 			}
 
 			// This is bad..
-			Overlay.Offset = 0;
-			Overlay.Index = 0;
+			Overlay.offset = 0;
+			Overlay.index = 0;
 
 			// I'd assume you wouldn't be able 
 			// to remove more then 1 window on

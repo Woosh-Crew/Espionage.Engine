@@ -92,14 +92,13 @@ namespace Espionage.Engine.Services
 			public void Remove( IService item )
 			{
 				_services.Remove( item );
-				item.Dispose();
 			}
 
 			public void Clear()
 			{
 				foreach ( var service in _services )
 				{
-					service.Dispose();
+					service.OnShutdown();
 				}
 
 				_services.Clear();
