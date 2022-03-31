@@ -376,6 +376,22 @@ namespace Espionage.Engine.Tools
 			public virtual void OnActive( object item ) { }
 			public abstract void OnLayout( object instance );
 		}
+
+		public abstract class Editor<T> : Editor
+		{
+			public override void OnActive( object item )
+			{
+				OnActive( (T)item );
+			}
+
+			public override void OnLayout( object instance )
+			{
+				OnLayout( (T)instance );
+			}
+
+			protected virtual void OnActive( T item ) { }
+			protected abstract void OnLayout( T instance );
+		}
 	}
 
 }

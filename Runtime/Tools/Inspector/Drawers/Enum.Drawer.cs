@@ -23,13 +23,15 @@ namespace Espionage.Engine.Tools
 					}
 
 					change = Enum.Parse( Type, name );
+					ImGui.EndPopup();
+
 					return true;
 				}
 
 				ImGui.EndPopup();
 			}
 
-			change = null;
+			change = default;
 			return false;
 		}
 	}
