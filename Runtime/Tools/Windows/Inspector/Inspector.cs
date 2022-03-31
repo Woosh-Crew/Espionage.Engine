@@ -190,6 +190,13 @@ namespace Espionage.Engine.Tools
 				return comp.Type.IsInterface && type.HasInterface( comp.Type );
 			} );
 
+			// Still NULL? See if we can find a inherited type
+			lib ??= Library.Database.Find<Drawer>( e =>
+			{
+				var comp = e.Components.Get<TargetAttribute>();
+				return comp != null && type.IsSubclassOf( comp.Type );
+			} );
+
 			if ( lib == null )
 			{
 				// See if we have one from ILibrary

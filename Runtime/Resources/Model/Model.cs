@@ -11,6 +11,7 @@ namespace Espionage.Engine.Resources
 		}
 
 		private int Instances { get; set; }
+		private GameObject Object { get; set; }
 
 		protected override void Load( Action<GameObject> onLoad )
 		{

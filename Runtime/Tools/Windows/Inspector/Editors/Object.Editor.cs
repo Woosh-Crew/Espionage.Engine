@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using Espionage.Engine.Services;
 using ImGuiNET;
 using UnityEngine;
 
@@ -60,7 +61,31 @@ namespace Espionage.Engine.Tools.Editors
 							ImGui.TableNextColumn();
 							ImGui.SetNextItemWidth( ImGui.GetColumnWidth( 1 ) );
 
-							ImGui.TextDisabled( property.GetValue( item )?.ToString() ?? "Null" );
+							if ( property.GetMethod != null )
+							{
+								// Crap Hardcoded Library Drawer
+								if ( property.PropertyType.HasInterface<ILibrary>() )
+								{
+									var lib = property.GetValue( item ) as ILibrary;
+
+									if ( ImGui.Selectable( lib.ToString() ) )
+									{
+										Engine.Services.Get<DiagnosticsService>().Selection = property.GetValue( item ) as ILibrary;
+									}
+
+									ImGui.SameLine();
+									ImGui.TextColored( Color.gray, $" [{lib.ClassInfo.Title}]" );
+								}
+								else
+								{
+									ImGui.TextDisabled( property.GetValue( item )?.ToString() ?? "Null" );
+								}
+							}
+							else
+							{
+								ImGui.TextDisabled( "No Setter" );
+							}
+
 							if ( ImGui.IsItemHovered() )
 							{
 								ImGui.SetTooltip( "Item is Read Only, since this object is just a straight object" );
