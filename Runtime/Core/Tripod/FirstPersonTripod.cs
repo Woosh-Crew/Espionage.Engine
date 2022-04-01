@@ -6,7 +6,7 @@ namespace Espionage.Engine.Tripods
 	[Library( "tripod.first_person" )]
 	public class FirstPersonTripod : Tripod
 	{
-		public float NeckLength { get; set; } = 0.5f;
+		public float NeckLength { get; set; } = 0.28f;
 
 		// Logic
 
