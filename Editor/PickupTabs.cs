@@ -11,11 +11,11 @@ using System.Collections.Generic;
 namespace Espionage.Engine.Editor
 {
 
-	[CustomEditor(typeof(Pickup_SO),true)]
+	[CustomEditor(typeof(PickupData),true)]
     public class PickupTabs : UnityEditor.Editor
     {
 		/// <summary>Our Target</summary>
-		private Pickup_SO _myTarget;
+		private PickupData _myTarget;
 
 		/// <summary>Serialized Object</summary>
 		private SerializedObject _soTarget;
@@ -34,7 +34,7 @@ namespace Espionage.Engine.Editor
 
 		private void OnEnable(){
 			//Get our target and cast it to a pickup
-			_myTarget = (Pickup_SO)target;
+			_myTarget = (PickupData)target;
 			//Get te type
 			Type t = target.GetType();
 			//Extract the fields
