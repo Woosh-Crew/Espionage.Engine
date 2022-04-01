@@ -116,6 +116,30 @@ namespace Espionage.Engine
 		// Helpers
 		//
 
+		public static implicit operator Transform( Entity entity )
+		{
+			if ( entity != null )
+			{
+				return entity.gameObject.transform;
+			}
+
+			Dev.Log.Warning( "Entity was NULL" );
+			return null;
+
+		}
+
+		public static implicit operator GameObject( Entity entity )
+		{
+			if ( entity != null )
+			{
+				return entity.gameObject;
+			}
+
+			Dev.Log.Warning( "Entity was NULL" );
+			return null;
+
+		}
+
 		/// <summary> The Position of this Entity. </summary>
 		[Group( "Transform" ), Order( -15 )]
 		public Vector3 Position

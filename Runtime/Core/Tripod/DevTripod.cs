@@ -23,7 +23,7 @@ namespace Espionage.Engine.Tripods
 		private Vector3 _viewAngles;
 		private Quaternion _targetRot;
 
-		private Transform _lastViewer;
+		private Entity _lastViewer;
 
 		void ITripod.Build( ref Tripod.Setup camSetup )
 		{

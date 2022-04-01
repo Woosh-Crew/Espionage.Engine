@@ -23,7 +23,7 @@ namespace Espionage.Engine.Tripods
 				return;
 			}
 
-			camSetup.Viewer = Entity.Visuals;
+			camSetup.Viewer = Entity;
 
 			camSetup.Rotation = Local.Pawn.EyeRot;
 			camSetup.Position = Local.Pawn.EyePos;

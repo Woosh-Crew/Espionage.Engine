@@ -1,4 +1,5 @@
 ﻿using System;
+using Espionage.Engine.Resources;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -16,7 +17,7 @@ namespace Espionage.Engine.Internal
 			Camera.depth = 5;
 		}
 
-		private Transform _lastViewer;
+		private Entity _lastViewer;
 
 		internal void Finalise( in Tripod.Setup camSetup )
 		{
@@ -38,9 +39,9 @@ namespace Espionage.Engine.Internal
 				return;
 			}
 
-			if ( _lastViewer != null )
+			if ( _lastViewer != null && _lastViewer.Components.TryGet<Visuals>( out var oldVisuals ) && oldVisuals.Renderers != null )
 			{
-				foreach ( var meshRenderer in _lastViewer.GetComponentsInChildren<Renderer>() )
+				foreach ( var meshRenderer in oldVisuals.Renderers )
 				{
 					meshRenderer.shadowCastingMode = ShadowCastingMode.On;
 				}
@@ -48,9 +49,9 @@ namespace Espionage.Engine.Internal
 
 			_lastViewer = camSetup.Viewer;
 
-			if ( _lastViewer != null )
+			if ( _lastViewer != null && _lastViewer.Components.TryGet<Visuals>( out var newVisuals ) && newVisuals.Renderers != null )
 			{
-				foreach ( var meshRenderer in _lastViewer.GetComponentsInChildren<Renderer>() )
+				foreach ( var meshRenderer in newVisuals.Renderers )
 				{
 					meshRenderer.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
 				}

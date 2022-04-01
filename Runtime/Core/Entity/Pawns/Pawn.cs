@@ -14,15 +14,6 @@ namespace Espionage.Engine
 		protected override void OnAwake()
 		{
 			gameObject.layer = LayerMask.NameToLayer( "Pawn" );
-
-			if ( Visuals == null )
-			{
-				var go = new GameObject( "Visuals" );
-				go.transform.SetParent( transform );
-				go.transform.localPosition = Vector3.zero;
-
-				visuals = go.transform;
-			}
 		}
 
 		public void Simulate( Client client )
@@ -50,6 +41,8 @@ namespace Espionage.Engine
 			PawnController ??= Components.Get<Controller>();
 			Tripod ??= Components.Get<Tripod>();
 
+			PawnController.Enabled = true;
+
 			foreach ( var item in Components.GetAll<ICallbacks>() )
 			{
 				item.Possess( client );
@@ -58,7 +51,7 @@ namespace Espionage.Engine
 
 		public virtual void UnPossess()
 		{
-			PawnController = null;
+			PawnController.Enabled = false;
 
 			foreach ( var item in Components.GetAll<ICallbacks>() )
 			{
@@ -126,8 +119,6 @@ namespace Espionage.Engine
 		/// on a tripod, when updating the camera. This will just
 		/// disable all Renderers in its children tree.
 		/// </summary>
-		public Transform Visuals { get => visuals; set => visuals = value; }
-
 		/// <summary>
 		/// Is this pawn currently being possessed
 		/// by a client?
@@ -139,7 +130,7 @@ namespace Espionage.Engine
 		/// Use this interface on a Pawn component if you
 		/// wanna have pawn specific callbacks.
 		/// </summary>
-		public interface ICallbacks
+		public new interface ICallbacks
 		{
 			/// <inheritdoc cref="Pawn.Posses"/>
 			void Possess( Client client ) { }

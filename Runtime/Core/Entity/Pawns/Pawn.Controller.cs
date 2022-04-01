@@ -8,10 +8,16 @@ namespace Espionage.Engine
 		public abstract class Controller : Component<Pawn>, IControls
 		{
 			public float EyeHeight { get; set; } = 1.65f;
+			public bool Enabled { get; set; }
 
 			public void Simulate( Client client )
 			{
 				Client = client;
+
+				if ( !Enabled )
+				{
+					return;
+				}
 
 				Grab( Entity );
 				Simulate();

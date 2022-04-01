@@ -61,7 +61,7 @@ namespace Espionage.Engine
 			public float Damping;
 
 			/// <summary> Will hide nested Renderers if set </summary>
-			public Transform Viewer;
+			public Entity Viewer;
 
 			/// <summary> The position of the camera </summary>
 			public Vector3 Position;
@@ -173,6 +173,16 @@ namespace Espionage.Engine
 		{
 			private static readonly List<Effect> All = new();
 
+			public static void Add( Effect effect )
+			{
+				All.Add( effect );
+			}
+
+			public static void Create<T>() where T : Effect, new()
+			{
+				All.Add( new T() );
+			}
+
 			public static void Apply( ref Setup setup )
 			{
 				for ( var i = All.Count; i > 0; i-- )
@@ -189,11 +199,6 @@ namespace Espionage.Engine
 			public static void Clear()
 			{
 				All.Clear();
-			}
-
-			public Effect()
-			{
-				All.Add( this );
 			}
 
 			/// <returns> True if were done with this Modifier </returns>

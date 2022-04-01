@@ -5,13 +5,13 @@ namespace Espionage.Engine.Resources
 {
 	public sealed class Model : Resource<GameObject>
 	{
-		public static Model Load( string path, Action<GameObject> onLoad )
+		public static Model Load( string path, Action<GameObject> onLoad = null )
 		{
 			return null;
 		}
 
-		private int Instances { get; set; }
-		private GameObject Object { get; set; }
+		public int Instances { get; set; }
+		public GameObject Object { get; set; }
 
 		protected override void Load( Action<GameObject> onLoad )
 		{
