@@ -8,7 +8,7 @@ namespace Espionage.Engine
 	/// The scriptable object for firearms.
 	/// </summary>
 	[CreateAssetMenu(fileName = "Firearm", menuName = "Pickups/Holdables/Weapons/Firearms/Firearm", order = 1)]
-	public class Firearm_SO : Weapon_SO
+	public class FirearmData : WeaponData
 	{	
 		[Tab("Weapon")]
 		/// <summary>The fire type of a given weapon</summary>

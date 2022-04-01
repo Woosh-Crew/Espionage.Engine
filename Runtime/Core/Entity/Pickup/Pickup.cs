@@ -7,7 +7,7 @@
 		public Actor Carrier { get; private set; }
 
 		/// <summary>The Stats for a given weapon</summary>
-		public Pickup_SO Stats;
+		public PickupData Stats;
 
 		/// <summary>If this item can be dropped</summary>
 		public virtual bool Droppable => true;

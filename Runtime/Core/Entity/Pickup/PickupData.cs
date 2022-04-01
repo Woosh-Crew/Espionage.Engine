@@ -6,7 +6,7 @@ using System;
 namespace Espionage.Engine
 {
 	[CreateAssetMenu(fileName = "Pickup", menuName = "Pickups/Pickup", order = 1)]
-    public class Pickup_SO : ScriptableObject
+    public class PickupData : ScriptableObject
     {		
 		
     }

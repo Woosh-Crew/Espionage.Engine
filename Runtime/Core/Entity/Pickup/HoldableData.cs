@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Espionage.Engine
 {
 	[CreateAssetMenu(fileName = "Pickup", menuName = "Pickups/Holdables/Holdable", order = 1)]
-    public class Holdable_SO : Pickup_SO
+    public class HoldableData : PickupData
     {
 
     }
