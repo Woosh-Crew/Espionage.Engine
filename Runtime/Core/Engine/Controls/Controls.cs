@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace Espionage.Engine
 {
@@ -10,6 +12,7 @@ namespace Espionage.Engine
 	{
 		public static Mouse Mouse => _active.Mouse;
 		public static Cursor Cursor => _active.Cursor;
+		public static Scheme Scheme { get; }
 
 		internal static void SetSetup( Client client )
 		{
@@ -46,6 +49,11 @@ namespace Espionage.Engine
 		}
 	}
 
+	public class Scheme : Dictionary<string, Binding>
+	{
+		public Scheme() : base( StringComparer.CurrentCultureIgnoreCase ) { }
+	}
+
 	/// <summary>
 	/// Struct containing data about the mouse
 	/// </summary>
@@ -63,5 +71,15 @@ namespace Espionage.Engine
 		public bool Visible { get; set; }
 		public bool Locked { get; set; }
 		public bool Confined { get; set; }
+	}
+
+
+	public struct Binding
+	{
+		public KeyCode Key { get; }
+
+		public bool Pressed => Input.GetKeyDown( Key );
+		public bool Down => Input.GetKey( Key );
+		public bool Released => Input.GetKeyUp( Key );
 	}
 }
