@@ -14,7 +14,7 @@
 
 		public virtual void Push( float mouseDelta, float size = 0 )
 		{
-			var ray = Trace.Ray( Entity.Eyes.Position, Entity.Eyes.Rotation.Forward(), 0.9f ).Ignore( "Pawn" );
+			var ray = Entity.Eyes.Ray();
 			var entity = ray.Run<IPushable>() ?? ray.Radius( size ).Run<IPushable>();
 			entity?.OnPush( mouseDelta, Entity );
 		}

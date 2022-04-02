@@ -14,8 +14,13 @@ namespace Espionage.Engine
 			Position = pos;
 			Rotation = rot;
 		}
-		
-		public  Vector3 Position { get; internal set; }
+
+		public Vector3 Position { get; internal set; }
 		public Quaternion Rotation { get; internal set; }
+
+		public Trace.Builder Ray( float distance = 0.9f )
+		{
+			return Trace.Ray( Position, Rotation.Forward(), distance ).Ignore( "Pawn" );
+		}
 	}
 }

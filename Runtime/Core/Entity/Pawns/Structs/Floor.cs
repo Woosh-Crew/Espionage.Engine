@@ -18,7 +18,7 @@ namespace Espionage.Engine
 				.Radius( 0.1f )
 				.Run( out var info );
 
-			return new( hit, info.Value );
+			return new( hit, info ?? default );
 		}
 
 		private Floor( bool landed, RaycastHit hit )

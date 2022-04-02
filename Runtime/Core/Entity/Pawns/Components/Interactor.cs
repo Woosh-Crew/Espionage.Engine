@@ -5,11 +5,6 @@ namespace Espionage.Engine
 {
 	public class Interactor : Component<Actor>, ISimulated
 	{
-		[Slider( 0.1f, 2 )]
-		public float Length { get; set; } = 0.9f;
-
-		// Current
-
 		public IUsable Using { get; private set; }
 		public IHoverable Hovering { get; private set; }
 
@@ -86,7 +81,7 @@ namespace Espionage.Engine
 
 		private T Find<T>( float size, Func<T, bool> canUse ) where T : class
 		{
-			var ray = Trace.Ray( Entity.Eyes.Position, Entity.Eyes.Rotation.Forward(), Length ).Ignore( "Pawn" );
+			var ray = Entity.Eyes.Ray();
 			var entity = ray.Run<T>() ?? ray.Radius( size ).Run<T>();
 
 			// Set root ray to larger size then run
