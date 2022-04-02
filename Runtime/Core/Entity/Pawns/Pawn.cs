@@ -130,7 +130,7 @@ namespace Espionage.Engine
 		/// Use this interface on a Pawn component if you
 		/// wanna have pawn specific callbacks.
 		/// </summary>
-		public new interface ICallbacks
+		public interface ICallbacks
 		{
 			/// <inheritdoc cref="Pawn.Posses"/>
 			void Possess( Client client ) { }

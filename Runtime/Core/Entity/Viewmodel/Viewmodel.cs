@@ -94,6 +94,9 @@ namespace Espionage.Engine
 			{
 				effect.PostCameraSetup( ref setup );
 			}
+
+			trans.localPosition += setup.Viewmodel.Offset;
+			trans.localRotation *= setup.Viewmodel.Angles;
 		}
 
 		//

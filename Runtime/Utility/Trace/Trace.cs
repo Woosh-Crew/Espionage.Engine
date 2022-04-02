@@ -106,18 +106,24 @@ namespace Espionage.Engine
 					return null;
 				}
 
-				// Try get a component first
+				// T is Entity, do logic for Entity.
+				if ( typeof( T ).IsAssignableFrom( typeof( Entity ) ) )
+				{
+					// Try an Entity
+					if ( test.Value.collider.TryGetComponent<Entity>( out var entity ) )
+					{
+						hit = test;
+						return entity.Get<T>();
+					}
+
+					hit = null;
+					return null;
+				}
+
 				if ( test.Value.collider.TryGetComponent<T>( out var item ) )
 				{
 					hit = test;
 					return item;
-				}
-
-				// Try an Entity
-				if ( test.Value.collider.TryGetComponent<Entity>( out var entity ) )
-				{
-					hit = test;
-					return entity.Get<T>();
 				}
 
 				hit = null;

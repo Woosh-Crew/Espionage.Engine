@@ -82,6 +82,9 @@ namespace Espionage.Engine
 			{
 				public float FieldOfView;
 				public Vector2 Clipping;
+
+				public Vector3 Offset;
+				public Quaternion Angles;
 			}
 		}
 

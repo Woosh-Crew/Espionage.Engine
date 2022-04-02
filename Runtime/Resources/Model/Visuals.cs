@@ -38,7 +38,7 @@ namespace Espionage.Engine.Resources
 		{
 			get
 			{
-				if ( _model.Instances <= 0 )
+				if ( _model?.Instances <= 0 )
 				{
 					_model = null;
 					return null;

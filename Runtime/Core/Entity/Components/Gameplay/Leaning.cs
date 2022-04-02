@@ -6,9 +6,9 @@ namespace Espionage.Engine
 	{
 		public float Distance { get; set; } = 0.25f;
 		public float Angle { get; set; } = 15;
-		
+
 		// Logic
-		
+
 		protected int State { get; private set; }
 
 		public void Simulate( Client cl )
@@ -36,7 +36,7 @@ namespace Espionage.Engine
 		{
 			if ( !Entity.Ground )
 			{
-				Dev.Log.Info("ground");
+				Dev.Log.Info( "ground" );
 				return;
 			}
 
@@ -49,7 +49,7 @@ namespace Espionage.Engine
 			State += state;
 			State = Mathf.Clamp( State, -1, 1 );
 		}
-		
+
 		// Camera
 
 		private float _leanStateDamped;
@@ -59,12 +59,17 @@ namespace Espionage.Engine
 		{
 			// Get Distance
 			_distance = GetLeanDistance( State );
-			
+
 			// Apply Distance
 			_leanStateDamped = _leanStateDamped.LerpTo( State * _distance, 5 * Time.deltaTime );
 
 			setup.Rotation *= Quaternion.Euler( 0, 0, -Angle * _leanStateDamped );
 			setup.Position += setup.Rotation.Right() * Distance * _leanStateDamped;
+
+			setup.Viewmodel.Angles *= Quaternion.Euler( 0, 0, -Angle / 2 * _leanStateDamped );
+
+			setup.Viewmodel.Offset += setup.Rotation.Right() * (_leanStateDamped * 0.25f * Distance);
+			setup.Viewmodel.Offset += setup.Rotation.Down() * (_leanStateDamped * 0.02f * Distance);
 		}
 
 		protected virtual float GetLeanDistance( float leanState )

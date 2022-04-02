@@ -1,4 +1,6 @@
-﻿namespace Espionage.Engine
+﻿using System.Linq;
+
+namespace Espionage.Engine
 {
 	/// <summary>
 	/// Actor is the gameplay pawn, where AI and Clients can Posses. AI will look
@@ -61,6 +63,16 @@
 			{
 				// Tell the Gamemode, we want to respawn
 				Engine.Game.Gamemode.OnActorRespawned( this );
+			}
+			else
+			{
+				// Just Apply Spawn point
+				var spawn = All.OfType<SpawnPoint>().Random();
+				if ( spawn != null )
+				{
+					Position = spawn.Position;
+					Rotation = spawn.Rotation;
+				}
 			}
 
 			foreach ( var item in Components.GetAll<ICallbacks>() )
