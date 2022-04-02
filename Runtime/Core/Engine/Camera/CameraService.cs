@@ -28,12 +28,12 @@ namespace Espionage.Engine.Services
 
 		private Tripod.Setup _lastSetup = new()
 		{
+			FieldOfView = 68,
 			Rotation = Quaternion.identity,
-			FieldOfView = 60,
 			Position = Vector3.zero,
 			Viewmodel = new()
 			{
-				FieldOfView = 60,
+				FieldOfView = 68,
 				Clipping = new( 0.14f, 10 ),
 				Offset = Vector3.zero,
 				Angles = Quaternion.identity
@@ -53,8 +53,6 @@ namespace Espionage.Engine.Services
 
 			// Build the camSetup, from game.
 			_lastSetup = Engine.Game.BuildTripod( _lastSetup );
-
-			// Finalise
 			_camController.Finalise( _lastSetup );
 		}
 	}

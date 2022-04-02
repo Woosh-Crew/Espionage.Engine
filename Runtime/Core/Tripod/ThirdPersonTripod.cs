@@ -14,8 +14,8 @@ namespace Espionage.Engine.Tripods
 
 		public override void Activated( ref Setup camSetup )
 		{
-			camSetup.Position = Local.Pawn.EyePos;
-			camSetup.Rotation = Local.Pawn.EyeRot;
+			camSetup.Rotation = Local.Pawn.Eyes.Rotation;
+			camSetup.Position = Local.Pawn.Eyes.Position;
 		}
 
 		protected override void OnBuildTripod( ref Setup camSetup )
@@ -29,13 +29,13 @@ namespace Espionage.Engine.Tripods
 			var pawn = Local.Pawn;
 
 			// Set Rot first cause we use it below
-			camSetup.Rotation = Quaternion.Slerp( camSetup.Rotation, pawn.EyeRot, Smoothing * Time.deltaTime );
+			camSetup.Rotation = Quaternion.Slerp( camSetup.Rotation, pawn.Eyes.Rotation, Smoothing * Time.deltaTime );
 
 			// Do a ray to calculate the distance, so we don't hit shit
-			var ray = Physics.Raycast( new( pawn.EyePos, camSetup.Rotation * Vector3.back ), out var hitInfo, Distance );
+			var ray = Physics.Raycast( new( pawn.Eyes.Position, camSetup.Rotation * Vector3.back ), out var hitInfo, Distance );
 			var relativeOffset = camSetup.Rotation * Vector3.right * Offset.x + camSetup.Rotation * Vector3.up * Offset.y;
 
-			camSetup.Position = Local.Pawn.EyePos + relativeOffset + camSetup.Rotation * Vector3.back * ((ray ? hitInfo.distance : Distance) - Padding);
+			camSetup.Position = Local.Pawn.Eyes.Position + relativeOffset + camSetup.Rotation * Vector3.back * ((ray ? hitInfo.distance : Distance) - Padding);
 		}
 	}
 }

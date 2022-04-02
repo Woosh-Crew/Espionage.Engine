@@ -26,7 +26,7 @@ namespace Espionage.Engine
 			}
 
 			// If Jump return 
-			if ( !Entity.Ground && State != 0 )
+			if ( !Entity.Floor && State != 0 )
 			{
 				State = 0;
 			}
@@ -34,9 +34,8 @@ namespace Espionage.Engine
 
 		public virtual void Lean( int state )
 		{
-			if ( !Entity.Ground )
+			if ( !Entity.Floor )
 			{
-				Dev.Log.Info( "ground" );
 				return;
 			}
 
@@ -76,7 +75,7 @@ namespace Espionage.Engine
 		{
 			const float girth = 1f;
 
-			var hit = Trace.Ray( Entity.EyePos, Entity.EyeRot.Right() * leanState, girth )
+			var hit = Trace.Ray( Entity.Eyes.Position, Entity.Eyes.Rotation.Right() * leanState, girth )
 				.Ignore( "Pawn" )
 				.Radius( 0.2f )
 				.Run( out var tr );

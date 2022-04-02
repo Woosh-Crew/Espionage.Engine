@@ -18,9 +18,9 @@ namespace Espionage.Engine
 
 		public void Simulate( Client client )
 		{
-			GetActiveController()?.Simulate( client );
+			(DevController ?? PawnController)?.Simulate( client );
 
-			Ground = Ground.Get( Position );
+			Floor = Floor.Get( Position );
 
 			foreach ( var item in Components.GetAll<ISimulated>() )
 			{
@@ -28,13 +28,8 @@ namespace Espionage.Engine
 			}
 		}
 
-		//
-		// Pawn
-		//
-
-		public Ground Ground { get; private set; }
-		public Vector3 EyePos { get; internal set; }
-		public Quaternion EyeRot { get; internal set; }
+		public Floor Floor { get; private set; }
+		public Eyes Eyes { get; private set; }
 
 		public virtual void Posses( Client client )
 		{
@@ -63,11 +58,6 @@ namespace Espionage.Engine
 		// Controller
 		//
 
-		private Controller GetActiveController()
-		{
-			return DevController ?? PawnController;
-		}
-
 		/// <summary>
 		/// The controller that is currently being used
 		/// for controlling this pawn.
@@ -76,7 +66,7 @@ namespace Espionage.Engine
 
 		/// <summary>
 		/// This controller will override the normal controller.
-		/// Is used for dev shit like no-clip.
+		/// Is used for dev stuff like no-clip.
 		/// </summary>
 		public Controller DevController { get; set; }
 
@@ -141,10 +131,5 @@ namespace Espionage.Engine
 			/// <inheritdoc cref="Pawn.PostCameraSetup"/>
 			void PostCameraSetup( ref Tripod.Setup setup ) { }
 		}
-
-		// Fields
-
-		[SerializeField]
-		private Transform visuals;
 	}
 }

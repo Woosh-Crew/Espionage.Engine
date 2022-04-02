@@ -11,8 +11,8 @@ namespace Espionage.Engine.Tripods
 
 		public override void Activated( ref Setup camSetup )
 		{
-			camSetup.Rotation = Local.Pawn.EyeRot;
-			camSetup.Position = Local.Pawn.EyePos;
+			camSetup.Rotation = Local.Pawn.Eyes.Rotation;
+			camSetup.Position = Local.Pawn.Eyes.Position;
 		}
 
 		protected override void OnBuildTripod( ref Setup camSetup )
@@ -24,8 +24,8 @@ namespace Espionage.Engine.Tripods
 
 			camSetup.Viewer = Entity;
 
-			camSetup.Rotation = Local.Pawn.EyeRot;
-			camSetup.Position = Local.Pawn.EyePos;
+			camSetup.Rotation = Local.Pawn.Eyes.Rotation;
+			camSetup.Position = Local.Pawn.Eyes.Position;
 
 			var pitch = camSetup.Rotation.Pitch() - (camSetup.Rotation.Pitch() > 270 ? 360 : 0);
 			camSetup.Position += Local.Pawn.Rotation * Vector3.forward * pitch.Remap( -90, 90, -NeckLength * Local.Pawn.Scale.magnitude, NeckLength * Local.Pawn.Scale.magnitude );

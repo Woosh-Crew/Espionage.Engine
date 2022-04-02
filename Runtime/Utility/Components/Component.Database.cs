@@ -160,7 +160,7 @@ namespace Espionage.Engine.Components
 
 		public IEnumerable<TComp> GetAll<TComp>()
 		{
-			return this.OfType<TComp>();
+			return _storage.OfType<TComp>();
 		}
 
 		public bool TryGet<TComp>( out TComp output ) where TComp : class

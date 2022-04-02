@@ -20,7 +20,7 @@ namespace Espionage.Engine
 
 			// Movement
 
-			var vel = Entity.EyeRot * Vector3.forward * direction.x + Entity.EyeRot * Vector3.right * direction.y;
+			var vel = EyeRot * Vector3.forward * direction.x + EyeRot * Vector3.right * direction.y;
 
 			if ( Input.GetKey( KeyCode.Space ) || Input.GetKey( KeyCode.E ) )
 			{

@@ -1,6 +1,6 @@
 namespace Espionage.Engine.AI
 {
-	public class Eyes : Sense
+	public class Vision : Sense
 	{
 		private float Distance { get; set; }
 		private float FieldOfView { get; set; }

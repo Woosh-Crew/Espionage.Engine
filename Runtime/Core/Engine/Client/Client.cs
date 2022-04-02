@@ -26,7 +26,7 @@ namespace Espionage.Engine
 		// Instance
 		//
 
-		/// <summary> A Nice name for the Client. </summary>
+		/// <summary> A Nice name for the Client that is used in UI. </summary>
 		public string Name { get; set; }
 
 		/// <summary> Is this client ready to enter the game world? </summary>

@@ -86,7 +86,7 @@ namespace Espionage.Engine
 
 		private T Find<T>( float size, Func<T, bool> canUse ) where T : class
 		{
-			var ray = Trace.Ray( Entity.EyePos, Entity.EyeRot.Forward(), Length ).Ignore( "Pawn" );
+			var ray = Trace.Ray( Entity.Eyes.Position, Entity.Eyes.Rotation.Forward(), Length ).Ignore( "Pawn" );
 			var entity = ray.Run<T>() ?? ray.Radius( size ).Run<T>();
 
 			// Set root ray to larger size then run
