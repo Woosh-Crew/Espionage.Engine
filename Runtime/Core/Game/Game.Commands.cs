@@ -15,5 +15,25 @@ namespace Espionage.Engine
 
 			Local.Client.Tripod.Push<DevTripod>();
 		}
+
+		[Function( "dev.noclip" ), Terminal]
+		private static void DevNoclipCommand()
+		{
+			var pawn = Local.Client.Pawn;
+
+			if ( pawn.DevController == null )
+			{
+				pawn.DevController = pawn.Components.Create<NoclipController>();
+			}
+			else
+			{
+				var controller = pawn.Components.Get<NoclipController>();
+
+				pawn.Components.Remove( controller );
+				pawn.DevController = null;
+
+				controller.Delete();
+			}
+		}
 	}
 }

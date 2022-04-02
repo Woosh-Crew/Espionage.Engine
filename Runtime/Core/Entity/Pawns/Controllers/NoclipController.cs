@@ -9,6 +9,7 @@ namespace Espionage.Engine
 		protected override void OnAttached( Pawn item )
 		{
 			Enabled = true;
+			_targetPos = item.Position;
 		}
 
 		protected override void Simulate()
@@ -16,11 +17,6 @@ namespace Espionage.Engine
 			base.Simulate();
 
 			var direction = new Vector2( Client.Input.Forward, Client.Input.Horizontal );
-
-			if ( _targetPos == default )
-			{
-				_targetPos = Entity.Position;
-			}
 
 			// Movement
 
