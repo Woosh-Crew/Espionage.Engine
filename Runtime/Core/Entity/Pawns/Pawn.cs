@@ -19,7 +19,6 @@ namespace Espionage.Engine
 		public void Simulate( Client client )
 		{
 			(DevController ?? PawnController)?.Simulate( client );
-
 			Floor = Floor.Get( Position );
 
 			foreach ( var item in Components.GetAll<ISimulated>() )

@@ -1,11 +1,15 @@
-﻿using Espionage.Engine.Components;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Espionage.Engine
 {
 	public class NoclipController : Pawn.Controller
 	{
 		private Vector3 _targetPos;
+
+		protected override void OnAttached( Pawn item )
+		{
+			Enabled = true;
+		}
 
 		protected override void Simulate()
 		{
@@ -15,7 +19,7 @@ namespace Espionage.Engine
 
 			if ( _targetPos == default )
 			{
-				_targetPos = Entity.transform.position;
+				_targetPos = Entity.Position;
 			}
 
 			// Movement
@@ -45,10 +49,8 @@ namespace Espionage.Engine
 			}
 
 			_targetPos += vel * Time.deltaTime;
-
 			Velocity = vel;
-
-			Entity.transform.position = Vector3.Lerp( Entity.transform.position, _targetPos, 5 * Time.deltaTime );
+			Entity.Position = Entity.Position.LerpTo( _targetPos, 5 * Time.deltaTime );
 		}
 	}
 }

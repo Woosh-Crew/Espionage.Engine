@@ -7,7 +7,7 @@ namespace Espionage.Engine
 	/// eyes are. AI and Tripods use this for
 	/// vision placement (Camera /  Sense)
 	/// </summary>
-	public struct Eyes
+	public readonly struct Eyes
 	{
 		internal Eyes( Vector3 pos, Quaternion rot )
 		{
@@ -15,8 +15,8 @@ namespace Espionage.Engine
 			Rotation = rot;
 		}
 
-		public Vector3 Position { get; internal set; }
-		public Quaternion Rotation { get; internal set; }
+		public Vector3 Position { get; }
+		public Quaternion Rotation { get; }
 
 		public Trace.Builder Ray( float distance = 0.9f )
 		{

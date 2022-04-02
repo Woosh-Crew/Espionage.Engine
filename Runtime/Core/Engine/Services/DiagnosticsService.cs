@@ -57,6 +57,11 @@ namespace Espionage.Engine.Services
 				Dev.Terminal.Invoke( "dev.tripod" );
 			}
 
+			if ( Input.GetKeyDown( KeyCode.N ) )
+			{
+				Local.Client.Pawn.DevController = Local.Client.Pawn.DevController is NoclipController ? null : Local.Client.Pawn.Components.GetOrCreate<NoclipController>();
+			}
+
 			// Use Dev Tripod
 			if ( Input.GetKeyDown( KeyCode.BackQuote ) )
 			{

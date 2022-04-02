@@ -111,9 +111,9 @@ namespace Espionage.Engine.Components
 			return null;
 		}
 
-		public TComp GetOrCreate<TComp>() where TComp : class, new()
+		public TComp GetOrCreate<TComp>() where TComp : class, IComponent<T>, new()
 		{
-			return TryGet<TComp>( out var comp ) ? comp : new();
+			return TryGet<TComp>( out var comp ) ? comp : Create<TComp>();
 		}
 
 		public TComp GetOrCreate<TComp>( Func<TComp> creation ) where TComp : class
