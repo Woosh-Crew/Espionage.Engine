@@ -131,7 +131,7 @@ namespace Espionage.Engine
 		{
 			camSetup.Viewmodel.FieldOfView = camSetup.FieldOfView;
 
-			if ( Local.Pawn != null )
+			if ( Local.Pawn != null && LastTripod == Local.Pawn.Tripod )
 			{
 				Local.Pawn.PostCameraSetup( ref camSetup );
 			}

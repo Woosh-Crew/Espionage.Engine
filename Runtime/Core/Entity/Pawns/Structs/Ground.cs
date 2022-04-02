@@ -56,5 +56,12 @@ namespace Espionage.Engine
 
 		public Entity Entity { get; }
 		public Surface Surface { get; }
+
+		// Helpers
+
+		public static implicit operator bool( Ground ground )
+		{
+			return ground.IsGrounded;
+		}
 	}
 }

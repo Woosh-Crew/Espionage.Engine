@@ -5,9 +5,8 @@ namespace Espionage.Engine
 {
 	public class Interactor : Component<Actor>, ISimulated
 	{
-		[Slider( 0.1f, 10 )]
-		public float Length { get; set; } = 2;
-
+		[Slider( 0.1f, 2 )]
+		public float Length { get; set; } = 0.9f;
 
 		// Current
 
@@ -53,6 +52,10 @@ namespace Espionage.Engine
 
 		// IUse
 
+		public event Action OnFailed;
+
+		private Vector3 _positionWhenUsed;
+
 		private void Start()
 		{
 			Using = Find<IUsable>( 0.2f, e => e.IsUsable( Entity ) );
@@ -73,11 +76,11 @@ namespace Espionage.Engine
 			_positionWhenUsed = default;
 		}
 
-		private Vector3 _positionWhenUsed;
-
-
-		protected virtual void Failed() { }
-		protected virtual void Started() { }
+		protected virtual void Failed()
+		{
+			// Play a sound?
+			OnFailed?.Invoke();
+		}
 
 		// Helpers
 
