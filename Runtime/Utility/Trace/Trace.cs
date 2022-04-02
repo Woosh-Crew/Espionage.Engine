@@ -4,6 +4,11 @@ namespace Espionage.Engine
 {
 	public static class Trace
 	{
+		public static Builder Ray( Vector3 origin, Vector3 direction )
+		{
+			return new( origin, direction, 1 );
+		}
+
 		public static Builder Ray( Vector3 origin, Vector3 direction, float distance )
 		{
 			return new( origin, direction, distance );
@@ -72,8 +77,8 @@ namespace Espionage.Engine
 				RaycastHit test;
 
 				var cast = _radius > 0
-					? Physics.Raycast( _origin, _direction, out test, _distance, LayerMask.GetMask( _ignore ), QueryTriggerInteraction.Ignore )
-					: Physics.SphereCast( _origin, _radius, _direction, out test, _distance, LayerMask.GetMask( _ignore ), QueryTriggerInteraction.Ignore );
+					? Physics.Raycast( _origin, _direction, out test, _distance, ~LayerMask.GetMask( _ignore ), QueryTriggerInteraction.Ignore )
+					: Physics.SphereCast( _origin, _radius, _direction, out test, _distance, ~LayerMask.GetMask( _ignore ), QueryTriggerInteraction.Ignore );
 
 				if ( !cast )
 				{

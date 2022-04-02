@@ -11,18 +11,19 @@ namespace Espionage.Engine
 
 		public void Simulate( Client cl )
 		{
-			if ( Input.GetKeyDown( KeyCode.E ) )
+			if ( !Input.GetKeyDown( KeyCode.E ) )
 			{
-				// Fire Ray
-				var ray = Physics.Raycast( Entity.EyePos, Entity.EyeRot * Vector3.forward, out var result, Distance, ~LayerMask.GetMask( "Pawn" ) );
+				return;
+			}
 
-				if ( ray )
-				{
-					if ( result.collider.TryGetComponent<IUsable>( out var usable ) && usable.CanUse( Entity ) )
-					{
-						usable.OnInteract( Entity );
-					}
-				}
+			var usable = Trace.Ray( Entity.EyePos, Entity.EyeRot * Vector3.forward, Distance )
+				.Radius( 0.2f )
+				.Ignore( "Pawn" )
+				.Run<IUsable>();
+
+			if ( usable != null && usable.CanUse( Entity ) )
+			{
+				usable.OnInteract( Entity );
 			}
 		}
 	}
