@@ -27,8 +27,8 @@ namespace Espionage.Engine.Resources
 
 		// Utility
 
-		public Animator Animator { get; }
-		public Renderer[] Renderers { get; }
+		public Animator Animator { get; private set; }
+		public Renderer[] Renderers { get; private set; }
 
 		// Model
 
@@ -46,11 +46,14 @@ namespace Espionage.Engine.Resources
 
 				return _model;
 			}
-			set =>
+			set
+			{
 				// Apply Changes to Object
 				_model = value;
-			// Clone Object.
-			// Get Renderers and Animator				
+				// Clone Object.
+				Animator = null;
+				Renderers = null;
+			}
 		}
 	}
 }

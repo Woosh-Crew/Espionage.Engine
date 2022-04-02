@@ -13,10 +13,12 @@ namespace Espionage.Engine
 	{
 		public Library ClassInfo { get; }
 		public Loader Loader { get; protected set; }
+		public Splash Splash { get; protected set; }
 
 		public Game()
 		{
 			Loader = new();
+			Splash = new( string.Empty, 3 );
 
 			// Doesn't go out of scope, no need
 			// to unregister it.

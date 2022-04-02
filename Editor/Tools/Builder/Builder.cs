@@ -41,6 +41,11 @@ namespace Espionage.Engine.Tools.Editor
 				targetGroup = BuildTargetGroup.Standalone
 			};
 
+			if ( !string.IsNullOrEmpty( Engine.Game.Splash.Scene ) )
+			{
+				buildSettings.scenes = new[] { Engine.Game.Splash.Scene };
+			}
+
 			Callback.Run( "project_builder.building", target, buildSettings );
 			var report = UnityEditor.BuildPipeline.BuildPlayer( buildSettings );
 		}

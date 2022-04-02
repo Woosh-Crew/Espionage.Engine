@@ -1,6 +1,4 @@
-﻿using UnityEngine.SceneManagement;
-
-namespace Espionage.Engine
+﻿namespace Espionage.Engine
 {
 	/// <summary>
 	/// The splash screen hides asset and engine initialization.
@@ -23,5 +21,19 @@ namespace Espionage.Engine
 
 		public int Delay { get; }
 		public string Scene { get; }
+
+		public void Start()
+		{
+			OnStart();
+		}
+
+		protected virtual void OnStart() { }
+
+		public void Finish()
+		{
+			OnFinish();
+		}
+
+		protected virtual void OnFinish() { }
 	}
 }

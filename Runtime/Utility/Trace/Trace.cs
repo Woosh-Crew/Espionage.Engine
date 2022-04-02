@@ -100,21 +100,21 @@ namespace Espionage.Engine
 				var result = Run( out var test );
 
 				// Didn't hit
-				if ( !result )
+				if ( !result || !test.HasValue )
 				{
 					hit = null;
 					return null;
 				}
 
 				// Try get a component first
-				if ( test.HasValue && test.Value.collider.TryGetComponent<T>( out var item ) )
+				if ( test.Value.collider.TryGetComponent<T>( out var item ) )
 				{
 					hit = test;
 					return item;
 				}
 
 				// Try an Entity
-				if ( test.HasValue && test.Value.collider.TryGetComponent<Entity>( out var entity ) )
+				if ( test.Value.collider.TryGetComponent<Entity>( out var entity ) )
 				{
 					hit = test;
 					return entity.Get<T>();
