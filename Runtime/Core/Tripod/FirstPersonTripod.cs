@@ -1,5 +1,4 @@
-﻿using Espionage.Engine.Components;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Espionage.Engine.Tripods
 {

@@ -72,19 +72,19 @@ namespace Espionage.Engine
 		/// The controller that is currently being used
 		/// for controlling this pawn.
 		/// </summary>
-		[Property] public Controller PawnController { get; set; }
+		public Controller PawnController { get; set; }
 
 		/// <summary>
 		/// This controller will override the normal controller.
 		/// Is used for dev shit like no-clip.
 		/// </summary>
-		[Property] public Controller DevController { get; set; }
+		public Controller DevController { get; set; }
 
 		//
 		// Camera
 		//
 
-		[Property] public Tripod Tripod { get; set; }
+		public Tripod Tripod { get; set; }
 
 		public virtual void PostCameraSetup( ref Tripod.Setup setup )
 		{

@@ -8,14 +8,18 @@ namespace Espionage.Engine
 	/// A Client is a person that is currently playing the game.
 	/// Clients controls Input and their current possessed Pawn.
 	/// </summary>
-	[Group( "Networking" ), Spawnable( false )]
-	public class Client
+	[Group( "Networking" )]
+	public class Client : Entity
 	{
 		public new static IEnumerable<Client> All => Entity.All.OfType<Client>();
 
 		internal static Client Create( string name )
 		{
-			return new() { Name = name };
+			var cl = Library.Database.Create<Client>();
+			cl.Name = name;
+			cl.gameObject.MoveTo( Engine.Scene );
+
+			return cl;
 		}
 
 		//
