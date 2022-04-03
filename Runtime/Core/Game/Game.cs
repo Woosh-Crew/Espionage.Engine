@@ -16,13 +16,11 @@ namespace Espionage.Engine
 
 		public Loader Loader { get; protected set; }
 		public Splash Splash { get; protected set; }
-		public Scheme Controls { get; protected set; }
 
 		public Game()
 		{
 			Loader = new();
 			Splash = new( string.Empty, 3 );
-			Controls = new();
 
 			// Doesn't go out of scope, no need
 			// to unregister it.
@@ -30,6 +28,7 @@ namespace Espionage.Engine
 		}
 
 		public abstract void OnReady();
+		protected abstract void OnSetup( ref Scheme scheme );
 		public abstract void OnShutdown();
 
 		// Networking & Game-loop
@@ -165,12 +164,28 @@ namespace Espionage.Engine
 
 		}
 
-		// Build Controls
+		//
+		// Controls
+		//
 
 		internal Controls.Setup BuildControls( Controls.Setup builder )
 		{
 			PostControlSetup( builder );
 			return builder;
+		}
+
+		internal Scheme SetupControls()
+		{
+			// Default Scheme
+			var scheme = new Scheme()
+			{
+				["Interact"] = KeyCode.E,
+				["Shoot"] = KeyCode.Mouse0,
+				["Shoot.Alt"] = KeyCode.Mouse1
+			};
+
+			OnSetup( ref scheme );
+			return scheme;
 		}
 
 		/// <summary>

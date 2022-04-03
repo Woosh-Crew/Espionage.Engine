@@ -10,7 +10,7 @@ namespace Espionage.Engine
 	{
 		public static Mouse Mouse => _active.Mouse;
 		public static Cursor Cursor => _active.Cursor;
-		public static Scheme Scheme => Engine.Game.Controls;
+		public static Scheme Scheme { get; internal set; }
 
 		internal static void SetSetup( Client client )
 		{

@@ -9,6 +9,7 @@ namespace Espionage.Engine.Services
 		public override void OnReady()
 		{
 			Local.Client.Input = _setup;
+			Controls.Scheme = Engine.Game.SetupControls();
 		}
 
 		public override void OnUpdate()
