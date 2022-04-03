@@ -1,6 +1,7 @@
 ﻿using Espionage.Engine.Gamemodes;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
+using UnityEngine.SceneManagement;
 
 namespace Espionage.Engine
 {
@@ -12,13 +13,16 @@ namespace Espionage.Engine
 	public abstract partial class Game : ILibrary
 	{
 		public Library ClassInfo { get; }
+
 		public Loader Loader { get; protected set; }
 		public Splash Splash { get; protected set; }
+		public Scheme Controls { get; protected set; }
 
 		public Game()
 		{
 			Loader = new();
 			Splash = new( string.Empty, 3 );
+			Controls = new();
 
 			// Doesn't go out of scope, no need
 			// to unregister it.
