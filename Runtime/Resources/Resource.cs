@@ -27,9 +27,9 @@ namespace Espionage.Engine.Resources
 
 		private class InternalDatabase : IDatabase<Resource<T>, string>
 		{
-			private Dictionary<string, Resource<T>> _storage = new();
+			private readonly Dictionary<string, Resource<T>> _storage = new();
 
-			public Resource<T> this[ string key ] => throw new NotImplementedException();
+			public Resource<T> this[ string key ] => _storage.ContainsKey( key ) ? _storage[key] : null;
 			public int Count => _storage.Count;
 
 			// Enumerator

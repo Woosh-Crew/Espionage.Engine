@@ -1,41 +1,40 @@
 ﻿using System;
+using System.Linq;
 using UnityEngine;
 
 namespace Espionage.Engine.Resources.Models
 {
-	public class AssetBundleFile : Map.File
+	[Library( "mdl.asset_bundle" )]
+	public abstract class AssetBundleFile : Model.File
 	{
 		public AssetBundle Bundle { get; private set; }
-		public override float Progress => _request?.progress ?? 0;
 
 		private AssetBundleCreateRequest _request;
 
-		public override void Load( Action loaded )
+		public override void Load( Action<GameObject> loaded )
 		{
 			// Load Bundle
 			_request = AssetBundle.LoadFromFileAsync( Info.FullName );
 			_request.completed += _ =>
 			{
 				Bundle = _request.assetBundle;
-				
-				Dev.Log.Info( $"Finished Loading Asset Bundle [{Info.Name}]" );
-				loaded.Invoke();
+				var gameObject = Bundle.LoadAllAssets<GameObject>().FirstOrDefault();
+
+				loaded.Invoke( gameObject );
 			};
 		}
 
-		public override void Unload( Action finished )
+		public override void Unload()
 		{
 			if ( Bundle == null )
 			{
 				Dev.Log.Warning( "Bundle was NULL?" );
-				finished.Invoke();
 				return;
 			}
 
 			Bundle.UnloadAsync( true ).completed += _ =>
 			{
 				Dev.Log.Info( $"Finished Unloading Asset Bundle [{Info.Name}]" );
-				finished.Invoke();
 			};
 		}
 	}

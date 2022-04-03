@@ -35,7 +35,6 @@ namespace Espionage.Engine.Resources
 
 			Dev.Log.Error( $"Map Path [{path}], couldn't be found." );
 			return null;
-
 		}
 
 		/// <summary>
@@ -229,7 +228,7 @@ namespace Espionage.Engine.Resources
 			}
 		}
 
-		[Group( "Maps" )]
+		[Library( "map.file" ), Group( "Maps" )]
 		public abstract class File : IFile, ILoadable
 		{
 			public Binder Binder { get; protected set; }

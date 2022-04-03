@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Espionage.Engine.Resources.Maps
 {
+	[Library( "map.asset_bundle" )]
 	public class AssetBundleFile : Map.File
 	{
 		public AssetBundle Bundle { get; private set; }
