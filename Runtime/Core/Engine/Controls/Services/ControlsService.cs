@@ -9,7 +9,7 @@ namespace Espionage.Engine.Services
 		public override void OnReady()
 		{
 			Local.Client.Input = _setup;
-			Controls.Scheme = Engine.Game.SetupControls();
+			_setup.Scheme = Engine.Game.SetupControls();
 		}
 
 		public override void OnUpdate()
@@ -27,6 +27,12 @@ namespace Espionage.Engine.Services
 
 			_setup.Forward = Input.GetAxisRaw( "Vertical" );
 			_setup.Horizontal = Input.GetAxisRaw( "Horizontal" );
+
+			// Sample Scheme
+			foreach ( var binding in _setup.Scheme.Values )
+			{
+				binding.Sample();
+			}
 
 			// Building
 			_setup = Engine.Game.BuildControls( _setup );

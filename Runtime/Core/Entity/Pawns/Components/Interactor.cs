@@ -12,20 +12,19 @@ namespace Espionage.Engine
 
 		public void Simulate( Client cl )
 		{
-			const KeyCode interact = KeyCode.E;
-
 			// IHoverable
 
 			Hovering = Find<IHoverable>( 0.2f, e => e.Show( Entity ) );
 
 			// IUsable
+			var interact = Controls.Scheme["Interact"];
 
-			if ( Input.GetKeyDown( interact ) )
+			if ( interact.Pressed )
 			{
 				Start();
 			}
 
-			if ( !Input.GetKey( interact ) )
+			if ( !interact.Down )
 			{
 				Stop();
 				return;

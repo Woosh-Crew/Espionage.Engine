@@ -3,14 +3,21 @@
 namespace Espionage.Engine
 {
 	/// <summary>
+	/// <para>
 	/// Espionage.Engine's Input System. You should be using
 	/// this over UnityEngine.Input.
+	/// </para>
+	/// <para>
+	/// All Controls is, is just a wrapper for Unity's default
+	/// Input Manager. Later down the line I'd love to have our
+	/// own input readers / streams.
+	/// </para>
 	/// </summary>
 	public static class Controls
 	{
 		public static Mouse Mouse => _active.Mouse;
 		public static Cursor Cursor => _active.Cursor;
-		public static Scheme Scheme { get; internal set; }
+		public static Scheme Scheme => _active.Scheme;
 
 		internal static void SetSetup( Client client )
 		{
@@ -29,6 +36,7 @@ namespace Espionage.Engine
 		{
 			public Mouse Mouse { get; set; }
 			public Cursor Cursor { get; set; }
+			public Scheme Scheme { get; set; }
 
 			public float Forward { get; internal set; }
 			public float Horizontal { get; internal set; }
@@ -40,6 +48,11 @@ namespace Espionage.Engine
 			public void Clear()
 			{
 				Mouse = default;
+
+				foreach ( var binding in Scheme.Values )
+				{
+					binding.Clear();
+				}
 
 				Forward = 0;
 				Horizontal = 0;

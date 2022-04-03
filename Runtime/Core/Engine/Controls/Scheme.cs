@@ -9,21 +9,40 @@ namespace Espionage.Engine
 		public Scheme() : base( StringComparer.CurrentCultureIgnoreCase ) { }
 	}
 
-	public readonly struct Binding
+	public class Binding
 	{
+		public KeyCode Key { get; }
+
+		/// <param name="key"> Default Key Bind </param>
 		public Binding( KeyCode key )
 		{
 			Key = key;
+
+			Pressed = false;
+			Down = false;
+			Released = false;
 		}
 
-		public KeyCode Key { get; }
+		public void Sample()
+		{
+			Pressed = Input.GetKeyDown( Key );
+			Down = Input.GetKey( Key );
+			Released = Input.GetKeyUp( Key );
+		}
 
-		public bool Pressed => Input.GetKeyDown( Key );
-		public bool Down => Input.GetKey( Key );
-		public bool Released => Input.GetKeyUp( Key );
-		
+		public void Clear()
+		{
+			Pressed = false;
+			Down = false;
+			Released = false;
+		}
+
+		public bool Down { get; private set; }
+		public bool Pressed { get; private set; }
+		public bool Released { get; private set; }
+
 		// Helpers
-		
+
 		public static implicit operator Binding( KeyCode code )
 		{
 			return new( code );

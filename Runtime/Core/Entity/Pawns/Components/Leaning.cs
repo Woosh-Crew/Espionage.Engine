@@ -14,13 +14,13 @@ namespace Espionage.Engine
 		public void Simulate( Client cl )
 		{
 			// Left Lean
-			if ( Input.GetKeyDown( KeyCode.Q ) )
+			if ( Controls.Scheme["Lean.Left"].Pressed )
 			{
 				Lean( -1 );
 			}
 
 			// Right lean
-			if ( Input.GetKeyDown( KeyCode.E ) )
+			if ( Controls.Scheme["Lean.Right"].Pressed )
 			{
 				Lean( 1 );
 			}
