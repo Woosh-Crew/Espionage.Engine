@@ -20,7 +20,7 @@ namespace Espionage.Engine.Resources.Models
 				Bundle = _request.assetBundle;
 				var gameObject = Bundle.LoadAllAssets<GameObject>().FirstOrDefault();
 
-				loaded.Invoke( gameObject );
+				loaded?.Invoke( gameObject );
 			};
 		}
 

@@ -10,7 +10,7 @@ using UnityEditor;
 
 namespace Espionage.Engine.Tools.Editor
 {
-	[CreateAssetMenu]
+	[CreateAssetMenu( menuName = "Espionage.Engine/Project Builder" )]
 	public class Builder : ScriptableObject
 	{
 		[field : SerializeField]

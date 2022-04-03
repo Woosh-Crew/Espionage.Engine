@@ -51,6 +51,7 @@ namespace Espionage.Engine.Resources
 		//
 
 		public string Identifier { get; }
+		public bool Persistant { get; set; }
 		public Components<Map> Components { get; }
 
 		private File Source { get; }

@@ -4,11 +4,9 @@ namespace Espionage.Engine.Resources
 {
 	public class Visuals : Component
 	{
-		public Visuals() { }
-
 		public Visuals( Model model )
 		{
-			_model = model;
+			Model = model;
 		}
 
 		private Transform _root;
