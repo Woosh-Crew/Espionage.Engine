@@ -51,6 +51,11 @@ namespace Espionage.Engine.Services
 
 		public override void OnUpdate()
 		{
+			if ( Input.GetKeyDown( KeyCode.F1 ) )
+			{
+				Dev.Terminal.Invoke( "dev.tripod" );
+			}
+
 			// If were in Dev Tripod
 			if ( !Local.Client.Tripod.Is<DevTripod>() )
 			{
