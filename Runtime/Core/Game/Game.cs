@@ -179,9 +179,14 @@ namespace Espionage.Engine
 			// Default Scheme
 			var scheme = new Scheme()
 			{
-				["Interact"] = KeyCode.E,
-				["Shoot"] = KeyCode.Mouse0,
-				["Shoot.Alt"] = KeyCode.Mouse1
+				// Developer
+				{ "Dev.Toggle", KeyCode.F1 },
+				{ "Dev.Noclip", KeyCode.F3 },
+
+				// Gameplay
+				{ "Shoot", KeyCode.Mouse0 },
+				{ "Shoot.Alt", KeyCode.Mouse1 },
+				{ "Interact", KeyCode.F }
 			};
 
 			OnSetup( ref scheme );

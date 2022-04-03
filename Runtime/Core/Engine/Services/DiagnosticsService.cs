@@ -51,29 +51,6 @@ namespace Espionage.Engine.Services
 
 		public override void OnUpdate()
 		{
-			// Use Dev Tripod
-			if ( Input.GetKeyDown( KeyCode.F1 ) )
-			{
-				Dev.Terminal.Invoke( "dev.tripod" );
-			}
-
-			if ( Input.GetKeyDown( KeyCode.F3 ) )
-			{
-				Dev.Terminal.Invoke( "dev.noclip" );
-			}
-
-			// Use Dev Tripod
-			if ( Input.GetKeyDown( KeyCode.BackQuote ) )
-			{
-				if ( !Local.Client.Tripod.Is<DevTripod>() )
-				{
-					Dev.Terminal.Invoke( "dev.tripod" );
-				}
-
-				var terminal = Window.Show<Terminal>();
-				terminal.Focus = true;
-			}
-
 			// If were in Dev Tripod
 			if ( !Local.Client.Tripod.Is<DevTripod>() )
 			{

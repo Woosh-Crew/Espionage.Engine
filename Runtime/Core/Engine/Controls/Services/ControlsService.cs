@@ -2,6 +2,7 @@
 
 namespace Espionage.Engine.Services
 {
+	[Order( -2 )]
 	internal class ControlsService : Service
 	{
 		private Controls.Setup _setup = new() { Cursor = new() { Locked = true, Visible = false } };
@@ -14,17 +15,10 @@ namespace Espionage.Engine.Services
 
 		public override void OnUpdate()
 		{
-			if ( Engine.Game == null || !Application.isPlaying )
-			{
-				return;
-			}
-
 			// Setup ViewAngles,
-			Vector2 mouse = new() { x = Input.GetAxis( "Mouse X" ), y = Input.GetAxis( "Mouse Y" ) };
-			mouse *= Options.MouseSensitivity;
+			var mouse = new Vector2( Input.GetAxis( "Mouse X" ), Input.GetAxis( "Mouse Y" ) ) * Options.MouseSensitivity;
 
 			_setup.Mouse = new() { Delta = mouse, Wheel = Input.GetAxisRaw( "Mouse ScrollWheel" ) };
-
 			_setup.Forward = Input.GetAxisRaw( "Vertical" );
 			_setup.Horizontal = Input.GetAxisRaw( "Horizontal" );
 

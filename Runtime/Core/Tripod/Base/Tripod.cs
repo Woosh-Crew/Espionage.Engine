@@ -157,13 +157,6 @@ namespace Espionage.Engine
 			{
 				return Peek() is T;
 			}
-
-			// Conversions for Tripod, since we can't return an interface
-
-			public static implicit operator Tripod( Stack stack )
-			{
-				return stack.Peek<Tripod>();
-			}
 		}
 
 		/// <summary>

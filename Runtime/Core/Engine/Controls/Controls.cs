@@ -8,7 +8,7 @@ namespace Espionage.Engine
 	/// this over UnityEngine.Input.
 	/// </para>
 	/// <para>
-	/// All Controls is, is just a wrapper for Unity's default
+	/// All Controls is , is just a wrapper for Unity's default
 	/// Input Manager. Later down the line I'd love to have our
 	/// own input readers / streams.
 	/// </para>
@@ -34,8 +34,13 @@ namespace Espionage.Engine
 		/// </summary>
 		public class Setup
 		{
+			/// <summary> Mouse Data, gets reset every Input Sample </summary>
 			public Mouse Mouse { get; set; }
+
+			/// <summary> Used to control Cursor Lock and Visibility. </summary>
 			public Cursor Cursor { get; set; }
+
+			/// <summary> You're Games keybindings </summary>
 			public Scheme Scheme { get; set; }
 
 			public float Forward { get; internal set; }
