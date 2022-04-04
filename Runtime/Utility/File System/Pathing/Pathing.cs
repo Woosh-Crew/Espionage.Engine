@@ -146,6 +146,15 @@ namespace Espionage.Engine.IO
 		}
 
 		/// <summary>
+		/// Checks if this path is a valid path. Meaning it'll check
+		/// if it is a string that could potentially lead to a path. 
+		/// </summary>
+		public bool Valid( string path )
+		{
+			return Path.IsPathFullyQualified( path );
+		}
+
+		/// <summary>
 		/// Gets the path, relative to another path. If you use
 		/// the virtual pathing It'll search loaded mods first
 		///  then the base content, Depending on the virtual

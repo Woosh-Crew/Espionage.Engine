@@ -4,26 +4,34 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Espionage.Engine.Resources
 {
 	[Group( "Models" ), Path( "models", "assets://Models/" )]
 	public sealed class Model : ILibrary, IResource
 	{
-		public static Model Grab( string path )
+		public static Model Load( string path )
 		{
+			if ( !Files.Pathing.Valid( path ) )
+			{
+				path = "models://" + path;
+			}
+
 			path = Files.Pathing.Absolute( path );
 
 			// Use the Database Map if we have it
 			if ( Database[path] != null )
 			{
 				var model = Database[path];
+				model.Load();
 				return model;
 			}
 
 			if ( Files.Pathing.Exists( path ) )
 			{
 				var model = new Model( Files.Grab<File>( path, false ) );
+				model.Load();
 				return model;
 			}
 
@@ -35,52 +43,87 @@ namespace Espionage.Engine.Resources
 		// Instance
 		//
 
+		public Library ClassInfo { get; }
+
 		public string Identifier { get; }
 		public bool Persistant { get; set; }
-		public Library ClassInfo { get; }
 
 		private Model( File provider )
 		{
 			Assert.IsNull( provider );
+			ClassInfo = Library.Register( this );
 
 			Source = provider;
 			Identifier = provider.Info.FullName;
-			ClassInfo = Library.Register( this );
 		}
 
-		public File Source { get; private set; }
-		private GameObject Cached { get; set; }
+		public File Source { get; }
+		public GameObject Cache { get; set; }
+		private Stack<Instance> Instances { get; set; } = new();
 
-		public int Instances { get; private set; }
-
-		internal void Load( Action<GameObject> onLoad )
+		public Instance Consume( Transform transform )
 		{
-			if ( Instances <= 0 )
-			{
-				onLoad += OnLoad;
+			var instance = Instances.Peek();
 
-				// Add to Database
-				Database.Add( this );
-				Source.Load( onLoad );
+			if ( instance.IsConsumed )
+			{
+				Assert.IsTrue( instance.IsConsumed );
+				return null;
 			}
 
-			Instances++;
+			instance.IsConsumed = true;
+			instance.GameObject.SetActive( true );
+			instance.GameObject.transform.parent = transform;
+
+			return instance;
 		}
 
-		internal void OnLoad( GameObject gameObject )
+		private void Load()
 		{
-			Cached = gameObject;
-			UnityEngine.Object.Instantiate( gameObject );
-		}
-
-		internal void Unload()
-		{
-			Instances--;
-
-			if ( Instances <= 0 )
+			if ( Instances.Count <= 0 )
 			{
+				Database.Add( this );
+				Source.Load( OnLoad );
+			}
+
+			Instances.Push( new( this ) );
+		}
+
+		private void OnLoad( GameObject gameObject )
+		{
+			Cache = gameObject;
+		}
+
+		private void Unload()
+		{
+			Instances.Pop();
+
+			if ( Instances.Count <= 0 )
+			{
+				Database.Add( this );
 				Source.Unload();
-				Database.Remove( this );
+				Cache = null;
+			}
+		}
+
+		public sealed class Instance
+		{
+			public Instance( Model model )
+			{
+				Model = model;
+				IsConsumed = false;
+
+				GameObject = Object.Instantiate( Model.Cache );
+				GameObject.SetActive( false );
+			}
+
+			public Model Model { get; }
+			public GameObject GameObject { get; }
+			public bool IsConsumed { get; set; }
+
+			public void Delete()
+			{
+				Model.Unload();
 			}
 		}
 

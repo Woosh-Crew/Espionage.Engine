@@ -10,12 +10,11 @@ namespace Espionage.Engine.Resources.Models
 {
 	[Title( "Unity Model File" ), File( Extension = "umdl" )]
 	public partial class UMDL : AssetBundleFile { }
-	
+
 	#if UNITY_EDITOR
 
-	public partial class UMDL  : ICompiler<GameObject>
+	public partial class UMDL : ICompiler<GameObject>
 	{
-
 		public void Compile( string asset )
 		{
 			var exportPath = $"Exports/{ClassInfo.Group}/";
@@ -25,15 +24,13 @@ namespace Espionage.Engine.Resources.Models
 			{
 				try
 				{
-					AssetDatabase.Refresh();
-
 					if ( !Directory.Exists( Path.GetFullPath( exportPath ) ) )
 					{
 						Directory.CreateDirectory( Path.GetFullPath( exportPath ) );
 					}
 
 					var extension = Library.Database.Get<UMDL>().Components.Get<FileAttribute>().Extension;
-					var builds = new[] { new AssetBundleBuild() { assetNames = new[] { asset }, assetBundleName = $"{Files.Pathing.Name(asset, false)}.{extension}" } };
+					var builds = new[] { new AssetBundleBuild() { assetNames = new[] { asset }, assetBundleName = $"{Files.Pathing.Name( asset, false )}.{extension}" } };
 
 					var bundle = BuildPipeline.BuildAssetBundles( exportPath, builds, BuildAssetBundleOptions.ChunkBasedCompression, BuildTarget.StandaloneWindows );
 
@@ -52,6 +49,6 @@ namespace Espionage.Engine.Resources.Models
 			}
 		}
 	}
-	
+
 	#endif
 }

@@ -1,14 +1,10 @@
-﻿using UnityEngine;
+﻿using System.Xml.Schema;
+using UnityEngine;
 
 namespace Espionage.Engine.Resources
 {
 	public class Visuals : Component
 	{
-		public Visuals( Model model )
-		{
-			Model = model;
-		}
-
 		private Transform _root;
 
 		public override void OnAttached( Entity item )
@@ -30,27 +26,20 @@ namespace Espionage.Engine.Resources
 
 		// Model
 
-		private Model _model;
+		private Model.Instance _model;
 
 		public Model Model
 		{
-			get
-			{
-				if ( _model?.Instances <= 0 )
-				{
-					_model = null;
-					return null;
-				}
-
-				return _model;
-			}
+			get => _model.Model;
 			set
 			{
-				// Apply Changes to Object
-				_model = value;
-				// Clone Object.
-				Animator = null;
-				Renderers = null;
+				if ( value == null )
+				{
+					return;
+				}
+
+				_model?.Delete();
+				_model = value.Consume( _root );
 			}
 		}
 	}

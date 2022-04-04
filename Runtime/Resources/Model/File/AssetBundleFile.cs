@@ -14,14 +14,10 @@ namespace Espionage.Engine.Resources.Models
 		public override void Load( Action<GameObject> loaded )
 		{
 			// Load Bundle
-			_request = AssetBundle.LoadFromFileAsync( Info.FullName );
-			_request.completed += _ =>
-			{
-				Bundle = _request.assetBundle;
-				var gameObject = Bundle.LoadAllAssets<GameObject>().FirstOrDefault();
-
-				loaded?.Invoke( gameObject );
-			};
+			Bundle = AssetBundle.LoadFromFile( Info.FullName );
+			var gameObject = Bundle.LoadAllAssets<GameObject>().FirstOrDefault();
+			loaded?.Invoke( gameObject );
+			Dev.Log.Info( "Bundle Loaded" );
 		}
 
 		public override void Unload()
