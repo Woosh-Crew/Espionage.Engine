@@ -61,10 +61,16 @@ namespace Espionage.Engine
 
 		protected override void OnAwake()
 		{
-			foreach ( var render in GetComponentsInChildren<Renderer>() )
+			Visuals.Changed += OnModelChanged;
+			Enabled = Showing;
+		}
+
+		private void OnModelChanged()
+		{
+			foreach ( var render in Visuals.Renderers )
 			{
-				render.shadowCastingMode = castShadows ? ShadowCastingMode.On : ShadowCastingMode.Off;
-				render.receiveShadows = receiveShadows;
+				render.shadowCastingMode = ShadowCastingMode.Off;
+				render.receiveShadows = false;
 				render.gameObject.layer = LayerMask.NameToLayer( "Viewmodel" );
 
 				// Assign Correct Viewmodel Shader
@@ -73,8 +79,6 @@ namespace Espionage.Engine
 					mat.shader = Shader.Find( "Viewmodel Standard" );
 				}
 			}
-
-			Enabled = Showing;
 		}
 
 		private void PostCameraSetup( ref Tripod.Setup setup )
@@ -165,13 +169,5 @@ namespace Espionage.Engine
 			/// <returns> True if were done with this Modifier </returns>
 			protected abstract bool Update( ref Tripod.Setup setup, Viewmodel viewmodel );
 		}
-
-		// Fields
-
-		[SerializeField]
-		private bool castShadows;
-
-		[SerializeField]
-		private bool receiveShadows;
 	}
 }

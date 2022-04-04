@@ -1,4 +1,4 @@
-﻿using System.Xml.Schema;
+﻿using System;
 using UnityEngine;
 
 namespace Espionage.Engine.Resources
@@ -32,6 +32,7 @@ namespace Espionage.Engine.Resources
 
 		// Utility
 
+		public Action Changed { get; set; }
 		public Animator Animator { get; private set; }
 		public Renderer[] Renderers { get; private set; }
 
@@ -67,6 +68,7 @@ namespace Espionage.Engine.Resources
 
 				Animator = _model.GameObject.GetComponent<Animator>();
 				Renderers = _root.GetComponentsInChildren<Renderer>();
+				Changed?.Invoke();
 			}
 		}
 	}
