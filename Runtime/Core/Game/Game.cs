@@ -186,7 +186,8 @@ namespace Espionage.Engine
 				// Gameplay
 				{ "Shoot", KeyCode.Mouse0 },
 				{ "Shoot.Alt", KeyCode.Mouse1 },
-				{ "Interact", KeyCode.F }
+				{ "Interact", KeyCode.F },
+				{ "Switch.Tripod", KeyCode.C }
 			};
 
 			OnSetup( ref scheme );
