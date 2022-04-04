@@ -21,7 +21,7 @@ namespace Espionage.Engine.Tripods
 
 		public void Simulate( Client cl )
 		{
-			if ( Input.GetKeyDown( KeyCode.C ) )
+			if ( Controls.Scheme["Switch.Tripod"].Pressed )
 			{
 				_index++;
 				_index %= Tripods.Length;
