@@ -15,9 +15,9 @@ namespace Espionage.Engine
 
 		private class InternalDatabase : IDatabase<Library, string, Type>
 		{
-			private readonly Dictionary<string, Library> _records = new();
+			private readonly Dictionary<string, Library> _storage = new();
 
-			public Library this[ string key ] => _records[key];
+			public Library this[ string key ] => _storage[key];
 			public Library this[ Type key ] => this.Get( key );
 
 			// Enumerator
@@ -25,7 +25,7 @@ namespace Espionage.Engine
 			public IEnumerator<Library> GetEnumerator()
 			{
 				// This shouldn't box. _store.GetEnumerator Does. but Enumerable.Empty shouldn't.
-				return Count == 0 ? Enumerable.Empty<Library>().GetEnumerator() : _records.Values.GetEnumerator();
+				return Count == 0 ? Enumerable.Empty<Library>().GetEnumerator() : _storage.Values.GetEnumerator();
 			}
 
 			IEnumerator IEnumerable.GetEnumerator()
@@ -59,32 +59,32 @@ namespace Espionage.Engine
 				}
 
 				// Store it in Database
-				if ( _records.ContainsKey( item.Name! ) )
+				if ( _storage.ContainsKey( item.Name! ) )
 				{
-					_records[item.Name] = item;
+					_storage[item.Name] = item;
 				}
 				else
 				{
-					_records.Add( item.Name!, item );
+					_storage.Add( item.Name!, item );
 				}
 			}
 
 			public void Clear()
 			{
-				_records.Clear();
+				_storage.Clear();
 			}
 
 			public bool Contains( Library item )
 			{
-				return _records.ContainsKey( item.Name );
+				return _storage.ContainsKey( item.Name );
 			}
 
 			public void Remove( Library item )
 			{
-				_records.Remove( item.Name );
+				_storage.Remove( item.Name );
 			}
 
-			public int Count => _records.Count;
+			public int Count => _storage.Count;
 		}
 	}
 }

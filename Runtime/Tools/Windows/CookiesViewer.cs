@@ -43,6 +43,13 @@ namespace Espionage.Engine.Tools
 			{
 				Cookies.Save();
 			}
+
+			ImGui.SameLine();
+
+			if ( ImGui.Button( "Open Location" ) )
+			{
+				Files.Open( "config://" );
+			}
 		}
 	}
 }

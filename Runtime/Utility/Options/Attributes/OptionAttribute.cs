@@ -5,5 +5,8 @@
 	/// menu. use Library.Global.Properties.Select() to
 	/// get them all.
 	/// </summary>
-	public class OptionAttribute : CookieAttribute { }
+	public class OptionAttribute : CookieAttribute
+	{
+		public OptionAttribute( string path = "config://.cookies" ) : base( path ) { }
+	}
 }

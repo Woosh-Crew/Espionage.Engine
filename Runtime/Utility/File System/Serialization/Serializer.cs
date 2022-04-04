@@ -4,18 +4,6 @@ namespace Espionage.Engine.IO
 {
 	public class Serializer
 	{
-		protected static T Find<T>() where T : class, ILibrary
-		{
-			var library = Library.Database.Find<T>();
-
-			if ( library == null )
-			{
-				throw new FileLoadException( "No Valid Descriptors for this File" );
-			}
-
-			return Library.Database.Create<T>( library.Info );
-		}
-
 		//
 		// API
 		//
@@ -33,10 +21,7 @@ namespace Espionage.Engine.IO
 
 			var fileInfo = new FileInfo( path );
 
-			if ( !Directory.Exists( fileInfo.DirectoryName ) )
-			{
-				Directory.CreateDirectory( fileInfo.DirectoryName );
-			}
+			Files.Pathing.Create( fileInfo.DirectoryName );
 
 			using var stream = File.Create( path );
 			stream.Write( data );
@@ -47,7 +32,20 @@ namespace Espionage.Engine.IO
 		/// </summary>
 		public virtual byte[] Serialize<T>( T data )
 		{
-			var serializer = Find<ISerializer<T>>();
+			return Serialize( Library.Database.Find<ISerializer<T>>(), data );
+		}
+
+		/// <summary>
+		/// <para>
+		/// <inheritdoc cref="Serialize{T}(T)"/>
+		/// </para>
+		/// <para>
+		/// This is faster, if you already have the lib.
+		/// </para>
+		/// </summary>
+		public virtual byte[] Serialize<T>( Library lib, T data )
+		{
+			var serializer = Library.Database.Create<ISerializer<T>>( lib.Info );
 			return serializer.Serialize( data );
 		}
 
@@ -56,12 +54,24 @@ namespace Espionage.Engine.IO
 		/// </summary>
 		public virtual byte[] Serialize<T>( T[] data )
 		{
-			var serializer = Find<ISerializer<T>>();
+			return Serialize( Library.Database.Find<ISerializer<T>>(), data );
+		}
+
+		/// <summary>
+		/// <para>
+		/// <inheritdoc cref="Serialize{T}(T)"/>
+		/// </para>
+		/// <para>
+		/// This is faster, if you already have the lib.
+		/// </para>
+		/// </summary>
+		public virtual byte[] Serialize<T>( Library lib, T[] data )
+		{
+			var serializer = Library.Database.Create<ISerializer<T>>( lib.Info );
 			return serializer.Serialize( data );
 		}
 
 		// Deserialization
-
 
 		/// <summary>
 		/// Deserializes data at the given path. Will
@@ -70,9 +80,22 @@ namespace Espionage.Engine.IO
 		/// </summary>
 		public virtual T Deserialize<T>( string path )
 		{
+			return Deserialize<T>( Library.Database.Find<IDeserializer<T>>(), path );
+		}
+
+		/// <summary>
+		/// <para>
+		/// <inheritdoc cref="Deserialize{T}(string)"/>
+		/// </para>
+		/// <para>
+		/// This is faster, if you already have the lib.
+		/// </para>
+		/// </summary>
+		public virtual T Deserialize<T>( Library lib, string path )
+		{
 			path = Files.Pathing.Absolute( path );
 
-			var deserializer = Find<IDeserializer<T>>();
+			var deserializer = Library.Database.Create<IDeserializer<T>>( lib.Info );
 			return deserializer.Deserialize( Deserialize( path ) );
 		}
 

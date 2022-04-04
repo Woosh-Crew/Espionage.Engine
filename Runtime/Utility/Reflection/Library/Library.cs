@@ -181,6 +181,11 @@ namespace Espionage.Engine
 			}
 		}
 
+		public static implicit operator Library( string value )
+		{
+			return Database[value];
+		}
+
 		//
 		// Properties
 		// 

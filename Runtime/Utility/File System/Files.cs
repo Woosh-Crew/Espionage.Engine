@@ -39,6 +39,12 @@ namespace Espionage.Engine
 			return file;
 		}
 
+		/// <inheritdoc cref="Save{T}(T,string)"/>
+		public static void Save<T>( Library lib, T item, string path )
+		{
+			Serialization.Store( Serialization.Serialize( lib, item ), path );
+		}
+
 		/// <summary>
 		/// Saves anything you want, (provided theres a
 		/// serializer for it) to the given path
@@ -46,6 +52,12 @@ namespace Espionage.Engine
 		public static void Save<T>( T item, string path )
 		{
 			Serialization.Store( Serialization.Serialize( item ), path );
+		}
+
+		/// <inheritdoc cref="Save{T}(T,string)"/>
+		public static void Save<T>( Library lib, T[] item, string path )
+		{
+			Serialization.Store( Serialization.Serialize( lib, item ), path );
 		}
 
 		/// <summary>

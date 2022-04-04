@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Espionage.Engine.Serializers
 {
-	[Group( "Serializers" ), Singleton]
+	[Library( "serializer.string" ), Group( "Serializers" ), Singleton]
 	internal class StringSerializer : ISerializer<char>, ISerializer<string>, IDeserializer<string>, IDeserializer<char>, ISerializer<List<string>>
 	{
 		public Library ClassInfo { get; }

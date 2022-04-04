@@ -35,12 +35,12 @@ namespace Espionage.Engine.Internal
 				using var _ = Dev.Stopwatch( $"Loading Cookies [{file.Key}]" );
 
 				// This is a really shitty ini deserializer
-				var sheet = Files.Serialization.Deserialize<string>( file.Key ).Split( '\n', StringSplitOptions.RemoveEmptyEntries );
+				var sheet = Files.Serialization.Deserialize<string>( "serializer.string", file.Key ).Split( '\n', StringSplitOptions.RemoveEmptyEntries );
 
 				foreach ( var item in sheet )
 				{
 					// Comments (Not sure why there would be any?)
-					if ( string.IsNullOrWhiteSpace( item ) || item.StartsWith( '#' ) || item.StartsWith( '[' ) )
+					if ( string.IsNullOrWhiteSpace( item ) )
 					{
 						continue;
 					}
@@ -48,18 +48,11 @@ namespace Espionage.Engine.Internal
 					// 0 is Index, 1 is value
 					var split = item.Split( " = " );
 
-					try
+					if ( Registry.ContainsKey( split[0] ) )
 					{
-						if ( Registry.ContainsKey( split[0] ) )
-						{
-							// This is aids
-							var prop = Registry[split[0]].Property;
-							prop[null] = Converter.Convert( split[1].Trim(), prop.Type );
-						}
-					}
-					catch ( Exception e )
-					{
-						Dev.Log.Exception( e );
+						// This is aids
+						var prop = Registry[split[0]].Property;
+						prop[null] = Converter.Convert( split[1].Trim(), prop.Type );
 					}
 				}
 			}
@@ -81,14 +74,14 @@ namespace Espionage.Engine.Internal
 				return;
 			}
 
-			var files = Registry.Values.GroupBy( e => e.File );
+			var files = Registry.GroupBy( e => e.Value.File );
 			foreach ( var file in files )
 			{
 				using var _ = Dev.Stopwatch( $"Saving Cookies [{file.Key}]" );
 
 				var serialized = new StringBuilder();
 
-				foreach ( var group in Registry.GroupBy( e => e.Value.Property.Group ) )
+				foreach ( var group in file.GroupBy( e => e.Value.Property.Group ) )
 				{
 					// Grouping / Sections
 					if ( serialized.Length != 0 )
@@ -104,7 +97,7 @@ namespace Espionage.Engine.Internal
 					}
 				}
 
-				Files.Save( serialized.ToString(), file.Key );
+				Files.Save( "serializer.string", serialized.ToString(), file.Key );
 			}
 
 			Callback.Run( "cookies.saved" );
