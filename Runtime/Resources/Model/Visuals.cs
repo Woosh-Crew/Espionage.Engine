@@ -19,6 +19,17 @@ namespace Espionage.Engine.Resources
 			_root = go.transform;
 		}
 
+		public override void OnDetached()
+		{
+			base.OnDetached();
+
+			Animator = null;
+			Renderers = null;
+
+			_model?.Delete();
+			_model = null;
+		}
+
 		// Utility
 
 		public Animator Animator { get; private set; }
@@ -33,13 +44,29 @@ namespace Espionage.Engine.Resources
 			get => _model.Model;
 			set
 			{
+				if ( _model?.Model == value )
+				{
+					Dev.Log.Info( "Trying to apply the same Model" );
+					return;
+				}
+
 				if ( value == null )
 				{
+					_model?.Delete();
+					_model = null;
 					return;
 				}
 
 				_model?.Delete();
 				_model = value.Consume( _root );
+
+				if ( _model == null )
+				{
+					return;
+				}
+
+				Animator = _model.GameObject.GetComponent<Animator>();
+				Renderers = _root.GetComponentsInChildren<Renderer>();
 			}
 		}
 	}

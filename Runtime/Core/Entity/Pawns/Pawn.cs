@@ -16,7 +16,7 @@ namespace Espionage.Engine
 			gameObject.layer = LayerMask.NameToLayer( "Pawn" );
 		}
 
-		public void Simulate( Client client )
+		public virtual void Simulate( Client client )
 		{
 			(DevController ?? PawnController)?.Simulate( client );
 			Floor = Floor.Get( Position );
@@ -113,6 +113,8 @@ namespace Espionage.Engine
 		/// by a client?
 		/// </summary>
 		public bool IsClient => Client != null;
+
+		public bool IsLocalPawn => (Client != null ? Client.Pawn : null) == this;
 
 		/// <summary>
 		/// Component Callbacks Specific for this Entity.

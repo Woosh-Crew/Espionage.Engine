@@ -63,7 +63,7 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
-  - m_Name: Foward
+  - m_Name: Forward
     m_Type: 1
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -91,16 +91,24 @@ BlendTree:
   m_Name: Directional Movement
   m_Childs:
   - serializedVersion: 2
-    m_Motion: {fileID: -7429884730043439682, guid: ace5f7f3dc961514b8efdd75b4657c6e, type: 3}
+    m_Motion: {fileID: -5181458248759520008, guid: 55e67e162a943704cb3ef3bfe1df4845, type: 3}
     m_Threshold: 0
+    m_Position: {x: 0, y: 0}
+    m_TimeScale: 1
+    m_CycleOffset: 0
+    m_DirectBlendParameter: Horizontal
+    m_Mirror: 0
+  - serializedVersion: 2
+    m_Motion: {fileID: -7429884730043439682, guid: ace5f7f3dc961514b8efdd75b4657c6e, type: 3}
+    m_Threshold: 0.25
     m_Position: {x: 0, y: -1}
     m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: Blend
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: 2189004622298154380, guid: 92be80ed4017fe040976dff0162e0623, type: 3}
-    m_Threshold: 0.33333334
+    m_Motion: {fileID: 2667949614841947897, guid: a1cf171e6d0fefa4bb2fe19fd3fa32b5, type: 3}
+    m_Threshold: 0.5
     m_Position: {x: 0, y: 1}
     m_TimeScale: 1
     m_CycleOffset: 0
@@ -108,7 +116,7 @@ BlendTree:
     m_Mirror: 0
   - serializedVersion: 2
     m_Motion: {fileID: -625532383403663383, guid: df5d52570e7286c45b47c77967d40748, type: 3}
-    m_Threshold: 0.6666667
+    m_Threshold: 0.75
     m_Position: {x: -1, y: 0}
     m_TimeScale: 1
     m_CycleOffset: 0
@@ -123,7 +131,7 @@ BlendTree:
     m_DirectBlendParameter: Blend
     m_Mirror: 0
   m_BlendParameter: Horizontal
-  m_BlendParameterY: Foward
+  m_BlendParameterY: Forward
   m_MinThreshold: 0
   m_MaxThreshold: 1
   m_UseAutomaticThresholds: 1

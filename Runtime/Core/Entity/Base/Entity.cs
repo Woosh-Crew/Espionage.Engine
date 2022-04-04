@@ -64,6 +64,7 @@ namespace Espionage.Engine
 
 			base.OnDestroy();
 
+			Components.Clear();
 			Components = null;
 		}
 

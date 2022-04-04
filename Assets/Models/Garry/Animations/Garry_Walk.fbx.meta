@@ -1,11 +1,11 @@
 fileFormatVersion: 2
-guid: 92be80ed4017fe040976dff0162e0623
+guid: a1cf171e6d0fefa4bb2fe19fd3fa32b5
 ModelImporter:
   serializedVersion: 21202
   internalIDToNameTable:
   - first:
-      74: 2189004622298154380
-    second: Garry_Walk_Forwards
+      74: 2667949614841947897
+    second: Walk
   externalObjects: {}
   materials:
     materialImportMode: 2
@@ -15,7 +15,7 @@ ModelImporter:
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
-    resampleCurves: 0
+    resampleCurves: 1
     optimizeGameObjects: 0
     removeConstantScaleCurves: 1
     motionNodeName: 
@@ -36,8 +36,8 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Garry_Walk_Forwards
-      takeName: Garry_Walk_Forwards
+      name: Walk
+      takeName: Walk
       internalID: 0
       firstFrame: 1
       lastFrame: 31
