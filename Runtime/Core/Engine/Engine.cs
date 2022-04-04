@@ -170,6 +170,7 @@ namespace Espionage.Engine
 		private static void OnUpdate()
 		{
 			Services.Update();
+			Callback.Run( "app.frame" );
 
 			foreach ( var client in Client.All )
 			{

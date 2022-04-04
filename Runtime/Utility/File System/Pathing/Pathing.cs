@@ -145,6 +145,28 @@ namespace Espionage.Engine.IO
 			return Path.GetFullPath( newPath );
 		}
 
+		public void Create( string path )
+		{
+			path = Absolute( path );
+			if ( !Exists( path ) )
+			{
+				Directory.CreateDirectory( path );
+			}
+		}
+
+		public Files.Meta Meta( string path )
+		{
+			path = Absolute( path );
+			return !Exists( path )
+				? default
+				: new Files.Meta(
+					File.GetAttributes( path ),
+					File.GetCreationTime( path ),
+					File.GetLastAccessTime( path ),
+					File.GetLastWriteTime( path )
+				);
+		}
+
 		/// <summary>
 		/// Checks if this path is a valid path. Meaning it'll check
 		/// if it is a string that could potentially lead to a path. 

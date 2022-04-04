@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using Espionage.Engine.IO;
 
@@ -155,6 +156,34 @@ namespace Espionage.Engine
 			}
 
 			Process.Start( $"file://{path}" );
+		}
+
+		//
+		// Structs
+		//
+
+		public readonly struct Meta
+		{
+			internal Meta( FileAttributes attributes, DateTime creation, DateTime access, DateTime modified )
+			{
+				Attributes = attributes;
+				Creation = creation;
+				Access = access;
+				Modified = modified;
+			}
+
+			public FileAttributes Attributes { get; }
+
+			// Helpers
+
+			public bool IsFile => Attributes is not FileAttributes.Directory;
+			public bool IsDirectory => Attributes is FileAttributes.Directory;
+
+			// Timings
+
+			public DateTime Creation { get; }
+			public DateTime Access { get; }
+			public DateTime Modified { get; }
 		}
 	}
 }
