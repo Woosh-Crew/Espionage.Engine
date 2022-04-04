@@ -106,7 +106,7 @@ namespace Espionage.Engine
 		/// <summary>
 		/// Copies the source file to the target path
 		/// </summary>
-		public static void Copy( string file, string path )
+		public static void Copy( string file, string path, bool overwrite = true )
 		{
 			file = Pathing.Absolute( file );
 			path = Pathing.Absolute( path );
@@ -118,18 +118,14 @@ namespace Espionage.Engine
 				throw new FileNotFoundException();
 			}
 
-			if ( !Directory.Exists( path ) )
-			{
-				Directory.CreateDirectory( path );
-			}
-
-			fileInfo.CopyTo( path );
+			Pathing.Create( path );
+			fileInfo.CopyTo( path, overwrite );
 		}
 
 		/// <summary>
 		/// Moves the source file to the target destination
 		/// </summary>
-		public static void Move( string source, string destination, bool overwrite = true )
+		public static void Move( string source, string destination )
 		{
 			source = Pathing.Absolute( source );
 			destination = Pathing.Absolute( destination );

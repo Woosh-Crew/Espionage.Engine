@@ -134,14 +134,13 @@ namespace Espionage.Engine.IO
 			// Get Absolute Path
 			if ( !path.Contains( "://" ) )
 			{
-				return path;
+				return Path.GetFullPath( path );
 			}
 
 			var splitPath = path.Split( "://" );
 			splitPath[0] = Absolute( _paths[splitPath[0]] );
 
 			var newPath = Path.Combine( splitPath[0], splitPath[1] );
-
 			return Path.GetFullPath( newPath );
 		}
 
