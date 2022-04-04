@@ -151,7 +151,8 @@ namespace Espionage.Engine.IO
 		/// </summary>
 		public bool Valid( string path )
 		{
-			return Path.IsPathFullyQualified( path );
+			// It works... Don't complain.
+			return Path.IsPathFullyQualified( path ) || path.Contains( "://" );
 		}
 
 		/// <summary>

@@ -17,7 +17,6 @@ namespace Espionage.Engine.Resources.Models
 			Bundle = AssetBundle.LoadFromFile( Info.FullName );
 			var gameObject = Bundle.LoadAllAssets<GameObject>().FirstOrDefault();
 			loaded?.Invoke( gameObject );
-			Dev.Log.Info( "Bundle Loaded" );
 		}
 
 		public override void Unload()
