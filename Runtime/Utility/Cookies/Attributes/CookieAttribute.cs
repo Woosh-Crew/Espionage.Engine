@@ -11,6 +11,14 @@ namespace Espionage.Engine
 	[AttributeUsage( AttributeTargets.Property, Inherited = false )]
 	public class CookieAttribute : Attribute, IComponent<Property>
 	{
+		public string Path { get; }
+
+		public CookieAttribute( string path = "config://.cookies" )
+		{
+			Path = path;
+		}
+
+
 		public void OnAttached( Property item )
 		{
 			if ( !item.IsStatic )
@@ -19,7 +27,7 @@ namespace Espionage.Engine
 			}
 
 
-			Cookies.Register( item );
+			Cookies.Register( new( Path, item ) );
 		}
 	}
 }

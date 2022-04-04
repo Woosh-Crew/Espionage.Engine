@@ -12,47 +12,55 @@ namespace Espionage.Engine.Internal
 	/// </summary>
 	public class Cookies : Service
 	{
-		private static Dictionary<string, Property> Registry { get; } = new();
+		private static Dictionary<string, Reference> Registry { get; } = new();
 
-		public static void Register( Property prop )
+		public static void Register( Reference cookie )
 		{
-			Registry.Add( prop.Name, prop );
+			Registry.Add( cookie.Property.Name, cookie );
 		}
 
 		public override void OnReady()
 		{
-			if ( !Files.Pathing.Exists( "config://.cookies" ) )
-			{
-				// Nothing to load.
-				return;
-			}
+			var files = Registry.Values.GroupBy( e => e.File );
 
-			// This is a really shitty ini deserializer
-			var sheet = Files.Serialization.Deserialize<string>( "config://.cookies" ).Split( '\n', StringSplitOptions.RemoveEmptyEntries );
-
-			foreach ( var item in sheet )
+			// Groupings
+			foreach ( var file in files )
 			{
-				// Comments (Not sure why there would be any?)
-				if ( string.IsNullOrWhiteSpace( item ) || item.StartsWith( '#' ) || item.StartsWith( '[' ) )
+				if ( !Files.Pathing.Exists( file.Key ) )
 				{
-					continue;
+					// Nothing to load.
+					return;
 				}
 
-				// 0 is Index, 1 is value
-				var split = item.Split( " = " );
+				using var _ = Dev.Stopwatch( $"Loading Cookies [{file.Key}]" );
 
-				try
+				// This is a really shitty ini deserializer
+				var sheet = Files.Serialization.Deserialize<string>( file.Key ).Split( '\n', StringSplitOptions.RemoveEmptyEntries );
+
+				foreach ( var item in sheet )
 				{
-					if ( Registry.ContainsKey( split[0] ) )
+					// Comments (Not sure why there would be any?)
+					if ( string.IsNullOrWhiteSpace( item ) || item.StartsWith( '#' ) || item.StartsWith( '[' ) )
 					{
-						// This is aids
-						var prop = Registry[split[0]];
-						prop[null] = Converter.Convert( split[1].Trim(), prop.Type );
+						continue;
 					}
-				}
-				catch ( Exception e )
-				{
-					Dev.Log.Exception( e );
+
+					// 0 is Index, 1 is value
+					var split = item.Split( " = " );
+
+					try
+					{
+						if ( Registry.ContainsKey( split[0] ) )
+						{
+							// This is aids
+							var prop = Registry[split[0]].Property;
+							prop[null] = Converter.Convert( split[1].Trim(), prop.Type );
+						}
+					}
+					catch ( Exception e )
+					{
+						Dev.Log.Exception( e );
+					}
 				}
 			}
 		}
@@ -73,31 +81,49 @@ namespace Espionage.Engine.Internal
 				return;
 			}
 
-			// This is a really shitty ini serializer
-
-			using var _ = Dev.Stopwatch( "Saving Cookies" );
-
-			var serialized = new StringBuilder();
-
-			foreach ( var group in Registry.GroupBy( e => e.Value.Group ) )
+			var files = Registry.Values.GroupBy( e => e.File );
+			foreach ( var file in files )
 			{
-				// Grouping / Sections
-				if ( serialized.Length != 0 )
+				using var _ = Dev.Stopwatch( $"Saving Cookies [{file.Key}]" );
+
+				var serialized = new StringBuilder();
+
+				foreach ( var group in Registry.GroupBy( e => e.Value.Property.Group ) )
 				{
-					serialized.AppendLine();
+					// Grouping / Sections
+					if ( serialized.Length != 0 )
+					{
+						serialized.AppendLine();
+					}
+
+					serialized.AppendLine( $"[{group.Key}]" );
+
+					foreach ( var (key, reference) in group )
+					{
+						serialized.AppendLine( $"{key} = {reference.Property[null]}" );
+					}
 				}
 
-				serialized.AppendLine( $"[{group.Key}]" );
-
-				foreach ( var (key, property) in group )
-				{
-					serialized.AppendLine( $"{key} = {property[null]}" );
-				}
+				Files.Save( serialized.ToString(), file.Key );
 			}
 
-			Files.Save( serialized.ToString(), "config://.cookies" );
-
 			Callback.Run( "cookies.saved" );
+		}
+
+		//
+		// Structs
+		//
+
+		public readonly struct Reference
+		{
+			public Reference( string file, Property property )
+			{
+				File = file;
+				Property = property;
+			}
+
+			public string File { get; }
+			public Property Property { get; }
 		}
 	}
 }
