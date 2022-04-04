@@ -119,7 +119,7 @@ namespace Espionage.Engine
 			}
 
 			Pathing.Create( path );
-			fileInfo.CopyTo( path, overwrite );
+			fileInfo.CopyTo( path + $"{Pathing.Name( file )}", overwrite );
 		}
 
 		/// <summary>
