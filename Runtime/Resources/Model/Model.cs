@@ -84,6 +84,8 @@ namespace Espionage.Engine.Resources
 			{
 				Database.Add( this );
 				Source.Load( OnLoad );
+
+				Dev.Log.Info( $"Loaded Model [{Identifier}]" );
 			}
 
 			Instances.Push( new( this ) );
@@ -100,8 +102,12 @@ namespace Espionage.Engine.Resources
 
 			if ( Instances.Count <= 0 )
 			{
-				Database.Add( this );
+				Dev.Log.Info( $"Unloading Model [{Identifier}]" );
+
 				Source.Unload();
+				Database.Remove( this );
+				(this as ILibrary).Delete();
+
 				Cache = null;
 			}
 		}
@@ -123,6 +129,7 @@ namespace Espionage.Engine.Resources
 
 			public void Delete()
 			{
+				Object.Destroy( GameObject );
 				Model.Unload();
 			}
 		}
