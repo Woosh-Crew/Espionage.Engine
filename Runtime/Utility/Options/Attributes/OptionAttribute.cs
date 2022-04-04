@@ -7,6 +7,6 @@
 	/// </summary>
 	public class OptionAttribute : CookieAttribute
 	{
-		public OptionAttribute( string path = "config://.cookies" ) : base( path ) { }
+		public OptionAttribute( string path = "config://cookies.ini" ) : base( path ) { }
 	}
 }

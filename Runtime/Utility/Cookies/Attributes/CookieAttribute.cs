@@ -13,7 +13,7 @@ namespace Espionage.Engine
 	{
 		public string Path { get; }
 
-		public CookieAttribute( string path = "config://.cookies" )
+		public CookieAttribute( string path = "config://cookies.ini" )
 		{
 			Path = path;
 		}

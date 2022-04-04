@@ -62,43 +62,45 @@ namespace Espionage.Engine.PostProcessing
 		// Options
 		//
 
+		private const string Output = "config://postfx.ini";
+
 		// AO
 
-		[Option( "config://.postfx" ), Terminal, Property( "postfx.enable_ao", true ), Title( "Enabled" ), Group( "Ambient Occlusion" )]
+		[Option( Output ), Terminal, Property( "postfx.enable_ao", true ), Title( "Enabled" ), Group( "Ambient Occlusion" )]
 		public static bool EnableAO { get; set; }
 
 		// Bloom
 
-		[Option( "config://.postfx" ), Terminal, Property( "postfx.enable_bloom", true ), Title( "Enabled" ), Group( "Bloom" )]
+		[Option( Output ), Terminal, Property( "postfx.enable_bloom", true ), Title( "Enabled" ), Group( "Bloom" )]
 		public static bool EnableBloom { get; set; }
 
-		[Option( "config://.postfx" ), Terminal, Property( "postfx.fast_bloom", false ), Title( "Fast" ), Group( "Bloom" )]
+		[Option( Output ), Terminal, Property( "postfx.fast_bloom", false ), Title( "Fast" ), Group( "Bloom" )]
 		public static bool FastBloom { get; set; }
 
 		// SSR
 
-		[Option( "config://.postfx" ), Terminal, Property( "postfx.enable_ssr", true ), Title( "Enabled" ), Group( "Screen Space Reflections" )]
+		[Option( Output ), Terminal, Property( "postfx.enable_ssr", true ), Title( "Enabled" ), Group( "Screen Space Reflections" )]
 		public static bool EnableSSR { get; set; }
 
-		[Option( "config://.postfx" ), Terminal, Property( "postfx.ssr_quality", ScreenSpaceReflectionPreset.Medium ), Title( "Quality" ), Group( "Screen Space Reflections" )]
+		[Option( Output ), Terminal, Property( "postfx.ssr_quality", ScreenSpaceReflectionPreset.Medium ), Title( "Quality" ), Group( "Screen Space Reflections" )]
 		public static ScreenSpaceReflectionPreset QualitySSR { get; set; }
 
 		// Motion Blur
 
-		[Option( "config://.postfx" ), Terminal, Property( "postfx.enable_motion_blur", false ), Title( "Enabled" ), Group( "Motion Blur" )]
+		[Option( Output ), Terminal, Property( "postfx.enable_motion_blur", false ), Title( "Enabled" ), Group( "Motion Blur" )]
 		public static bool EnableMotionBlur { get; set; }
 
 		// Depth of Field
 
-		[Option( "config://.postfx" ), Terminal, Property( "postfx.enable_dof", false ), Title( "Enabled" ), Group( "Depth of Field" )]
+		[Option( Output ), Terminal, Property( "postfx.enable_dof", false ), Title( "Enabled" ), Group( "Depth of Field" )]
 		public static bool EnableDOF { get; set; }
 
 		// Chromatic Aberration
 
-		[Option( "config://.postfx" ), Terminal, Property( "postfx.enable_ca", true ), Title( "Enabled" ), Group( "Chromatic Aberration" )]
+		[Option( Output ), Terminal, Property( "postfx.enable_ca", true ), Title( "Enabled" ), Group( "Chromatic Aberration" )]
 		public static bool EnableChromaticAberration { get; set; }
 
-		[Option( "config://.postfx" ), Terminal, Property( "postfx.fast_ca", false ), Title( "Fast" ), Group( "Chromatic Aberration" )]
+		[Option( Output ), Terminal, Property( "postfx.fast_ca", false ), Title( "Fast" ), Group( "Chromatic Aberration" )]
 		public static bool FastChromaticAberration { get; set; }
 
 
