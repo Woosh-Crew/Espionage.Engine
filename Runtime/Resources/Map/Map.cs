@@ -20,6 +20,11 @@ namespace Espionage.Engine.Resources
 		/// </summary>
 		public static Map Find( string path )
 		{
+			if ( !Files.Pathing.Valid( path ) )
+			{
+				path = "maps://" + path;
+			}
+
 			path = Files.Pathing.Absolute( path );
 
 			// Use the Database Map if we have it

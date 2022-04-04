@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Espionage.Engine.Components;
+using Espionage.Engine.Resources;
 using UnityEngine;
 
 namespace Espionage.Engine
@@ -92,6 +93,9 @@ namespace Espionage.Engine
 		//
 		// Components
 		//
+
+		/// <summary> The Visuals for this Entity. (Models, Animator, etc) </summary>
+		public Visuals Visuals => Components.GetOrCreate<Visuals>();
 
 		/// <summary> Components that are currently attached to this Entity </summary>
 		public Components<Entity> Components { get; private set; }
