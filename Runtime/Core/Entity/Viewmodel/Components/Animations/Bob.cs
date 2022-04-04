@@ -4,6 +4,9 @@ namespace Espionage.Engine.Viewmodels
 {
 	public class Bob : Viewmodel.Modifier
 	{
+		public float Intensity { get; set; } = 1f;
+		public float Speed { get; set; } = 1f;
+
 		private float _dampedSpeed;
 		private float _walkBobDelta;
 
@@ -15,7 +18,7 @@ namespace Espionage.Engine.Viewmodels
 			// OUT WHY IT WAS FRAMERATE DEPENDENT AND FOR SOME DUMB ASS REASON THIS FIXES IT.		    
 			var speed = Local.Pawn.Velocity.WithY( 0 ).magnitude / 6.75f / Time.deltaTime;
 
-			_dampedSpeed = _dampedSpeed.LerpTo( speed, 2 * Time.deltaTime );
+			_dampedSpeed = _dampedSpeed.LerpTo( speed * Speed, 2 * Time.deltaTime );
 			var rot = new Vector3();
 
 			_walkBobDelta += Time.deltaTime * 12.0f * speed;
@@ -26,6 +29,7 @@ namespace Espionage.Engine.Viewmodels
 			rot.z = Mathf.Cos( _walkBobDelta * 1.3f ) * 0.8f * _random.z;
 
 			rot *= _dampedSpeed;
+			rot *= Intensity;
 
 			Rotation *= Quaternion.Euler( rot.z * 2, rot.y * 4, rot.x * 4 );
 

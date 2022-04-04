@@ -85,7 +85,7 @@ namespace Espionage.Engine.Resources
 				Database.Add( this );
 				Source.Load( OnLoad );
 
-				Dev.Log.Info( $"Loaded Model [{Identifier}]" );
+				Dev.Log.Info( $"Loaded Model [{Files.Pathing.Name( Identifier )}]" );
 			}
 
 			Instances.Push( new( this ) );
@@ -102,7 +102,7 @@ namespace Espionage.Engine.Resources
 
 			if ( Instances.Count <= 0 )
 			{
-				Dev.Log.Info( $"Unloading Model [{Identifier}]" );
+				Dev.Log.Info( $"Unloading Model [{Files.Pathing.Name( Identifier )}]" );
 
 				Source.Unload();
 				Database.Remove( this );

@@ -5,8 +5,8 @@ namespace Espionage.Engine.Viewmodels
 {
 	public class SourceSway : Viewmodel.Modifier
 	{
-		[Property] private float Smoothing { get; set; } = 10;
-		[Property] private float Intensity { get; set; } = 0.2f;
+		public float Smoothing { get; set; } = 10;
+		public float Intensity { get; set; } = 0.2f;
 
 		// Sway
 
