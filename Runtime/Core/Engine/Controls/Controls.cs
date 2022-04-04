@@ -54,7 +54,7 @@ namespace Espionage.Engine
 			{
 				Mouse = default;
 
-				foreach ( var binding in Scheme.Values )
+				foreach ( var binding in Scheme )
 				{
 					binding.Clear();
 				}

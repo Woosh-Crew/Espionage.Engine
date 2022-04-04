@@ -23,7 +23,7 @@ namespace Espionage.Engine.Services
 			_setup.Horizontal = Input.GetAxisRaw( "Horizontal" );
 
 			// Sample Scheme
-			foreach ( var binding in _setup.Scheme.Values )
+			foreach ( var binding in _setup.Scheme )
 			{
 				binding.Sample();
 			}
