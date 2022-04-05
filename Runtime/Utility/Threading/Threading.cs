@@ -21,7 +21,7 @@ namespace Espionage.Engine
 			{
 				thread.Start();
 			}
-			
+
 			return meta;
 		}
 
@@ -66,7 +66,7 @@ namespace Espionage.Engine
 					// Maybe stupid?
 					Thread.Abort();
 				}
-				
+
 				Queue.Clear();
 				Running.Remove( this );
 			}
@@ -77,7 +77,7 @@ namespace Espionage.Engine
 				{
 					return;
 				}
-				
+
 				for ( var i = 0; i < Main.Queue.Count; i++ )
 				{
 					Queue.Dequeue()?.Invoke();
@@ -99,7 +99,7 @@ namespace Espionage.Engine
 			public void Add( Meta item )
 			{
 				_storage.Add( item.Name, item );
-				
+
 				Dev.Log.Info( $"Adding Thread Meta {item.Name}" );
 			}
 
@@ -112,7 +112,7 @@ namespace Espionage.Engine
 			{
 				item.Closed = true;
 				_storage.Remove( item.Name );
-				
+
 				Dev.Log.Info( $"Removing Thread Meta {item.Name}" );
 			}
 

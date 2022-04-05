@@ -22,6 +22,18 @@ namespace Espionage.Engine
 			if ( Writer == null )
 			{
 				Threading.Create( "editor_ipc", new( () => Server( message ) ) { IsBackground = true } );
+
+				// Lazy
+				UnityEditor.EditorApplication.wantsToQuit += () =>
+				{
+					// If no process is attached, return true
+					if ( Game?.Id == 0 )
+					{
+						return true;
+					}
+
+					return Game?.HasExited ?? true;
+				};
 			}
 			else
 			{
@@ -50,12 +62,6 @@ namespace Espionage.Engine
 
 		private static void Server( string launchArgs )
 		{
-			UnityEditor.EditorApplication.quitting += () =>
-			{
-				// Close Game, if we're shutting the editor down.
-				Game.Close();
-			};
-
 			Game = new() { StartInfo = new( Files.Pathing.Absolute( "compiled://<executable>" ), launchArgs ) { UseShellExecute = false } };
 			Pipe = new( PipeDirection.Out, HandleInheritability.Inheritable );
 
