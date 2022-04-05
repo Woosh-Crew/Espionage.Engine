@@ -6,14 +6,22 @@ using UnityEngine;
 
 namespace Espionage.Engine
 {
+	/// <summary>
+	/// Messages is responsible for sending messages between editor and
+	/// the built version of the game. We can use this for invoking commands
+	/// in the console from the editor process. (Launch maps in game from editor)
+	/// </summary>
 	public static class Messages
 	{
+		// Editor [Server]
+
+		#if UNITY_EDITOR
+
 		public static void Send( string message )
 		{
 			if ( Writer == null )
 			{
-				var thread = new Thread( () => Server( message ) );
-				thread.Start();
+				Threading.Create( "editor_ipc", new( () => Server( message ) ) { IsBackground = true } );
 			}
 			else
 			{
@@ -35,52 +43,39 @@ namespace Espionage.Engine
 			}
 		}
 
-		internal static void Connect( string pipeHandle )
-		{
-			var thread = new Thread( () => Client( pipeHandle ) );
-			thread.Start();
 
-			Application.quitting += thread.Abort;
-		}
-
-		private static void Receive( string message )
-		{
-			if ( message.StartsWith( "+" ) )
-			{
-				// Dev.Terminal.Invoke( message[1..]);
-			}
-		}
-
-		// Editor [Server]
-
+		private static Process Game { get; set; }
 		private static StreamWriter Writer { get; set; }
+		private static AnonymousPipeServerStream Pipe { get; set; }
 
 		private static void Server( string launchArgs )
 		{
-			var game = new Process() { StartInfo = new( Files.Pathing.Absolute( "compiled://<executable>" ), launchArgs ) };
-			Dev.Log.Info( "Creating Pipe" );
+			UnityEditor.EditorApplication.quitting += () =>
+			{
+				// Close Game, if we're shutting the editor down.
+				Game.Close();
+			};
 
-			var editor = new AnonymousPipeServerStream( PipeDirection.Out, HandleInheritability.Inheritable );
+			Game = new() { StartInfo = new( Files.Pathing.Absolute( "compiled://<executable>" ), launchArgs ) { UseShellExecute = false } };
+			Pipe = new( PipeDirection.Out, HandleInheritability.Inheritable );
 
-			Dev.Log.Info( $"[SERVER] Current Transmission Mode: {editor.TransmissionMode}." );
+			Dev.Log.Info( "[SERVER] Creating Pipe" );
+			Dev.Log.Info( $"[SERVER] Current Transmission Mode: {Pipe.TransmissionMode}." );
 
 			// Pass the client process a handle to the server.
-			game.StartInfo.Arguments += " -connect " + editor.GetClientHandleAsString();
+			Game.StartInfo.Arguments += " -connect " + Pipe.GetClientHandleAsString();
+			Game.Start();
 
-			Dev.Log.Info( game.StartInfo.Arguments );
-			game.StartInfo.UseShellExecute = false;
-			game.Start();
-
-			editor.DisposeLocalCopyOfClientHandle();
+			Pipe.DisposeLocalCopyOfClientHandle();
 
 			try
 			{
 				// Read Input from Editor
-				Writer = new( editor );
-
+				Writer = new( Pipe );
 				Writer.AutoFlush = true;
+
 				Write( $"Connected to {Process.GetCurrentProcess().ProcessName}" );
-				editor.WaitForPipeDrain();
+				Pipe.WaitForPipeDrain();
 			}
 			catch ( IOException e )
 			{
@@ -88,26 +83,49 @@ namespace Espionage.Engine
 				Dev.Log.Error( $"[SERVER] Error: {e.Message}" );
 			}
 
-			game.WaitForExit();
+			Game.WaitForExit();
+			Game.Close();
 
-			Writer.Dispose();
-			editor.Dispose();
-
-			game.Close();
-
-			Writer = null;
+			Shutdown();
 
 			Dev.Log.Info( "[SERVER] Client quit. Server terminating." );
+			Threading.Running["editor_ipc"].Close();
 		}
+
+		private static void Shutdown()
+		{
+			Writer?.Dispose();
+			Pipe?.Dispose();
+
+			Writer = null;
+			Pipe = null;
+		}
+
+		#endif
 
 		// Game [Client]
 
-		private static void Client( string pipeHandle )
+		internal static void Connect( string handle )
 		{
-			Dev.Log.Info( $"Connecting to pipe {pipeHandle}" );
+			var thread = Threading.Create( "game_ipc", new( () => Client( handle ) ) { IsBackground = true } );
+			Application.quitting += thread.Close;
+		}
+
+		private static void Receive( string message )
+		{
+			if ( message.StartsWith( "+" ) )
+			{
+				// Call on main thread
+				Threading.Main.Enqueue( () => Dev.Terminal.Invoke( message[1..] ) );
+			}
+		}
+
+		private static void Client( string handle )
+		{
+			Dev.Log.Info( $"[CLIENT] Connecting to pipe {handle}" );
 
 			// Open Pipe to Server
-			using PipeStream game = new AnonymousPipeClientStream( PipeDirection.In, pipeHandle );
+			using PipeStream game = new AnonymousPipeClientStream( PipeDirection.In, handle );
 			using var sr = new StreamReader( game );
 
 			Dev.Log.Info( $"[CLIENT] Current Transmission Mode: {game.TransmissionMode}." );
