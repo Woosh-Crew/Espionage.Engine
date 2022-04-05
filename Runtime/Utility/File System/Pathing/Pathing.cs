@@ -41,6 +41,7 @@ namespace Espionage.Engine.IO
 		{
 			// -- Game Specific
 			["game"] = () => Engine.Game.ClassInfo.Title,
+			["executable"] = () => $"{Engine.Game.ClassInfo.Name}.exe",
 			["company"] = () => Application.companyName,
 			["user"] = () => Environment.UserName
 		};

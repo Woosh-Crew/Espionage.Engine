@@ -19,7 +19,6 @@ namespace Espionage.Engine.Resources.Maps
 	{
 		public string Test( string asset )
 		{
-			Dev.Log.Info( $"+map \"{Files.Pathing.Absolute( $"maps://{Files.Pathing.Name( asset, false )}.umap" )}\"" );
 			return $"+map \"{Files.Pathing.Absolute( $"maps://{Files.Pathing.Name( asset, false )}.umap" )}\"";
 		}
 

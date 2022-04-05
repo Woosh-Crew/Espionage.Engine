@@ -101,6 +101,7 @@ namespace Espionage.Engine
 			}
 
 			Callback.Run( "editor.game_constructed" );
+			Callback.Run( "editor.ready" );
 		}
 
 		#endif
