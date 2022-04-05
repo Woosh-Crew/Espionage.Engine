@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using Espionage.Engine.Services;
-using Steamworks.Ugc;
 
 namespace Espionage.Engine
 {

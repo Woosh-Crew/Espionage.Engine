@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
-using System.Threading;
 using UnityEngine;
 
 namespace Espionage.Engine
@@ -47,6 +46,7 @@ namespace Espionage.Engine
 			try
 			{
 				Writer.WriteLine( message );
+				Dev.Log.Error( $"[SERVER] Writing: {message}" );
 			}
 			catch ( IOException e )
 			{

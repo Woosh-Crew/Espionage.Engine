@@ -291,7 +291,7 @@ namespace Espionage.Engine.Resources
 
 			// Instance
 
-			private readonly Dictionary<string, Map> _records = new();
+			private readonly Dictionary<string, Map> _records = new( StringComparer.CurrentCultureIgnoreCase );
 
 			// Enumerator
 
