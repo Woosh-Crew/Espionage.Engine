@@ -1,6 +1,9 @@
 using System;
 using System.Diagnostics;
+using System.IO;
+using System.IO.Pipes;
 using System.Text;
+using System.Threading;
 using Espionage.Engine.Logging;
 using Espionage.Engine.Internal.Commands;
 using UnityEngine;
@@ -69,6 +72,12 @@ namespace Espionage.Engine
 				{
 					Terminal.Invoke( args[i][1..], new[] { args[i + 1] } );
 				}
+
+				// Get Pipe Handle and start IPC
+				if ( args[i].StartsWith( "-connect" ) )
+				{
+					Messages.Connect( args[i + 1] );
+				}
 			}
 		}
 
@@ -79,6 +88,7 @@ namespace Espionage.Engine
 		// App
 
 		[Terminal, Property( "application.unity_version" )]
+
 		private static string Version => Application.unityVersion;
 
 		[Terminal, Property( "application.sys_language" )]

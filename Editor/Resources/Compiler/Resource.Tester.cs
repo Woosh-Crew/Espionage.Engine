@@ -13,7 +13,7 @@ namespace Espionage.Engine.Resources.Editor
 			{
 				return false;
 			}
-			
+
 			return Selection.activeObject != null && Exists( Selection.activeObject.GetType() );
 		}
 
@@ -53,13 +53,11 @@ namespace Espionage.Engine.Resources.Editor
 			try
 			{
 				var launchArgs = method?.Invoke( converter, new object[] { asset } );
-				
-				// We should test if the game is already open.
-				Process.Start( Files.Pathing.Absolute( $"compiled://{Engine.Game.ClassInfo.Name}.exe" ), (string)launchArgs );
+				Messages.Send( (string)launchArgs );
 			}
 			catch ( Exception e )
 			{
-				UnityEngine.Debug.LogException(e);
+				UnityEngine.Debug.LogException( e );
 			}
 		}
 	}
