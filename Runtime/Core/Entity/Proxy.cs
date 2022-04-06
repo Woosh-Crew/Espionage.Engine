@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Espionage.Engine.Entities
+namespace Espionage.Engine
 {
 	public class Proxy : Entity
 	{

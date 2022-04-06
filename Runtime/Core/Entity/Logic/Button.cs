@@ -1,4 +1,4 @@
-﻿namespace Espionage.Engine.Entities
+﻿namespace Espionage.Engine.Logic
 {
 	public class Button : Entity, IUsable, IHoverable
 	{

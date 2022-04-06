@@ -23,7 +23,7 @@ namespace Espionage.Engine
 				}
 
 				// Find the instance
-				_instance = All.OfType<World>().FirstOrDefault();
+				_instance = All.Find<World>();
 				return _instance != null ? _instance : null;
 			}
 		}

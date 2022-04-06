@@ -12,9 +12,7 @@ namespace Espionage.Engine
 	public abstract class Entity : Behaviour
 	{
 		/// <summary> All the entities that exists in the game world. </summary>
-		public static IReadOnlyList<Entity> All => _all;
-
-		private static readonly List<Entity> _all = new();
+		public static Entities All { get; } = new();
 
 		/// <summary> Constructs the Entity, based off the Library </summary>
 		internal static object Constructor( Library library )
@@ -55,7 +53,7 @@ namespace Espionage.Engine
 		internal sealed override void Awake()
 		{
 			ClassInfo ??= Library.Register( this );
-			_all.Add( this );
+			All.Add( this );
 			Components = new( this );
 
 			if ( ClassInfo.Components.Has<PersistentAttribute>() )
@@ -79,7 +77,7 @@ namespace Espionage.Engine
 
 		protected sealed override void OnDestroy()
 		{
-			_all.Remove( this );
+			All.Remove( this );
 
 			base.OnDestroy();
 
