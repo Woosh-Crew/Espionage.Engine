@@ -46,6 +46,11 @@ namespace Espionage.Engine
 			_all.Add( this );
 			Components = new( this );
 
+			if ( ClassInfo.Components.Has<PersistentAttribute>() )
+			{
+				DontDestroyOnLoad( gameObject );
+			}
+
 			OnAwake();
 		}
 
