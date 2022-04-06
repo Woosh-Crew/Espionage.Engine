@@ -42,18 +42,20 @@ namespace Espionage.Engine
 
 		internal sealed override void Awake()
 		{
-			ClassInfo = Library.Register( this );
+			ClassInfo ??= Library.Register( this );
 			_all.Add( this );
-
 			Components = new( this );
 
+			OnAwake();
+		}
+
+		internal override void Start()
+		{
 			// Cache Components that are MonoBehaviour
 			foreach ( var item in GetComponents<IComponent<Entity>>() )
 			{
 				Components.Add( item );
 			}
-
-			OnAwake();
 		}
 
 		protected override void OnAwake() { }

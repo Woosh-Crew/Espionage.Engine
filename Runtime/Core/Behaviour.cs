@@ -37,17 +37,7 @@ namespace Espionage.Engine
 
 		// Ready
 
-		internal virtual void Start()
-		{
-			OnReady();
-		}
-
-		/// <summary>
-		/// The Behaviour is now ready to use.
-		/// Use this for logic that must be
-		/// done when the object has started.
-		/// </summary>
-		protected virtual void OnReady() { }
+		internal virtual void Start() { }
 
 		// Destroy
 
