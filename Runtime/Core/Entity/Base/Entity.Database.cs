@@ -62,9 +62,9 @@ namespace Espionage.Engine
 			return _storage.FirstOrDefault( e => e is T ) as T;
 		}
 
-		public Entity[] Find( string id )
+		public IEnumerable<Entity> Find( string id )
 		{
-			return _storage.Where( e => string.Equals( e.Identifier, id, StringComparison.CurrentCultureIgnoreCase ) ).ToArray();
+			return _storage.Where( e => string.Equals( e.Identifier, id, StringComparison.CurrentCultureIgnoreCase ) );
 		}
 	}
 }
