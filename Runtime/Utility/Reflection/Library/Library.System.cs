@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Espionage.Engine.Components;
 
 namespace Espionage.Engine
 {
@@ -22,8 +23,8 @@ namespace Espionage.Engine
 				return null;
 			}
 
-			// Check if Library is Singleton
-			if ( lib.Components.Has<SingletonAttribute>() )
+			// Check if Library is Singleton & not a component.
+			if ( lib.Components.Has<SingletonAttribute>() && !lib.Info.HasInterface( typeof( IComponent ) ) )
 			{
 				if ( Singletons.ContainsKey( lib.Info ) )
 				{

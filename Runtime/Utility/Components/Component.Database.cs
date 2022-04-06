@@ -48,6 +48,14 @@ namespace Espionage.Engine.Components
 				return;
 			}
 
+			// Replace if its a Singleton
+			if ( item is ILibrary lib && lib.ClassInfo.Components.Has<SingletonAttribute>() && TryGet( item.GetType(), out var comp ) )
+			{
+				Dev.Log.Warning( $"Replacing Component [{lib.ClassInfo.Name}]. Was Singleton" );
+				Replace( comp, item );
+				return;
+			}
+
 			_storage.Add( item );
 			item.OnAttached( _owner );
 		}
@@ -153,11 +161,6 @@ namespace Espionage.Engine.Components
 			Add( newComp );
 		}
 
-		public void Replace<TComp>( IComponent<T> old, Func<TComp> creation )
-		{
-			Replace( old, Create( creation ) as IComponent<T> );
-		}
-
 		public IEnumerable<TComp> GetAll<TComp>()
 		{
 			return _storage.OfType<TComp>();
@@ -166,6 +169,12 @@ namespace Espionage.Engine.Components
 		public bool TryGet<TComp>( out TComp output ) where TComp : class
 		{
 			output = Get<TComp>();
+			return output != null;
+		}
+
+		public bool TryGet( Type type, out IComponent<T> output )
+		{
+			output = Get( type );
 			return output != null;
 		}
 

@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Espionage.Engine.Resources
 {
+	[Singleton]
 	public class Visuals : Component
 	{
 		private Transform _root;
