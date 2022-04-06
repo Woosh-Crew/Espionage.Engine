@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Espionage.Engine
 {
+	[Singleton]
 	public class Interactor : Component<Actor>, ISimulated
 	{
 		public IUsable Using { get; private set; }

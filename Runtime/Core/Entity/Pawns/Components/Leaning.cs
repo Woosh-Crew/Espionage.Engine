@@ -2,6 +2,7 @@
 
 namespace Espionage.Engine
 {
+	[Singleton]
 	public class Leaning : Component<Actor>, ISimulated, Pawn.ICallbacks
 	{
 		public float Distance { get; set; } = 0.25f;

@@ -8,7 +8,7 @@ namespace Espionage.Engine
 	/// and other gameplay specific things.
 	/// </summary>
 	[Help( "Actor is designed to be a pawn used in gameplay, AI and Clients control this. AI will look for Actors instead of pawns is well." )]
-	public abstract class Actor : Pawn
+	public class Actor : Pawn
 	{
 		public Inventory Inventory => Components.Get<Inventory>();
 		public bool IsBot => Components.Get<AI.Brain>()?.Enabled ?? false;
@@ -42,19 +42,14 @@ namespace Espionage.Engine
 		// Health
 		//
 
-		public Health Health => Components.GetOrCreate( () =>
-		{
-			var comp = Library.Database.Create<Health>();
-			comp.Max = 100;
-			return comp;
-		} );
+		public Health Health => Components.GetOrCreate( () => new Health() { Max = 100 } );
 
 		/// <summary>
 		/// Respawns this Actor, and gives it max health. Use 
 		/// this after you have possessed the pawn to make
 		/// sure it spawns at a Spawn Point.
 		/// </summary>
-		/// <returns> Returns this object </returns>
+		/// <returns> Returns this Actor </returns>
 		public virtual Actor Respawn()
 		{
 			var health = Health;

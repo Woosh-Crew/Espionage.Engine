@@ -6,7 +6,7 @@ namespace Espionage.Engine
 	/// Allows an Entity to have Health, which means
 	/// it can be healed or take damage.
 	/// </summary>
-	[Help( "Gives an Entity health, by implementing the IDamageable and IHealable interfaces." )]
+	[Singleton, Help( "Gives an Entity health, by implementing the IDamageable and IHealable interfaces." )]
 	public class Health : Component, IDamageable, IHealable
 	{
 		[Property, Help( "The Current Health of this Entity" )]
