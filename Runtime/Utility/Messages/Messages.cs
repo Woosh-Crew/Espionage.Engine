@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
 using UnityEngine;
@@ -26,7 +27,7 @@ namespace Espionage.Engine
 				UnityEditor.EditorApplication.wantsToQuit += () =>
 				{
 					// If no process is attached, return true
-					if ( Game?.Id == 0 )
+					if ( Game == null )
 					{
 						return true;
 					}
@@ -105,6 +106,8 @@ namespace Espionage.Engine
 
 			Writer = null;
 			Pipe = null;
+
+			Game = null;
 		}
 
 		#endif
