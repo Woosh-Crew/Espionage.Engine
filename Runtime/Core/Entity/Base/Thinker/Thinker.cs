@@ -24,6 +24,21 @@ namespace Espionage.Engine
 			}
 		}
 
+		public float Delta
+		{
+			get
+			{
+				if ( _insideScope )
+				{
+					return _active.timeSinceLastThink;
+				}
+
+				Dev.Log.Error( "Can't change tick, not inside think scope." );
+				return 0;
+
+			}
+		}
+
 		internal void Run()
 		{
 			if ( _groups == null )
@@ -36,7 +51,7 @@ namespace Espionage.Engine
 			for ( var index = 0; index < _groups.Count; index++ )
 			{
 				// If we can't think, don't think.
-				if ( _groups[index].tick == 0 )
+				if ( _groups[index].tick <= 0 )
 				{
 					_groups.RemoveAt( index );
 					Dev.Log.Info( "Removing Group, since it was 0" );
@@ -89,7 +104,7 @@ namespace Espionage.Engine
 
 			if ( group != null )
 			{
-				_groups.Remove( @group );
+				_groups.Remove( group );
 			}
 		}
 

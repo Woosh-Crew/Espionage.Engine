@@ -23,11 +23,15 @@ namespace Espionage.Engine
 		}
 
 		/// <summary> Create an Entity, from its type. </summary>
-		public static T Create<T>( string id = null ) where T : Entity, new()
+		public static T Create<T>() where T : Entity, new()
 		{
-			var ent = Library.Database.Create<T>();
-			ent.identifier = id;
-			return ent;
+			return Library.Database.Create<T>();
+		}
+
+		/// <summary> Create an Entity, from its Library. </summary>
+		public static Entity Create( Library lib )
+		{
+			return Library.Create( lib ) as Entity;
 		}
 
 		// 
