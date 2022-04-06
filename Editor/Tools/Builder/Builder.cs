@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 #if UNITY_EDITOR
 using System.IO;
 using Espionage.Engine.Resources;
+using Espionage.Engine.Resources.Editor;
 using UnityEditor;
 #endif
 
@@ -23,6 +24,17 @@ namespace Espionage.Engine.Tools.Editor
 			{
 				Dev.Log.Error( "No Game!" );
 				return;
+			}
+
+			// Compile Default Assets
+			var errorPath = "Packages/com.wooshcrew.espionage.engine/Assets/Models/Bad/w_error.prefab";
+			var garryPath = "Packages/com.wooshcrew.espionage.engine/Assets/Models/Garry/w_garry.prefab";
+
+			if ( !Files.Pathing.Exists( "models://w_garry.umdl" ) || !Files.Pathing.Exists( "models://w_error.umdl" ) )
+			{
+				Dev.Log.Info( "Compiling Default Resources" );
+				ResourceCompiler.Compile( errorPath, typeof( GameObject ) );
+				ResourceCompiler.Compile( garryPath, typeof( GameObject ) );
 			}
 
 			var info = Engine.Game.ClassInfo;

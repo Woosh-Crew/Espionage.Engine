@@ -18,7 +18,7 @@ namespace Espionage.Engine.Resources.Editor
 			var selection = Selection.activeObject;
 			var path = AssetDatabase.GetAssetPath( selection );
 
-			Grab( path, selection.GetType() );
+			Compile( path, selection.GetType() );
 		}
 
 		private static bool Exists( Type type )
@@ -29,9 +29,13 @@ namespace Espionage.Engine.Resources.Editor
 			return library != null;
 		}
 
-		private static void Grab( string asset, Type type )
+		public static void Compile( string asset, Type type )
 		{
-			// JAKE: This is so aids.... But can't do much about that.
+			if ( !Files.Pathing.Exists( asset ) )
+			{
+				Dev.Log.Error( $"Path [{asset}] doesn't exist" );
+				return;
+			}
 
 			var interfaceType = typeof( ICompiler<> ).MakeGenericType( type );
 			var library = Library.Database.Find( interfaceType );
@@ -46,6 +50,7 @@ namespace Espionage.Engine.Resources.Editor
 
 			try
 			{
+				Dev.Log.Info( $"Compiling {Files.Pathing.Name( asset )} [{type.Name}]" );
 				method?.Invoke( converter, new object[] { asset } );
 			}
 			catch ( Exception e )

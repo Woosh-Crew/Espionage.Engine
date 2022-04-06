@@ -22,18 +22,7 @@ namespace Espionage.Engine
 			if ( Writer == null )
 			{
 				Threading.Create( "editor_ipc", new( () => Server( message ) ) { IsBackground = true } );
-
-				// Lazy
-				UnityEditor.EditorApplication.wantsToQuit += () =>
-				{
-					// If no process is attached, return true
-					if ( Game == null )
-					{
-						return true;
-					}
-
-					return Game?.HasExited ?? true;
-				};
+				UnityEditor.EditorApplication.wantsToQuit += () => Game == null || Game.HasExited;
 			}
 			else
 			{
@@ -71,6 +60,7 @@ namespace Espionage.Engine
 
 			// Pass the client process a handle to the server.
 			Game.StartInfo.Arguments += " -connect " + Pipe.GetClientHandleAsString();
+			Game.StartInfo.Arguments += " -screen-fullscreen 0 -screen-height 720 -screen-width 1280 -dev -tools";
 			Game.Start();
 
 			Pipe.DisposeLocalCopyOfClientHandle();

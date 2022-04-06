@@ -35,8 +35,9 @@ namespace Espionage.Engine.Resources
 				return model;
 			}
 
+			// Either Load Error Model, or nothing if not found.
 			Dev.Log.Error( $"Model Path [{path}], couldn't be found." );
-			return null;
+			return Files.Pathing.Exists( "models://w_error.umdl" ) ? Load( "w_error.umdl" ) : null;
 		}
 
 		//
