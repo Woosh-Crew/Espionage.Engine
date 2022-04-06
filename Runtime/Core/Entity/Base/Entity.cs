@@ -9,7 +9,7 @@ namespace Espionage.Engine
 	/// An Entity is the Root of a MonoBehaviour tree. Entities also contain IO / Actions logic.
 	/// </summary>
 	[DisallowMultipleComponent, Group( "Entities" ), Constructor( nameof( Constructor ) ), Spawnable, SelectionBase]
-	public abstract partial class Entity : Behaviour
+	public abstract class Entity : Behaviour
 	{
 		/// <summary> All the entities that exists in the game world. </summary>
 		public static IReadOnlyList<Entity> All => _all;

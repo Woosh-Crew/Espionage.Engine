@@ -54,7 +54,8 @@ namespace Espionage.Engine
 		/// this after you have possessed the pawn to make
 		/// sure it spawns at a Spawn Point.
 		/// </summary>
-		public virtual void Respawn()
+		/// <returns> Returns this object </returns>
+		public virtual Actor Respawn()
 		{
 			var health = Health;
 			health.Heal( health.Max - health.Current );
@@ -79,6 +80,8 @@ namespace Espionage.Engine
 			{
 				item.Respawn();
 			}
+
+			return this;
 		}
 
 		/// <summary>

@@ -119,6 +119,8 @@ namespace Espionage.Engine.Components
 			return null;
 		}
 
+		// Get or Create
+
 		public TComp GetOrCreate<TComp>() where TComp : class, IComponent<T>, new()
 		{
 			return TryGet<TComp>( out var comp ) ? comp : Create<TComp>();
@@ -128,6 +130,8 @@ namespace Espionage.Engine.Components
 		{
 			return TryGet<TComp>( out var comp ) ? comp : Create( creation );
 		}
+
+		// Create
 
 		public TComp Create<TComp>() where TComp : class, IComponent<T>, new()
 		{
@@ -142,6 +146,22 @@ namespace Espionage.Engine.Components
 			Add( newComp as IComponent<T> );
 			return newComp;
 		}
+
+		// Build
+
+		public Components<T> Build<TComp>() where TComp : class, IComponent<T>, new()
+		{
+			Create<TComp>();
+			return this;
+		}
+
+		public Components<T> Build<TComp>( out TComp comp ) where TComp : class, IComponent<T>, new()
+		{
+			comp = Create<TComp>();
+			return this;
+		}
+
+		// Replace
 
 		public void Replace( IComponent<T> old, IComponent<T> newComp )
 		{
@@ -161,10 +181,14 @@ namespace Espionage.Engine.Components
 			Add( newComp );
 		}
 
+		// All
+
 		public IEnumerable<TComp> GetAll<TComp>()
 		{
 			return _storage.OfType<TComp>();
 		}
+
+		// Try Get
 
 		public bool TryGet<TComp>( out TComp output ) where TComp : class
 		{
@@ -177,6 +201,8 @@ namespace Espionage.Engine.Components
 			output = Get( type );
 			return output != null;
 		}
+
+		// Has
 
 		public bool Has<TComp>()
 		{

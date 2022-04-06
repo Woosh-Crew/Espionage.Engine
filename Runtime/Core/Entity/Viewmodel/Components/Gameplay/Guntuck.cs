@@ -18,10 +18,11 @@ namespace Espionage.Engine.Viewmodels
 
 			var distance = Vector3.Distance( muzzlePos, setup.Position );
 			var start = muzzlePos + muzzleRot.Backward() * distance;
+			var direction = muzzleRot.Forward();
 
-			var hit = Physics.Raycast( new( start, muzzleRot.Forward() ), out var info, distance, ~LayerMask.GetMask( "Viewmodel", "Pawn" ), QueryTriggerInteraction.Ignore );
+			var hit = Trace.Ray( start, direction, distance ).Ignore( "Viewmodel", "Pawn" ).Run( out var info );
 
-			_dampedOffset = _dampedOffset.LerpTo( -(hit ? info.distance - distance : 0), Damping * Time.deltaTime );
+			_dampedOffset = _dampedOffset.LerpTo( -(hit ? info.Value.distance - distance : 0), Damping * Time.deltaTime );
 
 			Rotation *= Quaternion.AngleAxis( _dampedOffset * Roll, Vector3.forward );
 			Position += setup.Rotation * new Vector3( 0, -_dampedOffset / 1.7f, -_dampedOffset );
