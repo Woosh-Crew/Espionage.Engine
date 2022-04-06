@@ -4,6 +4,11 @@ namespace Espionage.Engine.Viewmodels
 {
 	public class Guntuck : Viewmodel.Modifier
 	{
+		public float Damping { get; set; } = 8;
+		public float Roll { get; set; } = 90;
+
+		// Logic
+
 		private float _dampedOffset;
 
 		public override void PostCameraSetup( ref Tripod.Setup setup )
@@ -16,13 +21,10 @@ namespace Espionage.Engine.Viewmodels
 
 			var hit = Physics.Raycast( new( start, muzzleRot.Forward() ), out var info, distance, ~LayerMask.GetMask( "Viewmodel", "Pawn" ), QueryTriggerInteraction.Ignore );
 
-			_dampedOffset = _dampedOffset.LerpTo( -(hit ? info.distance - distance : 0), damping * Time.deltaTime );
+			_dampedOffset = _dampedOffset.LerpTo( -(hit ? info.distance - distance : 0), Damping * Time.deltaTime );
 
-			Position += setup.Rotation * new Vector3( 0, -_dampedOffset / 2, -_dampedOffset );
+			Rotation *= Quaternion.AngleAxis( _dampedOffset * Roll, Vector3.forward );
+			Position += setup.Rotation * new Vector3( 0, -_dampedOffset / 1.7f, -_dampedOffset );
 		}
-
-		// Fields 
-
-		private float damping = 8;
 	}
 }
