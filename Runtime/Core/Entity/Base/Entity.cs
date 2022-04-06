@@ -17,9 +17,17 @@ namespace Espionage.Engine
 		private static readonly List<Entity> _all = new();
 
 		/// <summary> Constructs the Entity, based off the Library </summary>
-		public static object Constructor( Library library )
+		internal static object Constructor( Library library )
 		{
 			return new GameObject( library.Name ).AddComponent( library.Info );
+		}
+
+		/// <summary> Create an Entity, from its type. </summary>
+		public static T Create<T>( string id = null ) where T : Entity, new()
+		{
+			var ent = Library.Database.Create<T>();
+			ent.identifier = id;
+			return ent;
 		}
 
 		// 
