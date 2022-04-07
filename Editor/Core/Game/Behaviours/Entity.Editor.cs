@@ -1,11 +1,12 @@
-﻿using Espionage.Engine.Internal;
+﻿using System;
+using Espionage.Engine.Internal;
 using UnityEditor;
 using UnityEngine;
 
 namespace Espionage.Engine.Editor
 {
 	[CustomEditor( typeof( Entity ), true )]
-	internal class EntityEditor : BehaviourEditor
+	internal class EntityEditor : BehaviourEditor, IHasCustomMenu
 	{
 		protected Entity Entity => target as Entity;
 
@@ -32,6 +33,13 @@ namespace Espionage.Engine.Editor
 						return;
 					}
 				}
+			}
+
+			// Assign it a GUID
+			if ( string.IsNullOrWhiteSpace( Entity.UniqueID ) )
+			{
+				serializedObject.FindProperty( "uniqueId" ).stringValue = Guid.NewGuid().ToString();
+				Dev.Log.Info( "Giving Entity a GUID" );
 			}
 
 			EditorInjection.Titles[target.GetType()] = $"{ClassInfo.Title}";
@@ -90,7 +98,20 @@ namespace Espionage.Engine.Editor
 			rect.y += originalRect.height + 1;
 			EditorGUI.DrawRect( rect, color );
 
-			base.OnInspectorGUI();
+			if ( ClassInfo.Components.Get<EditableAttribute>()?.Editable ?? true )
+			{
+				DrawPropertiesExcluding( serializedObject, "m_Script", "uniqueId" );
+				serializedObject.ApplyModifiedProperties();
+
+				if ( !string.IsNullOrEmpty( ClassInfo.Help ) )
+				{
+					EditorGUILayout.HelpBox( ClassInfo.Help, MessageType.None );
+				}
+			}
+			else
+			{
+				GUILayout.Label( "Not Editable", EditorStyles.miniBoldLabel );
+			}
 		}
 
 		private static class Styles
@@ -109,6 +130,14 @@ namespace Espionage.Engine.Editor
 				stretchHeight = true,
 				fixedHeight = 0
 			};
+		}
+
+		public void AddItemsToMenu( GenericMenu menu )
+		{
+			menu.AddItem( new( "Regenerate Entity Identifier" ), false, () =>
+			{
+				serializedObject.FindProperty( "uniqueId" ).stringValue = Guid.NewGuid().ToString();
+			} );
 		}
 	}
 }

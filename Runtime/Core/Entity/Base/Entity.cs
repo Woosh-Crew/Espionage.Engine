@@ -1,4 +1,5 @@
-﻿using Espionage.Engine.Components;
+﻿using System;
+using Espionage.Engine.Components;
 using Espionage.Engine.Resources;
 using UnityEngine;
 
@@ -17,9 +18,14 @@ namespace Espionage.Engine
 		/// Constructs the Entity, based off the Library. (Used by the
 		/// [Constructor] Attribute in the Library system)
 		/// </summary>
-		internal static object Constructor( Library library )
+		internal static Entity Constructor( Library library )
 		{
-			return new GameObject( library.Name ).AddComponent( library.Info );
+			var ent = (Entity)new GameObject( library.Name ).AddComponent( library.Info );
+
+			ent.IsFromMap = false;
+			ent.UniqueID = Guid.NewGuid().ToString();
+
+			return ent;
 		}
 
 		/// <summary> Create an Entity, from its type. </summary>
@@ -44,7 +50,7 @@ namespace Espionage.Engine
 		//
 
 		/// <summary>
-		/// Used for grabbing entities by their names, such as when we
+		/// Used for grabbing entities by their Guid, such as when we
 		/// are trying to invoke an output, we will use its id, so multiple
 		/// can be triggered at the same time.
 		/// </summary>
@@ -53,6 +59,19 @@ namespace Espionage.Engine
 			get => identifier;
 			set => identifier = value;
 		}
+
+		/// <summary>
+		/// UniqueID is a GUID that has been converted to a string.
+		/// Probably Stupid.. but its because of Unity Serialization
+		/// (of course.....) 
+		/// </summary>
+		public string UniqueID
+		{
+			get => uniqueId;
+			internal set => uniqueId = value;
+		}
+
+		public bool IsFromMap { get; private set; } = true;
 
 		/// <summary> The client that has authority over this Entity </summary>
 		public Client Client { get; internal set; }
@@ -148,6 +167,13 @@ namespace Espionage.Engine
 		}
 
 		//
+		// Save & Restore
+		//
+
+		public void Save() { }
+		public void Restore() { }
+
+		//
 		// Helpers
 		//
 
@@ -179,7 +205,7 @@ namespace Espionage.Engine
 		/// The Position of this Entity. (Feeds
 		/// the value to the transforms position)
 		/// </summary>
-		[Group( "Transform" ), Order( -15 )]
+		[Serialize, Group( "Transform" ), Order( -15 )]
 		public Vector3 Position
 		{
 			get => transform.position;
@@ -191,7 +217,7 @@ namespace Espionage.Engine
 		/// (Feeds the value to the transforms
 		/// rotation)
 		/// </summary>
-		[Group( "Transform" )]
+		[Serialize, Group( "Transform" )]
 		public Quaternion Rotation
 		{
 			get => transform.rotation;
@@ -203,7 +229,7 @@ namespace Espionage.Engine
 		/// (Feeds the value to the transforms
 		/// local scale)
 		/// </summary>
-		[Group( "Transform" )]
+		[Serialize, Group( "Transform" )]
 		public Vector3 Scale
 		{
 			get => transform.lossyScale;
@@ -215,6 +241,7 @@ namespace Espionage.Engine
 		/// (Changes gameObject.SetActive() to
 		/// the target value)
 		/// </summary>
+		[Serialize]
 		public bool Enabled
 		{
 			// I hate Unity, this is so stupid
@@ -225,6 +252,9 @@ namespace Espionage.Engine
 		// Fields
 
 		[SerializeField]
-		private string identifier = string.Empty;
+		private string identifier;
+
+		[SerializeField]
+		private string uniqueId;
 	}
 }
