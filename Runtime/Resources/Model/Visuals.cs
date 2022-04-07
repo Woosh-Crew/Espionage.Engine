@@ -33,6 +33,12 @@ namespace Espionage.Engine.Resources
 
 		// Utility
 
+		public bool Enabled
+		{
+			get => _root.gameObject.activeSelf;
+			set => _root.gameObject.SetActive( value );
+		}
+
 		public Action Changed { get; set; }
 		public Animator Animator { get; private set; }
 		public Renderer[] Renderers { get; private set; }

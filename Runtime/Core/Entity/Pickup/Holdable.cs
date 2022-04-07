@@ -1,44 +1,90 @@
-﻿using System;
+﻿using Espionage.Engine.Resources;
 
 namespace Espionage.Engine
 {
 	public abstract class Holdable : Pickup, ISimulated
 	{
-		/// <summary>The given viewmodel for a holdable</summary>
-		public Viewmodel Viewmodel { get; set; }
-
-		public virtual void Simulate( Client cl ) { }
-		public virtual void PostCameraSetup( ref Tripod.Setup setup ) { }
-
-
-		/// <summary>If a given holdable is deploying</summary>
-		public bool IsDeploying { get; set; }
-
-		/// <summary>If a given weapon can be deployed</summary>
-		public virtual bool CanDeploy()
+		public virtual void Simulate( Client cl )
 		{
-			return true;
+			if ( TimeSinceDeployment >= DeployDelay && IsDeploying )
+			{
+				OnDeployed();
+			}
+
+			if ( TimeSinceHolster >= HolsterDelay && IsHolstering )
+			{
+				OnHolstered();
+			}
 		}
 
-		/// <summary>Deploys a given holdable</summary>
-		public virtual void Deploy() { }
+		public virtual void PostCameraSetup( ref Tripod.Setup setup ) { }
 
-		/// <summary>Call back for when holdable deployed</summary>
-		protected virtual void OnDeployed() { }
+		// Viewmodel
 
-		/// <summary>If a given holdable is currently holstering</summary>
+		public Viewmodel Viewmodel { get; set; }
+
+		protected virtual Viewmodel OnViewmodel( string path )
+		{
+			var vm = Create<Viewmodel>();
+			vm.Visuals.Model = Model.Load( path );
+			vm.Client = Client;
+			return vm;
+		}
+
+		// Deploying
+
+		public bool IsDeploying { get; set; }
+		protected virtual float DeployDelay { get; set; }
+		protected TimeSince TimeSinceDeployment { get; set; }
+
+		public virtual void Deploy()
+		{
+			Visuals.Enabled = true;
+
+			// Create Viewmodel
+
+			if ( Client == Local.Client )
+			{
+				Viewmodel = OnViewmodel( "v_mk23.umdl" );
+			}
+
+			// Start Deploying
+			IsDeploying = true;
+			TimeSinceDeployment = 0;
+
+			if ( DeployDelay == 0 )
+			{
+				OnDeployed();
+				return;
+			}
+
+			// Run Animations
+		}
+
+		protected virtual void OnDeployed()
+		{
+			IsDeploying = false;
+		}
+
+		// Holstering
+
 		public bool IsHolstering { get; set; }
+		protected virtual float HolsterDelay { get; set; }
+		protected TimeSince TimeSinceHolster { get; set; }
 
-		/// <summary>If a given holdable can be holstered</summary>
 		public virtual bool CanHolster()
 		{
 			return true;
 		}
 
-		/// <summary>Holsters the given holdable</summary>
 		public virtual void Holster( bool dropped = false ) { }
 
-		/// <summary>Call back for when a given holdable is holstered</summary>
-		protected virtual void OnHolstered() { }
+		protected virtual void OnHolstered()
+		{
+			Visuals.Enabled = false;
+
+			// Destroy Viewmodel
+			Destroy( Viewmodel );
+		}
 	}
 }

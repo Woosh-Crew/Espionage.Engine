@@ -13,7 +13,10 @@ namespace Espionage.Engine
 		/// <summary> All the entities that exists in the game world. </summary>
 		public static Entities All { get; } = new();
 
-		/// <summary> Constructs the Entity, based off the Library </summary>
+		/// <summary>
+		/// Constructs the Entity, based off the Library. (Used by the
+		/// [Constructor] Attribute in the Library system)
+		/// </summary>
 		internal static object Constructor( Library library )
 		{
 			return new GameObject( library.Name ).AddComponent( library.Info );
@@ -25,7 +28,12 @@ namespace Espionage.Engine
 			return Library.Database.Create<T>();
 		}
 
-		/// <summary> Create an Entity, from its Library. </summary>
+		/// <summary>
+		/// Create an Entity, from its Library, behind the scene's it'll
+		/// call a Library.Create using the fed in library. Plus because
+		/// its a library you can use the implicit operator for string
+		/// to library
+		/// </summary>
 		public static Entity Create( Library lib )
 		{
 			return Library.Create( lib ) as Entity;
@@ -111,10 +119,16 @@ namespace Espionage.Engine
 		// Components
 		//
 
-		/// <summary> The Visuals for this Entity. (Models, Animator, etc) </summary>
+		/// <summary>
+		/// The Visuals for this Entity which is the Model, Animator, etc.
+		/// (This will just Get or Create the Visuals Component)
+		/// </summary>
 		public Visuals Visuals => Components.GetOrCreate<Visuals>();
 
-		/// <summary> Components that are currently attached to this Entity </summary>
+		/// <summary>
+		/// Components that are currently attached to this Entity. Use Components for
+		/// injecting logic into an Entity (Dependency Injection)
+		/// </summary>
 		public Components<Entity> Components { get; private set; }
 
 		/// <summary>
@@ -161,7 +175,10 @@ namespace Espionage.Engine
 
 		}
 
-		/// <summary> The Position of this Entity. </summary>
+		/// <summary>
+		/// The Position of this Entity. (Feeds
+		/// the value to the transforms position)
+		/// </summary>
 		[Group( "Transform" ), Order( -15 )]
 		public Vector3 Position
 		{
@@ -169,7 +186,11 @@ namespace Espionage.Engine
 			set => transform.position = value;
 		}
 
-		/// <summary> The Rotation of this Entity. </summary>
+		/// <summary>
+		/// The Rotation of this Entity.
+		/// (Feeds the value to the transforms
+		/// rotation)
+		/// </summary>
 		[Group( "Transform" )]
 		public Quaternion Rotation
 		{
@@ -177,7 +198,11 @@ namespace Espionage.Engine
 			set => transform.rotation = value;
 		}
 
-		/// <summary> The Local Scale of this Entity. </summary>
+		/// <summary>
+		/// The Local Scale of this Entity.
+		/// (Feeds the value to the transforms
+		/// local scale)
+		/// </summary>
 		[Group( "Transform" )]
 		public Vector3 Scale
 		{
@@ -185,7 +210,11 @@ namespace Espionage.Engine
 			set => transform.localScale = value;
 		}
 
-		/// <summary> Is this Entity currently Enabled? </summary>
+		/// <summary>
+		/// Is this Entity currently Enabled?
+		/// (Changes gameObject.SetActive() to
+		/// the target value)
+		/// </summary>
 		public bool Enabled
 		{
 			// I hate Unity, this is so stupid

@@ -27,7 +27,7 @@ namespace Espionage.Engine.Resources.Editor
 			Grab( path, selection.GetType() );
 		}
 
-		[MenuItem( "Assets/Compile and Test Asset", priority = -500 )]
+		[MenuItem( "Assets/Compile and Test Asset", priority = -600 )]
 		private static void Both()
 		{
 			// Find Compiler, and Create it.	
