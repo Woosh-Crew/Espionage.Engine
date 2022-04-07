@@ -7,7 +7,7 @@ namespace Espionage.Engine.Resources.Editor
 	public static class ResourceTester
 	{
 		[MenuItem( "Assets/Test Asset", true )]
-		private static bool CompileValidate()
+		private static bool TestValidate()
 		{
 			if ( !Files.Pathing.Exists( "compiled://" ) )
 			{
@@ -18,12 +18,23 @@ namespace Espionage.Engine.Resources.Editor
 		}
 
 		[MenuItem( "Assets/Test Asset", priority = -500 )]
-		private static void Compile()
+		private static void Test()
 		{
 			// Find Compiler, and Create it.	
 			var selection = Selection.activeObject;
 			var path = AssetDatabase.GetAssetPath( selection );
 
+			Grab( path, selection.GetType() );
+		}
+
+		[MenuItem( "Assets/Compile and Test Asset", priority = -500 )]
+		private static void Both()
+		{
+			// Find Compiler, and Create it.	
+			var selection = Selection.activeObject;
+			var path = AssetDatabase.GetAssetPath( selection );
+
+			ResourceCompiler.Compile( path, selection.GetType() );
 			Grab( path, selection.GetType() );
 		}
 
