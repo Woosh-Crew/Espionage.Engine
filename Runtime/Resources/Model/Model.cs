@@ -30,7 +30,7 @@ namespace Espionage.Engine.Resources
 
 			if ( Files.Pathing.Exists( path ) )
 			{
-				var model = new Model( Files.Grab<File>( path, false ) );
+				var model = new Model( Files.Grab<File>( path ) );
 				model.Load();
 				return model;
 			}

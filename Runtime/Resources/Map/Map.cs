@@ -35,7 +35,7 @@ namespace Espionage.Engine.Resources
 
 			if ( Files.Pathing.Exists( path ) )
 			{
-				return new( Files.Grab<File>( path, false ) );
+				return new( Files.Grab<File>( path ) );
 			}
 
 			Dev.Log.Error( $"Map Path [{path}], couldn't be found." );

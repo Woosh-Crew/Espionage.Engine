@@ -23,7 +23,7 @@ namespace Espionage.Engine
 		/// <summary>
 		/// Gets the class that represents the target files extension.
 		/// </summary>
-		public static T Grab<T>( string path, bool load = true ) where T : class, IFile
+		public static T Grab<T>( string path ) where T : class, IFile
 		{
 			path = Pathing.Absolute( path );
 			Assert.IsFalse( Pathing.Exists( path ), "File doesn't exist" );

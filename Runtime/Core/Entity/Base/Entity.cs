@@ -162,8 +162,9 @@ namespace Espionage.Engine
 		// Save & Restore
 		//
 
-		public virtual void Save( Save.Writer writer ) { }
-		public virtual void Restore( Save.Reader reader ) { }
+		public virtual void Save( Save saver ) { }
+
+		public virtual void Restore( Restore restore ) { }
 
 		//
 		// Helpers
@@ -274,7 +275,7 @@ namespace Espionage.Engine
 		[SerializeField]
 		private string identifier;
 
-		[SerializeField, HideInInspector]
+		[SerializeField]
 		private string uniqueId;
 	}
 }
