@@ -35,13 +35,6 @@ namespace Espionage.Engine.Editor
 				}
 			}
 
-			// Assign it a GUID
-			if ( string.IsNullOrWhiteSpace( Entity.UniqueID ) )
-			{
-				serializedObject.FindProperty( "uniqueId" ).stringValue = Guid.NewGuid().ToString();
-				Dev.Log.Info( "Giving Entity a GUID" );
-			}
-
 			EditorInjection.Titles[target.GetType()] = $"{ClassInfo.Title}";
 
 			// Only Entities can have custom icons...

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Espionage.Engine.Components;
 using Espionage.Engine.Resources;
 using UnityEngine;
@@ -6,10 +7,11 @@ using UnityEngine;
 namespace Espionage.Engine
 {
 	/// <summary>
-	/// An Entity is the Root of a MonoBehaviour tree. Entities also contain IO / Actions logic.
+	/// An Entity is the Root of a MonoBehaviour tree. Entities can contain I/O logic,
+	/// be saved and restored, has a unique id for each, etc.
 	/// </summary>
 	[DisallowMultipleComponent, Group( "Entities" ), Constructor( nameof( Constructor ) ), Spawnable, SelectionBase]
-	public abstract class Entity : Behaviour
+	public abstract class Entity : Behaviour, ISerializationCallbackReceiver
 	{
 		/// <summary> All the entities that exists in the game world. </summary>
 		public static Entities All { get; } = new();
@@ -23,7 +25,7 @@ namespace Espionage.Engine
 			var ent = (Entity)new GameObject( library.Name ).AddComponent( library.Info );
 
 			ent.IsFromMap = false;
-			ent.UniqueID = Guid.NewGuid().ToString();
+			ent.UniqueID = Guid.NewGuid();
 
 			return ent;
 		}
@@ -60,17 +62,7 @@ namespace Espionage.Engine
 			set => identifier = value;
 		}
 
-		/// <summary>
-		/// UniqueID is a GUID that has been converted to a string.
-		/// Probably Stupid.. but its because of Unity Serialization
-		/// (of course.....) 
-		/// </summary>
-		public string UniqueID
-		{
-			get => uniqueId;
-			internal set => uniqueId = value;
-		}
-
+		public Guid UniqueID { get; private set; }
 		public bool IsFromMap { get; private set; } = true;
 
 		/// <summary> The client that has authority over this Entity </summary>
@@ -170,8 +162,8 @@ namespace Espionage.Engine
 		// Save & Restore
 		//
 
-		public void Save() { }
-		public void Restore() { }
+		public virtual void Save( Save.Writer writer ) { }
+		public virtual void Restore( Save.Reader reader ) { }
 
 		//
 		// Helpers
@@ -182,6 +174,21 @@ namespace Espionage.Engine
 			if ( entity != null )
 			{
 				return entity.gameObject.transform;
+			}
+
+			Dev.Log.Warning( "Entity was NULL" );
+			return null;
+
+		}
+
+		public static implicit operator Entity( Guid guid )
+		{
+			// Find an Entity with the same GUID
+			var entity = All.FirstOrDefault( e => e.UniqueID == guid );
+
+			if ( entity != null )
+			{
+				return entity;
 			}
 
 			Dev.Log.Warning( "Entity was NULL" );
@@ -249,12 +256,25 @@ namespace Espionage.Engine
 			set => gameObject.SetActive( value );
 		}
 
-		// Fields
+		// Fields & Unity Serialization
+
+		public void OnBeforeSerialize()
+		{
+			if ( string.IsNullOrWhiteSpace( uniqueId ) )
+			{
+				uniqueId = Guid.NewGuid().ToString();
+			}
+		}
+
+		public void OnAfterDeserialize()
+		{
+			UniqueID = Guid.Parse( uniqueId );
+		}
 
 		[SerializeField]
 		private string identifier;
 
-		[SerializeField]
+		[SerializeField, HideInInspector]
 		private string uniqueId;
 	}
 }
