@@ -6,6 +6,7 @@ namespace Espionage.Engine
 	[Singleton]
 	public class Interactor : Component<Actor>, ISimulated
 	{
+		public float Length { get; set; } = 0.9f;
 		public IUsable Using { get; private set; }
 		public IHoverable Hovering { get; private set; }
 		public Binding Binding { get; set; }
@@ -81,7 +82,7 @@ namespace Espionage.Engine
 
 		private T Find<T>( float size, Func<T, bool> canUse, out RaycastHit hit ) where T : class
 		{
-			var ray = Entity.Eyes.Ray();
+			var ray = Entity.Eyes.Ray( Length );
 			var entity = ray.Run<T>( out var result ) ?? ray.Radius( size ).Run<T>( out result );
 
 			// Set root ray to larger size then run

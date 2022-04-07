@@ -2,16 +2,19 @@
 {
 	public class Button : Entity, IUsable, IHoverable
 	{
-		public bool OnUse( Pawn user )
+		public virtual bool IsUsable( Pawn user )
+		{
+			return true;
+		}
+
+		public virtual bool OnUse( Pawn user )
 		{
 			Dev.Log.Info( "Used Button" );
 			return true;
 		}
 
-		public bool IsUsable( Pawn user )
-		{
-			return true;
-		}
+		public virtual void Started( Pawn user ) { }
+		public virtual void Stopped( Pawn user ) { }
 
 		// Hoverable
 
