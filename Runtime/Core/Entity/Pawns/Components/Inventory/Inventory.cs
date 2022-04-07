@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Espionage.Engine.Components;
+using UnityEditor.TextCore.Text;
 
 namespace Espionage.Engine
 {
@@ -11,28 +12,31 @@ namespace Espionage.Engine
 
 		private List<Pickup> Items { get; } = new();
 
-		public virtual void Add( Pickup item )
+		public virtual bool Add( Pickup item )
 		{
 			// If we dont own this and if we cant carry it, ignore
 			if ( Contains( item ) || item.Carrier is not null )
 			{
 				Dev.Log.Info( $"Can't pickup item {item}" );
-				return;
+				return false;
 			}
 
 			Items.Add( item );
 			item.OnPickup( Entity );
+
+			return true;
 		}
 
-		public virtual void Drop( Pickup item )
+		public virtual bool Drop( Pickup item )
 		{
 			if ( !Contains( item ) )
 			{
-				throw new( $"Item [{item.ClassInfo.Name}] isn't in Inventory" );
+				Dev.Log.Error( $"Item [{item.ClassInfo.Name}] isn't in Inventory" );
+				return false;
 			}
 
 			item.OnDrop( Entity );
-			Items.Remove( item );
+			return Items.Remove( item );
 		}
 
 		public virtual void Remove( Pickup item )
