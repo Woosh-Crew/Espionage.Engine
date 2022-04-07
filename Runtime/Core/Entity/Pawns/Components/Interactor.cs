@@ -8,33 +8,33 @@ namespace Espionage.Engine
 	{
 		public IUsable Using { get; private set; }
 		public IHoverable Hovering { get; private set; }
+		public Binding Binding { get; set; }
 
 		// Logic
 
 		public void Simulate( Client cl )
 		{
-			// IHoverable
+			Binding ??= Controls.Scheme["Interact"];
 
-			Hovering = Find<IHoverable>( 0.2f, e => e.Show( Entity ) );
+			// IHoverable
+			Hovering = Find<IHoverable>( 0.2f, e => e.Show( Entity ), out _ );
 
 			// IUsable
-			var interact = Controls.Scheme["Interact"];
-
-			if ( interact.Pressed )
+			if ( Binding.Pressed )
 			{
 				Start();
 			}
 
-			if ( !interact.Down )
+			if ( !Binding.Down )
 			{
 				Stop();
 				return;
 			}
 
-			// To far away, stop using
-			if ( Vector3.Distance( _positionWhenUsed, Entity.Position ) > 0.5f )
+			if ( Using != null && (Vector3.Dot( Entity.Rotation.Forward(), _positionWhenUsed - Entity.Position ) < 0.3f || Vector3.Distance( _positionWhenUsed, Entity.Position ) > 2f) )
 			{
 				Stop();
+				return;
 			}
 
 			if ( Using == null || !Using.OnUse( Entity ) )
@@ -53,10 +53,10 @@ namespace Espionage.Engine
 
 		private void Start()
 		{
-			Using = Find<IUsable>( 0.2f, e => e.IsUsable( Entity ) );
+			Using = Find<IUsable>( 0.2f, e => e.IsUsable( Entity ), out var info );
 			Using?.Started( Entity );
 
-			_positionWhenUsed = Entity.Position;
+			_positionWhenUsed = info.point;
 
 			if ( Using == null )
 			{
@@ -79,17 +79,19 @@ namespace Espionage.Engine
 
 		// Helpers
 
-		private T Find<T>( float size, Func<T, bool> canUse ) where T : class
+		private T Find<T>( float size, Func<T, bool> canUse, out RaycastHit hit ) where T : class
 		{
 			var ray = Entity.Eyes.Ray();
-			var entity = ray.Run<T>() ?? ray.Radius( size ).Run<T>();
+			var entity = ray.Run<T>( out var result ) ?? ray.Radius( size ).Run<T>( out result );
 
 			// Set root ray to larger size then run
 			if ( entity == null || !canUse.Invoke( entity ) )
 			{
+				hit = default;
 				return null;
 			}
 
+			hit = result.Value;
 			return entity;
 		}
 	}

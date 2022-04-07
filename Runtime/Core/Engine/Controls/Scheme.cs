@@ -57,15 +57,22 @@ namespace Espionage.Engine
 	public class Binding
 	{
 		public KeyCode? Key { get; private set; }
+		public string Text { get; private set; }
 
 		public Binding( KeyCode? key )
 		{
-			Key = key;
+			Change( key );
 		}
 
-		public void Change( KeyCode key )
+		public override string ToString()
+		{
+			return Text;
+		}
+
+		public void Change( KeyCode? key )
 		{
 			Key = key;
+			Text = key?.ToString() ?? "None";
 		}
 
 		public void Sample()
