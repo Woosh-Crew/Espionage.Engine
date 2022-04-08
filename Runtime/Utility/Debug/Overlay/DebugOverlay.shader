@@ -9,7 +9,7 @@ Shader "Unlit/DebugOverlay"
     {
         _Color ("Color", color) = (1.0, 1.0, 1.0, 1.0)
         [PowerSlider(3.0)]
-        _FrameWidth ("Wireframe width", Range(0.0, 0.5)) = 0.05
+        _FrameWidth ("Wireframe width", Range(0.0, 2.0)) = 0.05
     }
     SubShader
     {
@@ -98,8 +98,14 @@ Shader "Unlit/DebugOverlay"
             {
                 fixed4 col = _Color;
 
-                if(!any(bool3(i.bary.x <= _FrameWidth, i.bary.y <= _FrameWidth, i.bary.z <= _FrameWidth)))
-                 discard;
+                //Use screen space to make it so the width scales with the screen
+                float3 bary_grad = fwidth(i.bary * _FrameWidth); // change over 1 pixel
+                float3 bary = i.bary / bary_grad; // scale barycentrics
+ 
+                float edge = smoothstep(0.0, 1.0, min(bary.x, min(bary.y, bary.z)));
+                if(edge > 0.5){
+                    discard;
+                }
  
                 return col;
                 
