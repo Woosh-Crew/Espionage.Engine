@@ -56,6 +56,16 @@ namespace Espionage.Engine.Services
 				Dev.Terminal.Invoke( "dev.tripod" );
 			}
 
+			if ( Input.GetKeyDown( KeyCode.BackQuote ) )
+			{
+				if ( !Local.Client.Tripod.Is<DevTripod>() )
+				{
+					Dev.Terminal.Invoke( "dev.tripod" );
+				}
+
+				Window.Show<Terminal>().Focus = true;
+			}
+
 			// If were in Dev Tripod
 			if ( !Local.Client.Tripod.Is<DevTripod>() )
 			{

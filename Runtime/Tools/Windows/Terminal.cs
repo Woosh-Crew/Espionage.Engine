@@ -170,6 +170,16 @@ namespace Espionage.Engine.Tools
 						_input = command.Member.Name;
 					}
 
+					if ( ImGui.BeginPopupContextItem( "command_select", ImGuiPopupFlags.MouseButtonRight | ImGuiPopupFlags.AnyPopup ) )
+					{
+						if ( ImGui.MenuItem( "Show Meta" ) )
+						{
+							Service.Selection = command.Member as ILibrary;
+						}
+
+						ImGui.EndPopup();
+					}
+
 					if ( !string.IsNullOrWhiteSpace( command.Member.Help ) )
 					{
 						ImGui.SetTooltip( command.Member.Help );
@@ -193,13 +203,17 @@ namespace Espionage.Engine.Tools
 
 							if ( parameter.HasDefaultValue )
 							{
-								stringBuilder.Append( $"= {parameter.DefaultValue ?? "Null"} " );
+								stringBuilder.Append( $"({parameter.DefaultValue ?? "Null"}) " );
 							}
 						}
-						else
+						else if ( command.Info is PropertyInfo property )
 						{
-							var parameter = command.Parameters[i];
-							stringBuilder.Append( $"{parameter.Name} " );
+							stringBuilder.Append( $"{property.PropertyType.Name} " );
+
+							if ( property.GetMethod != null )
+							{
+								stringBuilder.Append( $"({property.GetValue( null )}) " );
+							}
 						}
 					}
 

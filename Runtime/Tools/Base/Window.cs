@@ -44,10 +44,17 @@ namespace Espionage.Engine.Tools
 
 			if ( toRemove != null )
 			{
-				All[toRemove].Delete();
+				All.Remove( toRemove, out var item );
+				item.Delete();
 			}
 
 			_running = false;
+		}
+
+		public static bool Exists<T>() where T : Window
+		{
+			var lib = Library.Database[typeof( T )];
+			return All.ContainsKey( lib );
 		}
 
 		public static T Show<T>() where T : Window

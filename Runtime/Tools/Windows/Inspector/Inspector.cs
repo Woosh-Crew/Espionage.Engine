@@ -53,10 +53,6 @@ namespace Espionage.Engine.Tools
 			Editors.Add( selection.GetType(), GrabEditor( selection is Library ? typeof( Library ) : selection.GetType() ) );
 		}
 
-		//
-		// ILibrary Inspector
-		//
-
 		private static void DrawGUI( object item )
 		{
 			if ( Editors.ContainsKey( item.GetType() ) )

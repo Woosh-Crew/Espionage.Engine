@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace Espionage.Engine
 {
@@ -14,7 +15,8 @@ namespace Espionage.Engine
 	{
 		public int Count => _storage.Count;
 
-		private readonly List<Entity> _storage = new();
+		private const int Max = 2048;
+		private readonly List<Entity> _storage = new( Max );
 
 		// Enumerator
 
@@ -43,28 +45,31 @@ namespace Espionage.Engine
 		// API
 
 		public Entity this[ int key ] => _storage[key];
-
-		public Entity this[ string key ]
-		{
-			get
-			{
-				if ( string.IsNullOrWhiteSpace( key ) )
-				{
-					return null;
-				}
-
-				return _storage.FirstOrDefault( e => string.Equals( e.Identifier, key, StringComparison.CurrentCultureIgnoreCase ) );
-			}
-		}
+		public Entity[] this[ string key ] => string.IsNullOrWhiteSpace( key ) ? null : _storage.Where( e => string.Equals( e.Identifier, key, StringComparison.CurrentCultureIgnoreCase ) ).ToArray();
 
 		public T Find<T>() where T : Entity
 		{
 			return _storage.FirstOrDefault( e => e is T ) as T;
 		}
 
-		public IEnumerable<Entity> Find( string id )
+		public T[] InSphere<T>( Vector3 position, float radius ) where T : Entity
 		{
-			return _storage.Where( e => string.Equals( e.Identifier, id, StringComparison.CurrentCultureIgnoreCase ) );
+			return this.OfType<T>().Where( entity => (entity.Position - position).magnitude <= radius ).ToArray();
+		}
+
+		public Entity[] InSphere( Vector3 position, float radius )
+		{
+			return this.Where( entity => (entity.Position - position).magnitude <= radius ).ToArray();
+		}
+
+		public T[] InBounds<T>( Vector3 position, Bounds bounds ) where T : Entity
+		{
+			return this.OfType<T>().Where( entity => bounds.Contains( entity.Position ) ).ToArray();
+		}
+
+		public Entity[] InBounds( Vector3 position, Bounds bounds )
+		{
+			return this.Where( entity => bounds.Contains( entity.Position ) ).ToArray();
 		}
 	}
 }
