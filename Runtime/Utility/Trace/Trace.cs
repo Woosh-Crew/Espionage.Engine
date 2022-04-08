@@ -18,8 +18,8 @@ namespace Espionage.Engine
 
 		public struct Builder
 		{
-			private readonly Vector3 _origin;
-			private readonly Vector3 _direction;
+			private Vector3 _origin;
+			private Vector3 _direction;
 			private float _distance;
 			private float _radius;
 
@@ -31,6 +31,25 @@ namespace Espionage.Engine
 
 				_radius = 0;
 				_ignore = null;
+			}
+
+			public Builder Start( Vector3 value )
+			{
+				_origin = value;
+				return this;
+			}
+
+			public Builder End( Vector3 value )
+			{
+				_direction = (_origin - value).normalized;
+				_distance = (_origin - value).magnitude;
+				return this;
+			}
+
+			public Builder Direction( Vector3 value )
+			{
+				_direction = value;
+				return this;
 			}
 
 			// Sphere
