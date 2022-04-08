@@ -62,12 +62,12 @@ namespace Espionage.Engine
 			return this.Where( entity => (entity.Position - position).magnitude <= radius ).ToArray();
 		}
 
-		public T[] InBounds<T>( Vector3 position, Bounds bounds ) where T : Entity
+		public T[] InBounds<T>( Bounds bounds ) where T : Entity
 		{
 			return this.OfType<T>().Where( entity => bounds.Contains( entity.Position ) ).ToArray();
 		}
 
-		public Entity[] InBounds( Vector3 position, Bounds bounds )
+		public Entity[] InBounds( Bounds bounds )
 		{
 			return this.Where( entity => bounds.Contains( entity.Position ) ).ToArray();
 		}
