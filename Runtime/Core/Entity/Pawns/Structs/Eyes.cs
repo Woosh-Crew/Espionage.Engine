@@ -18,7 +18,7 @@ namespace Espionage.Engine
 		public Vector3 Position { get; }
 		public Quaternion Rotation { get; }
 
-		public Trace.Builder Ray( float distance = 0.9f )
+		public Trace.Builder Ray( float distance = 1.25f )
 		{
 			return Trace.Ray( Position, Rotation.Forward(), distance ).Ignore( "Pawn" );
 		}

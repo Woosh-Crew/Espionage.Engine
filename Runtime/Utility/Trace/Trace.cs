@@ -93,6 +93,8 @@ namespace Espionage.Engine
 
 			public bool Run( out RaycastHit? hit )
 			{
+				Debug.DrawLine( _origin, _origin + _direction * _distance, Color.red, 0.5f );
+
 				RaycastHit test;
 
 				var cast = _radius > 0

@@ -6,7 +6,7 @@ namespace Espionage.Engine
 	[Singleton]
 	public class Interactor : Component<Actor>, ISimulated
 	{
-		public float Length { get; set; } = 0.9f;
+		public float Length { get; set; } = 1.25f;
 		public IUsable Using { get; private set; }
 		public IHoverable Hovering { get; private set; }
 		public Binding Binding { get; set; }
