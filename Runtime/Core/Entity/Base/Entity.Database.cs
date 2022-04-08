@@ -62,6 +62,16 @@ namespace Espionage.Engine
 			return this.Where( entity => (entity.Position - position).magnitude <= radius ).ToArray();
 		}
 
+		public T[] InBox<T>( Vector3 position, Vector3 size ) where T : Entity
+		{
+			return InBounds<T>( new( position, size ) );
+		}
+
+		public Entity[] InBox( Vector3 position, Vector3 size )
+		{
+			return InBounds( new( position, size ) );
+		}
+
 		public T[] InBounds<T>( Bounds bounds ) where T : Entity
 		{
 			return this.OfType<T>().Where( entity => bounds.Contains( entity.Position ) ).ToArray();
