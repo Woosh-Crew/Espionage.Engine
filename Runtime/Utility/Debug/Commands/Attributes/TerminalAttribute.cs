@@ -23,8 +23,7 @@ namespace Espionage.Engine
 
 			var command = new Command()
 			{
-				Name = item.Name,
-				Help = item.Help,
+				Member = item,
 				Info = item.Info,
 				Parameters = item.Info.GetParameters().Select( e => e.ParameterType ).ToArray()
 			}.WithAction(
@@ -44,8 +43,7 @@ namespace Espionage.Engine
 
 			var command = new Command()
 			{
-				Name = item.Name,
-				Help = item.Help,
+				Member = item,
 				Info = item.Info,
 				Parameters = new[] { item.Info.PropertyType }
 			}.WithAction(

@@ -5,11 +5,13 @@ namespace Espionage.Engine.Internal.Commands
 {
 	public struct Command
 	{
-		public string Name { get; internal set; }
-		public string Help { get; internal set; }
 
 		private Action<object[]> _action;
+
+
+		public IMember Member { get; internal set; }
 		public MemberInfo Info { get; internal set; }
+
 		public Type[] Parameters { get; internal set; }
 
 		public Command WithAction( Action<object[]> action )

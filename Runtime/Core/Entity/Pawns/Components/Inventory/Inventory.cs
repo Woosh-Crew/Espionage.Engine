@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Espionage.Engine.Components;
-using UnityEditor.TextCore.Text;
 
 namespace Espionage.Engine
 {

@@ -98,7 +98,14 @@ namespace Espionage.Engine
 
 			foreach ( var item in string.IsNullOrWhiteSpace( input ) ? Terminal.All : Terminal.Find( input ) )
 			{
-				builder.AppendLine( $"{item.Name} : {item.Help}" );
+				builder.AppendLine( item.Member.Name );
+
+				if ( string.IsNullOrWhiteSpace( item.Member.Help ) )
+				{
+					continue;
+				}
+
+				builder.Append( $" : {item.Member.Help}" );
 			}
 
 			Log.Add( new() { Message = builder.ToString(), Level = "Response" } );

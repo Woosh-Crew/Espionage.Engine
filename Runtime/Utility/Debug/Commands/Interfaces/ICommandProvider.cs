@@ -37,7 +37,7 @@ namespace Espionage.Engine
 
 		public static IEnumerable<Command> Find( this ICommandProvider provider, string input )
 		{
-			return provider.All.Where( e => e.Name.StartsWith( input ) );
+			return provider.All.Where( e => e.Member.Name.StartsWith( input ) );
 		}
 	}
 }

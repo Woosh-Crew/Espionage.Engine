@@ -10,7 +10,7 @@ namespace Espionage.Engine.Tools
 	public class Terminal : Window
 	{
 		public bool Focus { get; set; }
-		public override ImGuiWindowFlags Flags => base.Flags | ImGuiWindowFlags.NoBringToFrontOnFocus;
+		public override ImGuiWindowFlags Flags => base.Flags | ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoNavInputs;
 
 		private string _input = string.Empty;
 		private string _search = string.Empty;
@@ -137,7 +137,8 @@ namespace Espionage.Engine.Tools
 
 			var lastItem = ImGui.GetItemRectMin();
 
-			ImGui.SetNextWindowPos( lastItem + new Vector2( 0, ImGui.GetItemRectSize().y - 20 - 8 ), ImGuiCond.Always, Vector2.up );
+			ImGui.SetNextWindowPos( lastItem + new Vector2( 0, ImGui.GetItemRectSize().y - 22 - 8 ), ImGuiCond.Always, Vector2.up );
+			ImGui.SetNextWindowSize( new( ImGui.GetWindowWidth() - 16, 0 ) );
 
 			// Lotta Flags.. Kinda looks like a flag
 			const ImGuiWindowFlags flags =
@@ -147,50 +148,65 @@ namespace Espionage.Engine.Tools
 				ImGuiWindowFlags.NoSavedSettings |
 				ImGuiWindowFlags.NoNav;
 
-			ImGui.SetNextWindowBgAlpha( 0.5f );
-
 			ImGui.PushStyleVar( ImGuiStyleVar.WindowRounding, 0 );
 			ImGui.PushStyleVar( ImGuiStyleVar.PopupBorderSize, 0 );
 			ImGui.PushStyleVar( ImGuiStyleVar.WindowPadding, new Vector2( 8, 8 ) );
 
 			if ( ImGui.Begin( string.Empty, flags ) )
 			{
+				var count = 0;
 				foreach ( var command in Dev.Terminal.Find( _input ) )
 				{
-					if ( ImGui.Selectable( command.Name ) )
+					// Only allow 8 Hints
+					if ( count >= 8 )
 					{
-						_input = command.Name;
+						break;
 					}
 
-					if ( command.Parameters.Length > 0 )
+					count++;
+
+					if ( ImGui.Selectable( command.Member.Name ) )
 					{
-						var stringBuilder = new StringBuilder();
-						stringBuilder.Append( "[ " );
+						_input = command.Member.Name;
+					}
 
-						for ( var i = 0; i < command.Parameters.Length; i++ )
+					if ( !string.IsNullOrWhiteSpace( command.Member.Help ) )
+					{
+						ImGui.SetTooltip( command.Member.Help );
+					}
+
+					if ( command.Parameters.Length <= 0 )
+					{
+						continue;
+					}
+
+					// Build Parameters GUI
+					var stringBuilder = new StringBuilder();
+					stringBuilder.Append( "[ " );
+
+					for ( var i = 0; i < command.Parameters.Length; i++ )
+					{
+						if ( command.Info is MethodInfo method )
 						{
-							if ( command.Info is MethodInfo method )
-							{
-								var parameter = method.GetParameters()[i];
-								stringBuilder.Append( $"{parameter.ParameterType.Name} " );
+							var parameter = method.GetParameters()[i];
+							stringBuilder.Append( $"{parameter.ParameterType.Name} " );
 
-								if ( parameter.HasDefaultValue )
-								{
-									stringBuilder.Append( $"= {parameter.DefaultValue ?? "Null"} " );
-								}
-							}
-							else
+							if ( parameter.HasDefaultValue )
 							{
-								var parameter = command.Parameters[i];
-								stringBuilder.Append( $"{parameter.Name} " );
+								stringBuilder.Append( $"= {parameter.DefaultValue ?? "Null"} " );
 							}
 						}
-
-						stringBuilder.Append( "]" );
-
-						ImGui.SameLine();
-						ImGui.TextDisabled( stringBuilder.ToString() );
+						else
+						{
+							var parameter = command.Parameters[i];
+							stringBuilder.Append( $"{parameter.Name} " );
+						}
 					}
+
+					stringBuilder.Append( "]" );
+
+					ImGui.SameLine();
+					ImGui.TextDisabled( stringBuilder.ToString() );
 				}
 
 				ImGui.End();

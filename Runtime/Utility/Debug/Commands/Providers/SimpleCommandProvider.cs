@@ -28,7 +28,7 @@ namespace Espionage.Engine.Internal.Commands
 
 		public void Add( Command command )
 		{
-			_commands.Add( command.Name, command );
+			_commands.Add( command.Member.Name, command );
 		}
 
 		public Command Get( string command )
