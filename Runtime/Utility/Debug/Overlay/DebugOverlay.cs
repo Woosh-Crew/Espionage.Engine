@@ -3,42 +3,100 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Threading.Tasks;
 namespace Espionage.Engine
-{
-	/// <summary>This class will draw some shit</summary>
+{	
+	/// <summary>A class which will draw debug shapes in the world</summary>
     public static class Overlay
     {
-		//Note for Jake:
-		//It's a little scuffed and is gonna be cleaned up
-		
+		/// <summary>Returns a material of the overlay wireframe shader</summary>
+		public static Material WireframeOverlay{
+			get{
+				return new Material(Shader.Find("Unlit/DebugOverlay"));
+			}
+		}
 
-		public static void DrawSphere(Vector3 position, float radius,float time = 0f, Color? color = null){
-			//Weird hack for optional color
+		/// <summary>Returns a material of the geometry wireframe shader</summary>
+		public static Material WireframeGeo{
+			get{
+				return new Material(Shader.Find("Unlit/DebugOverlay"));
+			}
+		}
+	
+		public static void DrawSphere(Vector3 position, float radius,float time = 0f, Color? color = null, bool depthTest = false){
+			//Allows us to have a default color
 			if(color == null){
 				color = Color.green;
 			}
 			
-			//Weird hack for getting materials
-			//TODO: There's gotta be a more performant way to do this, or maybe this isn't super expensive, who knows.
-			Material mat = new Material(Shader.Find("Unlit/DebugOverlay"));
+			//Pick betwen the overlay or geomtry shader
+			Material mat = (depthTest) ? WireframeOverlay : WireframeGeo;
 			mat.SetColor("_Color",color.Value);
-			Mesh mesh = PrimitiveHelper.GetPrimitiveMesh(PrimitiveType.Sphere);
-			
-			Draw(time,mesh,mat,position,radius);
-			
-			
 
+			//Get the sphere primitive
+			Mesh mesh = PrimitiveFactory.GetPrimitiveMesh(PrimitiveType.Sphere);
+			
+			//Draw the msh
+			Draw(position,new Vector3(radius,radius,radius),time,mesh,mat);
 		}
 
-		public static async void Draw(float seconds, Mesh mesh,Material mat, Vector3 position, float scale){
-			Vector3 size = new Vector3(scale,scale,scale);
-			Matrix4x4 matrix = Matrix4x4.TRS(position, Quaternion.identity, size);
+		public static void DrawBox(Vector3 position, Vector3 size,float time = 0f, Color? color = null, bool depthTest = false){
+			//Allows us to have a default color
+			if(color == null){
+				color = Color.green;
+			}
 			
-			//Draw for a single frame
+			//Pick betwen the overlay or geomtry shader
+			Material mat = (depthTest) ? WireframeOverlay : WireframeGeo;
+			mat.SetColor("_Color",color.Value);
+
+			//Get the sphere primitive
+			Mesh mesh = PrimitiveFactory.GetPrimitiveMesh(PrimitiveType.Cube);
+			
+			//Draw the msh
+			Draw(position,size,time,mesh,mat);
+		}
+
+		public static void DrawCapsule(Vector3 position, Vector3 size,float time = 0f, Color? color = null, bool depthTest = false){
+			//Allows us to have a default color
+			if(color == null){
+				color = Color.green;
+			}
+			
+			//Pick betwen the overlay or geomtry shader
+			Material mat = (depthTest) ? WireframeOverlay : WireframeGeo;
+			mat.SetColor("_Color",color.Value);
+
+			//Get the sphere primitive
+			Mesh mesh = PrimitiveFactory.GetPrimitiveMesh(PrimitiveType.Capsule);
+			
+			//Draw the msh
+			Draw(position,size,time,mesh,mat);
+		}
+
+		public static void DrawMesh(Mesh mesh,Vector3 position, Vector3 size,float time = 0f, Color? color = null, bool depthTest = false){
+			//Allows us to have a default color
+			if(color == null){
+				color = Color.green;
+			}
+			
+			//Pick betwen the overlay or geomtry shader
+			Material mat = (depthTest) ? WireframeOverlay : WireframeGeo;
+			mat.SetColor("_Color",color.Value);
+			
+			//Draw the msh
+			Draw(position,size,time,mesh,mat);
+		}
+		
+		/// <summary>DrawDraws a given mesh with a material at a position with a scale</summary>
+		private static async void Draw(Vector3 position, Vector3 scale, float seconds, Mesh mesh,Material mat){
+			//Calculate a transform matrix for a given position, rotation, and scale
+			Matrix4x4 matrix = Matrix4x4.TRS(position, Quaternion.identity, scale);
+			
+			//Draw mesh draws for one frame, so if seconds is 0f, just draw it once
 			if(seconds <= 0f){
 				Graphics.DrawMesh(mesh, matrix, mat, 0);
 			}
 
-			//Fun little method for doing something 'x' number of seconds
+			//Otherwise draw the mesh for X number of seconds
 			for(float i = 0; i < seconds; i += Time.deltaTime){
 				Graphics.DrawMesh(mesh, matrix, mat, 0);
 				await Task.Yield();
@@ -47,42 +105,36 @@ namespace Espionage.Engine
     }
 
 	/// <summary>This is a helper class which helps create and cache static references to unity Primitive meshes</summary>
-	/// This was wonderfully provided in an answer to getting static mesh primitives on the unity forums
-	/// https://answers.unity.com/questions/514293/changing-a-gameobjects-primitive-mesh.html
-	/// In theory we could just triangulate our own primitives but thats a task for another day
-	public static class PrimitiveHelper
+	/// TODO: Worth looking into just doing these as manual triangulation, but this allows us to use unity primitives.
+	public static class PrimitiveFactory
 	{
+		/// <summary>Holds a cache of meshes that we've already requested to avoid overhead of having to create all the objects</summary>
 	    private static Dictionary<PrimitiveType, Mesh> primitiveMeshes = new Dictionary<PrimitiveType, Mesh>();
-	
-	    public static GameObject CreatePrimitive(PrimitiveType type, bool withCollider)
-	    {
-	        if (withCollider) { return GameObject.CreatePrimitive(type); }
-	
-	        GameObject gameObject = new GameObject(type.ToString());
-	        MeshFilter meshFilter = gameObject.AddComponent<MeshFilter>();
-	        meshFilter.sharedMesh = PrimitiveHelper.GetPrimitiveMesh(type);
-	        gameObject.AddComponent<MeshRenderer>();
-	
-	        return gameObject;
-	    }
-	
+
 	    public static Mesh GetPrimitiveMesh(PrimitiveType type)
 	    {
-	        if (!PrimitiveHelper.primitiveMeshes.ContainsKey(type))
+			//If we don't have the primitive cached, create and cache it.
+	        if (!PrimitiveFactory.primitiveMeshes.ContainsKey(type))
 	        {
-	            PrimitiveHelper.CreatePrimitiveMesh(type);
+	            PrimitiveFactory.CreatePrimitiveMesh(type);
 	        }
-	
-	        return PrimitiveHelper.primitiveMeshes[type];
+
+			//Return the given mesh
+	        return PrimitiveFactory.primitiveMeshes[type];
 	    }
-	
+
+		/// <summary>Creates a mesh of a given primitive type, stores it into the di</summary>
 	    private static Mesh CreatePrimitiveMesh(PrimitiveType type)
 	    {
+			//Create the gameoject as one of the primitives
 	        GameObject gameObject = GameObject.CreatePrimitive(type);
+			//Store a reference to the mesh
 	        Mesh mesh = gameObject.GetComponent<MeshFilter>().sharedMesh;
+			//Destroy the object
 	        GameObject.Destroy(gameObject);
-	
-	        PrimitiveHelper.primitiveMeshes[type] = mesh;
+
+			//Cash it into the dictionary
+	        PrimitiveFactory.primitiveMeshes[type] = mesh;
 	        return mesh;
 	    }
 	}

@@ -3,7 +3,7 @@
 //https://catlikecoding.com/unity/tutorials/advanced-rendering/flat-and-wireframe-shading/ 
 //Show genius technique for only drawing quads:
 //http://www.shaderslab.com/demo-94---wireframe-without-diagonal.html
-Shader "Unlit/DebugOverlay"
+Shader "Unlit/DebugGeo"
 {
     Properties
     {
@@ -13,9 +13,8 @@ Shader "Unlit/DebugOverlay"
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" "Queue"="Overlay+1"}
+        Tags { "RenderType"="Opaque" "Queue"="Geometry"}
         LOD 100
-        ZTest Always
         Cull Off
         Pass
         {
