@@ -11,7 +11,7 @@ namespace Espionage.Engine.Tools
 		{
 			if ( ImGui.Selectable( "Library" ) )
 			{
-				Engine.Services.Get<DiagnosticsService>().Selection = value;
+				Engine.Services.Get<Diagnostics>().Selection = value;
 			}
 
 			ImGui.SameLine();

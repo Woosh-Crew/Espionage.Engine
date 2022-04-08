@@ -2,6 +2,7 @@
 using System.Linq;
 using Espionage.Engine.Services;
 using ImGuiNET;
+using UnityEngine;
 
 namespace Espionage.Engine.Tools
 {
@@ -13,7 +14,7 @@ namespace Espionage.Engine.Tools
 
 		private static bool _running;
 
-		internal static void Apply( DiagnosticsService service )
+		internal static void Apply( Diagnostics service )
 		{
 			_running = true;
 
@@ -89,8 +90,8 @@ namespace Espionage.Engine.Tools
 			Library.Unregister( this );
 		}
 
-		protected DiagnosticsService Service { get; private set; }
-		public virtual ImGuiWindowFlags Flags { get; }
+		protected Diagnostics Service { get; private set; }
+		public virtual ImGuiWindowFlags Flags => ImGuiWindowFlags.NoSavedSettings;
 
 		internal virtual bool Layout()
 		{
@@ -101,8 +102,9 @@ namespace Espionage.Engine.Tools
 
 			var delete = true;
 
-			ImGui.SetNextWindowSize( new( 256, 356 ), ImGuiCond.Once );
-			if ( ImGui.Begin( ClassInfo.Title, ref delete, ImGuiWindowFlags.NoSavedSettings | Flags ) )
+			ImGui.SetNextWindowSize( new( 512, 512 ), ImGuiCond.Once );
+
+			if ( ImGui.Begin( ClassInfo.Title, ref delete, Flags ) )
 			{
 				OnLayout();
 			}

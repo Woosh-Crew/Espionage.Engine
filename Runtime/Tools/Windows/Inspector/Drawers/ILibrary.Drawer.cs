@@ -19,7 +19,7 @@ namespace Espionage.Engine.Tools
 
 			if ( ImGui.Selectable( value.ToString() ) )
 			{
-				Engine.Services.Get<DiagnosticsService>().Selection = value;
+				Engine.Services.Get<Diagnostics>().Selection = value;
 			}
 
 			ImGui.SameLine();

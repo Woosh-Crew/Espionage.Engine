@@ -11,7 +11,7 @@ namespace Espionage.Engine.Services
 	/// Diagnostics service is responsible for providing the
 	/// dev tripod, and tools. For use in debugging.
 	/// </summary>
-	public class DiagnosticsService : Service
+	public sealed class Diagnostics : Service
 	{
 		private Camera _camera;
 

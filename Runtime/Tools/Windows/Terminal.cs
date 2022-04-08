@@ -9,6 +9,7 @@ namespace Espionage.Engine.Tools
 	public class Terminal : Window
 	{
 		public bool Focus { get; set; }
+		public override ImGuiWindowFlags Flags => base.Flags | ImGuiWindowFlags.NoBringToFrontOnFocus;
 
 		private string _input = string.Empty;
 		private string _search = string.Empty;
@@ -16,6 +17,7 @@ namespace Espionage.Engine.Tools
 
 		private void Send()
 		{
+			// Send Input to Output
 			Dev.Log.Add( new()
 			{
 				Message = $"> {_input}",
@@ -34,7 +36,6 @@ namespace Espionage.Engine.Tools
 		public override void OnLayout()
 		{
 			// Log Output
-
 			ImGui.SetNextItemWidth( ImGui.GetWindowWidth() - 16 );
 
 			ImGui.InputTextWithHint( "Search", "Log Search...", ref _search, 160 );
@@ -92,12 +93,14 @@ namespace Espionage.Engine.Tools
 			ImGui.BeginGroup();
 			{
 				ImGui.SetNextItemWidth( ImGui.GetWindowWidth() - 48 * 2 - 28 );
+				ImGui.PushStyleVar( ImGuiStyleVar.FramePadding, new Vector2( 8, 4 ) );
 
 				if ( ImGui.InputTextWithHint( string.Empty, "Enter Command...", ref _input, 160, ImGuiInputTextFlags.EnterReturnsTrue ) )
 				{
 					Send();
 				}
 
+				ImGui.PopStyleVar();
 				ImGui.SetItemDefaultFocus();
 
 				if ( Focus )
@@ -133,7 +136,7 @@ namespace Espionage.Engine.Tools
 
 			var lastItem = ImGui.GetItemRectMin();
 
-			ImGui.SetNextWindowPos( lastItem + new Vector2( 0, ImGui.GetItemRectSize().y + 8 ) );
+			ImGui.SetNextWindowPos( lastItem + new Vector2( 0, ImGui.GetItemRectSize().y - 20 - 8 ), ImGuiCond.Always, Vector2.up );
 
 			// Lotta Flags.. Kinda looks like a flag
 			const ImGuiWindowFlags flags =
@@ -141,21 +144,29 @@ namespace Espionage.Engine.Tools
 				ImGuiWindowFlags.NoDecoration |
 				ImGuiWindowFlags.AlwaysAutoResize |
 				ImGuiWindowFlags.NoSavedSettings |
-				ImGuiWindowFlags.NoFocusOnAppearing |
 				ImGuiWindowFlags.NoNav;
 
 			ImGui.SetNextWindowBgAlpha( 0.5f );
+
+			ImGui.PushStyleVar( ImGuiStyleVar.WindowRounding, 0 );
+			ImGui.PushStyleVar( ImGuiStyleVar.PopupBorderSize, 0 );
+			ImGui.PushStyleVar( ImGuiStyleVar.WindowPadding, new Vector2( 8, 8 ) );
 
 			if ( ImGui.Begin( string.Empty, flags ) )
 			{
 				foreach ( var item in Dev.Terminal.Find( _input ) )
 				{
-					var stringBuilder = new StringBuilder( $"{item}" );
 					var command = Dev.Terminal.Get( item );
+
+					if ( ImGui.Selectable( command.Name ) )
+					{
+						_input = command.Name;
+					}
 
 					if ( command.Parameters.Length > 0 )
 					{
-						stringBuilder.Append( " [ " );
+						var stringBuilder = new StringBuilder();
+						stringBuilder.Append( "[ " );
 
 						foreach ( var parameter in command.Parameters )
 						{
@@ -163,13 +174,16 @@ namespace Espionage.Engine.Tools
 						}
 
 						stringBuilder.Append( "]" );
-					}
 
-					ImGui.Text( stringBuilder.ToString() );
+						ImGui.SameLine();
+						ImGui.TextDisabled( stringBuilder.ToString() );
+					}
 				}
 
 				ImGui.End();
 			}
+
+			ImGui.PopStyleVar( 3 );
 		}
 	}
 }

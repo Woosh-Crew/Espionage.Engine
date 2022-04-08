@@ -70,7 +70,7 @@ namespace Espionage.Engine.Tools.Editors
 
 									if ( ImGui.Selectable( lib.ToString() ) )
 									{
-										Engine.Services.Get<DiagnosticsService>().Selection = property.GetValue( item ) as ILibrary;
+										Engine.Services.Get<Diagnostics>().Selection = property.GetValue( item ) as ILibrary;
 									}
 
 									ImGui.SameLine();
