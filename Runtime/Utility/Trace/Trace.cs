@@ -4,9 +4,9 @@ namespace Espionage.Engine
 {
 	public static class Trace
 	{
-		public static Builder Ray( Vector3 origin, Vector3 direction )
+		public static Builder Ray( Vector3 start, Vector3 end )
 		{
-			return new( origin, direction, 1 );
+			return new( start, (start - end).normalized, (start - end).magnitude );
 		}
 
 		public static Builder Ray( Vector3 origin, Vector3 direction, float distance )
