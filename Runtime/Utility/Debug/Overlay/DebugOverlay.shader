@@ -9,7 +9,7 @@ Shader "Unlit/DebugOverlay"
     {
         _Color ("Color", color) = (1.0, 1.0, 1.0, 1.0)
         [PowerSlider(3.0)]
-        _FrameWidth ("Wireframe width", Range(0.0, 2.0)) = 0.05
+        _FrameWidth ("Wireframe width", Range(0.0, 2.0)) = 2.0
     }
     SubShader
     {
