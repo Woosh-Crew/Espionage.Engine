@@ -17,18 +17,18 @@ namespace Espionage.Engine
 		/// <summary>Returns a material of the geometry wireframe shader</summary>
 		public static Material WireframeGeo{
 			get{
-				return new Material(Shader.Find("Unlit/DebugOverlay"));
+				return new Material(Shader.Find("Unlit/DebugGeo"));
 			}
 		}
 	
 		public static void DrawSphere(Vector3 position, float radius,float time = 0f, Color? color = null, bool depthTest = false){
 			//Allows us to have a default color
 			if(color == null){
-				color = Color.green;
+				color = Color.red;
 			}
 			
 			//Pick betwen the overlay or geomtry shader
-			Material mat = (depthTest) ? WireframeOverlay : WireframeGeo;
+			Material mat = (!depthTest) ? WireframeOverlay : WireframeGeo;
 			mat.SetColor("_Color",color.Value);
 
 			//Get the sphere primitive
@@ -41,11 +41,11 @@ namespace Espionage.Engine
 		public static void DrawBox(Vector3 position, Vector3 size,float time = 0f, Color? color = null, bool depthTest = false){
 			//Allows us to have a default color
 			if(color == null){
-				color = Color.green;
+				color = Color.red;
 			}
 			
 			//Pick betwen the overlay or geomtry shader
-			Material mat = (depthTest) ? WireframeOverlay : WireframeGeo;
+			Material mat = (!depthTest) ? WireframeOverlay : WireframeGeo;
 			mat.SetColor("_Color",color.Value);
 
 			//Get the sphere primitive
@@ -58,11 +58,11 @@ namespace Espionage.Engine
 		public static void DrawCapsule(Vector3 position, Vector3 size,float time = 0f, Color? color = null, bool depthTest = false){
 			//Allows us to have a default color
 			if(color == null){
-				color = Color.green;
+				color = Color.red;
 			}
 			
 			//Pick betwen the overlay or geomtry shader
-			Material mat = (depthTest) ? WireframeOverlay : WireframeGeo;
+			Material mat = (!depthTest) ? WireframeOverlay : WireframeGeo;
 			mat.SetColor("_Color",color.Value);
 
 			//Get the sphere primitive
@@ -75,11 +75,11 @@ namespace Espionage.Engine
 		public static void DrawMesh(Mesh mesh,Vector3 position, Vector3 size,float time = 0f, Color? color = null, bool depthTest = false){
 			//Allows us to have a default color
 			if(color == null){
-				color = Color.green;
+				color = Color.red;
 			}
 			
 			//Pick betwen the overlay or geomtry shader
-			Material mat = (depthTest) ? WireframeOverlay : WireframeGeo;
+			Material mat = (!depthTest) ? WireframeOverlay : WireframeGeo;
 			mat.SetColor("_Color",color.Value);
 			
 			//Draw the msh
