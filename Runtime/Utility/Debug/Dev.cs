@@ -92,11 +92,11 @@ namespace Espionage.Engine
 		private static string Language => Application.systemLanguage.ToString();
 
 		[Terminal, Function( "help" )]
-		private static void Help()
+		private static void Help( string input = null )
 		{
 			var builder = new StringBuilder();
 
-			foreach ( var item in Terminal.All )
+			foreach ( var item in string.IsNullOrWhiteSpace( input ) ? Terminal.All : Terminal.Find( input ) )
 			{
 				builder.AppendLine( $"{item.Name} : {item.Help}" );
 			}

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using ImGuiNET;
 using UnityEngine;
@@ -154,10 +155,8 @@ namespace Espionage.Engine.Tools
 
 			if ( ImGui.Begin( string.Empty, flags ) )
 			{
-				foreach ( var item in Dev.Terminal.Find( _input ) )
+				foreach ( var command in Dev.Terminal.Find( _input ) )
 				{
-					var command = Dev.Terminal.Get( item );
-
 					if ( ImGui.Selectable( command.Name ) )
 					{
 						_input = command.Name;
@@ -168,9 +167,23 @@ namespace Espionage.Engine.Tools
 						var stringBuilder = new StringBuilder();
 						stringBuilder.Append( "[ " );
 
-						foreach ( var parameter in command.Parameters )
+						for ( var i = 0; i < command.Parameters.Length; i++ )
 						{
-							stringBuilder.Append( $"{parameter.Name} " );
+							if ( command.Info is MethodInfo method )
+							{
+								var parameter = method.GetParameters()[i];
+								stringBuilder.Append( $"{parameter.ParameterType.Name} " );
+
+								if ( parameter.HasDefaultValue )
+								{
+									stringBuilder.Append( $"= {parameter.DefaultValue ?? "Null"} " );
+								}
+							}
+							else
+							{
+								var parameter = command.Parameters[i];
+								stringBuilder.Append( $"{parameter.Name} " );
+							}
 						}
 
 						stringBuilder.Append( "]" );

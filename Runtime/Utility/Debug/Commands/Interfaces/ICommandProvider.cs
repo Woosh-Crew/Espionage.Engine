@@ -35,9 +35,9 @@ namespace Espionage.Engine
 			}
 		}
 
-		public static string[] Find( this ICommandProvider provider, string input )
+		public static IEnumerable<Command> Find( this ICommandProvider provider, string input )
 		{
-			return provider.All.Select( e => e.Name ).Where( e => e.StartsWith( input ) ).ToArray();
+			return provider.All.Where( e => e.Name.StartsWith( input ) );
 		}
 	}
 }
