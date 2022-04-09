@@ -30,37 +30,34 @@ namespace Espionage.Engine.Overlays
 		public void Draw( Vector3 position, Vector3 scale, Mesh mesh, float seconds, Color? color, bool depth )
 		{
 			// Required by IOverlayProvider
-
-			color ??= Color.red;
-			_requests.Add( new( seconds, mesh, Matrix4x4.TRS( position, Quaternion.identity, scale ), color, depth ) );
+			_requests.Add( new( seconds, mesh, Matrix4x4.TRS( position, Quaternion.identity, scale ), color ?? Color.red, depth ) );
 		}
 
 		public void Draw( Matrix4x4 matrix, Mesh mesh, float seconds, Color? color, bool depth )
 		{
 			// Required by IOverlayProvider
-
-			color ??= Color.red;
-			_requests.Add( new( seconds, mesh, matrix, color, depth ) );
+			_requests.Add( new( seconds, mesh, matrix, color ?? Color.red, depth ) );
 		}
 
 
 		private readonly struct Request
 		{
-			public Request( float time, Mesh mesh, Matrix4x4 matrix, Color? color, bool depth )
+			public Request( float time, Mesh mesh, Matrix4x4 matrix, Color color, bool depth )
 			{
 				Time = time;
 				Mesh = mesh;
 				Matrix = matrix;
-				Color = color;
-				Depth = depth;
 
 				TimeSinceCreated = 0;
+
+				Material = depth ? new( Shader.Find( "Unlit/DebugGeo" ) ) : new( Shader.Find( "Unlit/DebugOverlay" ) );
+				Material.SetColor( "_Color", color );
 			}
 
 
 			public bool Draw()
 			{
-				Graphics.DrawMesh( Mesh, Matrix, null, 0 );
+				Graphics.DrawMesh( Mesh, Matrix, Material, 0 );
 				return TimeSinceCreated > Time;
 			}
 
@@ -69,8 +66,7 @@ namespace Espionage.Engine.Overlays
 			private float Time { get; }
 			private Matrix4x4 Matrix { get; }
 			private Mesh Mesh { get; }
-			private Color? Color { get; }
-			private bool Depth { get; }
+			private Material Material { get; }
 		}
 	}
 }
