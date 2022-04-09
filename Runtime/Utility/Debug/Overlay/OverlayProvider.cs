@@ -25,7 +25,7 @@ namespace Espionage.Engine.Overlays
 
 		// Rendering
 
-		private List<Request> _requests;
+		private readonly List<Request> _requests = new();
 
 		public void Draw( Vector3 position, Vector3 scale, Mesh mesh, float seconds, Color? color, bool depth )
 		{
