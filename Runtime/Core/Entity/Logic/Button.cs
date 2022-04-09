@@ -16,12 +16,6 @@
 		public virtual void Started( Pawn user ) { }
 		public virtual void Stopped( Pawn user ) { }
 
-		[Function, Callback( "app.frame" )]
-		private void Frame()
-		{
-			Overlay.Box( Position, Scale, depthTest : true );
-		}
-
 		// Hoverable
 
 		public virtual string Title => ClassInfo.Title;

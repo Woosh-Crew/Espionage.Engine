@@ -1,4 +1,5 @@
-﻿using Espionage.Engine.Services;
+﻿using System.Collections.Generic;
+using Espionage.Engine.Services;
 using UnityEngine;
 
 namespace Espionage.Engine.Overlays
@@ -13,41 +14,63 @@ namespace Espionage.Engine.Overlays
 
 		public override void OnUpdate()
 		{
-			base.OnUpdate();
+			for ( var i = 0; i < _requests.Count; i++ )
+			{
+				if ( _requests[i].Draw() )
+				{
+					_requests.Remove( _requests[i] );
+				}
+			}
 		}
 
 		// Rendering
 
+		private List<Request> _requests;
+
 		public void Draw( Vector3 position, Vector3 scale, Mesh mesh, float seconds, Color? color, bool depth )
 		{
 			// Required by IOverlayProvider
+
+			color ??= Color.red;
+			_requests.Add( new( seconds, mesh, Matrix4x4.TRS( position, Quaternion.identity, scale ), color, depth ) );
+		}
+
+		public void Draw( Matrix4x4 matrix, Mesh mesh, float seconds, Color? color, bool depth )
+		{
+			// Required by IOverlayProvider
+
+			color ??= Color.red;
+			_requests.Add( new( seconds, mesh, matrix, color, depth ) );
 		}
 
 
-		private struct Request
+		private readonly struct Request
 		{
-			public Request( float time, Matrix4x4 matrix, Color? color, bool depth )
+			public Request( float time, Mesh mesh, Matrix4x4 matrix, Color? color, bool depth )
 			{
-				_time = time;
-				_matrix = matrix;
-				_color = color;
-				_depth = depth;
+				Time = time;
+				Mesh = mesh;
+				Matrix = matrix;
+				Color = color;
+				Depth = depth;
 
-				_timeSinceCreated = 0;
+				TimeSinceCreated = 0;
 			}
 
-			
+
 			public bool Draw()
 			{
-				
+				Graphics.DrawMesh( Mesh, Matrix, null, 0 );
+				return TimeSinceCreated > Time;
 			}
 
-			private TimeSince _timeSinceCreated { get; }
-			
-			private float _time { get; }
-			private Matrix4x4 _matrix { get; }
-			private Color? _color { get; }
-			private bool _depth { get; }
+			private TimeSince TimeSinceCreated { get; }
+
+			private float Time { get; }
+			private Matrix4x4 Matrix { get; }
+			private Mesh Mesh { get; }
+			private Color? Color { get; }
+			private bool Depth { get; }
 		}
 	}
 }
