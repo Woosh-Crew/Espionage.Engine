@@ -32,7 +32,7 @@ namespace Espionage.Engine.Internal
 					return;
 				}
 
-				using var _ = Dev.Stopwatch( $"Loading Cookies [{file.Key}]" );
+				using var _ = Debugging.Stopwatch( $"Loading Cookies [{file.Key}]" );
 
 				// This is a really shitty ini deserializer
 				var sheet = Files.Serialization.Deserialize<string>( "serializer.string", file.Key ).Split( '\n', StringSplitOptions.RemoveEmptyEntries );
@@ -77,7 +77,7 @@ namespace Espionage.Engine.Internal
 			var files = Registry.GroupBy( e => e.Value.File );
 			foreach ( var file in files )
 			{
-				using var _ = Dev.Stopwatch( $"Saving Cookies [{file.Key}]" );
+				using var _ = Debugging.Stopwatch( $"Saving Cookies [{file.Key}]" );
 
 				var serialized = new StringBuilder();
 

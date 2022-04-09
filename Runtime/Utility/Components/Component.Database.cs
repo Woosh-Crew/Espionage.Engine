@@ -51,7 +51,7 @@ namespace Espionage.Engine.Components
 			// Replace if its a Singleton
 			if ( item is ILibrary lib && lib.ClassInfo.Components.Has<SingletonAttribute>() && TryGet( item.GetType(), out var comp ) )
 			{
-				Dev.Log.Warning( $"Replacing Component [{lib.ClassInfo.Name}]. Was Singleton" );
+				Debugging.Log.Warning( $"Replacing Component [{lib.ClassInfo.Name}]. Was Singleton" );
 				Replace( comp, item );
 				return;
 			}
@@ -167,13 +167,13 @@ namespace Espionage.Engine.Components
 		{
 			if ( old == null || newComp == null )
 			{
-				Dev.Log.Error( $"Components aren't valid" );
+				Debugging.Log.Error( $"Components aren't valid" );
 				return;
 			}
 
 			if ( !Contains( old ) )
 			{
-				Dev.Log.Error( $"Components doesnt contain {old}" );
+				Debugging.Log.Error( $"Components doesnt contain {old}" );
 				return;
 			}
 

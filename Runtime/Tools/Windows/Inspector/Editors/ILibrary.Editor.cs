@@ -100,7 +100,7 @@ namespace Espionage.Engine.Tools.Editors
 							ImGui.PushID( function.Title );
 							if ( ImGui.Button( "Invoke" ) )
 							{
-								Dev.Log.Info( $"Invoking {function.Title}" );
+								Debugging.Log.Info( $"Invoking {function.Title}" );
 								function.Invoke( item );
 							}
 

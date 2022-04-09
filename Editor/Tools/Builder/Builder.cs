@@ -22,7 +22,7 @@ namespace Espionage.Engine.Tools.Editor
 		{
 			if ( Engine.Game == null )
 			{
-				Dev.Log.Error( "No Game!" );
+				Debugging.Log.Error( "No Game!" );
 				return;
 			}
 
@@ -32,7 +32,7 @@ namespace Espionage.Engine.Tools.Editor
 
 			if ( !Files.Pathing.Exists( "models://w_garry.umdl" ) || !Files.Pathing.Exists( "models://w_error.umdl" ) )
 			{
-				Dev.Log.Info( "Compiling Default Resources" );
+				Debugging.Log.Info( "Compiling Default Resources" );
 				ResourceCompiler.Compile( errorPath, typeof( GameObject ) );
 				ResourceCompiler.Compile( garryPath, typeof( GameObject ) );
 			}
@@ -81,7 +81,7 @@ namespace Espionage.Engine.Tools.Editor
 				// Does Assets actually Exists?
 				if ( !Files.Pathing.Exists( $"assets://{library.Group}" ) )
 				{
-					Dev.Log.Info( $"{library.Title} doesn't have any exported assets." );
+					Debugging.Log.Info( $"{library.Title} doesn't have any exported assets." );
 					continue;
 				}
 

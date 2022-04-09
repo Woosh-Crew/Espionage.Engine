@@ -72,7 +72,7 @@ namespace Espionage.Engine
 			{
 				if ( !Editable )
 				{
-					Dev.Log.Error( $"Can't edit {Name}" );
+					Debugging.Log.Error( $"Can't edit {Name}" );
 					return;
 				}
 

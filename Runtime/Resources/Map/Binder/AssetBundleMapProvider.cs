@@ -32,7 +32,7 @@ namespace Espionage.Engine.Resources.Maps
 				OnLoad();
 
 				// We've finished loading the scene.
-				Dev.Log.Info( "Finished Loading Scene" );
+				Debugging.Log.Info( "Finished Loading Scene" );
 				finished?.Invoke();
 			};
 		}

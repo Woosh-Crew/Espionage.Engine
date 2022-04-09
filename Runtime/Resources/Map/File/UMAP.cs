@@ -30,7 +30,7 @@ namespace Espionage.Engine.Resources.Maps
 
 			if ( activeScene.path == scenePath && !EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo() )
 			{
-				Dev.Log.Warning( "Not compiling, User didn't want to save." );
+				Debugging.Log.Warning( "Not compiling, User didn't want to save." );
 				return;
 			}
 
@@ -38,11 +38,11 @@ namespace Espionage.Engine.Resources.Maps
 			var exportPath = $"Exports/{ClassInfo.Group}/";
 
 			// Track how long exporting took
-			using ( Dev.Stopwatch( "Map Compiled", true ) )
+			using ( Debugging.Stopwatch( "Map Compiled", true ) )
 			{
 				if ( Callback.Run<bool>( "compiler.sanity_check", scene )?.Any( e => e is false ) ?? false )
 				{
-					Dev.Log.Info( "Sanity check failed" );
+					Debugging.Log.Info( "Sanity check failed" );
 					return;
 				}
 
@@ -72,7 +72,7 @@ namespace Espionage.Engine.Resources.Maps
 				}
 				catch ( Exception e )
 				{
-					Dev.Log.Exception( e );
+					Debugging.Log.Exception( e );
 				}
 				finally
 				{

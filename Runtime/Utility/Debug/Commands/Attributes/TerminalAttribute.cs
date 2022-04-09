@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Espionage.Engine.Components;
-using Espionage.Engine.Internal.Commands;
+using Espionage.Engine.Commands;
 
 namespace Espionage.Engine
 {
@@ -17,7 +17,7 @@ namespace Espionage.Engine
 		{
 			if ( !item.Info.IsStatic )
 			{
-				Dev.Log.Error( $"Function \"{item.Name}\" Must be Static!" );
+				Debugging.Log.Error( $"Function \"{item.Name}\" Must be Static!" );
 				return;
 			}
 
@@ -30,14 +30,14 @@ namespace Espionage.Engine
 				( e ) => item.Info?.Invoke( null, e )
 			);
 
-			Dev.Terminal.Add( command );
+			Debugging.Terminal.Add( command );
 		}
 
 		public void OnAttached( Property item )
 		{
 			if ( !item.IsStatic )
 			{
-				Dev.Log.Error( $"Property \"{item.Name}\" Must be Static!" );
+				Debugging.Log.Error( $"Property \"{item.Name}\" Must be Static!" );
 				return;
 			}
 
@@ -54,16 +54,16 @@ namespace Espionage.Engine
 						var value = parameters[0];
 						item[null] = value;
 
-						Dev.Log.Info( $"{item.Name} now equals {value}" );
+						Debugging.Log.Info( $"{item.Name} now equals {value}" );
 					}
 					else
 					{
-						Dev.Log.Info( $"{item.Name} = {item[null]}" );
+						Debugging.Log.Info( $"{item.Name} = {item[null]}" );
 					}
 				}
 			);
 
-			Dev.Terminal.Add( command );
+			Debugging.Terminal.Add( command );
 		}
 	}
 }

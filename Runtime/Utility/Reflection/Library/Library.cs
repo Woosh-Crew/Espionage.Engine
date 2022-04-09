@@ -265,7 +265,7 @@ namespace Espionage.Engine
 				// Now add it to the instance
 				if ( _all.ContainsKey( item.Name ) )
 				{
-					Dev.Log.Error( $"Replacing {item.Name}, from {_owner.Name}" );
+					Debugging.Log.Error( $"Replacing {item.Name}, from {_owner.Name}" );
 					return;
 				}
 

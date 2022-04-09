@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-namespace Espionage.Engine.Internal.Commands
+namespace Espionage.Engine.Commands
 {
 	public struct Command
 	{

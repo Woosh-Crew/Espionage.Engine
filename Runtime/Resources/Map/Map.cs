@@ -38,7 +38,7 @@ namespace Espionage.Engine.Resources
 				return new( Files.Grab<File>( path ) );
 			}
 
-			Dev.Log.Error( $"Map Path [{path}], couldn't be found." );
+			Debugging.Log.Error( $"Map Path [{path}], couldn't be found." );
 			return null;
 		}
 
@@ -266,7 +266,7 @@ namespace Espionage.Engine.Resources
 		{
 			if ( string.IsNullOrEmpty( path ) )
 			{
-				Dev.Log.Info( $"Map: {Current.Identifier}" );
+				Debugging.Log.Info( $"Map: {Current.Identifier}" );
 				return;
 			}
 
@@ -313,7 +313,7 @@ namespace Espionage.Engine.Resources
 				// Store it in Database
 				if ( _records.ContainsKey( item.Identifier! ) )
 				{
-					Dev.Log.Warning( $"Replacing Map [{item.Identifier}]" );
+					Debugging.Log.Warning( $"Replacing Map [{item.Identifier}]" );
 					_records[item.Identifier] = item;
 				}
 				else

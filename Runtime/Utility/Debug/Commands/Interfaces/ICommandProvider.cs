@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Espionage.Engine;
-using Espionage.Engine.Internal.Commands;
+using Espionage.Engine.Commands;
 
-namespace Espionage.Engine.Internal.Commands
+namespace Espionage.Engine.Commands
 {
 	public interface ICommandProvider
 	{

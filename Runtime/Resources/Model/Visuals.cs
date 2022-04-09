@@ -54,7 +54,7 @@ namespace Espionage.Engine.Resources
 			{
 				if ( _model?.Model == value )
 				{
-					Dev.Log.Info( "Trying to apply the same Model" );
+					Debugging.Log.Info( "Trying to apply the same Model" );
 					return;
 				}
 

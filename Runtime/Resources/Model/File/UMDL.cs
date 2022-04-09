@@ -20,7 +20,7 @@ namespace Espionage.Engine.Resources.Models
 			var exportPath = $"Exports/{ClassInfo.Group}/";
 
 			// Track how long exporting took
-			using ( Dev.Stopwatch( "Model Compiled", true ) )
+			using ( Debugging.Stopwatch( "Model Compiled", true ) )
 			{
 				try
 				{
@@ -44,7 +44,7 @@ namespace Espionage.Engine.Resources.Models
 				}
 				catch ( Exception e )
 				{
-					Dev.Log.Exception( e );
+					Debugging.Log.Exception( e );
 				}
 			}
 		}

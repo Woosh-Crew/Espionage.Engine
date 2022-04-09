@@ -99,7 +99,7 @@ namespace Espionage.Engine
 			{
 				_storage.Add( item.Name, item );
 
-				Dev.Log.Info( $"Adding Thread Meta {item.Name}" );
+				Debugging.Log.Info( $"Adding Thread Meta {item.Name}" );
 			}
 
 			public bool Contains( Meta item )
@@ -112,7 +112,7 @@ namespace Espionage.Engine
 				item.Closed = true;
 				_storage.Remove( item.Name );
 
-				Dev.Log.Info( $"Removing Thread Meta {item.Name}" );
+				Debugging.Log.Info( $"Removing Thread Meta {item.Name}" );
 			}
 
 			public void Clear()

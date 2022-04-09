@@ -9,12 +9,18 @@
 
 		public virtual bool OnUse( Pawn user )
 		{
-			Dev.Log.Info( "Used Button" );
+			Debugging.Log.Info( "Used Button" );
 			return true;
 		}
 
 		public virtual void Started( Pawn user ) { }
 		public virtual void Stopped( Pawn user ) { }
+
+		[Function, Callback( "app.frame" )]
+		private void Frame()
+		{
+			Overlay.Box( Position, Scale, depthTest : true );
+		}
 
 		// Hoverable
 

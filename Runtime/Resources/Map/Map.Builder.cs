@@ -35,7 +35,7 @@ namespace Espionage.Engine.Resources
 			{
 				if ( _components.ContainsKey( typeof( T ) ) )
 				{
-					Dev.Log.Warning( $"Builder already contains component, {typeof( T ).FullName}" );
+					Debugging.Log.Warning( $"Builder already contains component, {typeof( T ).FullName}" );
 					return this;
 				}
 

@@ -2,7 +2,8 @@ using System;
 using System.Diagnostics;
 using System.Text;
 using Espionage.Engine.Logging;
-using Espionage.Engine.Internal.Commands;
+using Espionage.Engine.Commands;
+using Espionage.Engine.Overlays;
 using UnityEngine;
 
 namespace Espionage.Engine
@@ -13,7 +14,7 @@ namespace Espionage.Engine
 	/// You should be using this over Unity's debug library.
 	/// </summary>
 	[Library, Group( "Debug" )]
-	public static class Dev
+	public static class Debugging
 	{
 		// Providers
 
@@ -31,6 +32,8 @@ namespace Espionage.Engine
 		/// </summary>
 		public static ILoggingProvider Log { get; set; }
 
+		public static IOverlayProvider Overlay { get; set; }
+
 		/// <summary>
 		/// Runs a stopwatch on a IDisposable Scope. Use this in a using() expression
 		/// to record how long it took to execute that code block.
@@ -42,7 +45,7 @@ namespace Espionage.Engine
 			return ReportStopwatch || alwaysReport ? new TimedScope( message ) : null;
 		}
 
-		static Dev()
+		static Debugging()
 		{
 			Log = new SimpleLoggingProvider();
 			Terminal = new SimpleCommandProvider();

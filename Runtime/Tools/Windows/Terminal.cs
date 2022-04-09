@@ -19,7 +19,7 @@ namespace Espionage.Engine.Tools
 		private void Send()
 		{
 			// Send Input to Output
-			Dev.Log.Add( new()
+			Debugging.Log.Add( new()
 			{
 				Message = $"> {_input}",
 				Trace = "Inputted Text",
@@ -27,7 +27,7 @@ namespace Espionage.Engine.Tools
 				Color = Color.cyan
 			} );
 
-			Dev.Terminal.Invoke( _input );
+			Debugging.Terminal.Invoke( _input );
 
 			_input = string.Empty;
 			_scrollToBottom = true;
@@ -53,8 +53,8 @@ namespace Espionage.Engine.Tools
 					ImGui.TableHeadersRow();
 
 					foreach ( var entry in string.IsNullOrEmpty( _search )
-						         ? Dev.Log.All
-						         : Dev.Log.All.Where( e => e.Message.Contains( _search, StringComparison.CurrentCultureIgnoreCase ) || e.Level.StartsWith( _search, StringComparison.CurrentCultureIgnoreCase ) ) )
+						         ? Debugging.Log.All
+						         : Debugging.Log.All.Where( e => e.Message.Contains( _search, StringComparison.CurrentCultureIgnoreCase ) || e.Level.StartsWith( _search, StringComparison.CurrentCultureIgnoreCase ) ) )
 					{
 						ImGui.TableNextColumn();
 						ImGui.TextColored( Color.gray, $"[{DateTime.Now.ToShortTimeString()}]" );
@@ -123,7 +123,7 @@ namespace Espionage.Engine.Tools
 				ImGui.SetNextItemWidth( 48 );
 				if ( ImGui.Button( "Clear" ) )
 				{
-					Dev.Terminal.Invoke( "clear" );
+					Debugging.Terminal.Invoke( "clear" );
 				}
 			}
 			ImGui.EndGroup();
@@ -155,7 +155,7 @@ namespace Espionage.Engine.Tools
 			if ( ImGui.Begin( string.Empty, flags ) )
 			{
 				var count = 0;
-				foreach ( var command in Dev.Terminal.Find( _input ) )
+				foreach ( var command in Debugging.Terminal.Find( _input ) )
 				{
 					// Only allow 8 Hints
 					if ( count >= 8 )

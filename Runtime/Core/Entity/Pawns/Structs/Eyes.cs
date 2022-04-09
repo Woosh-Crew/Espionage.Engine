@@ -5,7 +5,7 @@ namespace Espionage.Engine
 	/// <summary>
 	/// Used by the pawn to represent where its
 	/// eyes are. AI and Tripods use this for
-	/// vision placement (Camera /  Sense)
+	/// vision placement (Camera / Sense)
 	/// </summary>
 	public readonly struct Eyes
 	{

@@ -26,7 +26,7 @@ namespace Espionage.Engine
 			}
 			else
 			{
-				Dev.Log.Info( "Pipe Already Exists, Sending message" );
+				Debugging.Log.Info( "Pipe Already Exists, Sending message" );
 				Write( message );
 			}
 		}
@@ -36,12 +36,12 @@ namespace Espionage.Engine
 			try
 			{
 				Writer.WriteLine( message );
-				Dev.Log.Error( $"[SERVER] Writing: {message}" );
+				Debugging.Log.Error( $"[SERVER] Writing: {message}" );
 			}
 			catch ( IOException e )
 			{
 				// Catch the IOException that is raised if the pipe is broken or disconnected
-				Dev.Log.Error( $"[SERVER] Error: {e.Message}" );
+				Debugging.Log.Error( $"[SERVER] Error: {e.Message}" );
 			}
 		}
 
@@ -55,8 +55,8 @@ namespace Espionage.Engine
 			Game = new() { StartInfo = new( Files.Pathing.Absolute( "compiled://<executable>" ), launchArgs ) { UseShellExecute = false } };
 			Pipe = new( PipeDirection.Out, HandleInheritability.Inheritable );
 
-			Dev.Log.Info( "[SERVER] Creating Pipe" );
-			Dev.Log.Info( $"[SERVER] Current Transmission Mode: {Pipe.TransmissionMode}." );
+			Debugging.Log.Info( "[SERVER] Creating Pipe" );
+			Debugging.Log.Info( $"[SERVER] Current Transmission Mode: {Pipe.TransmissionMode}." );
 
 			// Pass the client process a handle to the server.
 			Game.StartInfo.Arguments += " -connect " + Pipe.GetClientHandleAsString();
@@ -77,7 +77,7 @@ namespace Espionage.Engine
 			catch ( IOException e )
 			{
 				// Catch the IOException that is raised if the pipe is broken or disconnected
-				Dev.Log.Error( $"[SERVER] Error: {e.Message}" );
+				Debugging.Log.Error( $"[SERVER] Error: {e.Message}" );
 			}
 
 			Game.WaitForExit();
@@ -85,7 +85,7 @@ namespace Espionage.Engine
 
 			Shutdown();
 
-			Dev.Log.Info( "[SERVER] Client quit. Server terminating." );
+			Debugging.Log.Info( "[SERVER] Client quit. Server terminating." );
 			Threading.Running["editor_ipc"].Close();
 		}
 
@@ -115,24 +115,24 @@ namespace Espionage.Engine
 			if ( message.StartsWith( "+" ) )
 			{
 				// Call on main thread
-				Threading.Main.Enqueue( () => Dev.Terminal.Invoke( message[1..] ) );
+				Threading.Main.Enqueue( () => Debugging.Terminal.Invoke( message[1..] ) );
 			}
 		}
 
 		private static void Client( string handle )
 		{
-			Dev.Log.Info( $"[CLIENT] Connecting to pipe {handle}" );
+			Debugging.Log.Info( $"[CLIENT] Connecting to pipe {handle}" );
 
 			// Open Pipe to Server
 			using PipeStream game = new AnonymousPipeClientStream( PipeDirection.In, handle );
 			using var sr = new StreamReader( game );
 
-			Dev.Log.Info( $"[CLIENT] Current Transmission Mode: {game.TransmissionMode}." );
+			Debugging.Log.Info( $"[CLIENT] Current Transmission Mode: {game.TransmissionMode}." );
 
 			string message;
 			while ( (message = sr.ReadLine()) != null )
 			{
-				Dev.Log.Info( "[CLIENT] Received Message: " + message );
+				Debugging.Log.Info( "[CLIENT] Received Message: " + message );
 				Receive( message );
 			}
 		}

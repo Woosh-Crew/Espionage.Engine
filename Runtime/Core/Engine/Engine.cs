@@ -60,12 +60,12 @@ namespace Espionage.Engine
 		[RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.AfterSceneLoad )]
 		private static void Initialize_RuntimePostScene()
 		{
-			using var _ = Dev.Stopwatch( "Engine / Game Ready", true );
+			using var _ = Debugging.Stopwatch( "Engine / Game Ready", true );
 
 			// Find Game
 			if ( Game == null && !SetupGame() )
 			{
-				Dev.Log.Error( "Game couldn't be found. Make sure to make a class inherited from Game" );
+				Debugging.Log.Error( "Game couldn't be found. Make sure to make a class inherited from Game" );
 				return;
 			}
 
@@ -96,7 +96,7 @@ namespace Espionage.Engine
 			// Find Game
 			if ( Game == null && !SetupGame() )
 			{
-				Dev.Log.Error( "Game couldn't be found. Make sure to make a class inherited from Game" );
+				Debugging.Log.Error( "Game couldn't be found. Make sure to make a class inherited from Game" );
 				return;
 			}
 
@@ -120,7 +120,7 @@ namespace Espionage.Engine
 
 			Callback.Run( "game.ready" );
 
-			Dev.Log.Info( $"Using {Game.ClassInfo.Title} as the Game, [{Game.ClassInfo.Name}]" );
+			Debugging.Log.Info( $"Using {Game.ClassInfo.Title} as the Game, [{Game.ClassInfo.Name}]" );
 
 			return true;
 		}

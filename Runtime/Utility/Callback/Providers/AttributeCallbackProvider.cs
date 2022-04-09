@@ -131,7 +131,7 @@ namespace Espionage.Engine.Internal.Callbacks
 			_callbacks?.Clear();
 			_callbacks = null;
 
-			Dev.Log.Warning( "Disposing ICallbackProvider" );
+			Debugging.Log.Warning( "Disposing ICallbackProvider" );
 		}
 
 		private static Callback.Info.Action Build( MethodBase info )

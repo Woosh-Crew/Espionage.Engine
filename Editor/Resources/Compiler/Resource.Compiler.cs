@@ -33,7 +33,7 @@ namespace Espionage.Engine.Resources.Editor
 		{
 			if ( !Files.Pathing.Exists( asset ) )
 			{
-				Dev.Log.Error( $"Path [{asset}] doesn't exist" );
+				Debugging.Log.Error( $"Path [{asset}] doesn't exist" );
 				return;
 			}
 
@@ -50,12 +50,12 @@ namespace Espionage.Engine.Resources.Editor
 
 			try
 			{
-				Dev.Log.Info( $"Compiling {Files.Pathing.Name( asset )} [{type.Name}]" );
+				Debugging.Log.Info( $"Compiling {Files.Pathing.Name( asset )} [{type.Name}]" );
 				method?.Invoke( converter, new object[] { asset } );
 			}
 			catch ( Exception e )
 			{
-				Dev.Log.Exception( e );
+				Debugging.Log.Exception( e );
 			}
 		}
 	}

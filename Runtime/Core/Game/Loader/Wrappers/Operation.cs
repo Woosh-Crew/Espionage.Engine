@@ -61,7 +61,7 @@ namespace Espionage.Engine
 				}
 				catch ( Exception e )
 				{
-					Dev.Log.Exception( e );
+					Debugging.Log.Exception( e );
 				}
 
 				loaded.Invoke();
