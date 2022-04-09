@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Espionage.Engine;
+using Espionage.Engine.Overlays;
+using UnityEngine;
 
 namespace Espionage.Engine.Overlays
 {
@@ -10,5 +12,17 @@ namespace Espionage.Engine.Overlays
 		}
 
 		void Draw( Matrix4x4 matrix, Mesh mesh, float seconds, Color? color = null, bool depth = false );
+	}
+}
+
+//
+// Extensions
+//
+
+public static class OverlayProviderExtensions
+{
+	public static void Primitive( this IOverlayProvider provider, Vector3 position, Vector3 scale, PrimitiveType primitive, float seconds, Color? color = null, bool depth = false )
+	{
+		provider.Draw( position, scale, Primitives.GetMesh( primitive ), seconds, color, depth );
 	}
 }

@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System.Threading.Tasks;
 
@@ -23,7 +22,7 @@ namespace Espionage.Engine
 			mat.SetColor( "_Color", color.Value );
 
 			//Get the sphere primitive
-			var mesh = PrimitiveFactory.GetPrimitiveMesh( PrimitiveType.Sphere );
+			var mesh = Primitives.GetMesh( PrimitiveType.Sphere );
 
 			//Draw the msh
 			Draw( position, new( radius, radius, radius ), time, mesh, mat );
@@ -38,7 +37,7 @@ namespace Espionage.Engine
 			mat.SetColor( "_Color", color.Value );
 
 			// Get the sphere primitive
-			var mesh = PrimitiveFactory.GetPrimitiveMesh( PrimitiveType.Cube );
+			var mesh = Primitives.GetMesh( PrimitiveType.Cube );
 
 			// Draw the msh
 			Draw( position, size, time, mesh, mat );
@@ -53,7 +52,7 @@ namespace Espionage.Engine
 			mat.SetColor( "_Color", color.Value );
 
 			//Get the sphere primitive
-			var mesh = PrimitiveFactory.GetPrimitiveMesh( PrimitiveType.Capsule );
+			var mesh = Primitives.GetMesh( PrimitiveType.Capsule );
 
 			//Draw the msh
 			Draw( position, size, time, mesh, mat );
@@ -92,38 +91,4 @@ namespace Espionage.Engine
 		}
 	}
 
-	/// <summary> This is a helper class which helps create and cache static references to unity Primitive meshes </summary>
-	/// TODO: Worth looking into just doing these as manual triangulation, but this allows us to use unity primitives.
-	public static class PrimitiveFactory
-	{
-		/// <summary> Holds a cache of meshes that we've already requested to avoid overhead of having to create all the objects </summary>
-		private static readonly Dictionary<PrimitiveType, Mesh> primitiveMeshes = new();
-
-		public static Mesh GetPrimitiveMesh( PrimitiveType type )
-		{
-			//If we don't have the primitive cached, create and cache it.
-			if ( !primitiveMeshes.ContainsKey( type ) )
-			{
-				CreatePrimitiveMesh( type );
-			}
-
-			//Return the given mesh
-			return primitiveMeshes[type];
-		}
-
-		/// <summary> Creates a mesh of a given primitive type, stores it into the database </summary>
-		private static Mesh CreatePrimitiveMesh( PrimitiveType type )
-		{
-			// Create the gameoject as one of the primitives
-			var gameObject = GameObject.CreatePrimitive( type );
-			//Store a reference to the mesh
-			var mesh = gameObject.GetComponent<MeshFilter>().sharedMesh;
-			//Destroy the object
-			Object.Destroy( gameObject );
-
-			//Cash it into the dictionary
-			primitiveMeshes[type] = mesh;
-			return mesh;
-		}
-	}
 }
