@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Espionage.Engine.Internal.Commands
+namespace Espionage.Engine.Commands
 {
 	internal class SimpleCommandProvider : ICommandProvider
 	{
@@ -40,7 +40,7 @@ namespace Espionage.Engine.Internal.Commands
 		{
 			if ( !_commands.TryGetValue( command, out var consoleCommand ) )
 			{
-				Dev.Log.Info( $"Couldn't find command \"{command}\"" );
+				Debugging.Log.Info( $"Couldn't find command \"{command}\"" );
 				return;
 			}
 

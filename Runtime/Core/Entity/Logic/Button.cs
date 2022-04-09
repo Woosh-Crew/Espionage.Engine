@@ -9,7 +9,7 @@
 
 		public virtual bool OnUse( Pawn user )
 		{
-			Dev.Log.Info( "Used Button" );
+			Debugging.Log.Info( "Used Button" );
 			return true;
 		}
 

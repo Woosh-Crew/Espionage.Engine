@@ -36,7 +36,7 @@ namespace Espionage.Engine.Resources
 			}
 
 			// Either Load Error Model, or nothing if not found.
-			Dev.Log.Error( $"Model Path [{path}], couldn't be found." );
+			Debugging.Log.Error( $"Model Path [{path}], couldn't be found." );
 			return Files.Pathing.Exists( "models://w_error.umdl" ) ? Load( "w_error.umdl" ) : null;
 		}
 
@@ -86,7 +86,7 @@ namespace Espionage.Engine.Resources
 				Database.Add( this );
 				Source.Load( OnLoad );
 
-				Dev.Log.Info( $"Loaded Model [{Files.Pathing.Name( Identifier )}]" );
+				Debugging.Log.Info( $"Loaded Model [{Files.Pathing.Name( Identifier )}]" );
 			}
 
 			Instances.Push( new( this ) );
@@ -103,7 +103,7 @@ namespace Espionage.Engine.Resources
 
 			if ( Instances.Count <= 0 )
 			{
-				Dev.Log.Info( $"Unloading Model [{Files.Pathing.Name( Identifier )}]" );
+				Debugging.Log.Info( $"Unloading Model [{Files.Pathing.Name( Identifier )}]" );
 
 				Source.Unload();
 				Database.Remove( this );
@@ -184,7 +184,7 @@ namespace Espionage.Engine.Resources
 				// Store it in Database
 				if ( _storage.ContainsKey( item.Identifier! ) )
 				{
-					Dev.Log.Warning( $"Replacing Resource [{item.Identifier}]" );
+					Debugging.Log.Warning( $"Replacing Resource [{item.Identifier}]" );
 					_storage[item.Identifier] = item;
 				}
 				else

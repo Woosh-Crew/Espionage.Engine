@@ -24,7 +24,7 @@ namespace Espionage.Engine
 		{
 			var classInfo = Library.Database.Get( target );
 
-			using var _ = Dev.Stopwatch( $"Created Book - {classInfo.Name}" );
+			using var _ = Debugging.Stopwatch( $"Created Book - {classInfo.Name}" );
 			var lib = Library.Database.Create<T>( target );
 
 			// Don't do any deserialization, since we got no props

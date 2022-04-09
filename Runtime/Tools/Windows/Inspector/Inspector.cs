@@ -257,7 +257,7 @@ namespace Espionage.Engine.Tools
 				}
 				catch ( InvalidCastException )
 				{
-					Dev.Log.Info( $"Tried casting {value.GetType()} to {typeof( T ).Name} " );
+					Debugging.Log.Info( $"Tried casting {value.GetType()} to {typeof( T ).Name} " );
 				}
 
 

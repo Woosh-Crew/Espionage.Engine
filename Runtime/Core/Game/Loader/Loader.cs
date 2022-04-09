@@ -90,7 +90,7 @@ namespace Espionage.Engine
 			Timing.Stop();
 			Finished?.Invoke();
 
-			Dev.Log.Info( "Finished" );
+			Debugging.Log.Info( "Finished" );
 
 			Stack = null;
 			Current = null;

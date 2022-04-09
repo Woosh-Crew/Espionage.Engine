@@ -22,7 +22,7 @@ namespace Espionage.Engine
 
 			if ( library == null )
 			{
-				Dev.Log.Error( $"No Valid converters for {typeof( T ).Name}." );
+				Debugging.Log.Error( $"No Valid converters for {typeof( T ).Name}." );
 				return default;
 			}
 
@@ -34,7 +34,7 @@ namespace Espionage.Engine
 			}
 			catch ( Exception e )
 			{
-				Dev.Log.Exception( e );
+				Debugging.Log.Exception( e );
 				return default;
 			}
 		}
@@ -74,7 +74,7 @@ namespace Espionage.Engine
 			}
 			catch ( Exception e )
 			{
-				Dev.Log.Exception( e );
+				Debugging.Log.Exception( e );
 				return default;
 			}
 		}

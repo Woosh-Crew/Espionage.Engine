@@ -20,7 +20,7 @@ namespace Espionage.Engine.Resources.Maps
 				Bundle = _request.assetBundle;
 				Binder = new AssetBundleMapProvider( Bundle );
 
-				Dev.Log.Info( $"Finished Loading Asset Bundle [{Info.Name}]" );
+				Debugging.Log.Info( $"Finished Loading Asset Bundle [{Info.Name}]" );
 				loaded.Invoke();
 			};
 		}
@@ -29,14 +29,14 @@ namespace Espionage.Engine.Resources.Maps
 		{
 			if ( Bundle == null )
 			{
-				Dev.Log.Warning( "Bundle was NULL?" );
+				Debugging.Log.Warning( "Bundle was NULL?" );
 				finished.Invoke();
 				return;
 			}
 
 			Bundle.UnloadAsync( true ).completed += _ =>
 			{
-				Dev.Log.Info( $"Finished Unloading Asset Bundle [{Info.Name}]" );
+				Debugging.Log.Info( $"Finished Unloading Asset Bundle [{Info.Name}]" );
 				finished.Invoke();
 			};
 		}

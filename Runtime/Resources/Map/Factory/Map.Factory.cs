@@ -14,14 +14,14 @@ namespace Espionage.Engine.Resources
 
 			if ( !Files.Pathing.Exists( path ) )
 			{
-				Dev.Log.Info( $"Path [{path}], doesn't exist" );
+				Debugging.Log.Info( $"Path [{path}], doesn't exist" );
 				return null;
 			}
 
 			// Use the Database Map if we have it
 			if ( Map.Exists( path ) )
 			{
-				Dev.Log.Info( $"Map [{path}], already exists" );
+				Debugging.Log.Info( $"Map [{path}], already exists" );
 				return null;
 			}
 

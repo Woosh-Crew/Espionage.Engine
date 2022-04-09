@@ -51,7 +51,7 @@ namespace Espionage.Engine
 			{
 				if ( value != null && !value.Validate() )
 				{
-					Dev.Log.Warning( $"Gamemode {value.ClassInfo.Name} is not valid for map" );
+					Debugging.Log.Warning( $"Gamemode {value.ClassInfo.Name} is not valid for map" );
 					return;
 				}
 

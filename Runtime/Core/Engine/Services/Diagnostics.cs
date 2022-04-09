@@ -53,14 +53,14 @@ namespace Espionage.Engine.Services
 		{
 			if ( Input.GetKeyDown( KeyCode.F1 ) )
 			{
-				Dev.Terminal.Invoke( "dev.tripod" );
+				Debugging.Terminal.Invoke( "dev.tripod" );
 			}
 
 			if ( Input.GetKeyDown( KeyCode.BackQuote ) )
 			{
 				if ( !Local.Client.Tripod.Is<DevTripod>() )
 				{
-					Dev.Terminal.Invoke( "dev.tripod" );
+					Debugging.Terminal.Invoke( "dev.tripod" );
 				}
 
 				Window.Show<Terminal>().Focus = true;

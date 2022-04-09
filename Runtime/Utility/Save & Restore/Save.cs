@@ -41,7 +41,7 @@ namespace Espionage.Engine
 					Version = 0;
 					Nodes = null;
 
-					Dev.Log.Error( "Invalid File" );
+					Debugging.Log.Error( "Invalid File" );
 					return;
 				}
 

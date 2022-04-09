@@ -177,7 +177,7 @@ namespace Espionage.Engine
 				return entity.gameObject.transform;
 			}
 
-			Dev.Log.Warning( "Entity was NULL" );
+			Debugging.Log.Warning( "Entity was NULL" );
 			return null;
 
 		}
@@ -192,7 +192,7 @@ namespace Espionage.Engine
 				return entity;
 			}
 
-			Dev.Log.Warning( "Entity was NULL" );
+			Debugging.Log.Warning( "Entity was NULL" );
 			return null;
 
 		}
@@ -204,7 +204,7 @@ namespace Espionage.Engine
 				return entity.gameObject;
 			}
 
-			Dev.Log.Warning( "Entity was NULL" );
+			Debugging.Log.Warning( "Entity was NULL" );
 			return null;
 
 		}

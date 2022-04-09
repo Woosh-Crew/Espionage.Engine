@@ -15,7 +15,7 @@ namespace Espionage.Engine
 			// If we dont own this and if we cant carry it, ignore
 			if ( Contains( item ) || item.Carrier is not null )
 			{
-				Dev.Log.Info( $"Can't pickup item {item}" );
+				Debugging.Log.Info( $"Can't pickup item {item}" );
 				return false;
 			}
 
@@ -29,7 +29,7 @@ namespace Espionage.Engine
 		{
 			if ( !Contains( item ) )
 			{
-				Dev.Log.Error( $"Item [{item.ClassInfo.Name}] isn't in Inventory" );
+				Debugging.Log.Error( $"Item [{item.ClassInfo.Name}] isn't in Inventory" );
 				return false;
 			}
 

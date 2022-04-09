@@ -95,7 +95,7 @@ namespace Espionage.Engine
 		protected virtual void OnDeployed()
 		{
 			IsDeploying = false;
-			Dev.Log.Info( $"Deployed [{ClassInfo.Name}]" );
+			Debugging.Log.Info( $"Deployed [{ClassInfo.Name}]" );
 		}
 
 		// Holstering
@@ -128,7 +128,7 @@ namespace Espionage.Engine
 
 			// Destroy Viewmodel
 			Destroy( Viewmodel.gameObject );
-			Dev.Log.Info( $"Holstered [{ClassInfo.Name}]" );
+			Debugging.Log.Info( $"Holstered [{ClassInfo.Name}]" );
 		}
 	}
 }

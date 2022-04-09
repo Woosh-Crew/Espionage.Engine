@@ -82,7 +82,7 @@ namespace Espionage.Engine
 				File.Delete( path );
 			}
 
-			Dev.Log.Error( $"File [{path}], couldn't be deleted." );
+			Debugging.Log.Error( $"File [{path}], couldn't be deleted." );
 		}
 
 		/// <summary>
@@ -104,7 +104,7 @@ namespace Espionage.Engine
 		{
 			if ( !Pathing.Exists( path ) )
 			{
-				Dev.Log.Error( $"Path [{path}], doesn't exist" );
+				Debugging.Log.Error( $"Path [{path}], doesn't exist" );
 				return;
 			}
 
@@ -160,7 +160,7 @@ namespace Espionage.Engine
 
 			if ( !Pathing.Exists( path ) )
 			{
-				Dev.Log.Warning( $"Path or File [{path}], doesn't exist" );
+				Debugging.Log.Warning( $"Path or File [{path}], doesn't exist" );
 			}
 
 			Process.Start( $"file://{path}" );

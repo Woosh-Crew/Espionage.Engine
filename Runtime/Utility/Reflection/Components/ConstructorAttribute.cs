@@ -29,7 +29,7 @@ namespace Espionage.Engine
 
 			if ( method is null )
 			{
-				Dev.Log.Info( $"Method was not valid {library.Name} - {_targetMethod}" );
+				Debugging.Log.Info( $"Method was not valid {library.Name} - {_targetMethod}" );
 				return;
 			}
 

@@ -19,7 +19,7 @@ namespace Espionage.Engine
 					return _storage[key];
 				}
 
-				Dev.Log.Error( $"Controls Scheme doesn't have [{key}] Binding" );
+				Debugging.Log.Error( $"Controls Scheme doesn't have [{key}] Binding" );
 				return _default;
 			}
 		}
@@ -33,7 +33,7 @@ namespace Espionage.Engine
 		{
 			if ( _storage.ContainsKey( key ) )
 			{
-				Dev.Log.Warning( $"Replacing Binding {key}" );
+				Debugging.Log.Warning( $"Replacing Binding {key}" );
 				_storage[key] = bind;
 				return;
 			}

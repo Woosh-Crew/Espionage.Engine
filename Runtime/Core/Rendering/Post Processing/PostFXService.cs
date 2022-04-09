@@ -116,7 +116,7 @@ namespace Espionage.Engine.PostProcessing
 
 			// Get all Post FX.
 			var all = Object.FindObjectsOfType<PostProcessVolume>();
-			Dev.Log.Info( "Adjusting Post FX Profiles" );
+			Debugging.Log.Info( "Adjusting Post FX Profiles" );
 
 			foreach ( var volume in all )
 			{
