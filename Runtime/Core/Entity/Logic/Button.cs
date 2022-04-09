@@ -19,7 +19,7 @@
 		// Hoverable
 
 		public virtual string Title => ClassInfo.Title;
-		public string Action => "[F]";
+		public string Action => $"[{Controls.Scheme["Interact"]}]";
 		public string Description => "Press Button";
 
 		bool IHoverable.Show( Pawn pawn )
