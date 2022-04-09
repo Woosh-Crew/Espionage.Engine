@@ -27,4 +27,9 @@ public static class OverlayProviderExtensions
 	{
 		provider.Draw( position, scale, Primitives.GetMesh( primitive ), seconds, color, depth );
 	}
+
+	public static void Bounds( this IOverlayProvider provider, Bounds bounds, float seconds, Color? color = null, bool depth = false )
+	{
+		provider.Draw( bounds.center, bounds.size, Primitives.GetMesh( PrimitiveType.Cube ), seconds, color, depth );
+	}
 }
