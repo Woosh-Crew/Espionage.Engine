@@ -276,6 +276,11 @@ namespace Espionage.Engine.Resources
 			);
 		}
 
+		public static implicit operator Map( string input )
+		{
+			return Find( input );
+		}
+
 		//
 		// Database
 		//

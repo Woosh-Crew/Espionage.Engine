@@ -113,6 +113,12 @@ namespace Espionage.Engine.Resources
 			}
 		}
 
+		public static implicit operator Model( string input )
+		{
+			return Load( input );
+		}
+
+
 		public sealed class Instance
 		{
 			public Instance( Model model )
