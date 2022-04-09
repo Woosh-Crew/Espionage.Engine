@@ -6,6 +6,8 @@ namespace Espionage.Engine.Overlays
 {
 	public class OverlayProvider : Service, IOverlayProvider
 	{
+		public bool Show { get; set; } = true;
+
 		public override void OnReady()
 		{
 			// Tell Debugging to use this
@@ -16,7 +18,7 @@ namespace Espionage.Engine.Overlays
 		{
 			for ( var i = 0; i < _requests.Count; i++ )
 			{
-				if ( _requests[i].Draw() )
+				if ( _requests[i].Draw( Show ) )
 				{
 					_requests.Remove( _requests[i] );
 				}
@@ -49,9 +51,13 @@ namespace Espionage.Engine.Overlays
 				Material.SetFloat( "_FrameWidth", 2 );
 			}
 
-			public bool Draw()
+			public bool Draw( bool render = true )
 			{
-				Graphics.DrawMesh( Mesh, Matrix, Material, 0 );
+				if ( render )
+				{
+					Graphics.DrawMesh( Mesh, Matrix, Material, 0 );
+				}
+
 				return TimeSinceCreated > Time;
 			}
 

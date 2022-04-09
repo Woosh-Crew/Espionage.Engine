@@ -125,6 +125,21 @@ namespace Espionage.Engine
 		[Terminal, Property( "dev.report_stopwatch", true )]
 		private static bool ReportStopwatch { get; set; } = true;
 
+		[Terminal, Property( "dev.overlays", true )]
+		private static bool ShowOverlays
+		{
+			get => Overlay?.Show ?? false;
+			set
+			{
+				if ( Overlay == null )
+				{
+					return;
+				}
+
+				Overlay.Show = value;
+			}
+		}
+
 		private class TimedScope : IDisposable
 		{
 			private readonly Stopwatch _stopwatch;
