@@ -27,12 +27,6 @@ namespace Espionage.Engine.Overlays
 
 		private readonly List<Request> _requests = new();
 
-		public void Draw( Vector3 position, Vector3 scale, Mesh mesh, float seconds, Color? color, bool depth )
-		{
-			// Required by IOverlayProvider
-			_requests.Add( new( seconds, mesh, Matrix4x4.TRS( position, Quaternion.identity, scale ), color ?? Color.red, depth ) );
-		}
-
 		public void Draw( Matrix4x4 matrix, Mesh mesh, float seconds, Color? color, bool depth )
 		{
 			// Required by IOverlayProvider
@@ -52,8 +46,8 @@ namespace Espionage.Engine.Overlays
 
 				Material = depth ? new( Shader.Find( "Unlit/DebugGeo" ) ) : new( Shader.Find( "Unlit/DebugOverlay" ) );
 				Material.SetColor( "_Color", color );
+				Material.SetFloat( "_FrameWidth", 2 );
 			}
-
 
 			public bool Draw()
 			{
