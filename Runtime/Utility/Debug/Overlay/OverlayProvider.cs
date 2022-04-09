@@ -46,7 +46,7 @@ namespace Espionage.Engine.Overlays
 
 				TimeSinceCreated = 0;
 
-				Material = depth ? new( Shader.Find( "Unlit/DebugGeo" ) ) : new( Shader.Find( "Unlit/DebugOverlay" ) );
+				Material = depth ? new( Shader.Find( "Debug/Quad Outline" ) ) : new( Shader.Find( "Debug/Quad Outline Overlay" ) );
 				Material.SetColor( "_Color", color );
 				Material.SetFloat( "_FrameWidth", 2 );
 			}

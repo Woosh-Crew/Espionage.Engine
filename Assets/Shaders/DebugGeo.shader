@@ -3,7 +3,7 @@
 //https://catlikecoding.com/unity/tutorials/advanced-rendering/flat-and-wireframe-shading/ 
 //Show genius technique for only drawing quads:
 //http://www.shaderslab.com/demo-94---wireframe-without-diagonal.html
-Shader "Unlit/DebugGeo"
+Shader "Debug/Quad Outline"
 {
     Properties
     {
