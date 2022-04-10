@@ -1,24 +1,70 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿#if UNITY_EDITOR
 
-#if UNITY_EDITOR
-using System.IO;
+using System.Diagnostics;
+using System.Text;
+using UnityEngine;
 using Espionage.Engine.Resources;
 using Espionage.Engine.Resources.Editor;
 using UnityEditor;
-#endif
 
 namespace Espionage.Engine.Tools.Editor
 {
 	[CreateAssetMenu( menuName = "Espionage.Engine/Project Builder" )]
-	public class Builder : ScriptableObject
+	public class Builder : EditorWindow
 	{
-#if UNITY_EDITOR
+		//
+		// Editor Window
+		//
 
-		public void Build( BuildTarget target, BuildOptions options )
+		[MenuItem( "Tools/Builder" )]
+		private static void ShowWindow()
+		{
+			GetWindow<Builder>();
+		}
+
+		private void OnEnable()
+		{
+			titleContent.text = "Project Builder";
+		}
+
+		private void OnGUI()
+		{
+			if ( GUILayout.Button( "Compile Project" ) )
+			{
+				Build( BuildTarget.StandaloneWindows64, BuildOptions.None );
+			}
+
+			if ( GUILayout.Button( "Play" ) )
+			{
+				Play();
+			}
+			
+			if ( GUILayout.Button( "Regenerate Builder" ) )
+			{
+				CreateBatch();
+			}
+		}
+
+		[InitializeOnLoadMethod]
+		private static void Initialize()
+		{
+			if ( !Files.Pathing.Exists( "exports://Builder.bat"  ) )
+			{
+				CreateBatch();
+			}
+		}
+
+		//
+		// API
+		//
+
+		private static void Build()
+		{
+			Build( BuildTarget.StandaloneWindows64, BuildOptions.None );
+			EditorApplication.Exit( 0 );
+		}
+
+		public static void Build( BuildTarget target, BuildOptions options )
 		{
 			if ( Engine.Game == null )
 			{
@@ -48,11 +94,12 @@ namespace Espionage.Engine.Tools.Editor
 				locationPathName = $"{path}{info.Name}.exe",
 				options = options,
 				target = target,
-				//
 				extraScriptingDefines = new[] { "ESP_ENGINE_RUNTIME" },
 				targetGroup = BuildTargetGroup.Standalone
 			};
 
+			buildSettings.scenes = new[] { "Assets/Test/Scenes/lab.unity" };
+			
 			if ( !string.IsNullOrEmpty( Engine.Game.Splash.Scene ) )
 			{
 				buildSettings.scenes = new[] { Engine.Game.Splash.Scene };
@@ -64,7 +111,7 @@ namespace Espionage.Engine.Tools.Editor
 			MoveCompiledAssets( $"{path}{info.Name}_Data/" );
 		}
 
-		public void Play( string launchArgs = null )
+		public static void Play( string launchArgs = null )
 		{
 			var info = Engine.Game.ClassInfo;
 			Process.Start( Files.Pathing.Absolute( $"Exports/{info.Title}/{info.Name}.exe" ), launchArgs );
@@ -72,7 +119,19 @@ namespace Espionage.Engine.Tools.Editor
 
 		// Utility
 
-		private void MoveCompiledAssets( string path )
+		private static void CreateBatch()
+		{
+			var builder = new StringBuilder( "@echo off\necho Building Project\n" );
+
+			builder.Append( $"\"{EditorApplication.applicationPath}\" -quit -batchmode -silent-crashes " );
+			builder.Append( "-logFile /../Logs/compile_output.log " );
+			builder.Append( $"-projectPath \"{Files.Pathing.Absolute( "project://" )}\" " );
+			builder.Append( "-executeMethod Espionage.Engine.Tools.Editor.Builder.Build " );
+
+			Files.Save( "serializer.string", builder.ToString(), "exports://Builder.bat" );
+		}
+
+		private static void MoveCompiledAssets( string path )
 		{
 			path = Files.Pathing.Absolute( path );
 
@@ -90,39 +149,13 @@ namespace Espionage.Engine.Tools.Editor
 
 				foreach ( var file in Files.Pathing.All( $"assets://{library.Group}" ) )
 				{
+					Debugging.Log.Info($"Moving [{Files.Pathing.Name(file)}] to [{outputPath}]");
 					Files.Copy( file, outputPath );
 				}
 			}
 		}
 
-#endif
-
-		// Fields
-
-		[SerializeField]
-		private bool master;
 	}
-
-	#if UNITY_EDITOR
-
-	[CustomEditor( typeof( Builder ) )]
-	public class BuilderEditor : UnityEditor.Editor
-	{
-		public override void OnInspectorGUI()
-		{
-			base.OnInspectorGUI();
-
-			if ( GUILayout.Button( "Build" ) )
-			{
-				((Builder)target).Build( BuildTarget.StandaloneWindows64, BuildOptions.None );
-			}
-
-			if ( GUILayout.Button( "Test" ) )
-			{
-				((Builder)target).Play();
-			}
-		}
-	}
-
-	#endif
 }
+
+#endif

@@ -49,6 +49,11 @@ namespace Espionage.Engine.Logging
 			_logs.Add( entry );
 			OnLogged?.Invoke( entry );
 
+			if ( Application.isBatchMode )
+			{
+				Console.WriteLine( entry.Message );
+			}
+
 			OutputUnity( entry );
 		}
 
