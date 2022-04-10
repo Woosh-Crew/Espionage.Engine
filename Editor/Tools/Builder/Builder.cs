@@ -38,7 +38,7 @@ namespace Espionage.Engine.Tools.Editor
 			{
 				Play();
 			}
-			
+
 			if ( GUILayout.Button( "Regenerate Builder" ) )
 			{
 				CreateBatch();
@@ -48,7 +48,7 @@ namespace Espionage.Engine.Tools.Editor
 		[InitializeOnLoadMethod]
 		private static void Initialize()
 		{
-			if ( !Files.Pathing.Exists( "exports://Builder.bat"  ) )
+			if ( !Files.Pathing.Exists( "exports://Builder.bat" ) )
 			{
 				CreateBatch();
 			}
@@ -61,6 +61,18 @@ namespace Espionage.Engine.Tools.Editor
 		private static void Build()
 		{
 			Build( BuildTarget.StandaloneWindows64, BuildOptions.None );
+			EditorApplication.Exit( 0 );
+		}
+
+		private static void BuildDevelopment()
+		{
+			Build( BuildTarget.StandaloneWindows64, BuildOptions.Development );
+			EditorApplication.Exit( 0 );
+		}
+
+		private static void BuildCode()
+		{
+			Build( BuildTarget.StandaloneWindows64, BuildOptions.BuildScriptsOnly | BuildOptions.Development );
 			EditorApplication.Exit( 0 );
 		}
 
@@ -99,7 +111,7 @@ namespace Espionage.Engine.Tools.Editor
 			};
 
 			buildSettings.scenes = new[] { "Assets/Test/Scenes/lab.unity" };
-			
+
 			if ( !string.IsNullOrEmpty( Engine.Game.Splash.Scene ) )
 			{
 				buildSettings.scenes = new[] { Engine.Game.Splash.Scene };
@@ -108,7 +120,10 @@ namespace Espionage.Engine.Tools.Editor
 			Callback.Run( "project_builder.building", target, buildSettings );
 			BuildPipeline.BuildPlayer( buildSettings );
 
-			MoveCompiledAssets( $"{path}{info.Name}_Data/" );
+			if ( !buildSettings.options.HasFlag( BuildOptions.BuildScriptsOnly ) )
+			{
+				MoveCompiledAssets( $"{path}{info.Name}_Data/" );
+			}
 		}
 
 		public static void Play( string launchArgs = null )
@@ -126,9 +141,10 @@ namespace Espionage.Engine.Tools.Editor
 			builder.Append( $"\"{EditorApplication.applicationPath}\" -quit -batchmode -silent-crashes " );
 			builder.Append( "-logFile /../Logs/compile_output.log " );
 			builder.Append( $"-projectPath \"{Files.Pathing.Absolute( "project://" )}\" " );
-			builder.Append( "-executeMethod Espionage.Engine.Tools.Editor.Builder.Build " );
 
-			Files.Save( "serializer.string", builder.ToString(), "exports://Builder.bat" );
+			Files.Save( "serializer.string", $"{builder}-executeMethod Espionage.Engine.Tools.Editor.Builder.Build ", "exports://full_build.bat" );
+			Files.Save( "serializer.string", $"{builder}-executeMethod Espionage.Engine.Tools.Editor.Builder.BuildDevelopment ", "exports://development_build.bat" );
+			Files.Save( "serializer.string", $"{builder}-executeMethod Espionage.Engine.Tools.Editor.Builder.BuildCode ", "exports://code_build.bat" );
 		}
 
 		private static void MoveCompiledAssets( string path )
@@ -149,7 +165,7 @@ namespace Espionage.Engine.Tools.Editor
 
 				foreach ( var file in Files.Pathing.All( $"assets://{library.Group}" ) )
 				{
-					Debugging.Log.Info($"Moving [{Files.Pathing.Name(file)}] to [{outputPath}]");
+					Debugging.Log.Info( $"Moving [{Files.Pathing.Name( file )}] to [{outputPath}]" );
 					Files.Copy( file, outputPath );
 				}
 			}
