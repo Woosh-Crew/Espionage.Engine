@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Espionage.Engine
 {
@@ -30,7 +31,7 @@ namespace Espionage.Engine
 				_distance = distance;
 
 				_radius = 0;
-				_ignore = null;
+				_ignore = Array.Empty<string>();
 			}
 
 			public Builder Start( Vector3 value )
@@ -93,8 +94,6 @@ namespace Espionage.Engine
 
 			public bool Run( out RaycastHit? hit )
 			{
-				Debug.DrawLine( _origin, _origin + _direction * _distance, Color.red, 0.5f );
-
 				RaycastHit test;
 
 				var cast = _radius > 0
