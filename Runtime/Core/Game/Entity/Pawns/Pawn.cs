@@ -28,7 +28,7 @@ namespace Espionage.Engine
 		}
 
 		public Floor Floor { get; private set; }
-		public Eyes Eyes { get; private set; }
+		public Eyes Eyes { get; set; }
 
 		public virtual void Posses( Client client )
 		{

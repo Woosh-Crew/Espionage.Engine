@@ -25,8 +25,14 @@ namespace Espionage.Engine
 			ClassInfo = Library.Register( this );
 		}
 
+		/// <summary> Called when Espionage.Engine and Unity are ready. </summary>
 		public abstract void OnReady();
+		
+		/// <summary> Called locally for setting up input. </summary>
+		/// <param name="scheme"> Scheme comes with default values. </param>
 		protected abstract void OnSetup( ref Scheme scheme );
+		
+		/// <summary> Called when the application gets shutdown. </summary>
 		public abstract void OnShutdown();
 
 		// Networking & Game-loop
@@ -42,6 +48,8 @@ namespace Espionage.Engine
 
 		// Gamemode
 
+		private Gamemode _gamemode;
+		
 		public Gamemode Gamemode
 		{
 			get => _gamemode;
@@ -69,9 +77,7 @@ namespace Espionage.Engine
 				Callback.Run( "gamemodes.switched" );
 			}
 		}
-
-		private Gamemode _gamemode;
-
+		
 		// Build Tripod
 
 		protected ITripod LastTripod { get; set; }
@@ -86,7 +92,7 @@ namespace Espionage.Engine
 		/// The active tripod that should be built and used as the
 		/// main camera controller.
 		/// </returns>
-		protected virtual ITripod FindActiveCamera()
+		protected virtual ITripod FindActiveTripod()
 		{
 			if ( Local.Client.Tripod.Peek() != null )
 			{
@@ -108,7 +114,7 @@ namespace Espionage.Engine
 		/// </summary>
 		internal Tripod.Setup BuildTripod( Tripod.Setup camSetup )
 		{
-			var cam = FindActiveCamera();
+			var cam = FindActiveTripod();
 
 			if ( LastTripod != cam )
 			{

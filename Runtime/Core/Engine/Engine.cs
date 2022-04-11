@@ -69,7 +69,7 @@ namespace Espionage.Engine
 			// Create engine layer scene
 			Scene = SceneManager.CreateScene( "Engine Layer" );
 
-			Local.Client = Client.Create( "Local" );
+			Local.Client = new Client( "Local" );
 			Callback.Run( "engine.getting_ready" );
 
 			Services.Ready();

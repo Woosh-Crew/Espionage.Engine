@@ -2,6 +2,8 @@
 {
 	public class Bot : Client
 	{
+		internal Bot( string name ) : base( name ) { }
+		
 		private Client Copying { get; set; }
 
 		internal override void Simulate()

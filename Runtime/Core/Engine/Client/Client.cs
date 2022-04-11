@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
+using Espionage.Engine.Components;
 
 namespace Espionage.Engine
 {
@@ -9,22 +9,26 @@ namespace Espionage.Engine
 	/// Clients controls Input and their current possessed Pawn.
 	/// </summary>
 	[Group( "Networking" )]
-	public class Client : Entity
+	public class Client : ILibrary
 	{
-		public new static IEnumerable<Client> All => Entity.All.OfType<Client>();
+		public static List<Client> All { get; } = new();
 
-		internal static Client Create( string name )
+		public Library ClassInfo { get; }
+		public Components<Client> Components { get; }
+
+		internal Client( string name )
 		{
-			var cl = Library.Database.Create<Client>();
-			cl.Name = name;
-			cl.gameObject.MoveTo( Engine.Scene );
+			Components = new( this );
 
-			return cl;
+			ClassInfo = Library.Register( this );
+			All.Add( this );
 		}
 
-		//
-		// Instance
-		//
+		public void Delete()
+		{
+			Library.Unregister( this );
+			All.Remove( this );
+		}
 
 		/// <summary> A Nice name for the Client that is used in UI. </summary>
 		public string Name { get; set; }
@@ -50,13 +54,7 @@ namespace Espionage.Engine
 		// Input
 		//
 
-		/// <summary>
-		/// The clients current input buffer.
-		/// <remarks>
-		/// you should be using this instead of Unity's default
-		/// input system.
-		/// </remarks>
-		/// </summary>
+		/// <summary> The clients current input buffer. </summary>
 		public Controls.Setup Input { get; set; }
 
 		//
