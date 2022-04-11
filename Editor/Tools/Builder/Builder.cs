@@ -12,10 +12,6 @@ namespace Espionage.Engine.Tools.Editor
 	[CreateAssetMenu( menuName = "Espionage.Engine/Project Builder" )]
 	public class Builder : EditorWindow
 	{
-		//
-		// Editor Window
-		//
-
 		[MenuItem( "Tools/Builder" )]
 		private static void ShowWindow()
 		{
@@ -48,7 +44,7 @@ namespace Espionage.Engine.Tools.Editor
 		[InitializeOnLoadMethod]
 		private static void Initialize()
 		{
-			if ( !Files.Pathing.Exists( "exports://Builder.bat" ) )
+			if ( !Files.Pathing.Exists( "exports://full_build.bat" ) )
 			{
 				CreateBatch();
 			}

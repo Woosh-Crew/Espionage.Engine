@@ -51,12 +51,6 @@ namespace Espionage.Engine
 		// Initialization
 		//
 
-		[RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.BeforeSplashScreen )]
-		private static void Initialize_RuntimeSplashScreen()
-		{
-			Library.Initialize();
-		}
-
 		[RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.AfterSceneLoad )]
 		private static void Initialize_RuntimePostScene()
 		{
@@ -91,8 +85,6 @@ namespace Espionage.Engine
 		[InitializeOnLoadMethod]
 		private static void Initialize_Editor()
 		{
-			Library.Initialize();
-
 			// Find Game
 			if ( Game == null && !SetupGame() )
 			{

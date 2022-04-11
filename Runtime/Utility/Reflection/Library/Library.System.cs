@@ -112,7 +112,7 @@ namespace Espionage.Engine
 
 		public static bool Initialized { get; private set; }
 
-		public static void Initialize()
+		static Library()
 		{
 			if ( Initialized )
 			{
