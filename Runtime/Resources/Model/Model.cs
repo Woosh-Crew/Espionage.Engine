@@ -8,7 +8,7 @@ using Object = UnityEngine.Object;
 
 namespace Espionage.Engine.Resources
 {
-	[Group( "Models" ), Path( "models", "assets://Models/" )]
+	[Library( "res.model" ), Group( "Models" ), Path( "models", "assets://<library_group(res.model)>/", Overridable = true )]
 	public sealed class Model : ILibrary, IResource
 	{
 		public static Model Load( string path )

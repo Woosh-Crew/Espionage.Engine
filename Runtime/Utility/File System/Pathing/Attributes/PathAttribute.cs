@@ -8,6 +8,8 @@ namespace Espionage.Engine
 	{
 		public string ShortHand { get; }
 		public string Path { get; }
+		
+		public bool Overridable { get; set; }
 
 		public PathAttribute( string shortHand, string path )
 		{

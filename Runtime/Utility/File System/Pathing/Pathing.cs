@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 namespace Espionage.Engine.IO
@@ -31,19 +32,30 @@ namespace Espionage.Engine.IO
 				$"{Environment.GetFolderPath( Environment.SpecialFolder.UserProfile )}/Library/Application Support/<game>"
 			),
 
+			#if UNITY_EDITOR
+
 			// -- Editor Specific
 			["project"] = $"{Application.dataPath}/../",
 			["exports"] = "project://Exports/",
-			["compiled"] = "exports://<game>/"
+			["compiled"] = "exports://<game>/",
+			["editor"] = EditorApplication.applicationPath,
+
+			#endif
 		};
 
-		private readonly Dictionary<string, Func<string>> _keywords = new()
+		// Reason why its a func, is cause some of these values are null
+		// when the static constructor gets called, so we use the func instead
+		private readonly Dictionary<string, Func<string[], string>> _keywords = new()
 		{
 			// -- Game Specific
-			["game"] = () => Engine.Game.ClassInfo.Title,
-			["executable"] = () => $"{Engine.Game.ClassInfo.Name}.exe",
-			["company"] = () => Application.companyName,
-			["user"] = () => Environment.UserName
+			["game"] = ( _ ) => Engine.Game.ClassInfo.Title,
+			["executable"] = ( _ ) => $"{Engine.Game.ClassInfo.Name}.exe",
+			["company"] = ( _ ) => Application.companyName,
+			["user"] = ( _ ) => Environment.UserName,
+
+			// Library
+			["library_title"] = ( args ) => Library.Database[args[0]]?.Title,
+			["library_group"] = ( args ) => Library.Database[args[0]]?.Group
 		};
 
 		//
@@ -91,9 +103,11 @@ namespace Espionage.Engine.IO
 
 		/// <summary>
 		/// Add a keyword to the pathing database for use later, 
-		///you can't override already exising keys.
+		/// you can't override already exising keys.
+		/// The string[] are optional parameters you can include
+		/// into the Keyword, they are divided by a comma.
 		/// </summary>
-		public void Add( string key, Func<string> word )
+		public void Add( string key, Func<string[], string> word )
 		{
 			if ( _keywords.ContainsKey( key ) )
 			{
@@ -104,6 +118,9 @@ namespace Espionage.Engine.IO
 			_keywords.Add( key, word );
 		}
 
+		/// <summary>
+		/// Does the paths database contain this key?
+		/// </summary>
 		public bool Contains( string item )
 		{
 			return _paths.ContainsKey( item );
@@ -123,12 +140,25 @@ namespace Espionage.Engine.IO
 			{
 				foreach ( var (key, value) in _keywords )
 				{
-					if ( !path.Contains( $"<{key}>" ) )
+					if ( !path.Contains( $"<{key}" ) )
 					{
 						continue;
 					}
 
-					path = path.Replace( $"<{key}>", value.Invoke() );
+					var concat = path.Split( '<', '>' )[1];
+
+					// Get parameters
+					if ( concat.Contains( '(' ) )
+					{
+						var args = concat.Split( '(', ')' )[1];
+						Debugging.Log.Info( args );
+
+						path = path.Replace( $"<{concat}>", value.Invoke( args.Split( ',' ) ) );
+						continue;
+					}
+
+					// No Args
+					path = path.Replace( $"<{key}>", value.Invoke( null ) );
 				}
 			}
 
@@ -142,9 +172,14 @@ namespace Espionage.Engine.IO
 			splitPath[0] = Absolute( _paths[splitPath[0]] );
 
 			var newPath = Path.Combine( splitPath[0], splitPath[1] );
+
 			return Path.GetFullPath( newPath );
 		}
 
+		/// <summary>
+		/// Creates a directory at the given path
+		/// if the directory didnt exist.
+		/// </summary>
 		public void Create( string path )
 		{
 			path = Absolute( path );
@@ -154,6 +189,12 @@ namespace Espionage.Engine.IO
 			}
 		}
 
+		/// <summary>
+		/// Gets the files meta at the given path.
+		/// Meta includes its attributes, when it was
+		/// created, the lsat access time and the last
+		/// write time.
+		/// </summary>
 		public Files.Meta Meta( string path )
 		{
 			path = Absolute( path );
@@ -178,9 +219,18 @@ namespace Espionage.Engine.IO
 		}
 
 		/// <summary>
+		/// Can this path be overriden by mods? (such as "models://")
+		/// </summary>
+		/// <returns> True if I can be overriden </returns>
+		public bool Virtual( string path )
+		{
+			return true;
+		}
+
+		/// <summary>
 		/// Gets the path, relative to another path. If you use
 		/// the virtual pathing It'll search loaded mods first
-		///  then the base content, Depending on the virtual
+		/// then the base content, Depending on the virtual
 		/// path you are trying to get.
 		/// </summary>
 		public string Relative( string path, string relative )
@@ -230,7 +280,6 @@ namespace Espionage.Engine.IO
 			return Directory.GetFiles( path, "*.*", SearchOption.AllDirectories )
 				.Where( file => Path.HasExtension( file ) && extension.Contains( Path.GetExtension( file )[1..] ) );
 		}
-
 
 		/// <summary>
 		/// Gets the name of last directory or file
