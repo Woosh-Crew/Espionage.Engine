@@ -176,18 +176,9 @@ namespace Espionage.Engine
 			return attribute.CreateRecord( type );
 		}
 
-		private static Guid GenerateID( string name )
+		private static int GenerateID( string name )
 		{
-			if ( string.IsNullOrEmpty( name ) )
-			{
-				return default;
-			}
-
-			var random = new Random( name.GetHashCode( StringComparison.InvariantCultureIgnoreCase ) );
-			var guid = new byte[16];
-			random.NextBytes( guid );
-
-			return new( guid );
+			return string.IsNullOrEmpty( name ) ? default : name.Hash();
 		}
 
 		//

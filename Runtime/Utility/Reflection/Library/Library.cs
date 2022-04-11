@@ -166,9 +166,9 @@ namespace Espionage.Engine
 		// Owner & Identification
 		public Type Info { get; }
 
-		private Guid _id;
+		private int _id;
 
-		public Guid Id
+		public int Id
 		{
 			get
 			{

@@ -80,10 +80,16 @@ namespace Espionage.Engine
 
 			public struct Viewmodels
 			{
+				/// <summary> The target field of view for viewmodels </summary>
 				public float FieldOfView;
+				
+				/// <summary> Viewmodels clipping planes </summary>
 				public Vector2 Clipping;
 
+				/// <summary> Applies a positional offset to the Viewmodel</summary>
 				public Vector3 Offset;
+				
+				/// <summary> Applies a angles offset to the Viewmodel</summary>
 				public Quaternion Angles;
 			}
 		}

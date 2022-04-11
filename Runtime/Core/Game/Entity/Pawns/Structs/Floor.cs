@@ -11,9 +11,9 @@ namespace Espionage.Engine
 	{
 		public Library ClassInfo => Library.Database[typeof( Floor )];
 
-		public static Floor Get( Vector3 position )
+		public static Floor Get( Vector3 position, float offset = 0 )
 		{
-			var hit = Trace.Ray( position + Vector3.up * 0.05f, Vector3.down, 0.1f )
+			var hit = Trace.Ray( position + (Vector3.down * offset) + (Vector3.up * 0.05f), Vector3.down, 0.1f )
 				.Ignore( "Ignore Raycast", "Pawn" )
 				.Radius( 0.1f )
 				.Run( out var info );

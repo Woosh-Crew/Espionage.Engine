@@ -10,6 +10,7 @@ namespace Espionage.Engine
 	public partial class Pawn : Entity, ISimulated, IControls
 	{
 		public Vector3 Velocity { get; set; }
+		public float Offset { get; protected set; } = 0;
 
 		protected override void OnAwake()
 		{
@@ -19,7 +20,7 @@ namespace Espionage.Engine
 		public virtual void Simulate( Client client )
 		{
 			(DevController ?? PawnController)?.Simulate( client );
-			Floor = Floor.Get( Position );
+			Floor = Floor.Get( Position, Offset );
 
 			foreach ( var item in Components.GetAll<ISimulated>() )
 			{
@@ -73,8 +74,8 @@ namespace Espionage.Engine
 		// Camera
 		//
 
-		public Tripod Tripod { get; set; }
-
+		public ITripod Tripod { get; set; }
+		
 		public virtual void PostCameraSetup( ref Tripod.Setup setup )
 		{
 			foreach ( var item in Components.GetAll<ICallbacks>() )
@@ -102,12 +103,7 @@ namespace Espionage.Engine
 		//
 		// Helpers
 		//
-
-		/// <summary>
-		/// The Visuals is what gets assigned to on the Viewer
-		/// on a tripod, when updating the camera. This will just
-		/// disable all Renderers in its children tree.
-		/// </summary>
+		
 		/// <summary>
 		/// Is this pawn currently being possessed
 		/// by a client?
