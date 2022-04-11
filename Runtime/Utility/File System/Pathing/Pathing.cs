@@ -151,8 +151,6 @@ namespace Espionage.Engine.IO
 					if ( concat.Contains( '(' ) )
 					{
 						var args = concat.Split( '(', ')' )[1];
-						Debugging.Log.Info( args );
-
 						path = path.Replace( $"<{concat}>", value.Invoke( args.Split( ',' ) ) );
 						continue;
 					}
@@ -233,12 +231,9 @@ namespace Espionage.Engine.IO
 		/// then the base content, Depending on the virtual
 		/// path you are trying to get.
 		/// </summary>
-		public string Relative( string path, string relative )
+		public string Relative( string relative, string path )
 		{
-			path = Absolute( path );
-			relative = Absolute( relative );
-
-			return Path.GetRelativePath( relative, path );
+			return Path.GetRelativePath( Absolute( relative ), Absolute( path ) );
 		}
 
 		/// <summary>

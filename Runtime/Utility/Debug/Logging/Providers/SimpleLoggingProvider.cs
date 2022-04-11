@@ -64,7 +64,24 @@ namespace Espionage.Engine.Logging
 				return;
 			}
 
-			Debug.Log( message.Message );
+			switch ( message.Level )
+			{
+				case "Warning":
+					Debug.LogWarning(message.Message);
+					break;
+				
+				case "Error":
+					Debug.LogError(message.Message);
+					break;
+				
+				case "Exception":
+					Debug.LogError(message.Message);
+					break;
+				
+				default:
+					Debug.Log( message.Message );
+					break;
+			}
 		}
 
 		public void Clear()
