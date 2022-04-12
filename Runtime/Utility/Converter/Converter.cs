@@ -65,7 +65,7 @@ namespace Espionage.Engine
 				throw new( "No Valid Converters for this Type" );
 			}
 
-			var converter = Library.Database.Create( library.Info );
+			var converter = Library.Create( library.Info );
 			var method = interfaceType.GetMethod( "Convert" );
 
 			try

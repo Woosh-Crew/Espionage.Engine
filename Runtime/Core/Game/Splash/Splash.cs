@@ -13,7 +13,7 @@
 
 		public Splash( string splashScene, int time )
 		{
-			ClassInfo = Library.Database.Get( GetType() );
+			ClassInfo = Library.Database[GetType()];
 
 			Delay = time;
 			Scene = splashScene;

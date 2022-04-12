@@ -41,14 +41,9 @@ namespace Espionage.Engine
 		{
 			Assert.IsNull( type );
 
-			Info = type;
-			Spawnable = true;
-
 			Name = type.Name.ToProgrammerCase( type.Namespace );
-			Title = type.Name.ToTitleCase();
-			Group = type.Namespace;
+			Info = type;
 
-			// Components
 			Components = new( this );
 
 			// This is really expensive (6ms)...
@@ -61,6 +56,10 @@ namespace Espionage.Engine
 					Components.Add( library );
 				}
 			}
+			
+			// Components can mutate Group and Title, if they haven't give it one
+			Group = Group.IsEmpty( type.Namespace.ToTitleCase() );
+			Title = Title.IsEmpty( type.Name.ToTitleCase() );
 
 			Properties = new MemberDatabase<Property, PropertyInfo>( this );
 			Functions = new MemberDatabase<Function, MethodInfo>( this );
@@ -139,6 +138,8 @@ namespace Espionage.Engine
 		//
 		// Meta
 		//
+		
+		public Type Info { get; }
 
 		[Editable( false )]
 		public string Name { get; set; }
@@ -149,10 +150,9 @@ namespace Espionage.Engine
 		public string Group { get; set; }
 		public string Help { get; set; }
 
-		public bool Spawnable { get; set; }
+		public bool Spawnable { get; set; } = true;
 
 		// Owner & Identification
-		public Type Info { get; }
 
 		private int _id;
 		public int Id => _id = _id == default ? Name.Hash() : _id;

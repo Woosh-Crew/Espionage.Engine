@@ -9,12 +9,32 @@ namespace Espionage.Engine
 		{
 			return (int)Encoding.Unicode.GetBytes( value ).Aggregate( 2166136261, ( current, num2 ) => (current ^ num2) * 16777619U );;
 		}
+
+		public static bool IsEmpty( this string value )
+		{
+			if ( value == null )
+			{
+				return true;
+			}
+
+			return value == string.Empty;
+		}
+		
+		public static string IsEmpty( this string value, string replace )
+		{
+			return IsEmpty(value) ? replace : value;
+		}
 		
 		public static string ToTitleCase( this string value )
 		{
-			value = value.Replace( '_', ' ' );
-			value = value.Replace( '.', ' ' );
-			value = value.Replace( '-', ' ' );
+			if ( string.IsNullOrEmpty( value ) )
+			{
+				return string.Empty;
+			}
+			
+			value = value.Replace( "_", "" );
+			value = value.Replace( "-", "" );
+			value = value.Replace( ".", "" );
 			
 			return string.Concat( value.Select( x => char.IsUpper( x ) ? " " + x : x.ToString() ) ).TrimStart( ' ' );
 		}

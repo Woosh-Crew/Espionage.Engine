@@ -45,7 +45,7 @@ namespace Espionage.Engine.Resources.Editor
 				throw new( "No Valid Compilers for this Type" );
 			}
 
-			var converter = Library.Database.Create( library.Info );
+			var converter = Library.Create( library.Info );
 			var method = interfaceType.GetMethod( "Compile" );
 
 			try

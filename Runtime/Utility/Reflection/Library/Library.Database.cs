@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Espionage.Engine
 {
@@ -20,13 +21,12 @@ namespace Espionage.Engine
 			
 			public Library this[ int hash ] => _storage[hash];
 			public Library this[ string key ] => _storage[key.Hash()];
-			public Library this[ Type key ] => this.Get( key );
+			public Library this[ Type key ] => _storage.Values.FirstOrDefault( e => e.Info == key );
 
 			// Enumerator
 
 			public IEnumerator<Library> GetEnumerator()
 			{
-				// This shouldn't box. _store.GetEnumerator Does. but Enumerable.Empty shouldn't.
 				return _storage.Values.GetEnumerator();
 			}
 
