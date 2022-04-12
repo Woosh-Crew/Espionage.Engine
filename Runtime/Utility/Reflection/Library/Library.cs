@@ -29,6 +29,12 @@ namespace Espionage.Engine
 		/// database index. It is here for easy viewing
 		/// </summary>
 		public static Library Global => Database[typeof( Global )];
+		
+		/// <summary>
+		/// Database for Library Records. Allows the access of all records.
+		/// Use extension methods to add functionality to database access.
+		/// </summary>
+		public static Libraries Database { get; private set; }
 
 		/// <summary>
 		/// Components are added meta data onto that library, this can

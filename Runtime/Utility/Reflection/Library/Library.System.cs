@@ -15,7 +15,7 @@ namespace Espionage.Engine
 		/// </summary>
 		public static Library Register( ILibrary value )
 		{
-			var lib = Database[value.GetType()];
+			Library lib = value.GetType();
 
 			if ( lib == null )
 			{
@@ -57,36 +57,33 @@ namespace Espionage.Engine
 		}
 
 		/// <summary>
+		/// Checks if the lib has a singleton component,
+		/// and an instance of it somewhere.
+		/// </summary>
+		public static bool IsSingleton( Library lib )
+		{
+			return lib.Components.Has<SingletonAttribute>() && Singletons.ContainsKey( lib.Info );
+		}
+
+		/// <summary>
 		/// Constructs ILibrary, if it it has a custom constructor
 		/// it'll use that to create the ILibrary
 		/// </summary>
 		public static ILibrary Create( Library library )
 		{
-			if ( library is null )
+			if ( library == null )
 			{
 				Debugging.Log.Error( "Can't construct, Library is null" );
 				return null;
 			}
 
-			if ( !library.Spawnable )
+			if ( library.Spawnable )
 			{
-				Debugging.Log.Error( $"{library.Name} is not spawnable. Set Spawnable to true in classes meta." );
-				return null;
+				return IsSingleton( library ) ? Singletons[library.Info] : Construct( library );
 			}
 
-			// If we are a singleton, Check if an instance already exists 
-			if ( library.Components.Has<SingletonAttribute>() )
-			{
-				if ( Singletons.ContainsKey( library.Info ) )
-				{
-					return Singletons[library.Info];
-				}
-
-				var newSingleton = Construct( library );
-				return newSingleton;
-			}
-
-			return Construct( library );
+			Debugging.Log.Error( $"{library.Name} is not spawnable. Set Spawnable to true in classes meta." );
+			return null;
 		}
 
 		private static ILibrary Construct( Library library )
@@ -110,51 +107,22 @@ namespace Espionage.Engine
 		// Manager
 		//
 
-		public static bool Initialized { get; private set; }
-
 		static Library()
 		{
-			if ( Initialized )
-			{
-				return;
-			}
-
-			Database = new InternalDatabase();
-			Database.Add( new( typeof( Global ) ) );
+			Database = new() { new Library( typeof( Global ) ) };
 
 			using ( Debugging.Stopwatch( "Library Initialized" ) )
 			{
 				var main = typeof( Library ).Assembly;
-				AddAssembly( main );
-
-				var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+				Database.Add( main );
 
 				// Select all types where ILibrary exists or if it has the correct attribute
-				for ( var assemblyIndex = 0; assemblyIndex < assemblies.Length; assemblyIndex++ )
+				foreach ( var assembly in AppDomain.CurrentDomain.GetAssemblies() )
 				{
-					var assembly = assemblies[assemblyIndex];
-
 					if ( assembly != main && assembly.GetReferencedAssemblies().Any( e => e.FullName == main.FullName ) )
 					{
-						AddAssembly( assembly );
+						Database.Add( assembly );
 					}
-				}
-			}
-
-			Initialized = true;
-			Callback.Run( "library.ready" );
-		}
-
-		private static void AddAssembly( Assembly assembly )
-		{
-			var types = assembly.GetTypes();
-			for ( var typeIndex = 0; typeIndex < types.Length; typeIndex++ )
-			{
-				var type = types[typeIndex];
-
-				if ( IsValid( type ) )
-				{
-					Database.Add( CreateRecord( type ) );
 				}
 			}
 		}
@@ -162,18 +130,6 @@ namespace Espionage.Engine
 		internal static bool IsValid( Type type )
 		{
 			return type.HasInterface( typeof( ILibrary ) ) || type.IsDefined( typeof( LibraryAttribute ), true );
-		}
-
-		private static Library CreateRecord( Type type )
-		{
-			if ( !type.IsDefined( typeof( LibraryAttribute ), false ) )
-			{
-				return new( type );
-			}
-
-			// If we have meta present, use it
-			var attribute = type.GetCustomAttribute<LibraryAttribute>();
-			return attribute.CreateRecord( type );
 		}
 
 		//
