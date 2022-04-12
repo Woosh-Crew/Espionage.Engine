@@ -1,13 +1,24 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Espionage.Engine.Components;
 
 namespace Espionage.Engine
 {
 	public partial class Library
 	{
+		/// <summary>
+		/// All static Properties and Functions can be found in the Globals Library
+		/// database index. It is here for easy viewing
+		/// </summary>
+		public static Library Global => Database[typeof( Global )];
+
+		/// <summary>
+		/// Database for Library Records. Allows the access of all records.
+		/// Use extension methods to add functionality to database access.
+		/// </summary>
+		public static Libraries Database { get; private set; }
+
 		/// <summary>
 		/// Registers the target object with the Library.
 		/// Which allows it to receive instance callbacks and
@@ -109,21 +120,12 @@ namespace Espionage.Engine
 
 		static Library()
 		{
-			Database = new() { new Library( typeof( Global ) ) };
+			Database = new();
 
 			using ( Debugging.Stopwatch( "Library Initialized" ) )
 			{
-				var main = typeof( Library ).Assembly;
-				Database.Add( main );
-
-				// Select all types where ILibrary exists or if it has the correct attribute
-				foreach ( var assembly in AppDomain.CurrentDomain.GetAssemblies() )
-				{
-					if ( assembly != main && assembly.GetReferencedAssemblies().Any( e => e.FullName == main.FullName ) )
-					{
-						Database.Add( assembly );
-					}
-				}
+				Database.Add( new Library( typeof( Global ) ) );
+				Database.Add( AppDomain.CurrentDomain );
 			}
 		}
 

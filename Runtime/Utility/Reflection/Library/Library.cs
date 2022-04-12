@@ -25,18 +25,6 @@ namespace Espionage.Engine
 		public Library ClassInfo => Database[typeof( Library )];
 
 		/// <summary>
-		/// All static Properties and Functions can be found in the Globals Library
-		/// database index. It is here for easy viewing
-		/// </summary>
-		public static Library Global => Database[typeof( Global )];
-		
-		/// <summary>
-		/// Database for Library Records. Allows the access of all records.
-		/// Use extension methods to add functionality to database access.
-		/// </summary>
-		public static Libraries Database { get; private set; }
-
-		/// <summary>
 		/// Components are added meta data onto that library, this can
 		/// include icons, company, stylesheet, etc. They allow us
 		/// to do some really crazy cool shit
@@ -66,7 +54,7 @@ namespace Espionage.Engine
 			// Components can mutate Group and Title, if they haven't give it one
 			Group = Group.IsEmpty( type.Namespace.ToTitleCase() );
 			Title = Title.IsEmpty( type.Name.ToTitleCase() );
-
+			
 			Properties = new MemberDatabase<Property, PropertyInfo>( this );
 			Functions = new MemberDatabase<Function, MethodInfo>( this );
 

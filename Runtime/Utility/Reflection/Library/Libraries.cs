@@ -26,8 +26,8 @@ namespace Espionage.Engine
 				Debugging.Log.Warning( $"Replacing Library [{item.Name}]" );
 				_storage[hashedName] = item;
 				return;
-			} 
-			
+			}
+
 			_storage.Add( hashedName, item );
 		}
 
@@ -51,6 +51,20 @@ namespace Espionage.Engine
 				if ( Library.IsValid( type ) )
 				{
 					Add( type );
+				}
+			}
+		}
+
+		internal void Add( AppDomain domain )
+		{
+			var main = typeof( Library ).Assembly;
+			Add( main );
+
+			foreach ( var assembly in AppDomain.CurrentDomain.GetAssemblies() )
+			{
+				if ( assembly != main && assembly.GetReferencedAssemblies().Any( e => e.FullName == main.FullName ) )
+				{
+					Add( assembly );
 				}
 			}
 		}
