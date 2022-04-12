@@ -14,7 +14,7 @@ namespace Espionage.Engine
 
 		private class InternalDatabase : IDatabase<Library, string, Type, int>
 		{
-			private readonly Dictionary<int, Library> _storage = new();
+			private readonly SortedList<int, Library> _storage = new();
 
 			public int Count => _storage.Count;
 			
