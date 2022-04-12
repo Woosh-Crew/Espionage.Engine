@@ -7,8 +7,29 @@ namespace Espionage.Engine
 	{
 		public static int Hash( this string value )
 		{
-			var num1 = Encoding.Unicode.GetBytes( value ).Aggregate( 2166136261, ( current, num2 ) => (current ^ num2) * 16777619U );
-			return (int)num1;
+			return (int)Encoding.Unicode.GetBytes( value ).Aggregate( 2166136261, ( current, num2 ) => (current ^ num2) * 16777619U );;
+		}
+		
+		public static string ToTitleCase( this string value )
+		{
+			value = value.Replace( '_', ' ' );
+			value = value.Replace( '.', ' ' );
+			value = value.Replace( '-', ' ' );
+			
+			return string.Concat( value.Select( x => char.IsUpper( x ) ? " " + x : x.ToString() ) ).TrimStart( ' ' );
+		}
+
+		public static string ToProgrammerCase( this string value, string prefix = null )
+		{
+			var name = string.Concat( value.Select( x => char.IsUpper( x ) ? "_" + x : x.ToString() ) ).TrimStart( '_' );
+
+			if ( string.IsNullOrEmpty( prefix ) )
+			{
+				return name.ToLower();
+			}
+
+			prefix = prefix.Split( '.' )[^1] ?? "";
+			return $"{prefix}.{name}".ToLower();
 		}
 	}
 }

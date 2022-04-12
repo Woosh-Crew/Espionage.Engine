@@ -32,12 +32,6 @@ public static class LibraryDatabaseExtensions
 		return library is not null;
 	}
 
-	public static bool TryGet( this IDatabase<Library> database, Guid id, out Library library )
-	{
-		library = database.Get( id );
-		return library is not null;
-	}
-
 	//
 	// Exists
 	//
@@ -57,11 +51,6 @@ public static class LibraryDatabaseExtensions
 		return database.Get( type ) is not null;
 	}
 
-	public static bool Exists( this IDatabase<Library> database, Guid id )
-	{
-		return database.Get( id ) is not null;
-	}
-
 	//
 	// Get
 	//
@@ -79,11 +68,6 @@ public static class LibraryDatabaseExtensions
 	public static Library Get( this IDatabase<Library> database, Type type )
 	{
 		return database.FirstOrDefault( e => e.Info == type );
-	}
-
-	public static Library Get( this IDatabase<Library> database, Guid id )
-	{
-		return database.FirstOrDefault( e => e.Id == id );
 	}
 
 	//
@@ -139,11 +123,6 @@ public static class LibraryDatabaseExtensions
 		return !database.TryGet( name, out var item ) ? null : database.Where( e => e.Info.IsSubclassOf( item.Info ) );
 	}
 
-	public static IEnumerable<Library> GetAll( this IDatabase<Library> database, Guid id )
-	{
-		return !database.TryGet( id, out var item ) ? null : database.Where( e => e.Info.IsSubclassOf( item.Info ) );
-	}
-
 	//
 	// Create
 	//
@@ -186,23 +165,5 @@ public static class LibraryDatabaseExtensions
 	public static T Create<T>( this IDatabase<Library> database, string name, bool assertMissing = false ) where T : class, ILibrary
 	{
 		return database.Create( name, assertMissing ) as T;
-	}
-
-	public static ILibrary Create( this IDatabase<Library> database, Guid id )
-	{
-		var library = database.Get( id );
-
-		if ( id != default )
-		{
-			return Library.Create( library );
-		}
-
-		Debugging.Log.Error( "Invalid ID" );
-		return null;
-	}
-
-	public static T Create<T>( this IDatabase<Library> database, Guid id ) where T : class, new()
-	{
-		return database.Create( id ) as T;
 	}
 }

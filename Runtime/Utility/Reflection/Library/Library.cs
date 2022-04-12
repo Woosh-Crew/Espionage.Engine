@@ -41,24 +41,12 @@ namespace Espionage.Engine
 		{
 			Assert.IsNull( type );
 
-			string BuildName( Type type )
-			{
-				var name = string.Concat( type.Name!.Select( x => char.IsUpper( x ) ? "_" + x : x.ToString() ) ).TrimStart( '_' );
-
-				if ( string.IsNullOrEmpty( type.Namespace ) )
-				{
-					return name.ToLower();
-				}
-
-				var prefix = type.Namespace?.Split( '.' )[^1] ?? "";
-				return $"{prefix}.{name}".ToLower();
-			}
-
 			Info = type;
 			Spawnable = true;
 
-			Name = BuildName( type );
-			Title = string.Concat( type.Name.Select( x => char.IsUpper( x ) ? " " + x : x.ToString() ) ).TrimStart( ' ' );
+			Name = type.Name.ToProgrammerCase( type.Namespace );
+			Title = type.Name.ToTitleCase();
+			Group = type.Namespace;
 
 			// Components
 			Components = new( this );
@@ -102,7 +90,7 @@ namespace Espionage.Engine
 
 			var reg = MemberDatabase<Property, PropertyInfo>.Registry;
 
-			if ( reg.ContainsKey( info.DeclaringType ) )
+			if ( reg.ContainsKey( info.DeclaringType! ) )
 			{
 				var potential = reg[info.DeclaringType].FirstOrDefault( e => e.Name == info.Name );
 
@@ -133,7 +121,7 @@ namespace Espionage.Engine
 
 			var reg = MemberDatabase<Function, MethodInfo>.Registry;
 
-			if ( reg.ContainsKey( info.DeclaringType ) )
+			if ( reg.ContainsKey( info.DeclaringType! ) )
 			{
 				var potential = reg[info.DeclaringType].FirstOrDefault( e => e.Name == info.Name );
 
@@ -167,23 +155,21 @@ namespace Espionage.Engine
 		public Type Info { get; }
 
 		private int _id;
-
-		public int Id
-		{
-			get
-			{
-				if ( _id == default )
-				{
-					_id = GenerateID( Name );
-				}
-
-				return _id;
-			}
-		}
+		public int Id => _id = _id == default ? Name.Hash() : _id;
 
 		public static implicit operator Library( string value )
 		{
 			return Database[value];
+		}
+
+		public static implicit operator Library( Type value )
+		{
+			return Database[value];
+		}
+
+		public static implicit operator Library( int hash )
+		{
+			return Database[hash];
 		}
 
 		//

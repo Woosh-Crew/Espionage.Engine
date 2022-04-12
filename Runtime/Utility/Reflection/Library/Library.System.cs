@@ -176,11 +176,6 @@ namespace Espionage.Engine
 			return attribute.CreateRecord( type );
 		}
 
-		private static int GenerateID( string name )
-		{
-			return string.IsNullOrEmpty( name ) ? default : name.Hash();
-		}
-
 		//
 		// Singletons
 		//
