@@ -9,7 +9,24 @@ namespace Espionage.Engine.IO
 {
 	public class Pathing
 	{
-		private readonly Dictionary<string, string> _paths = new()
+		private readonly struct Grouping
+		{
+			public Grouping( string path, bool isOverridable )
+			{
+				Path = path;
+				IsOverridable = isOverridable;
+			}
+
+			public static implicit operator Grouping( string value )
+			{
+				return new( value, false );
+			}
+
+			public string Path { get; }
+			public bool IsOverridable { get; }
+		}
+
+		private readonly Dictionary<string, Grouping> _paths = new()
 		{
 			// -- Game Specific
 			["game"] = Application.dataPath,
@@ -90,7 +107,7 @@ namespace Espionage.Engine.IO
 		/// Add a shorthand / virtual path to the pathing database
 		/// for use later, you can't override already exising keys.
 		/// </summary>
-		public void Add( string key, string path )
+		public void Add( string key, string path, bool overrideable = false )
 		{
 			if ( _paths.ContainsKey( key ) )
 			{
@@ -98,7 +115,7 @@ namespace Espionage.Engine.IO
 				return;
 			}
 
-			_paths.Add( key, path );
+			_paths.Add( key, new( path, overrideable ) );
 		}
 
 		/// <summary>
@@ -131,7 +148,7 @@ namespace Espionage.Engine.IO
 		/// It'll search loaded mods first then the base content,
 		/// Depending on the virtual path you are trying to get.
 		/// </summary>
-		public string Absolute( string path )
+		public string Absolute( string path, bool directoryOnly = false )
 		{
 			Assert.IsNull( path );
 
@@ -163,15 +180,15 @@ namespace Espionage.Engine.IO
 			// Get Absolute Path
 			if ( !path.Contains( "://" ) )
 			{
-				return Path.GetFullPath( path );
+				path = Path.GetFullPath( path );
+				return directoryOnly ? Path.GetDirectoryName( path ) : path;
 			}
 
 			var splitPath = path.Split( "://" );
-			splitPath[0] = Absolute( _paths[splitPath[0]] );
+			splitPath[0] = Absolute( _paths[splitPath[0]].Path );
 
-			var newPath = Path.Combine( splitPath[0], splitPath[1] );
-
-			return Path.GetFullPath( newPath );
+			var newPath = Path.GetFullPath( Path.Combine( splitPath[0], splitPath[1] ) );
+			return directoryOnly ? Path.GetDirectoryName( newPath ) : newPath;
 		}
 
 		/// <summary>
@@ -220,9 +237,19 @@ namespace Espionage.Engine.IO
 		/// Can this path be overriden by mods? (such as "models://")
 		/// </summary>
 		/// <returns> True if I can be overriden </returns>
-		public bool Virtual( string path )
+		public bool IsOverridable( string path )
 		{
-			return true;
+			return _paths[path].IsOverridable;
+		}
+
+		/// <summary>
+		/// Is this path or file in a folder named "x"? (Folder must be relative to something,
+		/// or else it might pick up on duplicated folders.)
+		/// </summary>
+		public bool InFolder( string folderName, string path, string relativeTo = "game://" )
+		{
+			path = Relative( relativeTo, Absolute( path, true ) );
+			return path.Contains( folderName );
 		}
 
 		/// <summary>
