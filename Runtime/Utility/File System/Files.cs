@@ -33,7 +33,7 @@ namespace Espionage.Engine
 
 			Assert.IsNull( library, "No Valid Loaders for this File" );
 
-			var file = Library.Database.Create<T>( library.Info );
+			var file = Library.Create<T>( library.Info );
 			file.Info = info;
 
 			return file;

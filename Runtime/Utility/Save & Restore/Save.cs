@@ -15,7 +15,18 @@ namespace Espionage.Engine
 
 		// API
 
-		public void Save() { }
+		public void Save()
+		{
+			using var stream = new MemoryStream();
+			using var writer = new BinaryWriter( stream );
+
+			// Create Header
+			var header = new Header();
+			header.Serialize( writer );
+			// Save each entities data
+
+			// Save to file.
+		}
 
 		public void Load()
 		{
@@ -26,6 +37,7 @@ namespace Espionage.Engine
 			Head = new( reader );
 		}
 
+		// 12 + ( 28 * Count )
 		public readonly struct Header
 		{
 			public string Format => Encoding.UTF8.GetString( Indent );
@@ -56,12 +68,26 @@ namespace Espionage.Engine
 				}
 			}
 
+			public void Serialize( BinaryWriter writer )
+			{
+				writer.Write( new char[]
+				{
+					'U',
+					'S',
+					'V',
+					'E'
+				} );
+
+				writer.Write( 150 );
+			}
+
 			public byte[] Indent { get; }
 			public int Version { get; }
 			public int Count { get; }
 			public Node[] Nodes { get; }
 		}
 
+		// 28 Bytes
 		public struct Node
 		{
 			internal Node( BinaryReader reader )
@@ -74,21 +100,34 @@ namespace Espionage.Engine
 
 			public int ClassID { get; }
 			public byte[] EntityID { get; }
-			public int Start { get; }
-			public int End { get; }
+			public long Start { get; }
+			public long End { get; }
 		}
 	}
 
 	public ref struct Save
 	{
-		public void WriteInt32( int value ) { }
-		public void WriteFloat( float value ) { }
-		public void WriteBool( bool value ) { }
+		public BinaryWriter Writer { get; }
+		
+		public int ClassID { get; }
+		public byte[] EntityID { get; }
+		public long Start { get; }
+		public long End { get; }
 
-		internal byte[] Finish()
+		public Save( Entity entity ,BinaryWriter writer )
 		{
-			return default;
+			Writer = writer;
+			
+			ClassID = entity.ClassInfo.Id;
+			EntityID = entity.UniqueID.ToByteArray();
+
+			Start = writer.BaseStream.Position;
+			End = 0;
 		}
+		
+		public void Write( int value ) { }
+
+		internal Depot.Node Finish() { return default; }
 	}
 
 	public class Restore

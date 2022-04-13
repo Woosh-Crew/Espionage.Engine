@@ -27,19 +27,14 @@ namespace Espionage.Engine
 		public static Library Register( ILibrary value )
 		{
 			Library lib = value.GetType();
-
-			if ( lib == null )
-			{
-				Debugging.Log.Error( $"[FATAL] {value} was null in library database." );
-				return null;
-			}
+			Assert.IsNull( lib );
 
 			// Check if Library is Singleton & not a component.
 			if ( lib.Components.Has<SingletonAttribute>() && !lib.Info.HasInterface( typeof( IComponent ) ) )
 			{
 				if ( Singletons.ContainsKey( lib.Info ) )
 				{
-					Debugging.Log.Error( $"You are trying to register another Singleton? How???? -- [{lib.Name}]" );
+					Debugging.Log.Error( $"You're trying to register another Singleton [{lib.Name}]" );
 					return null;
 				}
 
@@ -95,6 +90,12 @@ namespace Espionage.Engine
 
 			Debugging.Log.Error( $"{library.Name} is not spawnable. Set Spawnable to true in classes meta." );
 			return null;
+		}
+
+		/// <summary> <inheritdoc cref="Create"/> and returns T </summary>
+		public static T Create<T>( Library lib ) where T : ILibrary
+		{
+			return (T)Create( lib );
 		}
 
 		private static ILibrary Construct( Library library )

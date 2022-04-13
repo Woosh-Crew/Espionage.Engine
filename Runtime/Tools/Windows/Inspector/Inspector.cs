@@ -153,7 +153,7 @@ namespace Espionage.Engine.Tools
 				return comp != null && type.IsSubclassOf( comp.Type );
 			} );
 
-			return lib == null ? null : Library.Database.Create<Editor>( lib.Info );
+			return lib == null ? null : Library.Create<Editor>( lib.Info );
 		}
 
 		private static Drawer GrabDrawer( Type type )
@@ -199,7 +199,7 @@ namespace Espionage.Engine.Tools
 				return type.HasInterface<ILibrary>() ? Library.Database.Create<ILibraryDrawer>() : null;
 			}
 
-			return Library.Database.Create<Drawer>( lib.Info );
+			return Library.Create<Drawer>( lib.Info );
 		}
 
 		//

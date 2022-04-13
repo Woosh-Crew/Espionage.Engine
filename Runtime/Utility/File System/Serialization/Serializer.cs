@@ -45,7 +45,7 @@ namespace Espionage.Engine.IO
 		/// </summary>
 		public virtual byte[] Serialize<T>( Library lib, T data )
 		{
-			var serializer = Library.Database.Create<ISerializer<T>>( lib.Info );
+			var serializer = Library.Create<ISerializer<T>>( lib.Info );
 			return serializer.Serialize( data );
 		}
 
@@ -67,7 +67,7 @@ namespace Espionage.Engine.IO
 		/// </summary>
 		public virtual byte[] Serialize<T>( Library lib, T[] data )
 		{
-			var serializer = Library.Database.Create<ISerializer<T>>( lib.Info );
+			var serializer = Library.Create<ISerializer<T>>( lib.Info );
 			return serializer.Serialize( data );
 		}
 
@@ -95,7 +95,7 @@ namespace Espionage.Engine.IO
 		{
 			path = Files.Pathing.Absolute( path );
 
-			var deserializer = Library.Database.Create<IDeserializer<T>>( lib.Info );
+			var deserializer = Library.Create<IDeserializer<T>>( lib.Info );
 			return deserializer.Deserialize( Deserialize( path ) );
 		}
 

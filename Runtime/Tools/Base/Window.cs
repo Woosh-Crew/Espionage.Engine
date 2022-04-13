@@ -68,7 +68,7 @@ namespace Espionage.Engine.Tools
 			}
 
 			// Gotta do this or the compiler has a fit?
-			var item = Library.Database.Create<Window>( lib );
+			var item = Library.Create<Window>( lib );
 			return item as T;
 		}
 

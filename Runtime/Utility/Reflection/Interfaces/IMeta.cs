@@ -2,7 +2,7 @@
 
 namespace Espionage.Engine
 {
-	public interface IMember<T> : IMember where T : MemberInfo
+	public interface IMember<out T> : IMember where T : MemberInfo
 	{
 		T Info { get; }
 	}

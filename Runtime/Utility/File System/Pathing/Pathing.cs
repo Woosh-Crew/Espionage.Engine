@@ -278,13 +278,7 @@ namespace Espionage.Engine.IO
 		public IEnumerable<string> All( string path )
 		{
 			path = Absolute( path );
-
-			if ( !Exists( path ) )
-			{
-				return null;
-			}
-
-			return Directory.GetFiles( path );
+			return !Exists( path ) ? null : Directory.GetFiles( path );
 		}
 
 		/// <summary>

@@ -26,7 +26,7 @@ namespace Espionage.Engine
 				return default;
 			}
 
-			var converter = Library.Database.Create<IConverter<T>>( library );
+			var converter = Library.Create<IConverter<T>>( library );
 
 			try
 			{

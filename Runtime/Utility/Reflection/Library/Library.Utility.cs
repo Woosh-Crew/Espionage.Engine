@@ -6,6 +6,11 @@ namespace Espionage.Engine
 {
 	public static class LibraryDatabaseExtensions
 	{
+		public static T Create<T>( this Libraries database ) where T : class, new()
+		{
+			return Library.Create( typeof(T) ) as T;
+		}
+		
 		public static Library Get<T>( this Libraries database ) where T : class
 		{
 			return Library.Database[typeof( T )];
@@ -54,25 +59,6 @@ namespace Espionage.Engine
 			// Get the T
 			var item = database.Get<T>();
 			return item == null ? null : database.Where( e => e.Info.IsSubclassOf( item.Info ) );
-		}
-
-		//
-		// Create
-		//
-
-		public static T Create<T>( this Libraries database ) where T : class, new()
-		{
-			return Library.Create( typeof(T) ) as T;
-		}
-
-		public static T Create<T>( this Libraries database, Library library ) where T : class, ILibrary
-		{
-			return Library.Create( library ) as T;
-		}
-
-		public static T Create<T>( this Libraries database, Type type ) where T : class, ILibrary
-		{
-			return Library.Create( type ) as T;
 		}
 	}
 }

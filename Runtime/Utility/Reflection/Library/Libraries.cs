@@ -6,6 +6,12 @@ using System.Reflection;
 
 namespace Espionage.Engine
 {
+	/// <summary>
+	/// Libraries is used for handling every library instance. It is
+	/// also responsible for caching libraries too. Its in its own
+	/// class so we can decouple it, plus provide a wrapper / our own
+	/// accessors to the database.
+	/// </summary>
 	public class Libraries : IEnumerable<Library>
 	{
 		private readonly SortedList<int, Library> _storage = new();

@@ -17,7 +17,7 @@ namespace Espionage.Engine.Services
 				{
 					if ( !service.Info.IsAbstract )
 					{
-						Add( Library.Database.Create<IService>( service.Info ) );
+						Add( Library.Create<IService>( service.Info ) );
 					}
 
 					_services = _services.OrderBy( e => e.ClassInfo.Components.Get<OrderAttribute>()?.Order ?? 5 ).ToList();
