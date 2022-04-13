@@ -24,7 +24,7 @@ namespace Espionage.Engine.Overlays
 				}
 			}
 		}
-
+		
 		// Rendering
 
 		private readonly List<Request> _requests = new();
@@ -34,7 +34,6 @@ namespace Espionage.Engine.Overlays
 			// Required by IOverlayProvider
 			_requests.Add( new( seconds, mesh, matrix, color ?? Color.red, depth ) );
 		}
-
 
 		private readonly struct Request
 		{

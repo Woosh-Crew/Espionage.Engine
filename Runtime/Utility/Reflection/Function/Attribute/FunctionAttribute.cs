@@ -6,7 +6,7 @@ namespace Espionage.Engine
 	/// <summary>
 	/// Properties are variables that are changeable by the editor.
 	/// </summary>
-	[AttributeUsage( AttributeTargets.Method, Inherited = true, AllowMultiple = false )]
+	[AttributeUsage( AttributeTargets.Method )]
 	public sealed class FunctionAttribute : Attribute
 	{
 		private string Name { get; }
@@ -20,7 +20,7 @@ namespace Espionage.Engine
 
 		public Function CreateRecord( MethodInfo info )
 		{
-			return new( info, string.IsNullOrEmpty( Name ) ? info.Name : Name );
+			return new( info, Name );
 		}
 	}
 }

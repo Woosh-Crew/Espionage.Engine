@@ -19,10 +19,10 @@ namespace Espionage.Engine
 	/// We can do a lotta cool and performant shit because of this.
 	/// </para>
 	/// </summary>
-	[Serializable]
+	[Serializable, Group( "Reflection" )]
 	public sealed partial class Library : ILibrary, IMeta
 	{
-		public Library ClassInfo => Database[typeof( Library )];
+		public Library ClassInfo => typeof( Library );
 
 		/// <summary>
 		/// Components are added meta data onto that library, this can
@@ -31,12 +31,13 @@ namespace Espionage.Engine
 		/// </summary>
 		public Components<Library> Components { get; }
 
-		internal Library( [NotNull] Type type )
+		internal Library( [NotNull] Type type, string name = null )
 		{
 			Assert.IsNull( type );
 
-			Name = type.Name.ToProgrammerCase( type.Namespace );
 			Info = type;
+			Name = name.IsEmpty( type.Name.ToProgrammerCase( type.Namespace ) );
+			Id = Name.Hash();
 
 			Components = new( this );
 
@@ -50,11 +51,11 @@ namespace Espionage.Engine
 					Components.Add( library );
 				}
 			}
-			
+
 			// Components can mutate Group and Title, if they haven't give it one
 			Group = Group.IsEmpty( type.Namespace.ToTitleCase() );
 			Title = Title.IsEmpty( type.Name.ToTitleCase() );
-			
+
 			Properties = new MemberDatabase<Property, PropertyInfo>( this );
 			Functions = new MemberDatabase<Function, MethodInfo>( this );
 
@@ -76,7 +77,7 @@ namespace Espionage.Engine
 		{
 			// If this property came from a class outside the scope of ILibrary
 			// Ignore it. We don't care about it. 
-			if ( info.GetIndexParameters().Length > 0 || !IsValid( info.DeclaringType ) || info.HasAttribute<SkipAttribute>( true ) || info.HasAttribute<ObsoleteAttribute>() )
+			if ( !IsValid( info.DeclaringType ) || info.HasAttribute<SkipAttribute>( true ) || info.GetIndexParameters().Length > 0 )
 			{
 				return;
 			}
@@ -132,24 +133,16 @@ namespace Espionage.Engine
 		//
 		// Meta
 		//
-		
+
 		public Type Info { get; }
+		public string Name { get; }
+		public int Id { get; }
 
-		[Editable( false )]
-		public string Name { get; set; }
-
-		[Editable( false )]
 		public string Title { get; set; }
-
 		public string Group { get; set; }
 		public string Help { get; set; }
 
 		public bool Spawnable { get; set; } = true;
-
-		// Owner & Identification
-
-		private int _id;
-		public int Id => _id = _id == default ? Name.Hash() : _id;
 
 		public static implicit operator Library( string value )
 		{
@@ -220,7 +213,7 @@ namespace Espionage.Engine
 			public void Add( T item )
 			{
 				// Add the Key to the registry, if its null
-				if ( !Registry.ContainsKey( item.Info.DeclaringType ) )
+				if ( !Registry.ContainsKey( item.Info.DeclaringType! ) )
 				{
 					Registry.Add( item.Info.DeclaringType, new() );
 				}
@@ -232,14 +225,10 @@ namespace Espionage.Engine
 				}
 
 				// Assign Proper owner, if we're the owner.
-				if ( item.Owner == null && item.Info.DeclaringType == _owner.Info )
+				if ( item.Owner == null && (item.IsStatic || item.Info.DeclaringType == _owner.Info) )
 				{
 					item.Owner = _owner;
-
-					if ( string.IsNullOrWhiteSpace( item.Group ) )
-					{
-						item.Group = _owner.Title;
-					}
+					item.Group = item.Group.IsEmpty( _owner.Title );
 				}
 
 				// Now add it to the instance

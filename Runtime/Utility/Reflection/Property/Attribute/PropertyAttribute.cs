@@ -22,7 +22,7 @@ namespace Espionage.Engine
 
 		public Property CreateRecord( PropertyInfo info )
 		{
-			return new( info, !string.IsNullOrEmpty( Name ) ? Name : info.Name, Default );
+			return new( info, !Name.IsEmpty()  ? Name : info.Name, Default );
 		}
 	}
 }

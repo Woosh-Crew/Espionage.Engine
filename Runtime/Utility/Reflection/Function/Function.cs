@@ -11,11 +11,10 @@ namespace Espionage.Engine
 		public Components<Function> Components { get; }
 		public MethodInfo Info { get; }
 
-		internal Function( MethodInfo info, string name )
+		internal Function( MethodInfo info, string name = null )
 		{
 			Info = info;
-			Name = name;
-			Title = info.Name;
+			Name = name.IsEmpty( info.Name.ToProgrammerCase() );
 
 			// Components
 			Components = new( this );
@@ -29,20 +28,22 @@ namespace Espionage.Engine
 					Components.Add( property );
 				}
 			}
+
+			Title = Title.IsEmpty( info.Name.ToTitleCase() );
 		}
 
 		public override string ToString()
 		{
-			return Name;
+			return $"Function:[{Name}/{Owner.Name}]";
 		}
 
-		public string Name { get; set; }
+		public string Name { get; }
 		public string Title { get; set; }
 		public string Group { get; set; }
 		public string Help { get; set; }
 
 		public bool IsStatic => Info.IsStatic;
-
+		
 		//
 		// Invokers
 		//

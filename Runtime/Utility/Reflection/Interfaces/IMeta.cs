@@ -10,6 +10,7 @@ namespace Espionage.Engine
 	public interface IMember : IMeta
 	{
 		Library Owner { get; set; }
+		bool IsStatic { get; }
 	}
 
 	public interface IMeta

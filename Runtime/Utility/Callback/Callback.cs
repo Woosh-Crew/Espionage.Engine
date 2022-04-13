@@ -18,7 +18,7 @@ namespace Espionage.Engine
 		/// <summary> Runs a callback with an array of args. </summary>
 		public static void Run( string name )
 		{
-			if ( Provider is null || string.IsNullOrEmpty( name ) )
+			if ( Provider is null || name.IsEmpty() )
 			{
 				return;
 			}
@@ -29,7 +29,7 @@ namespace Espionage.Engine
 		/// <summary> Runs a callback with an array of args. [EXPENSIVE] </summary>
 		public static void Run( string name, params object[] args )
 		{
-			if ( Provider is null || string.IsNullOrEmpty( name ) )
+			if ( Provider is null || name.IsEmpty() )
 			{
 				return;
 			}

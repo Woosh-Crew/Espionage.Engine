@@ -7,7 +7,7 @@ namespace Espionage.Engine
 	{
 		public static int Hash( this string value )
 		{
-			return (int)Encoding.Unicode.GetBytes( value ).Aggregate( 2166136261, ( current, num2 ) => (current ^ num2) * 16777619U );;
+			return (int)Encoding.Unicode.GetBytes( value ).Aggregate( 2166136261, ( current, num2 ) => (current ^ num2) * 16777619U );
 		}
 
 		public static bool IsEmpty( this string value )

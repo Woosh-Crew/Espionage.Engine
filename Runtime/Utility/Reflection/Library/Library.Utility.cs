@@ -8,9 +8,9 @@ namespace Espionage.Engine
 	{
 		public static T Create<T>( this Libraries database ) where T : class, new()
 		{
-			return Library.Create( typeof(T) ) as T;
+			return Library.Create( typeof( T ) ) as T;
 		}
-		
+
 		public static Library Get<T>( this Libraries database ) where T : class
 		{
 			return Library.Database[typeof( T )];
@@ -50,15 +50,7 @@ namespace Espionage.Engine
 		public static IEnumerable<Library> GetAll<T>( this Libraries database ) where T : class
 		{
 			var type = typeof( T );
-
-			if ( type.IsInterface )
-			{
-				return database.Where( e => e.Info.HasInterface<T>() );
-			}
-
-			// Get the T
-			var item = database.Get<T>();
-			return item == null ? null : database.Where( e => e.Info.IsSubclassOf( item.Info ) );
+			return type.IsInterface ? database.Where( e => e.Info.HasInterface<T>() ) : database.Where( e => e.Info.IsSubclassOf( type ) );
 		}
 	}
 }

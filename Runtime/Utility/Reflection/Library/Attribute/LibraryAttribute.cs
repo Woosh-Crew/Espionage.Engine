@@ -20,15 +20,7 @@ namespace Espionage.Engine
 
 		public Library CreateRecord( Type type )
 		{
-			var library = new Library( type );
-
-			// This looks really stupid
-			if ( !string.IsNullOrEmpty( _name ) )
-			{
-				library.Name = _name;
-			}
-
-			return library;
+			return new( type, _name );
 		}
 	}
 }

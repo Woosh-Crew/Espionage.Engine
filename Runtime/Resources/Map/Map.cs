@@ -264,7 +264,7 @@ namespace Espionage.Engine.Resources
 		[Function( "map" ), Terminal]
 		private static void GrabOrLaunchMap( string path = null )
 		{
-			if ( string.IsNullOrEmpty( path ) )
+			if ( path.IsEmpty() )
 			{
 				Debugging.Log.Info( $"Map: {Current.Identifier}" );
 				return;
