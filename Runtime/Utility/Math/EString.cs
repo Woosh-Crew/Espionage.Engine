@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Text;
 
 namespace Espionage.Engine
@@ -19,23 +20,36 @@ namespace Espionage.Engine
 
 			return value == string.Empty;
 		}
-		
+
 		public static string IsEmpty( this string value, string replace )
 		{
-			return IsEmpty(value) ? replace : value;
+			return IsEmpty( value ) ? replace : value;
 		}
-		
+
+		public static string ReplaceAt( this string input, int index, char newChar )
+		{
+			if ( input == null )
+			{
+				throw new ArgumentNullException( nameof( input ) );
+			}
+
+			return new StringBuilder( input ) { [index] = newChar }.ToString();
+		}
+
 		public static string ToTitleCase( this string value )
 		{
 			if ( string.IsNullOrEmpty( value ) )
 			{
 				return string.Empty;
 			}
-			
-			value = value.Replace( "_", "" );
-			value = value.Replace( "-", "" );
-			value = value.Replace( ".", "" );
-			
+
+			// Change this stuff to space
+			value = value.Replace( "_", " " );
+			value = value.Replace( "-", " " );
+			value = value.Replace( ".", " " );
+
+			// Set first char to upper
+			value = value.ReplaceAt( 0, char.ToUpper( value[0] ) );
 			return string.Concat( value.Select( x => char.IsUpper( x ) ? " " + x : x.ToString() ) ).TrimStart( ' ' );
 		}
 

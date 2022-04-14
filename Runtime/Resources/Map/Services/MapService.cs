@@ -45,7 +45,7 @@ namespace Espionage.Engine.Resources.Maps
 			foreach ( var item in Files.Pathing.All( "maps://", extensions ) )
 			{
 				Map.Setup.Path( item )?
-					.Meta( Files.Pathing.Name( item ) )
+					.Meta( Files.Pathing.Name( item, false ).ToTitleCase() )
 					.Origin( "Game" )
 					.Build();
 			}
