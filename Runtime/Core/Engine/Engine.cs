@@ -63,7 +63,7 @@ namespace Espionage.Engine
 				return;
 			}
 
-			UpdatePlayerLoop( false );
+			UpdatePlayerLoop();
 			Services = new();
 
 			// Create engine layer scene

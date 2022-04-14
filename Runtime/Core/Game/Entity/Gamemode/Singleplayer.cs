@@ -1,6 +1,7 @@
 ﻿namespace Espionage.Engine.Gamemodes
 {
-	public abstract class Singleplayer : Gamemode
+	[Persistent]
+	public class Singleplayer : Gamemode
 	{
 		protected override bool OnValidation()
 		{
@@ -9,6 +10,20 @@
 			// networking just yet
 
 			return true;
+		}
+
+		protected override void OnFinish()
+		{
+			base.OnFinish();
+			
+			// Because were persistent
+			Destroy( gameObject );
+		}
+
+		public override void OnActorRespawned( Actor pawn )
+		{
+			pawn.MoveTo( All.Random<SpawnPoint>() );
+			Debugging.Log.Info("Moving to spawn point");
 		}
 
 		public override void OnActorKilled( Actor pawn, IDamageable.Info info )

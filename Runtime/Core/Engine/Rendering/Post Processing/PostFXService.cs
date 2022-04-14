@@ -7,7 +7,7 @@ using Object = UnityEngine.Object;
 
 namespace Espionage.Engine.PostProcessing
 {
-	[Title( "Post Processing" )]
+	[Library( "services.postfx" ), Group( "Post Processing" )]
 	public class PostFXService : Service
 	{
 		private PostProcessDebug _debug;
@@ -43,7 +43,7 @@ namespace Espionage.Engine.PostProcessing
 				foreach ( var value in Enum.GetValues( typeof( DebugOverlay ) ) )
 				{
 					var item = (DebugOverlay)value;
-					Item( item.ToString(), item );
+					Item( item.ToString().ToTitleCase().IsEmpty( "Null" ), item );
 				}
 
 				ImGui.EndMenu();
@@ -131,70 +131,45 @@ namespace Espionage.Engine.PostProcessing
 
 		private static void AdjustProfile( PostProcessProfile profile )
 		{
-			// AO
-			if ( profile.HasSettings<AmbientOcclusion>() )
+			AdjustSetting<AmbientOcclusion>( profile, EnableAO, occlusion =>
 			{
-				var ao = profile.GetSetting<AmbientOcclusion>();
-				ao.active = EnableAO;
+				occlusion.ambientOnly.Override( true );
+				occlusion.mode.Override( AmbientOcclusionMode.MultiScaleVolumetricObscurance );
+			} );
 
-				// Do shit only if we're active
-				if ( ao.active )
-				{
-					ao.ambientOnly.Override( true );
-					ao.mode.Override( AmbientOcclusionMode.MultiScaleVolumetricObscurance );
-				}
+			AdjustSetting<Bloom>( profile, EnableBloom, bloom =>
+			{
+				bloom.fastMode.Override( FastBloom );
+			} );
+
+			AdjustSetting<ScreenSpaceReflections>( profile, EnableSSR, ssr =>
+			{
+				ssr.preset.Override( QualitySSR );
+			} );
+
+			AdjustSetting<ChromaticAberration>( profile, EnableChromaticAberration, ca =>
+			{
+				ca.fastMode.Override( FastChromaticAberration );
+			} );
+
+			AdjustSetting<MotionBlur>( profile, EnableMotionBlur );
+			AdjustSetting<DepthOfField>( profile, EnableDOF );
+		}
+
+		private static void AdjustSetting<T>( PostProcessProfile profile, bool enabled, Action<T> setup = null ) where T : PostProcessEffectSettings
+		{
+			if ( !profile.HasSettings<T>() )
+			{
+				return;
 			}
 
-			// Bloom
-			if ( profile.HasSettings<Bloom>() )
+			var setting = profile.GetSetting<T>();
+			setting.active = enabled;
+
+			// Do shit only if we're active
+			if ( setting.active )
 			{
-				var bloom = profile.GetSetting<Bloom>();
-				bloom.active = EnableBloom;
-
-				// Do shit only if we're active
-				if ( bloom.active )
-				{
-					bloom.fastMode.Override( FastBloom );
-				}
-			}
-
-			// Screen Space Reflections
-			if ( profile.HasSettings<ScreenSpaceReflections>() )
-			{
-				var ssr = profile.GetSetting<ScreenSpaceReflections>();
-				ssr.active = EnableSSR;
-
-				// Do shit only if we're active
-				if ( ssr.active )
-				{
-					ssr.preset.Override( QualitySSR );
-				}
-			}
-
-			// Motion Blur
-			if ( profile.HasSettings<MotionBlur>() )
-			{
-				var blur = profile.GetSetting<MotionBlur>();
-				blur.active = EnableMotionBlur;
-			}
-
-			// Depth of Field
-			if ( profile.HasSettings<DepthOfField>() )
-			{
-				var dof = profile.GetSetting<DepthOfField>();
-				dof.active = EnableDOF;
-			}
-
-			// Chromatic Aberration
-			if ( profile.HasSettings<ChromaticAberration>() )
-			{
-				var ca = profile.GetSetting<ChromaticAberration>();
-				ca.active = EnableChromaticAberration;
-
-				if ( ca.active )
-				{
-					ca.fastMode.Override( FastChromaticAberration );
-				}
+				setup?.Invoke( setting );
 			}
 		}
 	}

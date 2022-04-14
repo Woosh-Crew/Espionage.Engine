@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace Espionage.Engine
+﻿namespace Espionage.Engine
 {
 	/// <summary>
 	/// Actor is the gameplay pawn, where AI and Clients can Posses. AI will look
@@ -50,8 +48,11 @@ namespace Espionage.Engine
 		/// sure it spawns at a Spawn Point.
 		/// </summary>
 		/// <returns> Returns this Actor </returns>
+		[Function, Button]
 		public virtual Actor Respawn()
 		{
+			Debugging.Log.Info( "Respawning Actor" );
+
 			var health = Health;
 			health.Heal( health.Max - health.Current );
 
@@ -63,7 +64,7 @@ namespace Espionage.Engine
 			else
 			{
 				// Just move to random Spawn point
-				this.MoveTo( All.OfType<SpawnPoint>().Random() );
+				this.MoveTo( All.Random<SpawnPoint>() );
 			}
 
 			foreach ( var item in Components.GetAll<ICallbacks>() )
@@ -72,6 +73,12 @@ namespace Espionage.Engine
 			}
 
 			return this;
+		}
+
+		[Function, Button]
+		public void Kill()
+		{
+			Health.Damage( Health.Max );
 		}
 
 		/// <summary>
@@ -106,6 +113,8 @@ namespace Espionage.Engine
 		/// </summary>
 		protected virtual void OnKilled( IDamageable.Info info )
 		{
+			Debugging.Log.Info( "Actor got Killed" );
+
 			if ( Engine.Game.Gamemode != null )
 			{
 				// Tell the Gamemode, we want to respawn

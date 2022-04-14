@@ -42,6 +42,11 @@ namespace Espionage.Engine
 			return (Time.time - _time).Equals( other );
 		}
 
+		public override string ToString()
+		{
+			return $"since:{Time.time - _time}";
+		}
+
 		public override int GetHashCode()
 		{
 			return _time.GetHashCode();

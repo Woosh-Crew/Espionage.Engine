@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 namespace Espionage.Engine
 {
@@ -14,6 +15,11 @@ namespace Espionage.Engine
 			entity.Position = target.position;
 			entity.Rotation = target.rotation;
 			return entity;
+		}
+		
+		public static T Random<T>( this Entities database ) where T : Entity
+		{
+			return database.OfType<T>().Random();
 		}
 	}
 }
