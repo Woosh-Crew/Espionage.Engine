@@ -62,13 +62,8 @@ namespace Espionage.Engine
 			}
 			else
 			{
-				// Just Apply Spawn point
-				var spawn = All.OfType<SpawnPoint>().Random();
-				if ( spawn != null )
-				{
-					Position = spawn.Position;
-					Rotation = spawn.Rotation;
-				}
+				// Just move to random Spawn point
+				this.MoveTo( All.OfType<SpawnPoint>().Random() );
 			}
 
 			foreach ( var item in Components.GetAll<ICallbacks>() )
