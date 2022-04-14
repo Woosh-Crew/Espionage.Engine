@@ -83,10 +83,10 @@ namespace Espionage.Engine.Resources
 		{
 			if ( Instances.Count <= 0 )
 			{
+				var stopwatch = Debugging.Stopwatch( $"Loaded Model [{Files.Pathing.Name( Identifier )}]" );
 				Database.Add( this );
 				Source.Load( OnLoad );
-
-				Debugging.Log.Info( $"Loaded Model [{Files.Pathing.Name( Identifier )}]" );
+				stopwatch?.Dispose();
 			}
 
 			Instances.Push( new( this ) );

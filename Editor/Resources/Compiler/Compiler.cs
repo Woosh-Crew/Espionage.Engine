@@ -15,11 +15,11 @@ namespace Espionage.Engine.Editor.Resources
 		[MenuItem( "Assets/Compile Asset", priority = -500 )]
 		private static void Compile()
 		{
-			// Find Compiler, and Create it.	
-			var selection = Selection.activeObject;
-			var path = AssetDatabase.GetAssetPath( selection );
-
-			Compile( path, selection.GetType() );
+			foreach ( var selection in Selection.objects )
+			{
+				var path = AssetDatabase.GetAssetPath( selection );
+				Compile( path, selection.GetType() );
+			}
 		}
 
 		//

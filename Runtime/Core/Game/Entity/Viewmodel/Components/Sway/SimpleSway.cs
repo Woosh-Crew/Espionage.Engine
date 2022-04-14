@@ -4,8 +4,8 @@ namespace Espionage.Engine.Viewmodels
 {
 	public sealed class SimpleSway : Viewmodel.Modifier
 	{
-		private float Tilting { get; set; } = 1;
-		private Vector2 Scale { get; set; } = new( 10, 10 );
+		private float Tilting { get; set; } = 5;
+		private Vector2 Scale { get; set; } = new( 15, 15 );
 		private float Smoothing { get; set; } = 10;
 
 		// Sway

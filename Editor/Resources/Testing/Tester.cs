@@ -34,17 +34,28 @@ namespace Espionage.Engine.Editor.Resources
 				return false;
 			}
 
+			if ( Selection.objects.Length > 1 )
+			{
+				return false;
+			}
+
 			return Selection.activeObject != null && Exists( Selection.activeObject.GetType() );
 		}
 
 		[MenuItem( "Assets/Test Asset", priority = -500 )]
-		private static void Test( MenuCommand command )
+		private static void Test()
 		{
 			// Find Compiler, and Create it.	
 			var selection = Selection.activeObject;
 			var path = AssetDatabase.GetAssetPath( selection );
 
 			Test( path, selection.GetType() );
+		}
+		
+		[MenuItem("Assets/Compile and Test Asset", true )]
+		private static bool BothValidate()
+		{
+			return TestValidate() && Compiler.Exists( Selection.activeObject?.GetType() );
 		}
 
 		[MenuItem( "Assets/Compile and Test Asset", priority = -600 )]

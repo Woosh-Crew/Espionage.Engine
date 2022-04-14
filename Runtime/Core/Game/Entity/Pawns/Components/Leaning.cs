@@ -7,6 +7,9 @@ namespace Espionage.Engine
 	{
 		public float Distance { get; set; } = 0.25f;
 		public float Angle { get; set; } = 15;
+		
+		public Binding LeanLeft { get; set; }
+		public Binding LeanRight { get; set; }
 
 		// Logic
 
@@ -14,14 +17,17 @@ namespace Espionage.Engine
 
 		public void Simulate( Client cl )
 		{
+			LeanLeft ??= Controls.Scheme["Lean.Left"];
+			LeanRight ??= Controls.Scheme["Lean.Right"];
+			
 			// Left Lean
-			if ( Controls.Scheme["Lean.Left"].Pressed )
+			if ( LeanLeft.Pressed )
 			{
 				Lean( -1 );
 			}
 
 			// Right lean
-			if ( Controls.Scheme["Lean.Right"].Pressed )
+			if ( LeanRight.Pressed )
 			{
 				Lean( 1 );
 			}

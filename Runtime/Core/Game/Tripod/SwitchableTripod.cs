@@ -1,11 +1,11 @@
 ﻿using System.Linq;
-using UnityEngine;
 
 namespace Espionage.Engine.Tripods
 {
 	public class SwitchableTripod : Component<Pawn>, Pawn.ICallbacks, ISimulated
 	{
 		private Tripod[] Tripods { get; set; }
+		public Binding Binding { get; set; }
 
 		protected override void OnAttached( Pawn pawn )
 		{
@@ -21,7 +21,9 @@ namespace Espionage.Engine.Tripods
 
 		public void Simulate( Client cl )
 		{
-			if ( Controls.Scheme["Switch.Tripod"].Pressed )
+			Binding ??= Controls.Scheme["Switch.Tripod"];
+			
+			if ( Binding.Pressed )
 			{
 				_index++;
 				_index %= Tripods.Length;

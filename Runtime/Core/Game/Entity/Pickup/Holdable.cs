@@ -14,7 +14,7 @@ namespace Espionage.Engine
 				.Build<Bob>()
 				.Build<Guntuck>();
 
-			viewmodel.Visuals.Model = Model.Load( "v_mk23.umdl" );
+			viewmodel.Visuals.Model = Model.Load( Files.Pathing.All( "models://Viewmodels" ).Random() );
 			return viewmodel;
 		}
 	}
@@ -128,6 +128,8 @@ namespace Espionage.Engine
 
 			// Destroy Viewmodel
 			Destroy( Viewmodel.gameObject );
+			Viewmodel = null;
+			
 			Debugging.Log.Info( $"Holstered [{ClassInfo.Name}]" );
 		}
 	}
