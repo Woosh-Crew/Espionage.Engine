@@ -81,14 +81,14 @@ namespace Espionage.Engine.Tools.Editor
 			}
 
 			// Compile Default Assets
-			var errorPath = "Packages/com.wooshcrew.espionage.engine/Assets/Models/Bad/w_error.prefab";
-			var garryPath = "Packages/com.wooshcrew.espionage.engine/Assets/Models/Garry/w_garry.prefab";
+			const string errorPath = "Packages/com.wooshcrew.espionage.engine/Assets/Models/Bad/w_error.prefab";
+			const string garryPath = "Packages/com.wooshcrew.espionage.engine/Assets/Models/Garry/w_garry.prefab";
 
 			if ( !Files.Pathing.Exists( "models://w_garry.umdl" ) || !Files.Pathing.Exists( "models://w_error.umdl" ) )
 			{
 				Debugging.Log.Info( "Compiling Default Resources" );
-				ResourceCompiler.Compile( errorPath, typeof( GameObject ) );
-				ResourceCompiler.Compile( garryPath, typeof( GameObject ) );
+				Compiler.Compile( errorPath, typeof( GameObject ) );
+				Compiler.Compile( garryPath, typeof( GameObject ) );
 			}
 
 			var info = Engine.Game.ClassInfo;
@@ -158,12 +158,9 @@ namespace Espionage.Engine.Tools.Editor
 
 				var outputPath = $"{path}{library.Group}/";
 				Files.Pathing.Create( outputPath );
+				Files.Copy( $"assets://{library.Group}", outputPath );
 
-				foreach ( var file in Files.Pathing.All( $"assets://{library.Group}" ) )
-				{
-					Debugging.Log.Info( $"Moving [{Files.Pathing.Name( file )}] to [{outputPath}]" );
-					Files.Copy( file, outputPath );
-				}
+				Debugging.Log.Info( $"Moving [{library.Group}] to [{outputPath}]" );
 			}
 		}
 

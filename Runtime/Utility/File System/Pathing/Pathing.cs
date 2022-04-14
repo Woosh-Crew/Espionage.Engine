@@ -120,7 +120,6 @@ namespace Espionage.Engine.IO
 				return;
 			}
 
-			Debugging.Log.Info( $"Adding Key {key}" );
 			_paths.Add( key, new( path, overrideable ) );
 		}
 
@@ -191,15 +190,32 @@ namespace Espionage.Engine.IO
 			}
 
 			var splitPath = path.Split( "://" );
+			var virtualPath = splitPath[0];
 
-			if ( !_paths.ContainsKey( splitPath[0] ) )
+			if ( !_paths.ContainsKey( virtualPath ) )
 			{
-				throw new( $"Path {splitPath[0]} isn't present in the Keys. Make sure you have valid pathing." );
+				throw new( $"Path {virtualPath} isn't present in the Keys. Make sure you have valid pathing." );
 			}
 
-			splitPath[0] = Absolute( _paths[splitPath[0]].Path );
+			splitPath[0] = Absolute( _paths[virtualPath].Path );
 
 			var newPath = Path.GetFullPath( Path.Combine( splitPath[0], splitPath[1] ) );
+
+			// See if we can override it.
+			if ( !IsOverridable( virtualPath ) )
+			{
+				return directoryOnly ? Path.GetDirectoryName( newPath ) : newPath;
+			}
+
+			// Go through mods, see if we can replace it.
+			foreach ( var mod in Mod.Database )
+			{
+				if ( mod.Exists( newPath, out var potentialPath ) )
+				{
+					return directoryOnly ? Path.GetDirectoryName( potentialPath ) : potentialPath;
+				}
+			}
+
 			return directoryOnly ? Path.GetDirectoryName( newPath ) : newPath;
 		}
 
@@ -291,6 +307,16 @@ namespace Espionage.Engine.IO
 		{
 			path = Absolute( path );
 			return !Exists( path ) ? null : Directory.GetFiles( path );
+		}
+
+		/// <summary>
+		/// Gets all directories at the given path with the
+		/// following search option
+		/// </summary>
+		public IEnumerable<string> All( string path, SearchOption option )
+		{
+			path = Absolute( path );
+			return !Exists( path ) ? null : Directory.GetDirectories( path, "*", option );
 		}
 
 		/// <summary>

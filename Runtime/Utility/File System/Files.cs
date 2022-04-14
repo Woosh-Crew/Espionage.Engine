@@ -116,22 +116,39 @@ namespace Espionage.Engine
 
 
 		/// <summary>
-		/// Copies the source file to the target path
+		/// Copies the source file or directory to the target path
 		/// </summary>
-		public static void Copy( string file, string path, bool overwrite = true )
+		public static void Copy( string sourcePath, string targetPath, bool overwrite = true )
 		{
-			file = Pathing.Absolute( file );
-			path = Pathing.Absolute( path );
-
-			var fileInfo = new FileInfo( file );
-
-			if ( !File.Exists( file ) )
+			sourcePath = Pathing.Absolute( sourcePath );
+			targetPath = Pathing.Absolute( targetPath );
+			
+			// Is File
+			if ( Pathing.Meta( sourcePath ).IsFile )
 			{
-				throw new FileNotFoundException();
-			}
+				var fileInfo = new FileInfo( sourcePath );
 
-			Pathing.Create( path );
-			fileInfo.CopyTo( path + $"{Pathing.Name( file )}", overwrite );
+				if ( !File.Exists( sourcePath ) )
+				{
+					throw new FileNotFoundException();
+				}
+
+				Pathing.Create( targetPath );
+				fileInfo.CopyTo( targetPath + $"{Pathing.Name( sourcePath )}", overwrite );
+			}
+			// Is Directory
+			else
+			{
+				foreach ( var dirPath in Directory.GetDirectories( sourcePath, "*", SearchOption.AllDirectories ) )
+				{
+					Directory.CreateDirectory( dirPath.Replace( sourcePath, targetPath ) );
+				}
+
+				foreach ( var newPath in Directory.GetFiles( sourcePath, "*.*", SearchOption.AllDirectories ) )
+				{
+					File.Copy( newPath, newPath.Replace( sourcePath, targetPath ), true );
+				}
+			}
 		}
 
 		/// <summary>

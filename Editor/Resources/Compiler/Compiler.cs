@@ -4,7 +4,7 @@ using UnityEditor;
 
 namespace Espionage.Engine.Editor.Resources
 {
-	public static class ResourceCompiler
+	public static class Compiler
 	{
 		[MenuItem( "Assets/Compile Asset", true )]
 		private static bool CompileValidate()
@@ -22,7 +22,11 @@ namespace Espionage.Engine.Editor.Resources
 			Compile( path, selection.GetType() );
 		}
 
-		private static bool Exists( Type type )
+		//
+		// API
+		//
+		
+		public static bool Exists( Type type )
 		{
 			var interfaceType = typeof( ICompiler<> ).MakeGenericType( type );
 			var library = Library.Database.Find( interfaceType );

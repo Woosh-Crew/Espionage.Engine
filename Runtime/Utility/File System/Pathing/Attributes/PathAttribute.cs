@@ -8,7 +8,7 @@ namespace Espionage.Engine
 	{
 		public string ShortHand { get; }
 		public string Path { get; }
-		
+
 		public bool Overridable { get; set; }
 
 		public PathAttribute( string shortHand, string path )
@@ -19,7 +19,7 @@ namespace Espionage.Engine
 
 		public void OnAttached( Library item )
 		{
-			Files.Pathing.Add( ShortHand, Path );
+			Files.Pathing.Add( ShortHand, Path, Overridable );
 		}
 	}
 }

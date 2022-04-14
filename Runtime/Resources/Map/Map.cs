@@ -13,6 +13,7 @@ namespace Espionage.Engine.Resources
 	public sealed partial class Map : IResource, ILibrary, ILoadable
 	{
 		public static Map Current { get; internal set; }
+		public static string[] Extensions { get; } = Library.Database.GetAll<File>().Select( e => e.Components.Get<FileAttribute>()?.Extension ).ToArray();
 
 		/// <summary>
 		/// Trys to find the map by path. If it couldn't find the map in the database,
@@ -56,7 +57,6 @@ namespace Espionage.Engine.Resources
 		//
 
 		public string Identifier { get; }
-		public bool Persistant { get; set; }
 		public Components<Map> Components { get; }
 
 		private File Source { get; }

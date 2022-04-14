@@ -8,12 +8,6 @@ namespace Espionage.Engine.Editor.Resources
 	{
 		public static string Application { get; set; } = "compiled://<executable>";
 
-		public static void Open( string path, Type type )
-		{
-			// Open Window if there is more than one 
-			Grab( path, type );
-		}
-
 		//
 		// Editor Menu Items
 		//
@@ -50,7 +44,7 @@ namespace Espionage.Engine.Editor.Resources
 			var selection = Selection.activeObject;
 			var path = AssetDatabase.GetAssetPath( selection );
 
-			Grab( path, selection.GetType() );
+			Test( path, selection.GetType() );
 		}
 
 		[MenuItem( "Assets/Compile and Test Asset", priority = -600 )]
@@ -60,15 +54,15 @@ namespace Espionage.Engine.Editor.Resources
 			var selection = Selection.activeObject;
 			var path = AssetDatabase.GetAssetPath( selection );
 
-			ResourceCompiler.Compile( path, selection.GetType() );
-			Grab( path, selection.GetType() );
+			Compiler.Compile( path, selection.GetType() );
+			Test( path, selection.GetType() );
 		}
 
 		//
-		// Internal
+		// API
 		//
 
-		private static bool Exists( Type type )
+		public static bool Exists( Type type )
 		{
 			var interfaceType = typeof( ITester<> ).MakeGenericType( type );
 			var library = Library.Database.Find( interfaceType );
@@ -76,7 +70,7 @@ namespace Espionage.Engine.Editor.Resources
 			return library != null;
 		}
 
-		private static void Grab( string asset, Type type )
+		public static void Test( string asset, Type type )
 		{
 			var interfaceType = typeof( ITester<> ).MakeGenericType( type );
 			var library = Library.Database.Find( interfaceType );
