@@ -98,7 +98,6 @@ namespace Espionage.Engine
 
 		private static void Tick()
 		{
-			Write( "Hello" );
 		}
 
 		private static void Shutdown()
