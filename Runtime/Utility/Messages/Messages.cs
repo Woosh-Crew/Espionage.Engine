@@ -26,7 +26,18 @@ namespace Espionage.Engine
 			if ( Writer == null )
 			{
 				Threading.Create( "editor_ipc", new( Server ) { IsBackground = true } );
-				UnityEditor.EditorApplication.wantsToQuit += () => Game == null || Game.HasExited;
+				
+				UnityEditor.EditorApplication.quitting += () =>
+				{
+					if ( !Game.HasExited && Pipe.IsConnected )
+					{
+						Writer?.WriteLine( "+quit" );
+					}
+					
+					Writer?.Close();
+					Pipe?.Close();
+					Game?.Close();
+				};
 			}
 
 			Threading.Running["editor_ipc"].Enqueue( () => Write( data ) );

@@ -119,6 +119,12 @@ namespace Espionage.Engine
 		{
 			Log.Clear();
 		}
+		
+		[Terminal, Function( "quit" )]
+		private static void Quit()
+		{
+			Application.Quit();
+		}
 
 		// Debug
 
