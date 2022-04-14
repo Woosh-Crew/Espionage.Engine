@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Espionage.Engine.Components;
 
 namespace Espionage.Engine
@@ -29,8 +28,7 @@ namespace Espionage.Engine
 			Library lib = value.GetType();
 			Assert.IsNull( lib );
 
-			// Check if Library is Singleton & not a component.
-			if ( lib.Components.Has<SingletonAttribute>() && !lib.Info.HasInterface( typeof( IComponent ) ) )
+			if ( IsSingleton( lib ) )
 			{
 				if ( Singletons.ContainsKey( lib.Info ) )
 				{
@@ -54,7 +52,7 @@ namespace Espionage.Engine
 		public static void Unregister( ILibrary value )
 		{
 			// Check if Library is Singleton
-			if ( value.ClassInfo?.Components.Has<SingletonAttribute>() ?? false )
+			if ( IsSingleton( value.ClassInfo ) )
 			{
 				Singletons.Remove( value.GetType() );
 			}
@@ -68,7 +66,7 @@ namespace Espionage.Engine
 		/// </summary>
 		public static bool IsSingleton( Library lib )
 		{
-			return lib.Components.Has<SingletonAttribute>() && Singletons.ContainsKey( lib.Info );
+			return lib.Components.Has<SingletonAttribute>() && !lib.Info.HasInterface( typeof( IComponent ) );
 		}
 
 		/// <summary>
@@ -85,7 +83,7 @@ namespace Espionage.Engine
 
 			if ( library.Spawnable )
 			{
-				return IsSingleton( library ) ? Singletons[library.Info] : Construct( library );
+				return IsSingleton( library ) && Singletons.ContainsKey( library.Info ) ? Singletons[library.Info] : Construct( library );
 			}
 
 			Debugging.Log.Error( $"{library.Name} is not spawnable. Set Spawnable to true in classes meta." );
@@ -119,6 +117,8 @@ namespace Espionage.Engine
 		// Manager
 		//
 
+		private static Dictionary<Type, ILibrary> Singletons { get; } = new();
+
 		static Library()
 		{
 			Database = new();
@@ -134,11 +134,5 @@ namespace Espionage.Engine
 		{
 			return type.HasInterface( typeof( ILibrary ) ) || type.IsDefined( typeof( LibraryAttribute ), true );
 		}
-
-		//
-		// Singletons
-		//
-
-		private static Dictionary<Type, ILibrary> Singletons { get; } = new();
 	}
 }

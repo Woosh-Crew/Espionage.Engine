@@ -1,7 +1,4 @@
-﻿using Espionage.Engine.Components;
-using UnityEngine;
-
-namespace Espionage.Engine.Gamemodes
+﻿namespace Espionage.Engine.Gamemodes
 {
 	/// <summary>
 	/// A Gamemode is where your game-flow happens. It controls how a game
