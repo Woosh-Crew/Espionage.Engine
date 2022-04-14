@@ -24,12 +24,25 @@ namespace Espionage.Engine.Resources.Models
 			{
 				try
 				{
-					if ( !Directory.Exists( Path.GetFullPath( exportPath ) ) )
+					// Find relative folder
+					if ( Files.Pathing.InFolder( "Models", asset, "project://" ) )
 					{
-						Directory.CreateDirectory( Path.GetFullPath( exportPath ) );
+						var split = asset.Split( '/' );
+						for ( var i = split.Length - 1; i >= 0; i-- )
+						{
+							if ( split[i] != "Models" )
+							{
+								continue;
+							}
+
+							exportPath += string.Join( '/', split[(i + 1)..^1] );
+							break;
+						}
 					}
 
-					var extension = Library.Database.Get<UMDL>().Components.Get<FileAttribute>().Extension;
+					Files.Pathing.Create( exportPath );
+
+					var extension = ClassInfo.Components.Get<FileAttribute>().Extension;
 					var builds = new[] { new AssetBundleBuild() { assetNames = new[] { asset }, assetBundleName = $"{Files.Pathing.Name( asset, false )}.{extension}" } };
 
 					var bundle = BuildPipeline.BuildAssetBundles( exportPath, builds, BuildAssetBundleOptions.ChunkBasedCompression, BuildTarget.StandaloneWindows );
@@ -40,7 +53,7 @@ namespace Espionage.Engine.Resources.Models
 						return;
 					}
 
-					Files.Delete( $"assets://{ClassInfo.Group}", "manifest", "" );
+					Files.Delete( Files.Pathing.Absolute( exportPath ), "manifest", "" );
 				}
 				catch ( Exception e )
 				{
