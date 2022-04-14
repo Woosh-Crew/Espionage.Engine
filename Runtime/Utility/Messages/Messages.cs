@@ -20,20 +20,20 @@ namespace Espionage.Engine
 
 		#if UNITY_EDITOR
 
-		public static void Send( string data )
+		public static void Send( string data, string appPath = "compiled://<executable>" )
 		{
 			// Add to Buffer
 			if ( Writer == null )
 			{
-				Threading.Create( "editor_ipc", new( Server ) { IsBackground = true } );
-				
+				Threading.Create( "editor_ipc", new( () => Server( appPath ) ) { IsBackground = true } );
+
 				UnityEditor.EditorApplication.quitting += () =>
 				{
 					if ( !Game.HasExited && Pipe.IsConnected )
 					{
 						Writer?.WriteLine( "+quit" );
 					}
-					
+
 					Writer?.Close();
 					Pipe?.Close();
 					Game?.Close();
@@ -61,9 +61,9 @@ namespace Espionage.Engine
 		private static StreamWriter Writer { get; set; }
 		private static AnonymousPipeServerStream Pipe { get; set; }
 
-		private static void Server()
+		private static void Server( string applicationPath )
 		{
-			Game = new() { StartInfo = new( Files.Pathing.Absolute( "compiled://<executable>" ) ) { UseShellExecute = false } };
+			Game = new() { StartInfo = new( Files.Pathing.Absolute( applicationPath ) ) { UseShellExecute = false } };
 			Pipe = new( PipeDirection.Out, HandleInheritability.Inheritable );
 
 			Debugging.Log.Info( "[SERVER] Creating Pipe" );
@@ -107,9 +107,7 @@ namespace Espionage.Engine
 			Threading.Running["editor_ipc"].Close();
 		}
 
-		private static void Tick()
-		{
-		}
+		private static void Tick() { }
 
 		private static void Shutdown()
 		{

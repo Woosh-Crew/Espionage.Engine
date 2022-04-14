@@ -109,12 +109,18 @@ namespace Espionage.Engine.IO
 		/// </summary>
 		public void Add( string key, string path, bool overrideable = false )
 		{
+			if ( path.IsEmpty() )
+			{
+				Debugging.Log.Warning( $"Path [{path}] for key [{key}] was empty / null!" );
+			}
+
 			if ( _paths.ContainsKey( key ) )
 			{
 				Debugging.Log.Error( $"Pathing already contains shorthand {key}" );
 				return;
 			}
 
+			Debugging.Log.Info( $"Adding Key {key}" );
 			_paths.Add( key, new( path, overrideable ) );
 		}
 
@@ -185,6 +191,12 @@ namespace Espionage.Engine.IO
 			}
 
 			var splitPath = path.Split( "://" );
+
+			if ( !_paths.ContainsKey( splitPath[0] ) )
+			{
+				throw new( $"Path {splitPath[0]} isn't present in the Keys. Make sure you have valid pathing." );
+			}
+
 			splitPath[0] = Absolute( _paths[splitPath[0]].Path );
 
 			var newPath = Path.GetFullPath( Path.Combine( splitPath[0], splitPath[1] ) );

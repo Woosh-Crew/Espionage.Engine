@@ -1,7 +1,8 @@
 ﻿using System;
+using Espionage.Engine.Resources;
 using UnityEditor;
 
-namespace Espionage.Engine.Resources.Editor
+namespace Espionage.Engine.Editor.Resources
 {
 	public static class ResourceCompiler
 	{

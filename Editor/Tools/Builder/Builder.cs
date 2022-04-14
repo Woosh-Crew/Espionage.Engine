@@ -2,9 +2,9 @@
 
 using System.Diagnostics;
 using System.Text;
+using Espionage.Engine.Editor.Resources;
 using UnityEngine;
 using Espionage.Engine.Resources;
-using Espionage.Engine.Resources.Editor;
 using UnityEditor;
 
 namespace Espionage.Engine.Tools.Editor

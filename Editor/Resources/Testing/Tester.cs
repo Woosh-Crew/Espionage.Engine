@@ -1,11 +1,37 @@
 ﻿using System;
-using System.Diagnostics;
+using Espionage.Engine.Resources;
 using UnityEditor;
 
-namespace Espionage.Engine.Resources.Editor
+namespace Espionage.Engine.Editor.Resources
 {
-	public static class ResourceTester
+	public static class Tester
 	{
+		public static string Application { get; set; } = "compiled://<executable>";
+
+		public static void Open( string path, Type type )
+		{
+			// Open Window if there is more than one 
+			Grab( path, type );
+		}
+
+		//
+		// Editor Menu Items
+		//
+
+		[MenuItem( "Tools/Espionage.Engine/Testing Target/Exports" )]
+		private static void ToggleAction()
+		{
+			Application = "compiled://<executable>";
+		}
+
+		[MenuItem( "Tools/Espionage.Engine/Testing Target/Exports", true )]
+		private static bool ToggleActionValidate()
+		{
+			UnityEditor.Menu.SetChecked( "Tools/Espionage.Engine/Testing Target/Exports", Application == "compiled://<executable>" );
+			return true;
+		}
+
+
 		[MenuItem( "Assets/Test Asset", true )]
 		private static bool TestValidate()
 		{
@@ -18,7 +44,7 @@ namespace Espionage.Engine.Resources.Editor
 		}
 
 		[MenuItem( "Assets/Test Asset", priority = -500 )]
-		private static void Test()
+		private static void Test( MenuCommand command )
 		{
 			// Find Compiler, and Create it.	
 			var selection = Selection.activeObject;
@@ -38,6 +64,10 @@ namespace Espionage.Engine.Resources.Editor
 			Grab( path, selection.GetType() );
 		}
 
+		//
+		// Internal
+		//
+
 		private static bool Exists( Type type )
 		{
 			var interfaceType = typeof( ITester<> ).MakeGenericType( type );
@@ -48,8 +78,6 @@ namespace Espionage.Engine.Resources.Editor
 
 		private static void Grab( string asset, Type type )
 		{
-			// JAKE: This is so aids.... But can't do much about that.
-
 			var interfaceType = typeof( ITester<> ).MakeGenericType( type );
 			var library = Library.Database.Find( interfaceType );
 
@@ -64,7 +92,8 @@ namespace Espionage.Engine.Resources.Editor
 			try
 			{
 				var launchArgs = method?.Invoke( converter, new object[] { asset } );
-				Messages.Send( (string)launchArgs );
+				Messages.Send( (string)launchArgs, Application );
+				Debugging.Log.Info( Files.Pathing.Absolute( Application ) );
 			}
 			catch ( Exception e )
 			{
