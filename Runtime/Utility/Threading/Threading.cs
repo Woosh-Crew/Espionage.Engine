@@ -9,6 +9,7 @@ namespace Espionage.Engine
 	public class Threading : Service
 	{
 		public static Meta Main { get; private set; }
+		public static Thread Current => Thread.CurrentThread;
 		public static IDatabase<Meta, string> Running { get; } = new InternalDatabase();
 
 		public static Meta Create( string name, Thread thread )
@@ -77,7 +78,7 @@ namespace Espionage.Engine
 					return;
 				}
 
-				for ( var i = 0; i < Main.Queue.Count; i++ )
+				for ( var i = 0; i < Queue.Count; i++ )
 				{
 					Queue.Dequeue()?.Invoke();
 				}

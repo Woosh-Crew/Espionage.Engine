@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
+using System.Threading;
 using UnityEngine;
 
 namespace Espionage.Engine
@@ -13,22 +14,22 @@ namespace Espionage.Engine
 	/// </summary>
 	public static class Messages
 	{
+		//
 		// Editor [Server]
+		//
 
 		#if UNITY_EDITOR
 
-		public static void Send( string message )
+		public static void Send( string data )
 		{
+			// Add to Buffer
 			if ( Writer == null )
 			{
-				Threading.Create( "editor_ipc", new( () => Server( message ) ) { IsBackground = true } );
+				Threading.Create( "editor_ipc", new( Server ) { IsBackground = true } );
 				UnityEditor.EditorApplication.wantsToQuit += () => Game == null || Game.HasExited;
 			}
-			else
-			{
-				Debugging.Log.Info( "Pipe Already Exists, Sending message" );
-				Write( message );
-			}
+
+			Threading.Running["editor_ipc"].Enqueue( () => Write( data ) );
 		}
 
 		private static void Write( string message )
@@ -36,7 +37,7 @@ namespace Espionage.Engine
 			try
 			{
 				Writer.WriteLine( message );
-				Debugging.Log.Error( $"[SERVER] Writing: {message}" );
+				Debugging.Log.Info( $"[SERVER] Writing: {message}" );
 			}
 			catch ( IOException e )
 			{
@@ -45,14 +46,13 @@ namespace Espionage.Engine
 			}
 		}
 
-
 		private static Process Game { get; set; }
 		private static StreamWriter Writer { get; set; }
 		private static AnonymousPipeServerStream Pipe { get; set; }
 
-		private static void Server( string launchArgs )
+		private static void Server()
 		{
-			Game = new() { StartInfo = new( Files.Pathing.Absolute( "compiled://<executable>" ), launchArgs ) { UseShellExecute = false } };
+			Game = new() { StartInfo = new( Files.Pathing.Absolute( "compiled://<executable>" ) ) { UseShellExecute = false } };
 			Pipe = new( PipeDirection.Out, HandleInheritability.Inheritable );
 
 			Debugging.Log.Info( "[SERVER] Creating Pipe" );
@@ -73,6 +73,13 @@ namespace Espionage.Engine
 
 				Write( $"Connected to {Process.GetCurrentProcess().ProcessName}" );
 				Pipe.WaitForPipeDrain();
+
+				do
+				{
+					Threading.Running["editor_ipc"].Run();
+					Tick();
+					Thread.Sleep( TimeSpan.FromSeconds( 0.5f ) );
+				} while ( !Game.HasExited && Pipe.IsConnected );
 			}
 			catch ( IOException e )
 			{
@@ -89,6 +96,11 @@ namespace Espionage.Engine
 			Threading.Running["editor_ipc"].Close();
 		}
 
+		private static void Tick()
+		{
+			Write( "Hello" );
+		}
+
 		private static void Shutdown()
 		{
 			Writer?.Dispose();
@@ -102,7 +114,9 @@ namespace Espionage.Engine
 
 		#endif
 
+		//
 		// Game [Client]
+		//
 
 		internal static void Connect( string handle )
 		{
