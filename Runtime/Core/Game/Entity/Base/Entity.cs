@@ -22,6 +22,13 @@ namespace Espionage.Engine
 		{
 			// Create Hook to Unity
 			_gameObject = new( ClassInfo.Name );
+			_gameObject.AddComponent<Hook>().Owner = this;
+
+			if ( ClassInfo.Components.Has<PersistentAttribute>() )
+			{
+				GameObject.DontDestroyOnLoad( _gameObject );
+			}
+
 			Identifier = GameObject.GetInstanceID();
 			Tags = new();
 
@@ -49,13 +56,17 @@ namespace Espionage.Engine
 			Assert.IsInvalid( this );
 
 			Deleted = true;
-
 			All.Remove( this );
 
 			base.Delete();
 			OnDelete();
 
-			GameObject.Destroy( _gameObject );
+			Debugging.Log.Info( $"Deleting {ClassInfo.Name}" );
+
+			if ( _gameObject != null )
+			{
+				GameObject.Destroy( _gameObject );
+			}
 
 			Components.Clear();
 			Components = null;
@@ -121,19 +132,53 @@ namespace Espionage.Engine
 		}
 
 		//
+		// Overloads
+		//
+
+		public override int GetHashCode()
+		{
+			return Identifier;
+		}
+
+		public override bool Equals( object other )
+		{
+			var rhs = other as Entity;
+			return (!(rhs == null) || other is null or Entity) && Compare( this, rhs );
+		}
+
+		private static bool Compare( Entity left, Entity right )
+		{
+			var flag1 = (object)left == null;
+			var flag2 = (object)right == null;
+
+			if ( flag2 & flag1 )
+				return true;
+
+			if ( flag2 )
+				return !left.IsValid();
+
+			return flag1 ? !right.IsValid() : left.Identifier == right.Identifier;
+		}
+
+		public static bool operator ==( Entity a, Entity b )
+		{
+			return Compare( a, b );
+		}
+
+		public static bool operator !=( Entity a, Entity b )
+		{
+			return !Compare( a, b );
+		}
+
+		//
 		// Helpers
 		//
 
+		public static implicit operator bool( Entity exists ) => !Compare( exists, null );
+
 		public static implicit operator Transform( Entity entity )
 		{
-			if ( entity != null )
-			{
-				return entity.Transform;
-			}
-
-			Debugging.Log.Warning( "Entity was NULL" );
-			return null;
-
+			return entity != null ? entity.Transform : null;
 		}
 
 		public static implicit operator GameObject( Entity entity )
@@ -145,7 +190,6 @@ namespace Espionage.Engine
 
 			Debugging.Log.Warning( "Entity was NULL" );
 			return null;
-
 		}
 
 		public static implicit operator Entity( GameObject gameObject )
@@ -157,14 +201,25 @@ namespace Espionage.Engine
 
 			Debugging.Log.Warning( "GameObject was NULL" );
 			return null;
-
 		}
 
 		//
 		// Unity Hooks
 		//
 
+		private class Hook : MonoBehaviour
+		{
+			internal Entity Owner { get; set; }
+
+			private void OnDestroy()
+			{
+				Owner?.Delete();
+				Owner = null;
+			}
+		}
+
 		private readonly GameObject _gameObject;
+
 		public GameObject GameObject
 		{
 			get

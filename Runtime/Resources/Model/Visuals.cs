@@ -23,6 +23,7 @@ namespace Espionage.Engine.Resources
 		public override void OnDetached()
 		{
 			base.OnDetached();
+			Debugging.Log.Info( "Detaching Entity" );
 
 			Animator = null;
 			Renderers = null;

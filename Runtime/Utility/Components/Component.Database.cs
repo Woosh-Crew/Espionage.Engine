@@ -73,6 +73,8 @@ namespace Espionage.Engine.Components
 
 		public void Clear()
 		{
+			Debugging.Log.Info( "Clearing Components" );
+
 			for ( var i = 0; i < _storage.Count; i++ )
 			{
 				Remove( _storage[i] );

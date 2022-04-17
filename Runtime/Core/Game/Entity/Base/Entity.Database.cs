@@ -15,7 +15,7 @@ namespace Espionage.Engine
 	{
 		public int Count => _storage.Count;
 
-		private const int Max = 2048;
+		public const int Max = 2048;
 		private readonly SortedList<int, Entity> _storage = new( Max );
 
 		// Enumerator

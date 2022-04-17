@@ -57,8 +57,6 @@ namespace Espionage.Engine
 
 		public void Delete()
 		{
-			Library.Unregister( this );
-
 			if ( Entity == null || Entity.Components == null )
 			{
 				OnDetached();
@@ -67,7 +65,8 @@ namespace Espionage.Engine
 			{
 				Entity.Components?.Remove( this );
 			}
-
+			
+			Library.Unregister( this );
 		}
 
 		// Component

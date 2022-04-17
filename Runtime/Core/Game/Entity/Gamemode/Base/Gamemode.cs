@@ -38,6 +38,17 @@ namespace Espionage.Engine.Gamemodes
 		}
 
 		protected virtual void OnFinish() { }
+		
+		// Delete
+
+		protected override void OnDelete()
+		{
+			// Just in-case gamemode has a reference to this.
+			if ( Engine.Game.Gamemode == this )
+			{
+				Engine.Game.Gamemode = null;
+			}
+		}
 
 		// Map
 
