@@ -22,7 +22,7 @@ namespace Espionage.Engine.Viewmodels
 
 			var hit = Trace.Ray( start, direction, distance ).Ignore( "Viewmodel", "Pawn" ).Run( out var info );
 
-			_dampedOffset = _dampedOffset.LerpTo( -(hit ? info.Value.distance - distance : 0), Damping * Time.deltaTime );
+			_dampedOffset = _dampedOffset.LerpTo( -(hit ? info.Distance - distance : 0), Damping * Time.deltaTime );
 
 			Rotation *= Quaternion.AngleAxis( _dampedOffset * Roll, Vector3.forward );
 			Position += setup.Rotation * new Vector3( 0, -_dampedOffset / 1.7f, -_dampedOffset );

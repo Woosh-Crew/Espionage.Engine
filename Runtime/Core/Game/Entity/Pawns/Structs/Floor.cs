@@ -18,10 +18,10 @@ namespace Espionage.Engine
 				.Radius( 0.1f )
 				.Run( out var info );
 
-			return new( hit, info ?? default );
+			return new( hit, info );
 		}
 
-		private Floor( bool landed, RaycastHit hit )
+		private Floor( bool landed, Trace.Result hit )
 		{
 			IsGrounded = landed;
 			Hit = hit;
@@ -34,7 +34,7 @@ namespace Espionage.Engine
 			}
 
 			// Still null, see if theres a mono behaviour
-			if ( Surface == null && hit.collider.TryGetComponent<ISurface>( out var surface ) )
+			if ( Surface == null && hit.Collision.TryGetComponent<ISurface>( out var surface ) )
 			{
 				Surface = surface.Surface;
 			}
@@ -45,10 +45,10 @@ namespace Espionage.Engine
 			return $"Normal: {Normal}, Floored: {IsGrounded}";
 		}
 
-		public RaycastHit Hit { get; }
+		public Trace.Result Hit { get; }
 
 		public bool IsGrounded { get; }
-		public Vector3 Normal => Hit.normal;
+		public Vector3 Normal => Hit.Normal;
 
 		public Surface Surface { get; }
 

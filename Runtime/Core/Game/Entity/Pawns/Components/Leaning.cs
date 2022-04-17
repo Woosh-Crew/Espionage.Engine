@@ -87,7 +87,7 @@ namespace Espionage.Engine
 				.Radius( 0.2f )
 				.Run( out var tr );
 
-			return hit ? tr.Value.distance / girth : 1;
+			return hit ? tr.Distance / girth : 1;
 		}
 	}
 }
