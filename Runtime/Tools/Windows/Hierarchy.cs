@@ -10,7 +10,7 @@ namespace Espionage.Engine.Tools
 			{
 				foreach ( var entity in Entity.All )
 				{
-					var opened = ImGui.TreeNodeEx( entity.name, ImGuiTreeNodeFlags.OpenOnArrow );
+					var opened = ImGui.TreeNodeEx( entity.Name.IsEmpty( entity.ClassInfo.Name ), ImGuiTreeNodeFlags.OpenOnArrow );
 
 					if ( ImGui.IsItemClicked() )
 					{

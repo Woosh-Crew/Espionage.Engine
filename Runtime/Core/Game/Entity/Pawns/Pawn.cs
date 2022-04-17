@@ -12,9 +12,9 @@ namespace Espionage.Engine
 		public Vector3 Velocity { get; set; }
 		public float Offset { get; protected set; } = 0;
 
-		protected override void OnAwake()
+		public Pawn()
 		{
-			gameObject.layer = LayerMask.NameToLayer( "Pawn" );
+			Layer = LayerMask.NameToLayer( "Pawn" );
 		}
 
 		public virtual void Simulate( Client client )
@@ -110,7 +110,7 @@ namespace Espionage.Engine
 		/// </summary>
 		public bool IsClient => Client != null;
 
-		public bool IsLocalPawn => (Client != null ? Client.Pawn : null) == this;
+		public bool IsLocalPawn => Local.Client.Pawn == this;
 
 		/// <summary>
 		/// Component Callbacks Specific for this Entity.

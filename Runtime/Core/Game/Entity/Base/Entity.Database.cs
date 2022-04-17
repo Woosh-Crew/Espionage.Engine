@@ -16,13 +16,13 @@ namespace Espionage.Engine
 		public int Count => _storage.Count;
 
 		private const int Max = 2048;
-		private readonly List<Entity> _storage = new( Max );
+		private readonly SortedList<int, Entity> _storage = new( Max );
 
 		// Enumerator
 
 		public IEnumerator<Entity> GetEnumerator()
 		{
-			return _storage.GetEnumerator();
+			return _storage.Values.GetEnumerator();
 		}
 
 		IEnumerator IEnumerable.GetEnumerator()
@@ -34,18 +34,18 @@ namespace Espionage.Engine
 
 		internal void Add( Entity item )
 		{
-			_storage.Add( item );
+			_storage.Add( item.Identifier, item );
 		}
 
 		internal void Remove( Entity item )
 		{
-			_storage.Remove( item );
+			_storage.Remove( item.Identifier );
 		}
 
 		// API
 
 		public Entity this[ int key ] => _storage[key];
-		public Entity[] this[ string key ] => string.IsNullOrWhiteSpace( key ) ? null : _storage.Where( e => string.Equals( e.Identifier, key, StringComparison.CurrentCultureIgnoreCase ) ).ToArray();
+		public Entity[] this[ string key ] => string.IsNullOrWhiteSpace( key ) ? null : _storage.Values.Where( e => string.Equals( e.Name, key, StringComparison.CurrentCultureIgnoreCase ) ).ToArray();
 
 		public T Find<T>() where T : Entity
 		{

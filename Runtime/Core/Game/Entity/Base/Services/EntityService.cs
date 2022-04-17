@@ -4,9 +4,9 @@
 	{
 		public override void OnUpdate()
 		{
-			for ( var index = 0; index < Entity.All.Count; index++ )
+			foreach ( var entity in Entity.All )
 			{
-				Entity.All[index]?.Thinking.Run();
+				entity?.Thinking.Run();
 			}
 		}
 	}

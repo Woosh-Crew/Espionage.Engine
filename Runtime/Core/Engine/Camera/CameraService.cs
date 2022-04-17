@@ -12,9 +12,7 @@ namespace Espionage.Engine.Services
 		{
 			// Main Camera
 			_camController = Library.Database.Create<CameraController>();
-
 			Engine.Scene.Grab( _camController );
-			_camController.name = "[ Viewport ] Main Camera";
 
 			// Tell everyone we got cameras
 

@@ -79,7 +79,7 @@ namespace Espionage.Engine
 
 				if ( _pawn != null )
 				{
-					Input.ViewAngles = _pawn.transform.rotation.eulerAngles;
+					Input.ViewAngles = _pawn.Rotation.eulerAngles;
 
 					_pawn.Client = this;
 					_pawn.Posses( this );

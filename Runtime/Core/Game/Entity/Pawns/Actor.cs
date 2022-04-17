@@ -8,13 +8,10 @@
 	[Help( "Actor is designed to be a pawn used in gameplay, AI and Clients control this. AI will look for Actors instead of pawns is well." )]
 	public class Actor : Pawn
 	{
-		public Inventory Inventory => Components.Get<Inventory>();
 		public bool IsBot => Components.Get<AI.Brain>()?.Enabled ?? false;
 
-		protected override void OnAwake()
+		protected override void Spawn()
 		{
-			base.OnAwake();
-
 			Health.OnKilled += OnKilled;
 			Health.OnDamaged += OnDamaged;
 		}
@@ -23,17 +20,6 @@
 		{
 			Health.OnKilled -= OnKilled;
 			Health.OnDamaged -= OnDamaged;
-		}
-
-		public override void PostCameraSetup( ref Tripod.Setup setup )
-		{
-			var holdable = Inventory as IHasHoldable;
-			if ( holdable != null && holdable.Active != null )
-			{
-				holdable.Active.PostCameraSetup( ref setup );
-			}
-
-			base.PostCameraSetup( ref setup );
 		}
 
 		//

@@ -8,8 +8,6 @@ namespace Espionage.Engine.Editor
 	[CustomEditor( typeof( Entity ), true )]
 	internal class EntityEditor : BehaviourEditor, IHasCustomMenu
 	{
-		protected Entity Entity => target as Entity;
-
 		protected override void OnEnable()
 		{
 			base.OnEnable();

@@ -15,9 +15,7 @@
 		protected override void OnFinish()
 		{
 			base.OnFinish();
-			
-			// Because were persistent
-			Destroy( gameObject );
+			Delete();
 		}
 
 		public override void OnActorRespawned( Actor pawn )

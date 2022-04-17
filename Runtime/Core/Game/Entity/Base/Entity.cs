@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Espionage.Engine.Components;
 using Espionage.Engine.Resources;
 using UnityEngine;
@@ -10,111 +9,59 @@ namespace Espionage.Engine
 	/// An Entity is the Root of a MonoBehaviour tree. Entities can contain I/O logic,
 	/// be saved and restored, has a unique id for each, etc.
 	/// </summary>
-	[DisallowMultipleComponent, Group( "Entities" ), Constructor( nameof( Constructor ) ), Spawnable, SelectionBase]
-	public abstract class Entity : Behaviour, ISerializationCallbackReceiver
+	[Group( "Entities" ), Spawnable]
+	public abstract partial class Entity : Common, IValid
 	{
-		/// <summary> All the entities that exists in the game world. </summary>
-		public static Entities All { get; } = new();
+		public string Name { get; set; }
+		public int Identifier { get; }
 
-		/// <summary>
-		/// Constructs the Entity, based off the Library. (Used by the
-		/// [Constructor] Attribute in the Library system)
-		/// </summary>
-		internal static Entity Constructor( Library library )
-		{
-			var ent = (Entity)new GameObject( library.Name ).AddComponent( library.Info );
-
-			ent.IsFromMap = false;
-			ent.UniqueID = Guid.NewGuid();
-
-			return ent;
-		}
-
-		/// <summary> Create an Entity, from its type. </summary>
-		public static T Create<T>() where T : Entity, new()
-		{
-			return Library.Database.Create<T>();
-		}
-
-		/// <summary>
-		/// Create an Entity, from its Library, behind the scene's it'll
-		/// call a Library.Create using the fed in library. Plus because
-		/// its a library you can use the implicit operator for string
-		/// to library
-		/// </summary>
-		public static Entity Create( Library lib )
-		{
-			return Library.Create( lib ) as Entity;
-		}
-
-		// 
-		// Instance
-		//
-
-		/// <summary>
-		/// Used for grabbing entities by their Guid, such as when we
-		/// are trying to invoke an output, we will use its id, so multiple
-		/// can be triggered at the same time.
-		/// </summary>
-		public string Identifier
-		{
-			get => identifier;
-			set => identifier = value;
-		}
-
-		public Guid UniqueID { get; private set; }
-		public bool IsFromMap { get; private set; } = true;
-
-		/// <summary> The client that has authority over this Entity </summary>
 		public Client Client { get; internal set; }
 
-		internal sealed override void Awake()
+		public HashSet<string> Tags { get; }
+
+		public Entity()
 		{
-			ClassInfo ??= Library.Register( this );
-			All.Add( this );
+			// Create Hook to Unity
+			GameObject = new( ClassInfo.Name );
+			Identifier = GameObject.GetInstanceID();
+			Tags = new();
+
+			// Create Components architecture
 			Components = new( this );
 
-			if ( ClassInfo.Components.Has<PersistentAttribute>() )
-			{
-				DontDestroyOnLoad( gameObject );
-			}
+			// Add to Database
+			All.Add( this );
 
-			OnAwake();
+			Spawn();
 		}
 
-		internal override void Start()
-		{
-			// Cache Components that are MonoBehaviour
-			foreach ( var item in GetComponents<IComponent<Entity>>() )
-			{
-				Components.Add( item );
-			}
-		}
+		// Deletion
 
-		protected override void OnAwake() { }
+		bool IValid.IsValid => Deleted || GameObject == null;
+		protected bool Deleted { get; private set; }
 
-		protected sealed override void OnDestroy()
+		public sealed override void Delete()
 		{
+			Deleted = true;
+
 			All.Remove( this );
 
-			base.OnDestroy();
+			base.Delete();
+			OnDelete();
+
+			GameObject.Destroy( GameObject );
 
 			Components.Clear();
 			Components = null;
 		}
 
-		protected override void OnDelete() { }
+		protected virtual void OnDelete() { }
+
+		protected virtual void Spawn() { }
 
 		//
 		// Think
 		//
-
-		/// <summary>
-		/// Think gets called every tick, (which is in seconds). Use this for updating
-		/// state logic on the entity in a super performant way. Since its not being called
-		/// every frame, (AI, Particles, etc).
-		/// </summary>
-		public Thinker Thinking { get; } = new();
 
 		/// <summary>
 		/// Tick is the time it takes (in seconds), to call the active
@@ -125,6 +72,13 @@ namespace Espionage.Engine
 		{
 			set => Thinking.Tick = value;
 		}
+
+		/// <summary>
+		/// Think gets called every tick, (which is in seconds). Use this for updating
+		/// state logic on the entity in a super performant way. Since its not being called
+		/// every frame, (AI, Particles, etc).
+		/// </summary>
+		public Thinker Thinking { get; } = new();
 
 		//
 		// Components
@@ -159,14 +113,6 @@ namespace Espionage.Engine
 		}
 
 		//
-		// Save & Restore
-		//
-
-		public virtual void Save( Save saver ) { }
-
-		public virtual void Restore( Restore restore ) { }
-
-		//
 		// Helpers
 		//
 
@@ -174,22 +120,7 @@ namespace Espionage.Engine
 		{
 			if ( entity != null )
 			{
-				return entity.gameObject.transform;
-			}
-
-			Debugging.Log.Warning( "Entity was NULL" );
-			return null;
-
-		}
-
-		public static implicit operator Entity( Guid guid )
-		{
-			// Find an Entity with the same GUID
-			var entity = All.FirstOrDefault( e => e.UniqueID == guid );
-
-			if ( entity != null )
-			{
-				return entity;
+				return entity.Transform;
 			}
 
 			Debugging.Log.Warning( "Entity was NULL" );
@@ -201,7 +132,7 @@ namespace Espionage.Engine
 		{
 			if ( entity != null )
 			{
-				return entity.gameObject;
+				return entity.GameObject;
 			}
 
 			Debugging.Log.Warning( "Entity was NULL" );
@@ -209,15 +140,31 @@ namespace Espionage.Engine
 
 		}
 
+		//
+		// Unity Hooks
+		//
+
+		public GameObject GameObject { get; }
+
+		[Serialize, Group( "Transform" ), Order( -15 )]
+		public Transform Transform
+		{
+			get
+			{
+				Assert.IsInvalid( this );
+				return GameObject.transform;
+			}
+		}
+
 		/// <summary>
 		/// The Position of this Entity. (Feeds
 		/// the value to the transforms position)
 		/// </summary>
-		[Serialize, Group( "Transform" ), Order( -15 )]
+		[Serialize, Group( "Transform" )]
 		public Vector3 Position
 		{
-			get => transform.position;
-			set => transform.position = value;
+			get => Transform.position;
+			set => Transform.position = value;
 		}
 
 		/// <summary>
@@ -228,8 +175,8 @@ namespace Espionage.Engine
 		[Serialize, Group( "Transform" )]
 		public Quaternion Rotation
 		{
-			get => transform.rotation;
-			set => transform.rotation = value;
+			get => Transform.rotation;
+			set => Transform.rotation = value;
 		}
 
 		/// <summary>
@@ -240,8 +187,8 @@ namespace Espionage.Engine
 		[Serialize, Group( "Transform" )]
 		public Vector3 Scale
 		{
-			get => transform.lossyScale;
-			set => transform.localScale = value;
+			get => Transform.lossyScale;
+			set => Transform.localScale = value;
 		}
 
 		/// <summary>
@@ -253,29 +200,19 @@ namespace Espionage.Engine
 		public bool Enabled
 		{
 			// I hate Unity, this is so stupid
-			get => gameObject.activeInHierarchy;
-			set => gameObject.SetActive( value );
+			get => GameObject.activeInHierarchy;
+			set => GameObject.SetActive( value );
 		}
 
-		// Fields & Unity Serialization
-
-		public void OnBeforeSerialize()
+		/// <summary>
+		/// What layer is this Entity in?
+		/// Layers are used for rendering to cull
+		/// different "layers".
+		/// </summary>
+		public int Layer
 		{
-			if ( string.IsNullOrWhiteSpace( uniqueId ) )
-			{
-				uniqueId = Guid.NewGuid().ToString();
-			}
+			get => GameObject.layer;
+			set => GameObject.layer = value;
 		}
-
-		public void OnAfterDeserialize()
-		{
-			UniqueID = Guid.Parse( uniqueId );
-		}
-
-		[SerializeField]
-		private string identifier;
-
-		[SerializeField]
-		private string uniqueId;
 	}
 }

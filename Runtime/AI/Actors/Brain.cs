@@ -11,9 +11,9 @@ namespace Espionage.Engine.AI
 
 		protected override void OnAttached( Actor actor )
 		{
-			if ( !actor.TryGetComponent( out _agent ) )
+			if ( !actor.GameObject.TryGetComponent( out _agent ) )
 			{
-				_agent = actor.gameObject.AddComponent<NavMeshAgent>();
+				_agent = actor.GameObject.AddComponent<NavMeshAgent>();
 			}
 
 			Entity.Thinking.Add( Think, 0.2f );

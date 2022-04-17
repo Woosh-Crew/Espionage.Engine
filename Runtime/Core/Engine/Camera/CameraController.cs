@@ -5,15 +5,16 @@ using UnityEngine.Rendering;
 
 namespace Espionage.Engine.Internal
 {
-	[Group( "Engine" ), Singleton, RequireComponent( typeof( Camera ), typeof( AudioListener ) )]
+	[Group( "Engine" ), Singleton]
 	public class CameraController : Entity
 	{
 		internal Camera Camera { get; private set; }
 
-		protected override void OnAwake()
+		protected override void Spawn()
 		{
-			gameObject.tag = "MainCamera";
-			Camera = GetComponent<Camera>();
+			GameObject.tag = "MainCamera";
+			Camera = GameObject.AddComponent<Camera>(); 
+			GameObject.AddComponent<AudioListener>();
 			Camera.depth = 5;
 		}
 
@@ -21,7 +22,7 @@ namespace Espionage.Engine.Internal
 
 		internal void Finalise( in Tripod.Setup camSetup )
 		{
-			var trans = transform;
+			var trans = Transform;
 			trans.localPosition = camSetup.Position;
 			trans.localRotation = camSetup.Rotation;
 

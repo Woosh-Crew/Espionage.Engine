@@ -14,9 +14,9 @@ namespace Espionage.Engine
 
 		protected override void OnAttached( Pawn item )
 		{
-			if ( !item.TryGetComponent( out _characterController ) )
+			if ( !item.GameObject.TryGetComponent( out _characterController ) )
 			{
-				_characterController = item.gameObject.AddComponent<CharacterController>();
+				_characterController = item.GameObject.AddComponent<CharacterController>();
 
 				_characterController.skinWidth = 0.004f;
 				_characterController.radius = 0.4f;
