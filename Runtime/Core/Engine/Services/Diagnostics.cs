@@ -85,18 +85,19 @@ namespace Espionage.Engine.Services
 				{
 					Selection = null;
 
-					if ( hit.collider.TryGetComponent<Entity>( out var entity ) )
+					if ( hit.collider != null )
 					{
-						Selection = entity;
+						Selection = (Entity)hit.collider.gameObject;
 					}
 				}
 
 				if ( hit.collider != _lastCollider )
 				{
 					Hovering = null;
-					if ( hit.collider.TryGetComponent<Entity>( out var entity ) )
+
+					if ( hit.collider.gameObject != null )
 					{
-						Hovering = entity;
+						Hovering = hit.collider.gameObject;
 					}
 				}
 			}

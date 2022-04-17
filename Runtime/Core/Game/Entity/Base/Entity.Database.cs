@@ -44,7 +44,7 @@ namespace Espionage.Engine
 
 		// API
 
-		public Entity this[ int key ] => _storage[key];
+		public Entity this[ int key ] => _storage.ContainsKey( key ) ? _storage[key] : null;
 		public Entity[] this[ string key ] => string.IsNullOrWhiteSpace( key ) ? null : _storage.Values.Where( e => string.Equals( e.Name, key, StringComparison.CurrentCultureIgnoreCase ) ).ToArray();
 
 		public T Find<T>() where T : Entity

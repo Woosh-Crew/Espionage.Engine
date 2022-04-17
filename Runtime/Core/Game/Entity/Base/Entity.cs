@@ -16,7 +16,6 @@ namespace Espionage.Engine
 		public int Identifier { get; }
 
 		public Client Client { get; internal set; }
-
 		public HashSet<string> Tags { get; }
 
 		public Entity()
@@ -37,7 +36,7 @@ namespace Espionage.Engine
 
 		// Deletion
 
-		bool IValid.IsValid => Deleted || GameObject == null;
+		bool IValid.IsValid => !Deleted && GameObject != null;
 		protected bool Deleted { get; private set; }
 
 		public sealed override void Delete()
@@ -136,6 +135,18 @@ namespace Espionage.Engine
 			}
 
 			Debugging.Log.Warning( "Entity was NULL" );
+			return null;
+
+		}
+
+		public static implicit operator Entity( GameObject gameObject )
+		{
+			if ( gameObject != null )
+			{
+				return All[gameObject.GetInstanceID()];
+			}
+
+			Debugging.Log.Warning( "GameObject was NULL" );
 			return null;
 
 		}
