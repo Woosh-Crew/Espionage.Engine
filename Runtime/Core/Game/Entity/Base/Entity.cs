@@ -21,7 +21,7 @@ namespace Espionage.Engine
 		public Entity()
 		{
 			// Create Hook to Unity
-			GameObject = new( ClassInfo.Name );
+			_gameObject = new( ClassInfo.Name );
 			Identifier = GameObject.GetInstanceID();
 			Tags = new();
 
@@ -34,13 +34,20 @@ namespace Espionage.Engine
 			Spawn();
 		}
 
+		~Entity()
+		{
+			Debugging.Log.Info( $"Disposing Entity, {ClassInfo.Name}" );
+		}
+
 		// Deletion
 
-		bool IValid.IsValid => !Deleted && GameObject != null;
+		bool IValid.IsValid => !Deleted && _gameObject != null;
 		protected bool Deleted { get; private set; }
 
 		public sealed override void Delete()
 		{
+			Assert.IsInvalid( this );
+
 			Deleted = true;
 
 			All.Remove( this );
@@ -48,7 +55,7 @@ namespace Espionage.Engine
 			base.Delete();
 			OnDelete();
 
-			GameObject.Destroy( GameObject );
+			GameObject.Destroy( _gameObject );
 
 			Components.Clear();
 			Components = null;
@@ -102,6 +109,8 @@ namespace Espionage.Engine
 		/// </summary>
 		public T Get<T>() where T : class
 		{
+			Assert.IsInvalid( this );
+
 			if ( this is T )
 			{
 				// It works, dont complain
@@ -155,7 +164,15 @@ namespace Espionage.Engine
 		// Unity Hooks
 		//
 
-		public GameObject GameObject { get; }
+		private readonly GameObject _gameObject;
+		public GameObject GameObject
+		{
+			get
+			{
+				Assert.IsInvalid( this );
+				return _gameObject;
+			}
+		}
 
 		[Serialize, Group( "Transform" ), Order( -15 )]
 		public Transform Transform

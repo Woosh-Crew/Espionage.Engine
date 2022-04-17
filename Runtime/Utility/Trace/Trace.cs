@@ -32,8 +32,8 @@ namespace Espionage.Engine
 
 				Entity = hit.collider.gameObject;
 
-				GameObject = hit.collider.gameObject;
 				Collision = hit.collider;
+				GameObject = Collision.gameObject;
 			}
 
 			// Raw
