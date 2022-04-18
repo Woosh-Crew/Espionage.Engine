@@ -67,14 +67,12 @@ namespace Espionage.Engine.Components
 
 		public void Remove( IComponent<T> item )
 		{
-			_storage.Remove( item );
+			_storage.Remove( item ); 
 			item.OnDetached();
 		}
 
 		public void Clear()
 		{
-			Debugging.Log.Info( "Clearing Components" );
-
 			for ( var i = 0; i < _storage.Count; i++ )
 			{
 				Remove( _storage[i] );

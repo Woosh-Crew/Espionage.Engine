@@ -1,4 +1,6 @@
-﻿namespace Espionage.Engine.Services
+﻿using UnityEngine;
+
+namespace Espionage.Engine.Services
 {
 	internal class EntityService : Service
 	{
@@ -6,7 +8,24 @@
 		{
 			foreach ( var entity in Entity.All )
 			{
-				entity?.Thinking.Run();
+				(entity ? entity : null)?.Thinking.Run();
+			}
+		}
+
+		// Spawn Entities
+
+		[Function, Callback( "map.loaded" )]
+		public void OnMapLoaded()
+		{
+			foreach ( var proxy in GameObject.FindObjectsOfType<Proxy>() )
+			{
+				var ent = proxy.Create();
+				if ( ent == null )
+				{
+					continue;
+				}
+
+				ent.Spawn();
 			}
 		}
 	}

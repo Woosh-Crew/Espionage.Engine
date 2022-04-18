@@ -16,8 +16,38 @@ namespace Espionage.Engine
 	{
 		private readonly SortedList<int, Library> _storage = new();
 
-		public Library this[ int hash ] => _storage[hash];
-		public Library this[ string key ] => _storage[key.Hash()];
+		public Library this[ int hash ]
+		{
+			get
+			{
+				try
+				{
+					return _storage[hash];
+				}
+				catch ( KeyNotFoundException )
+				{
+					Debugging.Log.Error( $"ClassName ID [{hash}], was not found in Library Database" );
+					return null;
+				}
+			}
+		}
+
+		public Library this[ string key ]
+		{
+			get
+			{
+				try
+				{
+					return _storage[key.Hash()];
+				}
+				catch ( KeyNotFoundException )
+				{
+					Debugging.Log.Error( $"ClassName {key}, was not found in Library Database" );
+					return null;
+				}
+			}
+		}
+
 		public Library this[ Type key ] => _storage.Values.FirstOrDefault( e => e.Info == key );
 
 		// API

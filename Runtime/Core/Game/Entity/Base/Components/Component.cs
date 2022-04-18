@@ -23,8 +23,8 @@ namespace Espionage.Engine
 
 		public sealed override void OnDetached()
 		{
-			base.OnDetached();
 			OnDetached( Entity );
+			base.OnDetached();
 		}
 
 		/// <summary> <inheritdoc cref="OnDetached"/> </summary>

@@ -9,36 +9,69 @@ namespace Espionage.Engine
 	/// An Entity is the Root of a MonoBehaviour tree. Entities can contain I/O logic,
 	/// be saved and restored, has a unique id for each, etc.
 	/// </summary>
-	[Group( "Entities" ), Spawnable]
-	public abstract partial class Entity : Common, IValid
+	[Group( "Entities" ), Constructor( nameof( Constructor ) ), Spawnable]
+	public abstract partial class Entity : ScriptableObject, IValid, ILibrary
 	{
 		public string Name { get; set; }
-		public int Identifier { get; }
+		public int Identifier { get; private set; }
+		public Library ClassInfo { get; private set; }
 
 		public Client Client { get; internal set; }
-		public HashSet<string> Tags { get; }
+		public HashSet<string> Tags { get; } = new();
 
-		public Entity()
+		private void Awake()
 		{
+			ClassInfo = Library.Register( this );
+
+			if ( ClassInfo == null )
+			{
+				// Something went wrong...
+				Delete();
+				return;
+			}
+
 			// Create Hook to Unity
 			_gameObject = new( ClassInfo.Name );
 			_gameObject.AddComponent<Hook>().Owner = this;
 
 			if ( ClassInfo.Components.Has<PersistentAttribute>() )
 			{
-				GameObject.DontDestroyOnLoad( _gameObject );
+				DontDestroyOnLoad( this );
+				DontDestroyOnLoad( _gameObject );
 			}
 
 			Identifier = GameObject.GetInstanceID();
-			Tags = new();
 
 			// Create Components architecture
 			Components = new( this );
 
 			// Add to Database
 			All.Add( this );
+		}
 
-			Spawn();
+		private void OnDestroy()
+		{
+			Deleted = true;
+
+			if ( ClassInfo == null )
+			{
+				// Nothing was initialized
+				Debugging.Log.Error( "ClassInfo was null, when trying to destroy an entity." );
+				return;
+			}
+
+			All.Remove( this );
+
+			Library.Unregister( this );
+			OnDelete();
+
+			if ( _gameObject != null )
+			{
+				Destroy( _gameObject );
+			}
+
+			Components.Clear();
+			Components = null;
 		}
 
 		~Entity()
@@ -49,32 +82,22 @@ namespace Espionage.Engine
 		// Deletion
 
 		bool IValid.IsValid => !Deleted && _gameObject != null;
-		protected bool Deleted { get; private set; }
 
-		public sealed override void Delete()
+		protected bool Deleted
 		{
-			Assert.IsInvalid( this );
+			get;
+			private set;
+		}
 
-			Deleted = true;
-			All.Remove( this );
-
-			base.Delete();
-			OnDelete();
-
-			Debugging.Log.Info( $"Deleting {ClassInfo.Name}" );
-
-			if ( _gameObject != null )
-			{
-				GameObject.Destroy( _gameObject );
-			}
-
-			Components.Clear();
-			Components = null;
+		public void Delete()
+		{
+			Destroy( this );
 		}
 
 		protected virtual void OnDelete() { }
 
-		protected virtual void Spawn() { }
+		// Either gets called on map spawn, or by the constructor
+		public virtual void Spawn() { }
 
 		//
 		// Think
@@ -95,7 +118,10 @@ namespace Espionage.Engine
 		/// state logic on the entity in a super performant way. Since its not being called
 		/// every frame, (AI, Particles, etc).
 		/// </summary>
-		public Thinker Thinking { get; } = new();
+		public Thinker Thinking
+		{
+			get;
+		} = new();
 
 		//
 		// Components
@@ -105,13 +131,24 @@ namespace Espionage.Engine
 		/// The Visuals for this Entity which is the Model, Animator, etc.
 		/// (This will just Get or Create the Visuals Component)
 		/// </summary>
-		public Visuals Visuals => Components.GetOrCreate<Visuals>();
+		public Visuals Visuals
+		{
+			get
+			{
+				Assert.IsInvalid( this );
+				return Components.GetOrCreate<Visuals>();
+			}
+		}
 
 		/// <summary>
 		/// Components that are currently attached to this Entity. Use Components for
 		/// injecting logic into an Entity (Dependency Injection)
 		/// </summary>
-		public Components<Entity> Components { get; private set; }
+		public Components<Entity> Components
+		{
+			get;
+			private set;
+		}
 
 		/// <summary>
 		/// This is used for interfaces. Checks if the entity is T, if not checks the components
@@ -132,49 +169,8 @@ namespace Espionage.Engine
 		}
 
 		//
-		// Overloads
-		//
-
-		public override int GetHashCode()
-		{
-			return Identifier;
-		}
-
-		public override bool Equals( object other )
-		{
-			var rhs = other as Entity;
-			return (!(rhs == null) || other is null or Entity) && Compare( this, rhs );
-		}
-
-		private static bool Compare( Entity left, Entity right )
-		{
-			var flag1 = (object)left == null;
-			var flag2 = (object)right == null;
-
-			if ( flag2 & flag1 )
-				return true;
-
-			if ( flag2 )
-				return !left.IsValid();
-
-			return flag1 ? !right.IsValid() : left.Identifier == right.Identifier;
-		}
-
-		public static bool operator ==( Entity a, Entity b )
-		{
-			return Compare( a, b );
-		}
-
-		public static bool operator !=( Entity a, Entity b )
-		{
-			return !Compare( a, b );
-		}
-
-		//
 		// Helpers
 		//
-
-		public static implicit operator bool( Entity exists ) => !Compare( exists, null );
 
 		public static implicit operator Transform( Entity entity )
 		{
@@ -207,18 +203,7 @@ namespace Espionage.Engine
 		// Unity Hooks
 		//
 
-		private class Hook : MonoBehaviour
-		{
-			internal Entity Owner { get; set; }
-
-			private void OnDestroy()
-			{
-				Owner?.Delete();
-				Owner = null;
-			}
-		}
-
-		private readonly GameObject _gameObject;
+		private GameObject _gameObject;
 
 		public GameObject GameObject
 		{
@@ -245,6 +230,7 @@ namespace Espionage.Engine
 		/// </summary>
 		[Serialize, Group( "Transform" )]
 		public Vector3 Position
+
 		{
 			get => Transform.position;
 			set => Transform.position = value;
@@ -257,6 +243,7 @@ namespace Espionage.Engine
 		/// </summary>
 		[Serialize, Group( "Transform" )]
 		public Quaternion Rotation
+
 		{
 			get => Transform.rotation;
 			set => Transform.rotation = value;
@@ -269,6 +256,7 @@ namespace Espionage.Engine
 		/// </summary>
 		[Serialize, Group( "Transform" )]
 		public Vector3 Scale
+
 		{
 			get => Transform.lossyScale;
 			set => Transform.localScale = value;
@@ -281,6 +269,7 @@ namespace Espionage.Engine
 		/// </summary>
 		[Serialize]
 		public bool Enabled
+
 		{
 			// I hate Unity, this is so stupid
 			get => GameObject.activeInHierarchy;
@@ -297,5 +286,19 @@ namespace Espionage.Engine
 			get => GameObject.layer;
 			set => GameObject.layer = value;
 		}
+
+		//
+		// Callbacks
+		//
+
+		// Collision
+		protected virtual void OnCollisionEnter( Collision collision ) { }
+		protected virtual void OnCollisionExit( Collision other ) { }
+		protected virtual void OnCollisionStay( Collision collisionInfo ) { }
+		
+		// Trigger
+		protected virtual void OnTriggerEnter( Collider other ) { }
+		protected virtual void OnTriggerExit( Collider other ) { }
+		protected virtual void OnTriggerStay( Collider other ) { }
 	}
 }

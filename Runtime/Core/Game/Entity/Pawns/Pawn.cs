@@ -12,7 +12,7 @@ namespace Espionage.Engine
 		public Vector3 Velocity { get; set; }
 		public float Offset { get; protected set; } = 0;
 
-		public Pawn()
+		public override void Spawn()
 		{
 			Layer = LayerMask.NameToLayer( "Pawn" );
 		}

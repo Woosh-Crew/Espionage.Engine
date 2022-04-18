@@ -33,7 +33,7 @@ namespace Espionage.Engine
 
 		// Instance
 
-		protected override void Spawn()
+		public override void Spawn()
 		{
 			Visuals.Changed += OnModelChanged;
 			Enabled = Showing;	

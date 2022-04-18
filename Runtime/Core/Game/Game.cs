@@ -27,11 +27,11 @@ namespace Espionage.Engine
 
 		/// <summary> Called when Espionage.Engine and Unity are ready. </summary>
 		public abstract void OnReady();
-		
+
 		/// <summary> Called locally for setting up input. </summary>
 		/// <param name="scheme"> Scheme comes with default values. </param>
 		protected abstract void OnSetup( ref Scheme scheme );
-		
+
 		/// <summary> Called when the application gets shutdown. </summary>
 		public abstract void OnShutdown();
 
@@ -39,17 +39,14 @@ namespace Espionage.Engine
 
 		public virtual void Simulate( Client cl )
 		{
-			// Temp simulator.
-			if ( cl.Pawn != null )
-			{
-				cl.Pawn.Simulate( cl );
-			}
+			// Temp Simulator
+			(cl.Pawn ? cl.Pawn : null)?.Simulate( cl );
 		}
 
 		// Gamemode
 
 		private Gamemode _gamemode;
-		
+
 		public Gamemode Gamemode
 		{
 			get => _gamemode;
@@ -62,22 +59,14 @@ namespace Espionage.Engine
 				}
 
 				// Finish and do Cleanup
-				if ( _gamemode != null )
-				{
-					_gamemode.Finish();
-				}
-
+				(_gamemode ? _gamemode : null)?.Finish();
 				_gamemode = value;
-
-				if ( _gamemode != null )
-				{
-					_gamemode.Begin();
-				}
+				(_gamemode ? _gamemode : null)?.Begin();
 
 				Callback.Run( "gamemodes.switched" );
 			}
 		}
-		
+
 		// Build Tripod
 
 		protected ITripod LastTripod { get; set; }

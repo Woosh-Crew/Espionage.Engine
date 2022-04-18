@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Espionage.Engine.Resources
 {
-	[Singleton]
+	// [Singleton]
 	public class Visuals : Component
 	{
 		private Transform _root;
@@ -50,7 +50,7 @@ namespace Espionage.Engine.Resources
 
 		public Model Model
 		{
-			get => _model.Model;
+			get => _model?.Model;
 			set
 			{
 				if ( _model?.Model == value )

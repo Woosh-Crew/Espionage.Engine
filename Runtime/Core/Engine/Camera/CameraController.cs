@@ -10,7 +10,7 @@ namespace Espionage.Engine.Internal
 	{
 		internal Camera Camera { get; private set; }
 
-		protected override void Spawn()
+		public override void Spawn()
 		{
 			GameObject.tag = "MainCamera";
 			Camera = GameObject.AddComponent<Camera>(); 
