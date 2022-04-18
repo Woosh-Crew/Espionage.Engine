@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using Espionage.Engine.Internal;
 using UnityEditor;
+using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
 namespace Espionage.Engine.Editor
@@ -8,8 +10,12 @@ namespace Espionage.Engine.Editor
 	[CustomEditor( typeof( Proxy ), true )]
 	public class ProxyEditor : BehaviourEditor
 	{
+		private static LibraryList Dropdown { get; set; }
+
 		protected override void OnEnable()
 		{
+			Dropdown = new( serializedObject.FindProperty( "className" ) );
+
 			ClassInfo = Library.Database[target.GetType()];
 			EditorInjection.Titles[target.GetType()] = $"{ClassInfo.Title}";
 
@@ -23,101 +29,63 @@ namespace Espionage.Engine.Editor
 		public override void OnInspectorGUI()
 		{
 			serializedObject.Update();
-			EngineGUI.Header( null, serializedObject.FindProperty( "name" ), serializedObject.FindProperty( "className" ), serializedObject.FindProperty( "disabled" ) );
+
+			EngineGUI.Header( Dropdown, null, serializedObject.FindProperty( "name" ), serializedObject.FindProperty( "className" ), serializedObject.FindProperty( "disabled" ) );
+
+			// Draw Property Sheet
+
 			serializedObject.ApplyModifiedProperties();
-
-			return;
-
-			var originalRect = EditorGUILayout.GetControlRect( true, 24, GUIStyle.none );
-			var rect = originalRect;
-			rect.width = Screen.width;
-			rect.y = 0;
-			rect.x = 0;
-
-			// Box
-			EditorGUI.DrawRect( rect, new Color32( 45, 45, 45, 255 ) );
-
-			// Label
-			rect.x = 16;
-			rect.width -= 16;
-
-			var labelRect = rect;
-			labelRect.x += 28;
-			labelRect.width = Styles.Text.CalcSize( new( "None" ) ).x;
-
-			GUI.Label( labelRect, $"None", Styles.Text );
-
-			var dropdownRect = rect;
-			dropdownRect.x = labelRect.x + labelRect.width + 8;
-			if ( GUI.Button( dropdownRect, "Class", EditorStyles.foldoutPreDrop ) ) { }
-
-			var iconRect = rect;
-			iconRect.height -= 4;
-			iconRect.y += 2;
-			GUI.Label( iconRect, EditorGUIUtility.ObjectContent( null, typeof( Light ) ).image );
-
-			// Help
-			if ( ClassInfo.Components.TryGet<HelpAttribute>( out var help ) && !string.IsNullOrEmpty( help.URL ) )
-			{
-				var helpRect = originalRect;
-
-				helpRect.y = 0;
-				helpRect.x = Screen.width - 48 - 16;
-				helpRect.width = 48;
-
-				if ( GUI.Button( helpRect, "Help", Styles.Button ) )
-				{
-					Application.OpenURL( help.URL );
-				}
-			}
-
-			// Underline
-
-			rect.height = 1;
-			rect.width += 16;
-			rect.y -= 1;
-			rect.x = 0;
-			var color = new Color32( 26, 26, 26, 255 );
-
-			// Top
-			EditorGUI.DrawRect( rect, color );
-
-			// Bottom
-			rect.y += originalRect.height + 1;
-			EditorGUI.DrawRect( rect, color );
-
-			if ( ClassInfo.Components.Get<EditableAttribute>()?.Editable ?? true )
-			{
-				DrawPropertiesExcluding( serializedObject, "m_Script", "className" );
-				serializedObject.ApplyModifiedProperties();
-
-				if ( !string.IsNullOrEmpty( ClassInfo.Help ) )
-				{
-					EditorGUILayout.HelpBox( ClassInfo.Help, MessageType.None );
-				}
-			}
-			else
-			{
-				GUILayout.Label( "Not Editable", EditorStyles.miniBoldLabel );
-			}
 		}
 
-		private static class Styles
+		private void OnSceneGUI()
 		{
-			public static readonly GUIStyle Text = new( EditorStyles.largeLabel )
-			{
-				fontStyle = FontStyle.Bold,
-				alignment = TextAnchor.MiddleLeft,
-				richText = true
-			};
+			var proxy = (target as Proxy);
+			Handles.Label( proxy.transform.position, proxy.className );
+		}
 
-			public static readonly GUIStyle Button = new( EditorStyles.toolbarButton )
+		public class LibraryList : AdvancedDropdown
+		{
+			public SerializedProperty Owner { get; }
+
+			public LibraryList( SerializedProperty property ) : base( new() )
 			{
-				alignment = TextAnchor.MiddleCenter,
-				richText = true,
-				stretchHeight = true,
-				fixedHeight = 0
-			};
+				minimumSize = new Vector2( 0, 200 );
+				Owner = property;
+			}
+
+			protected override void ItemSelected( AdvancedDropdownItem item )
+			{
+				if ( !item.enabled )
+				{
+					return;
+				}
+
+				Owner.stringValue = Library.Database[item.id].Name;
+				Owner.serializedObject.ApplyModifiedProperties();
+			}
+
+			protected override AdvancedDropdownItem BuildRoot()
+			{
+				var root = new AdvancedDropdownItem( "Classes" );
+
+				var collection = Library.Database
+					.Where( e => e.Info.IsSubclassOf( typeof( Entity ) ) && !e.Info.IsAbstract )
+					.OrderBy( e => e.Components.Get<OrderAttribute>()?.Order ?? 5 )
+					.GroupBy( e => e.Group );
+
+				foreach ( var item in collection )
+				{
+					var grouping = new AdvancedDropdownItem( item.Key );
+					foreach ( var library in item )
+					{
+						grouping.AddChild( new( $"{library.Name}" ) { id = library.Id } );
+					}
+
+					root.AddChild( grouping );
+				}
+
+				return root;
+			}
 		}
 	}
 }

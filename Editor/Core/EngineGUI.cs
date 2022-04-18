@@ -1,35 +1,14 @@
-﻿using Espionage.Engine.Editor;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
+using UnityEditor.IMGUI.Controls;
 
-namespace Espionage.Engine
+namespace Espionage.Engine.Editor
 {
-	/// <summary>Editor Only Class</summary>
 	public class EngineGUI
 	{
 		public static void Line()
 		{
 			EditorGUILayout.LabelField( "", GUI.skin.horizontalSlider );
-		}
-
-		public static bool ComponentFoldout( Object obj, ref bool state, string name = null )
-		{
-			var content = EditorGUIUtility.ObjectContent( obj, obj.GetType() );
-			var foldoutTitle = name == null ? obj.GetType().Name : name;
-
-			return Foldout( new( $" {foldoutTitle}", content.image, content.tooltip ), ref state );
-		}
-
-		public static void ComponentInspector( UnityEditor.Editor obj, ref bool state, string name = null, System.Action AdditionalGUI = null )
-		{
-			if ( !ComponentFoldout( obj.serializedObject.targetObject, ref state, name ) ) { return; }
-
-			GUILayout.BeginVertical( Styles.EntityInspectorPadding );
-			{
-				obj.OnInspectorGUI();
-				AdditionalGUI?.Invoke();
-			}
-			GUILayout.EndVertical();
 		}
 
 		public static bool Foldout( GUIContent header, ref bool state, float height = 26 )
@@ -58,7 +37,7 @@ namespace Espionage.Engine
 			return state;
 		}
 
-		public static void Header( Texture icon, SerializedProperty name, SerializedProperty className, SerializedProperty disabled )
+		public static void Header( AdvancedDropdown dropdown, Texture icon, SerializedProperty name, SerializedProperty className, SerializedProperty disabled )
 		{
 			GUILayout.BeginHorizontal( "", Styles.EntityInspectorHeader, GUILayout.MaxHeight( 64 ), GUILayout.Height( 64 ), GUILayout.ExpandWidth( true ) );
 			{
@@ -92,8 +71,7 @@ namespace Espionage.Engine
 						var rect = GUILayoutUtility.GetRect( new( className.stringValue ), EditorStyles.popup );
 						if ( GUI.Button( rect, new GUIContent( className.stringValue ), EditorStyles.popup ) )
 						{
-							// var dropdown = new Entities.EntitiesList( new UnityEditor.IMGUI.Controls.AdvancedDropdownState() );
-							// dropdown.Show( rect );
+							dropdown.Show( rect );
 						}
 
 						GUILayout.BeginHorizontal( GUILayout.Width( 64 ) );
