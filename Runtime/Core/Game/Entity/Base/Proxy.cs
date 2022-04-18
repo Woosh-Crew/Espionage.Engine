@@ -2,6 +2,7 @@
 
 namespace Espionage.Engine
 {
+	[SelectionBase]
 	public class Proxy : Behaviour
 	{
 		public Entity Create()
@@ -19,9 +20,12 @@ namespace Espionage.Engine
 		// Fields
 
 		[SerializeField]
-		private new string name;
+		internal bool disabled;
+		
+		[SerializeField]
+		internal new string name;
 
 		[SerializeField]
-		private string className;
+		internal  string className;
 	}
 }

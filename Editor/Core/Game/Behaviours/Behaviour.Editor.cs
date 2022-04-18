@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Espionage.Engine.Editor
 {
 	[CustomEditor( typeof( Behaviour ), true )]
-	internal class BehaviourEditor : UnityEditor.Editor
+	public class BehaviourEditor : UnityEditor.Editor
 	{
 		public Library ClassInfo { get; set; }
 

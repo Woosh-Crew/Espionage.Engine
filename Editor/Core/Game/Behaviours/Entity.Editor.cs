@@ -5,34 +5,12 @@ using UnityEngine;
 
 namespace Espionage.Engine.Editor
 {
-	[CustomEditor( typeof( Entity ), true )]
-	internal class EntityEditor : BehaviourEditor, IHasCustomMenu
+	[CustomEditor( typeof( Proxy ), true )]
+	public class ProxyEditor : BehaviourEditor
 	{
 		protected override void OnEnable()
 		{
-			base.OnEnable();
-
-			// Check if we're a Singleton, if we are, delete this instance if it already exists
-			if ( ClassInfo.Components.TryGet<SingletonAttribute>( out _ ) )
-			{
-				// Find all objects of Type.
-				var objects = FindObjectsOfType( ClassInfo.Info );
-
-				foreach ( var o in objects )
-				{
-					if ( target != o )
-					{
-						EditorUtility.DisplayDialog(
-							$"Singleton ({ClassInfo.Title}) already exists",
-							$"Can't create Entity {ClassInfo.Title} onto this GameObject. An instance of it already exists else where in the scene",
-							"Okay" );
-
-						DestroyImmediate( target );
-						return;
-					}
-				}
-			}
-
+			ClassInfo = Library.Database[target.GetType()];
 			EditorInjection.Titles[target.GetType()] = $"{ClassInfo.Title}";
 
 			// Only Entities can have custom icons...
@@ -44,8 +22,13 @@ namespace Espionage.Engine.Editor
 
 		public override void OnInspectorGUI()
 		{
-			var originalRect = EditorGUILayout.GetControlRect( true, 24, GUIStyle.none );
+			serializedObject.Update();
+			EngineGUI.Header( null, serializedObject.FindProperty( "name" ), serializedObject.FindProperty( "className" ), serializedObject.FindProperty( "disabled" ) );
+			serializedObject.ApplyModifiedProperties();
 
+			return;
+
+			var originalRect = EditorGUILayout.GetControlRect( true, 24, GUIStyle.none );
 			var rect = originalRect;
 			rect.width = Screen.width;
 			rect.y = 0;
@@ -57,7 +40,21 @@ namespace Espionage.Engine.Editor
 			// Label
 			rect.x = 16;
 			rect.width -= 16;
-			GUI.Label( rect, $"Entity  <size=10>[{ClassInfo.Name} / {ClassInfo.Group}]</size>", Styles.Text );
+
+			var labelRect = rect;
+			labelRect.x += 28;
+			labelRect.width = Styles.Text.CalcSize( new( "None" ) ).x;
+
+			GUI.Label( labelRect, $"None", Styles.Text );
+
+			var dropdownRect = rect;
+			dropdownRect.x = labelRect.x + labelRect.width + 8;
+			if ( GUI.Button( dropdownRect, "Class", EditorStyles.foldoutPreDrop ) ) { }
+
+			var iconRect = rect;
+			iconRect.height -= 4;
+			iconRect.y += 2;
+			GUI.Label( iconRect, EditorGUIUtility.ObjectContent( null, typeof( Light ) ).image );
 
 			// Help
 			if ( ClassInfo.Components.TryGet<HelpAttribute>( out var help ) && !string.IsNullOrEmpty( help.URL ) )
@@ -91,7 +88,7 @@ namespace Espionage.Engine.Editor
 
 			if ( ClassInfo.Components.Get<EditableAttribute>()?.Editable ?? true )
 			{
-				DrawPropertiesExcluding( serializedObject, "m_Script", "uniqueId" );
+				DrawPropertiesExcluding( serializedObject, "m_Script", "className" );
 				serializedObject.ApplyModifiedProperties();
 
 				if ( !string.IsNullOrEmpty( ClassInfo.Help ) )
@@ -121,14 +118,6 @@ namespace Espionage.Engine.Editor
 				stretchHeight = true,
 				fixedHeight = 0
 			};
-		}
-
-		public void AddItemsToMenu( GenericMenu menu )
-		{
-			menu.AddItem( new( "Regenerate Entity Identifier" ), false, () =>
-			{
-				serializedObject.FindProperty( "uniqueId" ).stringValue = Guid.NewGuid().ToString();
-			} );
 		}
 	}
 }

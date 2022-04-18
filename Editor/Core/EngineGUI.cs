@@ -1,0 +1,205 @@
+﻿using Espionage.Engine.Editor;
+using UnityEngine;
+using UnityEditor;
+
+namespace Espionage.Engine
+{
+	/// <summary>Editor Only Class</summary>
+	public class EngineGUI
+	{
+		public static void Line()
+		{
+			EditorGUILayout.LabelField( "", GUI.skin.horizontalSlider );
+		}
+
+		public static bool ComponentFoldout( Object obj, ref bool state, string name = null )
+		{
+			var content = EditorGUIUtility.ObjectContent( obj, obj.GetType() );
+			var foldoutTitle = name == null ? obj.GetType().Name : name;
+
+			return Foldout( new( $" {foldoutTitle}", content.image, content.tooltip ), ref state );
+		}
+
+		public static void ComponentInspector( UnityEditor.Editor obj, ref bool state, string name = null, System.Action AdditionalGUI = null )
+		{
+			if ( !ComponentFoldout( obj.serializedObject.targetObject, ref state, name ) ) { return; }
+
+			GUILayout.BeginVertical( Styles.EntityInspectorPadding );
+			{
+				obj.OnInspectorGUI();
+				AdditionalGUI?.Invoke();
+			}
+			GUILayout.EndVertical();
+		}
+
+		public static bool Foldout( GUIContent header, ref bool state, float height = 26 )
+		{
+			// Set the icon size to match height
+			EditorGUIUtility.SetIconSize( new( 20, 20 ) );
+
+			// Create GUIStyle for Little Arrows
+			var arrowStyle = new GUIStyle( "Label" )
+			{
+				alignment = TextAnchor.MiddleLeft,
+				fontSize = (int)height - 16,
+				fontStyle = FontStyle.Bold,
+				padding = new( 16, 0, 0, 0 )
+			};
+
+			// Draw actual button
+			if ( GUILayout.Button( header, Styles.FoldoutStyle, GUILayout.ExpandWidth( true ), GUILayout.Height( height ) ) ) { state = !state; }
+
+			GUI.Label( GUILayoutUtility.GetLastRect(), state ? "▼" : "▶", arrowStyle );
+
+			GUILayout.Space( 8 );
+			EditorGUIUtility.SetIconSize( new( 0, 0 ) );
+
+			// Return the current state
+			return state;
+		}
+
+		public static void Header( Texture icon, SerializedProperty name, SerializedProperty className, SerializedProperty disabled )
+		{
+			GUILayout.BeginHorizontal( "", Styles.EntityInspectorHeader, GUILayout.MaxHeight( 64 ), GUILayout.Height( 64 ), GUILayout.ExpandWidth( true ) );
+			{
+				if ( icon != null )
+				{
+					GUILayout.Space( 8 );
+					EditorGUIUtility.SetIconSize( new( 48, 48 ) );
+					GUILayout.Label( icon, GUILayout.Width( 64 ), GUILayout.Height( 48 ) );
+					EditorGUIUtility.SetIconSize( new( 0, 0 ) );
+				}
+
+				GUILayout.BeginVertical( GUILayout.ExpandWidth( true ) );
+				{
+					EditorGUI.BeginChangeCheck();
+					name.stringValue = GUILayout.TextField( name.stringValue, Styles.EntityInspectorTextField, GUILayout.Height( 26 ) );
+
+					// Remove Spaces from entity name
+					if ( EditorGUI.EndChangeCheck() )
+					{
+						name.stringValue = name.stringValue.ToProgrammerCase();
+					}
+
+					if ( string.IsNullOrEmpty( name.stringValue ) )
+					{
+						GUI.Label( GUILayoutUtility.GetLastRect(), " <color=grey>Entity Name</color>", Styles.EntityInspectorTextFieldGhost );
+					}
+
+					GUILayout.FlexibleSpace();
+					GUILayout.BeginHorizontal();
+					{
+						var rect = GUILayoutUtility.GetRect( new( className.stringValue ), EditorStyles.popup );
+						if ( GUI.Button( rect, new GUIContent( className.stringValue ), EditorStyles.popup ) )
+						{
+							// var dropdown = new Entities.EntitiesList( new UnityEditor.IMGUI.Controls.AdvancedDropdownState() );
+							// dropdown.Show( rect );
+						}
+
+						GUILayout.BeginHorizontal( GUILayout.Width( 64 ) );
+						{
+							GUILayout.Label( "Start Disabled:" );
+							disabled.boolValue = EditorGUILayout.Toggle( disabled.boolValue );
+						}
+						GUILayout.EndHorizontal();
+					}
+					GUILayout.EndHorizontal();
+				}
+				GUILayout.EndVertical();
+			}
+			GUILayout.EndHorizontal();
+		}
+
+		public static class Styles
+		{
+			public static readonly GUIStyle TitleLabel = new( "Label" )
+			{
+				fontSize = 18,
+				alignment = TextAnchor.MiddleLeft,
+				padding = new( 4, 4, 0, 0 )
+			};
+
+			public static readonly GUIStyle DescriptionLabel = new( EditorStyles.label )
+			{
+				fontSize = 12,
+				alignment = TextAnchor.UpperLeft,
+				padding = new( 4, 4, 0, 0 ),
+				wordWrap = true
+			};
+
+			public static readonly GUIStyle NoticeLabel = new( EditorStyles.helpBox )
+			{
+				richText = true,
+				fontSize = 16,
+				alignment = TextAnchor.MiddleCenter,
+				padding = new( 8, 8, 8, 8 )
+			};
+
+			public static readonly GUIStyle EngineAboutDescription = new( EditorStyles.helpBox )
+			{
+				richText = true,
+				fontSize = 14,
+				alignment = TextAnchor.UpperLeft,
+				padding = new( 8, 8, 8, 8 ),
+				margin = new( 16, 16, 16, 16 ),
+				imagePosition = ImagePosition.ImageLeft
+			};
+
+			public static readonly GUIStyle FoldoutStyle = new( EditorStyles.miniButtonMid )
+			{
+				richText = true,
+				alignment = TextAnchor.MiddleLeft,
+				fontSize = 16,
+				fontStyle = FontStyle.Bold,
+				padding = new( EditorStyles.inspectorDefaultMargins.padding.left + 16, 0, 0, 0 ),
+				overflow = new( 0, 0, 0, 0 ),
+				border = new( 0, 0, 0, 0 ),
+				margin = new( 2, 0, 0, 0 ),
+				imagePosition = ImagePosition.ImageLeft,
+				fixedHeight = 0
+			};
+
+			public static readonly GUIStyle EntityInspectorPanel = new( EditorStyles.helpBox )
+			{
+				richText = true,
+				alignment = TextAnchor.UpperLeft,
+				fontSize = 16,
+				fontStyle = FontStyle.Bold,
+				padding = new( 0, 0, 8, 8 ),
+				margin = new( 8, 8, 8, 8 )
+			};
+
+			public static readonly GUIStyle EntityInspectorPadding = new() { padding = new( 16, 16, 0, 0 ) };
+
+			public static readonly GUIStyle EntityInspectorHeader = new( EditorStyles.helpBox )
+			{
+				richText = true,
+				alignment = TextAnchor.UpperLeft,
+				fontSize = 16,
+				fontStyle = FontStyle.Bold,
+				padding = new( 8, 8, 8, 8 ),
+				margin = new( 8, 8, 8, 0 )
+			};
+
+			public static readonly GUIStyle EntityInspectorToolbar = new( EditorStyles.miniButtonMid ) { richText = true, fixedHeight = 0 };
+
+			public static readonly GUIStyle EntityInspectorTextField = new( EditorStyles.textField )
+			{
+				richText = true,
+				alignment = TextAnchor.MiddleLeft,
+				padding = new( 6, 0, 0, 0 ),
+				fontSize = 12,
+				fontStyle = FontStyle.Bold
+			};
+
+			public static readonly GUIStyle EntityInspectorTextFieldGhost = new( "Label" )
+			{
+				richText = true,
+				alignment = TextAnchor.MiddleLeft,
+				padding = new RectOffset( 6, 0, 0, 0 ),
+				fontSize = 12,
+				fontStyle = FontStyle.Bold
+			};
+		}
+	}
+}
