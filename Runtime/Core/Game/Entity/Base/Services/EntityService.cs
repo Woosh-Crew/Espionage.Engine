@@ -6,8 +6,10 @@ namespace Espionage.Engine.Services
 	{
 		public override void OnUpdate()
 		{
+			// Run Think and Update
 			foreach ( var entity in Entity.All )
 			{
+				(entity ? entity : null)?.Frame( UnityEngine.Time.deltaTime );
 				(entity ? entity : null)?.Thinking.Run();
 			}
 		}

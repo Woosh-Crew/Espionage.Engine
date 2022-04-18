@@ -98,6 +98,9 @@ namespace Espionage.Engine
 
 		// Either gets called on map spawn, or by the constructor
 		public virtual void Spawn() { }
+		
+		// Client Only
+		public virtual void Frame( float delta ) { }
 
 		//
 		// Think
@@ -295,7 +298,7 @@ namespace Espionage.Engine
 		protected virtual void OnCollisionEnter( Collision collision ) { }
 		protected virtual void OnCollisionExit( Collision other ) { }
 		protected virtual void OnCollisionStay( Collision collisionInfo ) { }
-		
+
 		// Trigger
 		protected virtual void OnTriggerEnter( Collider other ) { }
 		protected virtual void OnTriggerExit( Collider other ) { }
