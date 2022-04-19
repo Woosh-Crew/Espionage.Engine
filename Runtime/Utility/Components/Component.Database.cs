@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Espionage.Engine.Components
 {
-	public class Components<T> : IDatabase<IComponent<T>, int, Type> where T : class
+	public class Components<T> : IEnumerable<IComponent<T>> where T : class
 	{
 		// IDatabase
 
@@ -41,11 +41,11 @@ namespace Espionage.Engine.Components
 
 		// Controllers
 
-		public void Add( IComponent<T> item )
+		public Components<T> Add( IComponent<T> item )
 		{
 			if ( !item.CanAttach( _owner ) )
 			{
-				return;
+				return this;
 			}
 
 			// Replace if its a Singleton
@@ -53,11 +53,13 @@ namespace Espionage.Engine.Components
 			{
 				Debugging.Log.Warning( $"Replacing Component [{lib.ClassInfo.Name}]. Was Singleton" );
 				Replace( comp, item );
-				return;
+				return this;
 			}
 
 			_storage.Add( item );
 			item.OnAttached( _owner );
+
+			return this;
 		}
 
 		public bool Contains( IComponent<T> item )
@@ -67,15 +69,15 @@ namespace Espionage.Engine.Components
 
 		public void Remove( IComponent<T> item )
 		{
-			_storage.Remove( item ); 
 			item.OnDetached();
+			_storage.Remove( item );
 		}
 
 		public void Clear()
 		{
-			for ( var i = 0; i < _storage.Count; i++ )
+			foreach ( var comp in _storage )
 			{
-				Remove( _storage[i] );
+				comp.OnDetached();
 			}
 
 			_storage.Clear();
@@ -140,25 +142,18 @@ namespace Espionage.Engine.Components
 			return newComp;
 		}
 
+		public Components<T> Create<TComp>( out TComp comp ) where TComp : class, IComponent<T>, new()
+		{
+			comp = new TComp();
+			Add( comp );
+			return this;
+		}
+
 		public TComp Create<TComp>( Func<TComp> creation )
 		{
 			var newComp = creation.Invoke();
 			Add( newComp as IComponent<T> );
 			return newComp;
-		}
-
-		// Build
-
-		public Components<T> Build<TComp>() where TComp : class, IComponent<T>, new()
-		{
-			Create<TComp>();
-			return this;
-		}
-
-		public Components<T> Build<TComp>( out TComp comp ) where TComp : class, IComponent<T>, new()
-		{
-			comp = Create<TComp>();
-			return this;
 		}
 
 		// Replace
