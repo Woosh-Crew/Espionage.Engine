@@ -2,7 +2,7 @@
 
 namespace Espionage.Engine
 {
-	public abstract partial class Entity
+	public  partial class Entity
 	{
 		private class Hook : MonoBehaviour
 		{

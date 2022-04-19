@@ -1,4 +1,5 @@
-﻿using Espionage.Engine.Components;
+﻿using System;
+using Espionage.Engine.Components;
 
 namespace Espionage.Engine
 {
@@ -65,7 +66,7 @@ namespace Espionage.Engine
 			{
 				Entity.Components?.Remove( this );
 			}
-			
+
 			Library.Unregister( this );
 		}
 

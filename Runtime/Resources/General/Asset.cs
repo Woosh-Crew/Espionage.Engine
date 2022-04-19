@@ -1,4 +1,7 @@
-﻿namespace Espionage.Engine.Resources
+﻿using System.IO;
+using System.Linq;
+
+namespace Espionage.Engine.Resources
 {
 	[Group( "Data" ), Path( "custom_assets", "assets://Data", Overridable = true )]
 	public abstract class Asset : IResource
@@ -25,6 +28,13 @@
 		void IResource.Load()
 		{
 			OnLoad();
+
+			// Deserialize Data
+			foreach ( var property in ClassInfo.Properties.Where( e => e.Serialized ) )
+			{
+				Debugging.Log.Info( $"Loading Property {property.Name}" );
+				property[this] = null /* Deserialize value */;
+			}
 		}
 
 		protected virtual void OnLoad() { }

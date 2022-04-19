@@ -10,7 +10,7 @@ namespace Espionage.Engine
 	/// be saved and restored, has a unique id for each, etc.
 	/// </summary>
 	[Group( "Entities" ), Constructor( nameof( Constructor ) ), Spawnable]
-	public abstract partial class Entity : ScriptableObject, IValid, ILibrary
+	public partial class Entity : ScriptableObject, IValid, ILibrary
 	{
 		public string Name { get; set; }
 		public int Identifier { get; private set; }

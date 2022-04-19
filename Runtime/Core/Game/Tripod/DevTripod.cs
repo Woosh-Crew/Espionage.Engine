@@ -126,7 +126,7 @@ namespace Espionage.Engine.Tripods
 					setup.Cursor.Locked = true;
 
 					// We don't use ViewAngles here, as they are not our eyes.
-					_viewAngles += new Vector3( -setup.Mouse.Delta.y, setup.Mouse.Delta.x, 0 );
+					_viewAngles += new Vector3( -setup.Mouse.Delta.y, setup.Mouse.Delta.x, 0 ) * 1.5f;
 					_viewAngles.x = Mathf.Clamp( _viewAngles.x, -88, 88 );
 
 					_targetRot = Quaternion.Euler( _viewAngles );

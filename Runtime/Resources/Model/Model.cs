@@ -35,6 +35,7 @@ namespace Espionage.Engine.Resources
 			instance.IsConsumed = true;
 			instance.GameObject.SetActive( true );
 			instance.GameObject.transform.parent = transform;
+			instance.GameObject.transform.localPosition = Vector3.zero;
 
 			return instance;
 		}
