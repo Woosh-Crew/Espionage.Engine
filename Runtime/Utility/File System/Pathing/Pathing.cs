@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 namespace Espionage.Engine.IO
@@ -54,7 +55,7 @@ namespace Espionage.Engine.IO
 			["project"] = $"{Application.dataPath}/../",
 			["exports"] = "project://Exports/",
 			["compiled"] = "exports://<game>/",
-			["editor"] = UnityEditor.EditorApplication.applicationPath,
+			["editor"] = EditorApplication.applicationPath,
 
 			#endif
 		};
@@ -69,9 +70,9 @@ namespace Espionage.Engine.IO
 			["company"] = ( _ ) => Application.companyName,
 			["user"] = ( _ ) => Environment.UserName,
 
-			// -- Library
+			// Library
 			["library_title"] = ( args ) => Library.Database[args[0]]?.Title,
-			["library_group"] = ( args ) => Library.Database[args[0]]?.Group,
+			["library_group"] = ( args ) => Library.Database[args[0]]?.Group
 		};
 
 		//
@@ -207,13 +208,13 @@ namespace Espionage.Engine.IO
 			}
 
 			// Go through mods, see if we can replace it.
-			foreach ( var mod in Mod.Database )
-			{
-				if ( mod.Exists( newPath, out var potentialPath ) )
-				{
-					return directoryOnly ? Path.GetDirectoryName( potentialPath ) : potentialPath;
-				}
-			}
+			// foreach ( var mod in Mod.Database )
+			// {
+			// 	if ( mod.Exists( newPath, out var potentialPath ) )
+			// 	{
+			// 		return directoryOnly ? Path.GetDirectoryName( potentialPath ) : potentialPath;
+			// 	}
+			// }
 
 			return directoryOnly ? Path.GetDirectoryName( newPath ) : newPath;
 		}
@@ -342,6 +343,12 @@ namespace Espionage.Engine.IO
 		{
 			path = Absolute( path );
 			return withExtension ? Path.GetFileName( path ) : Path.GetFileNameWithoutExtension( path );
+		}
+		
+		///<inheritdoc cref="Name(string,bool)"/>
+		public string Name( FileInfo file, bool withExtension = true )
+		{
+			return withExtension ? file.Name : file.FullName;
 		}
 	}
 }
