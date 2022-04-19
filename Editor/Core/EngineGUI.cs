@@ -39,90 +39,53 @@ namespace Espionage.Engine.Editor
 
 		public static void Header( AdvancedDropdown dropdown, Texture icon, SerializedProperty name, SerializedProperty className, SerializedProperty disabled )
 		{
-			GUILayout.BeginHorizontal( "", Styles.EntityInspectorHeader, GUILayout.MaxHeight( 64 ), GUILayout.Height( 64 ), GUILayout.ExpandWidth( true ) );
+			if ( icon != null )
 			{
-				if ( icon != null )
+				GUILayout.Space( 8 );
+				EditorGUIUtility.SetIconSize( new( 48, 48 ) );
+				GUILayout.Label( icon, GUILayout.Width( 64 ), GUILayout.Height( 48 ) );
+				EditorGUIUtility.SetIconSize( new( 0, 0 ) );
+			}
+
+			GUILayout.BeginVertical( GUILayout.ExpandWidth( true ) );
+			{
+				EditorGUI.BeginChangeCheck();
+				name.stringValue = GUILayout.TextField( name.stringValue, Styles.TextField, GUILayout.Height( 26 ) );
+
+				// Remove Spaces from entity name
+				if ( EditorGUI.EndChangeCheck() )
 				{
-					GUILayout.Space( 8 );
-					EditorGUIUtility.SetIconSize( new( 48, 48 ) );
-					GUILayout.Label( icon, GUILayout.Width( 64 ), GUILayout.Height( 48 ) );
-					EditorGUIUtility.SetIconSize( new( 0, 0 ) );
+					name.stringValue = name.stringValue.ToProgrammerCase();
 				}
 
-				GUILayout.BeginVertical( GUILayout.ExpandWidth( true ) );
+				if ( string.IsNullOrEmpty( name.stringValue ) )
 				{
-					EditorGUI.BeginChangeCheck();
-					name.stringValue = GUILayout.TextField( name.stringValue, Styles.EntityInspectorTextField, GUILayout.Height( 26 ) );
+					GUI.Label( GUILayoutUtility.GetLastRect(), " <color=grey>Entity Name</color>", Styles.TextFieldGhost );
+				}
 
-					// Remove Spaces from entity name
-					if ( EditorGUI.EndChangeCheck() )
+				GUILayout.FlexibleSpace();
+				GUILayout.BeginHorizontal();
+				{
+					var rect = GUILayoutUtility.GetRect( new( className.stringValue ), EditorStyles.popup );
+					if ( GUI.Button( rect, new GUIContent( className.stringValue ), EditorStyles.popup ) )
 					{
-						name.stringValue = name.stringValue.ToProgrammerCase();
+						dropdown.Show( rect );
 					}
 
-					if ( string.IsNullOrEmpty( name.stringValue ) )
+					GUILayout.BeginHorizontal( GUILayout.Width( 64 ) );
 					{
-						GUI.Label( GUILayoutUtility.GetLastRect(), " <color=grey>Entity Name</color>", Styles.EntityInspectorTextFieldGhost );
-					}
-
-					GUILayout.FlexibleSpace();
-					GUILayout.BeginHorizontal();
-					{
-						var rect = GUILayoutUtility.GetRect( new( className.stringValue ), EditorStyles.popup );
-						if ( GUI.Button( rect, new GUIContent( className.stringValue ), EditorStyles.popup ) )
-						{
-							dropdown.Show( rect );
-						}
-
-						GUILayout.BeginHorizontal( GUILayout.Width( 64 ) );
-						{
-							GUILayout.Label( "Start Disabled:" );
-							disabled.boolValue = EditorGUILayout.Toggle( disabled.boolValue );
-						}
-						GUILayout.EndHorizontal();
+						GUILayout.Label( "Start Disabled:" );
+						disabled.boolValue = EditorGUILayout.Toggle( disabled.boolValue );
 					}
 					GUILayout.EndHorizontal();
 				}
-				GUILayout.EndVertical();
+				GUILayout.EndHorizontal();
 			}
-			GUILayout.EndHorizontal();
+			GUILayout.EndVertical();
 		}
 
 		public static class Styles
 		{
-			public static readonly GUIStyle TitleLabel = new( "Label" )
-			{
-				fontSize = 18,
-				alignment = TextAnchor.MiddleLeft,
-				padding = new( 4, 4, 0, 0 )
-			};
-
-			public static readonly GUIStyle DescriptionLabel = new( EditorStyles.label )
-			{
-				fontSize = 12,
-				alignment = TextAnchor.UpperLeft,
-				padding = new( 4, 4, 0, 0 ),
-				wordWrap = true
-			};
-
-			public static readonly GUIStyle NoticeLabel = new( EditorStyles.helpBox )
-			{
-				richText = true,
-				fontSize = 16,
-				alignment = TextAnchor.MiddleCenter,
-				padding = new( 8, 8, 8, 8 )
-			};
-
-			public static readonly GUIStyle EngineAboutDescription = new( EditorStyles.helpBox )
-			{
-				richText = true,
-				fontSize = 14,
-				alignment = TextAnchor.UpperLeft,
-				padding = new( 8, 8, 8, 8 ),
-				margin = new( 16, 16, 16, 16 ),
-				imagePosition = ImagePosition.ImageLeft
-			};
-
 			public static readonly GUIStyle FoldoutStyle = new( EditorStyles.miniButtonMid )
 			{
 				richText = true,
@@ -137,19 +100,7 @@ namespace Espionage.Engine.Editor
 				fixedHeight = 0
 			};
 
-			public static readonly GUIStyle EntityInspectorPanel = new( EditorStyles.helpBox )
-			{
-				richText = true,
-				alignment = TextAnchor.UpperLeft,
-				fontSize = 16,
-				fontStyle = FontStyle.Bold,
-				padding = new( 0, 0, 8, 8 ),
-				margin = new( 8, 8, 8, 8 )
-			};
-
-			public static readonly GUIStyle EntityInspectorPadding = new() { padding = new( 16, 16, 0, 0 ) };
-
-			public static readonly GUIStyle EntityInspectorHeader = new( EditorStyles.helpBox )
+			public static readonly GUIStyle HeaderStyle = new( "window" )
 			{
 				richText = true,
 				alignment = TextAnchor.UpperLeft,
@@ -159,9 +110,7 @@ namespace Espionage.Engine.Editor
 				margin = new( 8, 8, 8, 0 )
 			};
 
-			public static readonly GUIStyle EntityInspectorToolbar = new( EditorStyles.miniButtonMid ) { richText = true, fixedHeight = 0 };
-
-			public static readonly GUIStyle EntityInspectorTextField = new( EditorStyles.textField )
+			public static readonly GUIStyle TextField = new( EditorStyles.textField )
 			{
 				richText = true,
 				alignment = TextAnchor.MiddleLeft,
@@ -170,7 +119,7 @@ namespace Espionage.Engine.Editor
 				fontStyle = FontStyle.Bold
 			};
 
-			public static readonly GUIStyle EntityInspectorTextFieldGhost = new( "Label" )
+			public static readonly GUIStyle TextFieldGhost = new( "Label" )
 			{
 				richText = true,
 				alignment = TextAnchor.MiddleLeft,

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using Espionage.Engine.Internal;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
@@ -11,6 +10,10 @@ namespace Espionage.Engine.Editor
 	public class ProxyEditor : BehaviourEditor
 	{
 		private static LibraryList Dropdown { get; set; }
+
+		// Instance
+
+		private Proxy Proxy => target as Proxy;
 
 		protected override void OnEnable()
 		{
@@ -30,11 +33,27 @@ namespace Espionage.Engine.Editor
 		{
 			serializedObject.Update();
 
-			EngineGUI.Header( Dropdown, null, serializedObject.FindProperty( "name" ), serializedObject.FindProperty( "className" ), serializedObject.FindProperty( "disabled" ) );
+			GUILayout.BeginVertical( EngineGUI.Styles.HeaderStyle, GUILayout.MaxHeight( 64 ), GUILayout.Height( 64 ), GUILayout.ExpandWidth( true ) );
+			{
+				EngineGUI.Header( Dropdown, null, serializedObject.FindProperty( "name" ), serializedObject.FindProperty( "className" ), serializedObject.FindProperty( "disabled" ) );
 
-			// Draw Property Sheet
+				if ( !Proxy.className.IsEmpty() )
+				{
+					EngineGUI.Line();
+					PropertyGUI();
+				}
+			}
+			GUILayout.EndVertical();
 
 			serializedObject.ApplyModifiedProperties();
+		}
+
+		private void PropertyGUI()
+		{
+			foreach ( var property in Library.Database[Proxy.className].Properties )
+			{
+				GUILayout.Label( property.Name );
+			}
 		}
 
 		private void OnSceneGUI()

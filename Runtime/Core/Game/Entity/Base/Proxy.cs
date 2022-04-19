@@ -1,10 +1,18 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Espionage.Engine
 {
 	[SelectionBase, DisallowMultipleComponent]
 	public class Proxy : Behaviour
 	{
+		[Serializable]
+		public class Sheet
+		{
+			public string key;
+			public string value;
+		}
+		
 		public Entity Create()
 		{
 			var ent = Library.Create( className ) as Entity;
@@ -49,6 +57,9 @@ namespace Espionage.Engine
 		}
 
 		// Fields
+
+		[SerializeField]
+		internal Sheet[] properties;
 
 		[SerializeField]
 		internal bool disabled;

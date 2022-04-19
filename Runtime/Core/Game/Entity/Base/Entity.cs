@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Espionage.Engine
 {
 	/// <summary>
-	/// An Entity is the Root of a MonoBehaviour tree. Entities can contain I/O logic,
+	/// An is a wrapper for a GameObject. Entities can contain I/O logic,
 	/// be saved and restored, has a unique id for each, etc.
 	/// </summary>
 	[Group( "Entities" ), Constructor( nameof( Constructor ) ), Spawnable]
@@ -60,6 +60,7 @@ namespace Espionage.Engine
 				return;
 			}
 
+			Components.Clear();
 			All.Remove( this );
 
 			Library.Unregister( this );
@@ -70,7 +71,6 @@ namespace Espionage.Engine
 				Destroy( _gameObject );
 			}
 
-			Components.Clear();
 			Components = null;
 		}
 
