@@ -19,7 +19,7 @@ namespace Espionage.Engine
 			// Build Viewmodels...
 			foreach ( var viewmodel in All.OfType<Viewmodel>() )
 			{
-				if ( viewmodel.gameObject.activeInHierarchy )
+				if ( viewmodel.Enabled )
 				{
 					viewmodel.PostCameraSetup( ref setup );
 				}
@@ -40,7 +40,7 @@ namespace Espionage.Engine
 
 			foreach ( var viewmodel in All.OfType<Viewmodel>() )
 			{
-				viewmodel.gameObject.SetActive( value );
+				viewmodel.GameObject.SetActive( value );
 			}
 		}
 
@@ -59,10 +59,10 @@ namespace Espionage.Engine
 
 		// Instance
 
-		protected override void OnAwake()
+		public override void Spawn()
 		{
 			Visuals.Changed += OnModelChanged;
-			Enabled = Showing;
+			Enabled = Showing;	
 		}
 
 		private void OnModelChanged()
@@ -90,7 +90,7 @@ namespace Espionage.Engine
 				return;
 			}
 
-			var trans = transform;
+			var trans = Transform;
 			trans.localPosition = setup.Position;
 			trans.localRotation = setup.Rotation;
 

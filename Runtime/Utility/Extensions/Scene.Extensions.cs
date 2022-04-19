@@ -18,7 +18,7 @@ namespace Espionage.Engine
 
 		public static void Grab( this Scene self, Entity entity )
 		{
-			SceneManager.MoveGameObjectToScene( entity.gameObject, self );
+			SceneManager.MoveGameObjectToScene( entity, self );
 		}
 	}
 }

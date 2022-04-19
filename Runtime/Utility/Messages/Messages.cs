@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
 using System.Threading;
+using UnityEditor;
 using UnityEngine;
 
 namespace Espionage.Engine
@@ -22,12 +23,19 @@ namespace Espionage.Engine
 
 		public static void Send( string data, string appPath = "compiled://<executable>" )
 		{
+			if ( Application.isPlaying )
+			{
+				// Just show the changes in the play view
+				Receive( data );
+				return;
+			}
+
 			// Add to Buffer
 			if ( Writer == null )
 			{
 				Threading.Create( "editor_ipc", new( () => Server( appPath ) ) { IsBackground = true } );
 
-				UnityEditor.EditorApplication.quitting += () =>
+				EditorApplication.quitting += () =>
 				{
 					if ( !Game.HasExited && Pipe.IsConnected )
 					{

@@ -57,7 +57,7 @@ namespace Espionage.Engine
 			Using = Find<IUsable>( 0.2f, e => e.IsUsable( Entity ), out var info );
 			Using?.Started( Entity );
 
-			_positionWhenUsed = info.point;
+			_positionWhenUsed = info.End;
 
 			if ( Using == null )
 			{
@@ -80,7 +80,7 @@ namespace Espionage.Engine
 
 		// Helpers
 
-		private T Find<T>( float size, Func<T, bool> canUse, out RaycastHit hit ) where T : class
+		private T Find<T>( float size, Func<T, bool> canUse, out Trace.Result hit ) where T : class
 		{
 			var ray = Entity.Eyes.Ray( Length );
 			var entity = ray.Run<T>( out var result ) ?? ray.Radius( size ).Run<T>( out result );

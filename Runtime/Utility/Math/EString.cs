@@ -62,6 +62,8 @@ namespace Espionage.Engine
 				return name.ToLower();
 			}
 
+			name = name.Replace( ' ', '_' );
+
 			prefix = prefix.Split( '.' )[^1] ?? "";
 			return $"{prefix}.{name}".ToLower();
 		}

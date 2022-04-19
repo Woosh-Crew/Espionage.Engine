@@ -11,10 +11,8 @@ namespace Espionage.Engine.Services
 		public override void OnReady()
 		{
 			// Main Camera
-			_camController = Library.Database.Create<CameraController>();
-
-			Engine.Scene.Grab( _camController );
-			_camController.name = "[ Viewport ] Main Camera";
+			_camController = Entity.Create<CameraController>();
+			Engine.Scene.Grab( entity: _camController );
 
 			// Tell everyone we got cameras
 

@@ -12,7 +12,7 @@ namespace Espionage.Engine
 			// Build Viewmodels...
 			foreach ( var viewmodel in All.OfType<Viewlegs>() )
 			{
-				if ( viewmodel.gameObject.activeInHierarchy )
+				if ( viewmodel.GameObject.activeInHierarchy )
 				{
 					viewmodel.PostCameraSetup( ref setup );
 				}
@@ -27,21 +27,32 @@ namespace Espionage.Engine
 
 			foreach ( var viewmodel in All.OfType<Viewlegs>() )
 			{
-				viewmodel.gameObject.SetActive( value );
+				viewmodel.GameObject.SetActive( value );
 			}
 		}
 
 		// Instance
 
-		protected override void OnAwake()
+		public override void Spawn()
 		{
-			foreach ( var render in GetComponentsInChildren<Renderer>() )
-			{
-				render.shadowCastingMode = castShadows ? ShadowCastingMode.On : ShadowCastingMode.Off;
-				render.receiveShadows = receiveShadows;
-			}
+			Visuals.Changed += OnModelChanged;
+			Enabled = Showing;	
+		}
 
-			Enabled = Showing;
+		private void OnModelChanged()
+		{
+			foreach ( var render in Visuals.Renderers )
+			{
+				render.shadowCastingMode = ShadowCastingMode.Off;
+				render.receiveShadows = false;
+				render.gameObject.layer = LayerMask.NameToLayer( "Viewmodel" );
+
+				// Assign Correct Viewmodel Shader
+				foreach ( var mat in render.materials )
+				{
+					mat.shader = Shader.Find( "Viewmodel Standard" );
+				}
+			}
 		}
 
 		private void PostCameraSetup( ref Tripod.Setup setup )
@@ -55,18 +66,10 @@ namespace Espionage.Engine
 
 			var pawn = Local.Pawn;
 
-			var trans = transform;
+			var trans = Transform;
 			trans.localPosition = pawn.Position;
 			trans.localRotation = pawn.Rotation;
 			trans.localScale = pawn.Scale;
 		}
-
-		// Fields
-
-		[SerializeField]
-		private bool castShadows;
-
-		[SerializeField]
-		private bool receiveShadows;
 	}
 }

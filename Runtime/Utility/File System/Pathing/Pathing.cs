@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 
 namespace Espionage.Engine.IO
@@ -55,7 +54,7 @@ namespace Espionage.Engine.IO
 			["project"] = $"{Application.dataPath}/../",
 			["exports"] = "project://Exports/",
 			["compiled"] = "exports://<game>/",
-			["editor"] = EditorApplication.applicationPath,
+			["editor"] = UnityEditor.EditorApplication.applicationPath,
 
 			#endif
 		};
@@ -70,9 +69,9 @@ namespace Espionage.Engine.IO
 			["company"] = ( _ ) => Application.companyName,
 			["user"] = ( _ ) => Environment.UserName,
 
-			// Library
+			// -- Library
 			["library_title"] = ( args ) => Library.Database[args[0]]?.Title,
-			["library_group"] = ( args ) => Library.Database[args[0]]?.Group
+			["library_group"] = ( args ) => Library.Database[args[0]]?.Group,
 		};
 
 		//

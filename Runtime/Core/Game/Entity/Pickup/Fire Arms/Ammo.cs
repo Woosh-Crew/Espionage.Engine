@@ -1,6 +1,0 @@
-
-
-namespace Espionage.Engine
-{
-    
-}

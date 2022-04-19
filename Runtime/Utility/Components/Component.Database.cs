@@ -67,7 +67,7 @@ namespace Espionage.Engine.Components
 
 		public void Remove( IComponent<T> item )
 		{
-			_storage.Remove( item );
+			_storage.Remove( item ); 
 			item.OnDetached();
 		}
 

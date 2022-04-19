@@ -38,7 +38,7 @@ namespace Espionage.Engine
 			private void Finalise( Pawn pawn )
 			{
 				pawn.Velocity = Velocity;
-				pawn.transform.localRotation = Rotation;
+				pawn.Transform.localRotation = Rotation;
 
 				pawn.Eyes = new( EyePos, EyeRot );
 			}

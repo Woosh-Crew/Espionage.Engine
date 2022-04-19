@@ -158,7 +158,7 @@ namespace Espionage.Engine
 		{
 			return Database[hash];
 		}
-
+		
 		//
 		// Properties
 		// 

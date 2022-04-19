@@ -15,15 +15,13 @@
 		protected override void OnFinish()
 		{
 			base.OnFinish();
-			
-			// Because were persistent
-			Destroy( gameObject );
+			Delete();
 		}
 
 		public override void OnActorRespawned( Actor pawn )
 		{
 			pawn.MoveTo( All.Random<SpawnPoint>() );
-			Debugging.Log.Info("Moving to spawn point");
+			Debugging.Log.Info( "Moving to spawn point" );
 		}
 
 		public override void OnActorKilled( Actor pawn, IDamageable.Info info )

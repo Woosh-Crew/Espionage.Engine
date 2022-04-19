@@ -22,11 +22,11 @@ namespace Espionage.Engine
 
 				// Find the instance
 				_instance = All.Find<World>();
-				return _instance != null ? _instance : null;
+				return _instance;
 			}
 		}
 
-		protected override void OnAwake()
+		public override void Spawn()
 		{
 			if ( _instance == null )
 			{
@@ -35,7 +35,6 @@ namespace Espionage.Engine
 			}
 
 			Debugging.Log.Warning( "More than one world was present in scene" );
-			Destroy( gameObject );
 		}
 
 		protected override void OnDelete()

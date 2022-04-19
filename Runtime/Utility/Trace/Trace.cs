@@ -15,12 +15,52 @@ namespace Espionage.Engine
 			return new( origin, direction, distance );
 		}
 
+		// Result
+
+		public struct Result
+		{
+			public Result( Builder from, RaycastHit hit )
+			{
+				Raycast = hit;
+
+				Start = from._origin;
+				Direction = from._direction;
+				End = hit.point;
+				Normal = hit.normal;
+
+				Distance = hit.distance;
+
+				Entity = hit.collider.gameObject;
+
+				Collision = hit.collider;
+				GameObject = Collision.gameObject;
+			}
+
+			// Raw
+
+			public RaycastHit Raycast { get; }
+
+			// Distances
+
+			public Vector3 Start { get; }
+			public Vector3 Direction { get; }
+			public float Distance { get; }
+			public Vector3 End { get; }
+			public Vector3 Normal { get; }
+
+			// Objects
+
+			public Entity Entity { get; }
+			public GameObject GameObject { get; }
+			public Collider Collision { get; }
+		}
+
 		// Builder
 
 		public struct Builder
 		{
-			private Vector3 _origin;
-			private Vector3 _direction;
+			internal Vector3 _origin;
+			internal Vector3 _direction;
 			private float _distance;
 			private float _radius;
 
@@ -92,7 +132,7 @@ namespace Espionage.Engine
 				return Run( out _ );
 			}
 
-			public bool Run( out RaycastHit? hit )
+			public bool Run( out Result hit )
 			{
 				RaycastHit test;
 
@@ -102,11 +142,11 @@ namespace Espionage.Engine
 
 				if ( !cast )
 				{
-					hit = null;
+					hit = default;
 					return false;
 				}
 
-				hit = test;
+				hit = new( this, test );
 				return true;
 			}
 
@@ -115,12 +155,12 @@ namespace Espionage.Engine
 				return Run<T>( out _ );
 			}
 
-			public T Run<T>( out RaycastHit? hit ) where T : class
+			public T Run<T>( out Result? hit ) where T : class
 			{
 				var result = Run( out var test );
 
 				// Didn't hit
-				if ( !result || !test.HasValue )
+				if ( !result )
 				{
 					hit = null;
 					return null;
@@ -130,17 +170,17 @@ namespace Espionage.Engine
 				if ( typeof( T ).IsAssignableFrom( typeof( Entity ) ) )
 				{
 					// Try an Entity
-					if ( test.Value.collider.TryGetComponent<Entity>( out var entity ) )
+					if ( test.Entity != null )
 					{
 						hit = test;
-						return entity.Get<T>();
+						return test.Entity.Get<T>();
 					}
 
 					hit = null;
 					return null;
 				}
 
-				if ( test.Value.collider.TryGetComponent<T>( out var item ) )
+				if ( test.GameObject.TryGetComponent<T>( out var item ) )
 				{
 					hit = test;
 					return item;

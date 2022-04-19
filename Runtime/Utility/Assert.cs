@@ -69,7 +69,14 @@ namespace Espionage.Engine
 				Fail( message );
 			}
 		}
-
+		
+		public static void IsInvalid( IValid item, string message = "Item is Invalid!" )
+		{
+			if ( item is { IsValid: false } )
+			{
+				Fail( message );
+			}
+		}
 		// Utility
 
 		private static void Fail( string message )

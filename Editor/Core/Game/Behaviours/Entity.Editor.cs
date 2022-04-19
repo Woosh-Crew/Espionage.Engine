@@ -1,40 +1,25 @@
-﻿using System;
+﻿using System.Linq;
 using Espionage.Engine.Internal;
 using UnityEditor;
+using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
 namespace Espionage.Engine.Editor
 {
-	[CustomEditor( typeof( Entity ), true )]
-	internal class EntityEditor : BehaviourEditor, IHasCustomMenu
+	[CustomEditor( typeof( Proxy ), true )]
+	public class ProxyEditor : BehaviourEditor
 	{
-		protected Entity Entity => target as Entity;
+		private static LibraryList Dropdown { get; set; }
+
+		// Instance
+
+		private Proxy Proxy => target as Proxy;
 
 		protected override void OnEnable()
 		{
-			base.OnEnable();
+			Dropdown = new( serializedObject.FindProperty( "className" ) );
 
-			// Check if we're a Singleton, if we are, delete this instance if it already exists
-			if ( ClassInfo.Components.TryGet<SingletonAttribute>( out _ ) )
-			{
-				// Find all objects of Type.
-				var objects = FindObjectsOfType( ClassInfo.Info );
-
-				foreach ( var o in objects )
-				{
-					if ( target != o )
-					{
-						EditorUtility.DisplayDialog(
-							$"Singleton ({ClassInfo.Title}) already exists",
-							$"Can't create Entity {ClassInfo.Title} onto this GameObject. An instance of it already exists else where in the scene",
-							"Okay" );
-
-						DestroyImmediate( target );
-						return;
-					}
-				}
-			}
-
+			ClassInfo = Library.Database[target.GetType()];
 			EditorInjection.Titles[target.GetType()] = $"{ClassInfo.Title}";
 
 			// Only Entities can have custom icons...
@@ -46,91 +31,80 @@ namespace Espionage.Engine.Editor
 
 		public override void OnInspectorGUI()
 		{
-			var originalRect = EditorGUILayout.GetControlRect( true, 24, GUIStyle.none );
+			serializedObject.Update();
 
-			var rect = originalRect;
-			rect.width = Screen.width;
-			rect.y = 0;
-			rect.x = 0;
-
-			// Box
-			EditorGUI.DrawRect( rect, new Color32( 45, 45, 45, 255 ) );
-
-			// Label
-			rect.x = 16;
-			rect.width -= 16;
-			GUI.Label( rect, $"Entity  <size=10>[{ClassInfo.Name} / {ClassInfo.Group}]</size>", Styles.Text );
-
-			// Help
-			if ( ClassInfo.Components.TryGet<HelpAttribute>( out var help ) && !string.IsNullOrEmpty( help.URL ) )
+			GUILayout.BeginVertical( EngineGUI.Styles.HeaderStyle, GUILayout.MaxHeight( 64 ), GUILayout.Height( 64 ), GUILayout.ExpandWidth( true ) );
 			{
-				var helpRect = originalRect;
+				EngineGUI.Header( Dropdown, null, serializedObject.FindProperty( "name" ), serializedObject.FindProperty( "className" ), serializedObject.FindProperty( "disabled" ) );
 
-				helpRect.y = 0;
-				helpRect.x = Screen.width - 48 - 16;
-				helpRect.width = 48;
-
-				if ( GUI.Button( helpRect, "Help", Styles.Button ) )
+				if ( !Proxy.className.IsEmpty() )
 				{
-					Application.OpenURL( help.URL );
+					EngineGUI.Line();
+					PropertyGUI();
 				}
 			}
+			GUILayout.EndVertical();
 
-			// Underline
+			serializedObject.ApplyModifiedProperties();
+		}
 
-			rect.height = 1;
-			rect.width += 16;
-			rect.y -= 1;
-			rect.x = 0;
-			var color = new Color32( 26, 26, 26, 255 );
-
-			// Top
-			EditorGUI.DrawRect( rect, color );
-
-			// Bottom
-			rect.y += originalRect.height + 1;
-			EditorGUI.DrawRect( rect, color );
-
-			if ( ClassInfo.Components.Get<EditableAttribute>()?.Editable ?? true )
+		private void PropertyGUI()
+		{
+			foreach ( var property in Library.Database[Proxy.className].Properties )
 			{
-				DrawPropertiesExcluding( serializedObject, "m_Script", "uniqueId" );
-				serializedObject.ApplyModifiedProperties();
-
-				if ( !string.IsNullOrEmpty( ClassInfo.Help ) )
-				{
-					EditorGUILayout.HelpBox( ClassInfo.Help, MessageType.None );
-				}
-			}
-			else
-			{
-				GUILayout.Label( "Not Editable", EditorStyles.miniBoldLabel );
+				GUILayout.Label( property.Name );
 			}
 		}
 
-		private static class Styles
+		private void OnSceneGUI()
 		{
-			public static readonly GUIStyle Text = new( EditorStyles.largeLabel )
-			{
-				fontStyle = FontStyle.Bold,
-				alignment = TextAnchor.MiddleLeft,
-				richText = true
-			};
-
-			public static readonly GUIStyle Button = new( EditorStyles.toolbarButton )
-			{
-				alignment = TextAnchor.MiddleCenter,
-				richText = true,
-				stretchHeight = true,
-				fixedHeight = 0
-			};
+			var proxy = (target as Proxy);
+			Handles.Label( proxy.transform.position, proxy.className );
 		}
 
-		public void AddItemsToMenu( GenericMenu menu )
+		public class LibraryList : AdvancedDropdown
 		{
-			menu.AddItem( new( "Regenerate Entity Identifier" ), false, () =>
+			public SerializedProperty Owner { get; }
+
+			public LibraryList( SerializedProperty property ) : base( new() )
 			{
-				serializedObject.FindProperty( "uniqueId" ).stringValue = Guid.NewGuid().ToString();
-			} );
+				minimumSize = new Vector2( 0, 200 );
+				Owner = property;
+			}
+
+			protected override void ItemSelected( AdvancedDropdownItem item )
+			{
+				if ( !item.enabled )
+				{
+					return;
+				}
+
+				Owner.stringValue = Library.Database[item.id].Name;
+				Owner.serializedObject.ApplyModifiedProperties();
+			}
+
+			protected override AdvancedDropdownItem BuildRoot()
+			{
+				var root = new AdvancedDropdownItem( "Classes" );
+
+				var collection = Library.Database
+					.Where( e => e.Info.IsSubclassOf( typeof( Entity ) ) && !e.Info.IsAbstract )
+					.OrderBy( e => e.Components.Get<OrderAttribute>()?.Order ?? 5 )
+					.GroupBy( e => e.Group );
+
+				foreach ( var item in collection )
+				{
+					var grouping = new AdvancedDropdownItem( item.Key );
+					foreach ( var library in item )
+					{
+						grouping.AddChild( new( $"{library.Name}" ) { id = library.Id } );
+					}
+
+					root.AddChild( grouping );
+				}
+
+				return root;
+			}
 		}
 	}
 }
