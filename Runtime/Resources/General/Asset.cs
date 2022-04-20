@@ -66,16 +66,13 @@ namespace Espionage.Engine.Resources
 		protected virtual void OnUnload() { }
 
 		// Hotloading
-		
+
 		void IWatchable.OnHotload()
 		{
 			(this as IResource).Load();
 		}
 
-		void IWatchable.OnDeleted()
-		{
-			
-		}
+		void IWatchable.OnDeleted() { }
 
 		// Compiler
 

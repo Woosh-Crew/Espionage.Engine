@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Espionage.Engine.Resources;
 using UnityEditor;
 
@@ -25,13 +26,28 @@ namespace Espionage.Engine.Editor.Resources
 		//
 		// API
 		//
-		
+
 		public static bool Exists( Type type )
 		{
 			var interfaceType = typeof( ICompiler<> ).MakeGenericType( type );
 			var library = Library.Database.Find( interfaceType );
 
 			return library != null;
+		}
+
+		public static void Compile<T>( T item )
+		{
+			var library = Library.Database.Find( typeof( ICompiler<T> ) );
+			Assert.IsNull( library );
+
+			Debugging.Log.Info( $"Compiling {item.ToString()}" );
+			Library.Create<ICompiler<T>>( library.Info ).Compile( item );
+		}
+
+		public static void Compile( object item, Type type )
+		{
+			var method = typeof( Compiler ).GetMethods().FirstOrDefault( e => e.Name == "Compile" && e.IsGenericMethod )?.MakeGenericMethod( type );
+			method?.Invoke( null, new[] { item } );
 		}
 
 		public static void Compile( string asset, Type type )

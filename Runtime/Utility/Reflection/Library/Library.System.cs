@@ -91,7 +91,7 @@ namespace Espionage.Engine
 		}
 
 		/// <summary> <inheritdoc cref="Create"/> and returns T </summary>
-		public static T Create<T>( Library lib = null ) where T : ILibrary
+		public static T Create<T>( Library lib = null )
 		{
 			lib ??= typeof( T );
 			return (T)Create( lib );
