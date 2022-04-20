@@ -1,6 +1,6 @@
 ﻿namespace Espionage.Engine
 {
-	public abstract partial class Entity
+	public partial class Entity
 	{
 		/// <summary> All the entities that exists in the game world. </summary>
 		public static Entities All { get; } = new();

@@ -1,7 +1,13 @@
 ﻿namespace Espionage.Engine.Resources
 {
-	public interface IResource
+	public interface IResource : ILibrary
 	{
-		string Identifier { get; }
+		int Identifier { get; set; }
+		bool Persistant { get; set; }
+		
+		void Setup( string path );
+		
+		void Load();
+		bool Unload();
 	}
 }

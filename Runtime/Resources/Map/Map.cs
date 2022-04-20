@@ -10,7 +10,7 @@ using UnityEngine.SceneManagement;
 namespace Espionage.Engine.Resources
 {
 	[Group( "Maps" ), Path( "maps", "assets://Maps/" )]
-	public sealed partial class Map : IResource, ILibrary, ILoadable
+	public sealed partial class Map : ILibrary, ILoadable
 	{
 		public static Map Current { get; internal set; }
 		public static string[] Extensions { get; } = Library.Database.GetAll<File>().Select( e => e.Components.Get<FileAttribute>()?.Extension ).ToArray();

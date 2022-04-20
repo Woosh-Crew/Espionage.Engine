@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
@@ -39,6 +40,30 @@ namespace Espionage.Engine
 		public static void Missing<T>( IDatabase<T> collection, T item, string message = "Database doesn't contain item!" )
 		{
 			if ( !collection.Contains( item ) )
+			{
+				Fail( message );
+			}
+		}
+		
+		public static void Missing<T>( IList<T> collection, T item, string message = "Database doesn't contain item!" )
+		{
+			if ( !collection.Contains( item ) )
+			{
+				Fail( message );
+			}
+		}
+		
+		public static void Contains<T>( IDatabase<T> collection, T item, string message = "Database already contains item!" )
+		{
+			if ( collection.Contains( item ) )
+			{
+				Fail( message );
+			}
+		}
+		
+		public static void Contains<T>( IList<T> collection, T item, string message = "Database already contains item!" )
+		{
+			if ( collection.Contains( item ) )
 			{
 				Fail( message );
 			}

@@ -14,6 +14,11 @@ namespace Espionage.Engine
 		{
 			Info = info;
 
+			if ( name.Length > 32 )
+			{
+				Debugging.Log.Warning( $"Property Name [{name}] is longer than 32 characters" );
+			}
+
 			Name = name;
 			Default = value;
 			Editable = info.SetMethod != null;
@@ -34,7 +39,7 @@ namespace Espionage.Engine
 					Components.Add( property );
 				}
 			}
-			
+
 			Title = Title.IsEmpty( info.Name.ToTitleCase() );
 		}
 

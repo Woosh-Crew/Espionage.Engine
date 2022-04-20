@@ -1,92 +1,54 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace Espionage.Engine.Resources
 {
 	[Library( "res.model" ), Group( "Models" ), Path( "models", "assets://<library_group(res.model)>/", Overridable = true )]
-	public sealed class Model : ILibrary, IResource
+	public sealed class Model : IResource
 	{
-		public static Model Load( string path )
-		{
-			if ( !Files.Pathing.Valid( path ) )
-			{
-				path = "models://" + path;
-			}
-
-			path = Files.Pathing.Absolute( path );
-
-			// Use the Database Map if we have it
-			if ( Database[path] != null )
-			{
-				var model = Database[path];
-				model.Load();
-				return model;
-			}
-
-			if ( Files.Pathing.Exists( path ) )
-			{
-				var model = new Model( Files.Grab<File>( path ) );
-				model.Load();
-				return model;
-			}
-
-			// Either Load Error Model, or nothing if not found.
-			Debugging.Log.Error( $"Model Path [{path}], couldn't be found." );
-			return Files.Pathing.Exists( "models://w_error.umdl" ) ? Load( "w_error.umdl" ) : null;
-		}
-
-		//
-		// Instance
-		//
-
 		public Library ClassInfo { get; }
 
-		public string Identifier { get; }
+		int IResource.Identifier { get; set; }
 		public bool Persistant { get; set; }
 
-		private Model( File provider )
+		public Model()
 		{
-			Assert.IsNull( provider );
 			ClassInfo = Library.Register( this );
-
-			Source = provider;
-			Identifier = provider.Info.FullName;
 		}
 
-		public File Source { get; }
+		public File Source { get; private set; }
 		public GameObject Cache { get; set; }
 		private Stack<Instance> Instances { get; set; } = new();
 
 		public Instance Consume( Transform transform )
 		{
 			var instance = Instances.Peek();
-
-			if ( instance.IsConsumed )
-			{
-				Assert.IsTrue( instance.IsConsumed );
-				return null;
-			}
-
+			
+			Assert.IsTrue( instance.IsConsumed );
 			instance.IsConsumed = true;
 			instance.GameObject.SetActive( true );
 			instance.GameObject.transform.parent = transform;
+			instance.GameObject.transform.localPosition = Vector3.zero;
 
 			return instance;
 		}
 
-		private void Load()
+		void IResource.Setup( string path )
 		{
-			if ( Instances.Count <= 0 )
+			var file = Files.Grab<File>( path );
+			Assert.IsNull( file );
+
+			Source = file;
+		}
+
+		void IResource.Load()
+		{
+			if ( Instances.Count <= 0 && Cache == null )
 			{
-				var stopwatch = Debugging.Stopwatch( $"Loaded Model [{Files.Pathing.Name( Identifier )}]" );
-				Database.Add( this );
+				using var stopwatch = Debugging.Stopwatch( $"Loaded Model [{Files.Pathing.Name( Source.Info )}]" );
 				Source.Load( OnLoad );
-				stopwatch?.Dispose();
 			}
 
 			Instances.Push( new( this ) );
@@ -97,27 +59,20 @@ namespace Espionage.Engine.Resources
 			Cache = gameObject;
 		}
 
-		private void Unload()
+		bool IResource.Unload()
 		{
 			Instances.Pop();
 
-			if ( Instances.Count <= 0 )
+			if ( !Persistant && Instances.Count <= 0 )
 			{
-				Debugging.Log.Info( $"Unloading Model [{Files.Pathing.Name( Identifier )}]" );
+				Debugging.Log.Info( $"Unloading Model [{Files.Pathing.Name( Source.Info )}]" );
 
 				Source.Unload();
-				Database.Remove( this );
-				(this as ILibrary).Delete();
-
 				Cache = null;
 			}
-		}
 
-		public static implicit operator Model( string input )
-		{
-			return Load( input );
+			return Instances.Count <= 0;
 		}
-
 
 		public sealed class Instance
 		{
@@ -126,7 +81,7 @@ namespace Espionage.Engine.Resources
 				Model = model;
 				IsConsumed = false;
 
-				GameObject = Object.Instantiate( Model.Cache );
+				GameObject = GameObject.Instantiate( Model.Cache );
 				GameObject.SetActive( false );
 			}
 
@@ -136,8 +91,8 @@ namespace Espionage.Engine.Resources
 
 			public void Delete()
 			{
-				Object.Destroy( GameObject );
-				Model.Unload();
+				GameObject.Destroy( GameObject );
+				Resource.Unload( Model );
 			}
 		}
 
@@ -155,64 +110,6 @@ namespace Espionage.Engine.Resources
 
 			public abstract void Load( Action<GameObject> loaded );
 			public abstract void Unload();
-		}
-
-		//
-		// Database
-		//
-
-		public static IDatabase<Model, string> Database { get; } = new InternalDatabase();
-
-		private class InternalDatabase : IDatabase<Model, string>
-		{
-			private readonly Dictionary<string, Model> _storage = new();
-
-			public Model this[ string key ] => _storage.ContainsKey( key ) ? _storage[key] : null;
-			public int Count => _storage.Count;
-
-			// Enumerator
-
-			public IEnumerator<Model> GetEnumerator()
-			{
-				// This shouldn't box. _store.GetEnumerator Does. but Enumerable.Empty shouldn't.
-				return Count == 0 ? Enumerable.Empty<Model>().GetEnumerator() : _storage.Values.GetEnumerator();
-			}
-
-			IEnumerator IEnumerable.GetEnumerator()
-			{
-				return GetEnumerator();
-			}
-
-			// API
-
-			public void Add( Model item )
-			{
-				// Store it in Database
-				if ( _storage.ContainsKey( item.Identifier! ) )
-				{
-					Debugging.Log.Warning( $"Replacing Resource [{item.Identifier}]" );
-					_storage[item.Identifier] = item;
-				}
-				else
-				{
-					_storage.Add( item.Identifier!, item );
-				}
-			}
-
-			public bool Contains( Model item )
-			{
-				return _storage.ContainsKey( item.Identifier );
-			}
-
-			public void Remove( Model item )
-			{
-				_storage.Remove( item.Identifier );
-			}
-
-			public void Clear()
-			{
-				_storage.Clear();
-			}
 		}
 	}
 }

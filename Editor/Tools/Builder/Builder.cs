@@ -119,6 +119,9 @@ namespace Espionage.Engine.Tools.Editor
 			if ( !buildSettings.options.HasFlag( BuildOptions.BuildScriptsOnly ) )
 			{
 				MoveCompiledAssets( $"{path}{info.Name}_Data/" );
+				
+				// Because map doesnt inherit from IResource
+				MoveGroup( typeof( Map ), $"{path}{info.Name}_Data/" );
 			}
 		}
 
@@ -145,23 +148,28 @@ namespace Espionage.Engine.Tools.Editor
 
 		private static void MoveCompiledAssets( string path )
 		{
-			path = Files.Pathing.Absolute( path );
-
 			foreach ( var library in Library.Database.GetAll<IResource>() )
 			{
-				// Does Assets actually Exists?
-				if ( !Files.Pathing.Exists( $"assets://{library.Group}" ) )
-				{
-					Debugging.Log.Info( $"{library.Title} doesn't have any exported assets." );
-					continue;
-				}
-
-				var outputPath = $"{path}{library.Group}/";
-				Files.Pathing.Create( outputPath );
-				Files.Copy( $"assets://{library.Group}", outputPath );
-
-				Debugging.Log.Info( $"Moving [{library.Group}] to [{outputPath}]" );
+				MoveGroup( library, path );
 			}
+		}
+
+		private static void MoveGroup( Library lib, string path )
+		{
+			path = Files.Pathing.Absolute( path );
+			
+			// Does Assets actually Exists?
+			if ( !Files.Pathing.Exists( $"assets://{lib.Group}" ) )
+			{
+				Debugging.Log.Info( $"{lib.Title} doesn't have any exported assets." );
+				return;
+			}
+
+			var outputPath = $"{path}{lib.Group}/";
+			Files.Pathing.Create( outputPath );
+			Files.Copy( $"assets://{lib.Group}", outputPath );
+
+			Debugging.Log.Info( $"Moving [{lib.Group}] to [{outputPath}]" );
 		}
 
 	}
