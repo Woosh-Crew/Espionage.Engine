@@ -65,8 +65,8 @@ namespace Espionage.Engine.IO
 		private readonly Dictionary<string, Func<string[], string>> _keywords = new()
 		{
 			// -- Game Specific
-			["game"] = ( _ ) => Engine.Game.ClassInfo.Title,
-			["executable"] = ( _ ) => $"{Engine.Game.ClassInfo.Name}.exe",
+			["game"] = ( _ ) => Engine.Game?.ClassInfo.Title ?? "None",
+			["executable"] = ( _ ) => Engine.Game == null ? "error" : $"{Engine.Game.ClassInfo.Name}.exe",
 			["company"] = ( _ ) => Application.companyName,
 			["user"] = ( _ ) => Environment.UserName,
 
@@ -344,7 +344,7 @@ namespace Espionage.Engine.IO
 			path = Absolute( path );
 			return withExtension ? Path.GetFileName( path ) : Path.GetFileNameWithoutExtension( path );
 		}
-		
+
 		///<inheritdoc cref="Name(string,bool)"/>
 		public string Name( FileInfo file, bool withExtension = true )
 		{
