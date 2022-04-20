@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Linq;
 using Espionage.Engine.Resources;
-using UnityEditor;
 
-namespace Espionage.Engine.Editor.Resources
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
+namespace Espionage.Engine.Resources
 {
 	public static class Compiler
 	{
+		#if UNITY_EDITOR
+		
 		[MenuItem( "Assets/Compile Asset", true )]
 		private static bool CompileValidate()
 		{
@@ -22,6 +27,8 @@ namespace Espionage.Engine.Editor.Resources
 				Compile( path, selection.GetType() );
 			}
 		}
+
+		#endif
 
 		//
 		// API
