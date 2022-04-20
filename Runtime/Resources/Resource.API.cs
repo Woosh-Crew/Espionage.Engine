@@ -33,6 +33,13 @@
 
 			// Either Load Error Model, or nothing if not found.
 			Debugging.Log.Error( $"{library.Title} Path [{path}], couldn't be found." );
+
+			// Load default resource, if its not there
+			if ( library.ClassInfo.Components.TryGet( out FileAttribute files ) && !files.Fallback.IsEmpty() && Files.Pathing.Exists( files.Fallback ) )
+			{
+				return Load<T>( files.Fallback, true );
+			}
+
 			return null;
 		}
 

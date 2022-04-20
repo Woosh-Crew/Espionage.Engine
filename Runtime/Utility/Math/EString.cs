@@ -28,11 +28,7 @@ namespace Espionage.Engine
 
 		public static string ReplaceAt( this string input, int index, char newChar )
 		{
-			if ( input == null )
-			{
-				throw new ArgumentNullException( nameof( input ) );
-			}
-
+			Assert.IsNull( input );
 			return new StringBuilder( input ) { [index] = newChar }.ToString();
 		}
 

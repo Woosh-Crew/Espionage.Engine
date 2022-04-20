@@ -11,7 +11,7 @@ namespace Espionage.Engine.Resources
 	public static class Compiler
 	{
 		#if UNITY_EDITOR
-		
+
 		[MenuItem( "Assets/Compile Asset", true )]
 		private static bool CompileValidate()
 		{
@@ -68,10 +68,7 @@ namespace Espionage.Engine.Resources
 			var interfaceType = typeof( ICompiler<> ).MakeGenericType( type );
 			var library = Library.Database.Find( interfaceType );
 
-			if ( library == null )
-			{
-				throw new( "No Valid Compilers for this Type" );
-			}
+			Assert.IsNull( "No Valid Compilers for this Type" );
 
 			var converter = Library.Create( library.Info );
 			var method = interfaceType.GetMethod( "Compile" );

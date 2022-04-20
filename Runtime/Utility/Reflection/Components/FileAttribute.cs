@@ -10,9 +10,9 @@ namespace Espionage.Engine
 	public sealed class FileAttribute : Attribute, IComponent<Library>
 	{
 		/// <summary>
-		/// The Default name of this file.
+		/// What file should we load by default if loading one failed.
 		/// </summary>
-		public string Path { get; set; }
+		public string Fallback { get; set; }
 
 		/// <summary>
 		/// The default extension for this file.
@@ -22,8 +22,10 @@ namespace Espionage.Engine
 		/// <summary>
 		/// The serialization type for this file.
 		/// </summary>
-		public string Serialization { get; set; }
+		public Serialization Serialization { get; set; }
 
 		public void OnAttached( Library library ) { }
 	}
+
+	public enum Serialization { Json, Binary, Ini, Yaml, XML }
 }

@@ -9,12 +9,18 @@ namespace Espionage.Engine
 	[AttributeUsage( AttributeTargets.Property )]
 	public sealed class SerializeAttribute : Attribute, IComponent<Property>
 	{
-		private readonly bool _serialize;
+		/// <summary>
+		/// Overrides the property serialization identifier.
+		/// Use this if you change the name of your property.
+		/// </summary>
+		public int Identifier { get; set; }
 
 		public SerializeAttribute( bool serialize = true )
 		{
 			_serialize = serialize;
 		}
+		
+		private readonly bool _serialize;
 
 		public void OnAttached( Property property )
 		{

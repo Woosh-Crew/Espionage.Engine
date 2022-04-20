@@ -21,12 +21,7 @@ namespace Espionage.Engine
 
 		public void OnAttached( Property item )
 		{
-			if ( !item.IsStatic )
-			{
-				throw new InvalidOperationException( $"Property {item.Name} from {item.Owner.Name} can't be instanced" );
-			}
-
-
+			Assert.IsFalse( item.IsStatic, $"Property {item.Name} from {item.Owner?.Name} can't be instanced" );
 			Cookies.Register( new( Path, item ) );
 		}
 	}

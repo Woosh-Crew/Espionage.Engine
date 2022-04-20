@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Espionage.Engine.Resources
 {
-	[Library( "res.model" ), Group( "Models" ), Path( "models", "assets://<library_group(res.model)>/", Overridable = true )]
+	[Library( "res.model" ), File( Fallback = "w_error.umdl" ), Group( "Models" ), Path( "models", "assets://Models", Overridable = true )]
 	public sealed class Model : IResource
 	{
 		public Library ClassInfo { get; }
@@ -25,7 +25,7 @@ namespace Espionage.Engine.Resources
 		public Instance Consume( Transform transform )
 		{
 			var instance = Instances.Peek();
-			
+
 			Assert.IsTrue( instance.IsConsumed );
 			instance.IsConsumed = true;
 			instance.GameObject.SetActive( true );

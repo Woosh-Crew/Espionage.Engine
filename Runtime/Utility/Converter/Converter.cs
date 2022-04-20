@@ -60,10 +60,7 @@ namespace Espionage.Engine
 			var interfaceType = typeof( IConverter<> ).MakeGenericType( type );
 			var library = Library.Database.Find( interfaceType );
 
-			if ( library == null )
-			{
-				throw new( "No Valid Converters for this Type" );
-			}
+			Assert.IsNull( library, "No Valid Converters for this Type" );
 
 			var converter = Library.Create( library.Info );
 			var method = interfaceType.GetMethod( "Convert" );
