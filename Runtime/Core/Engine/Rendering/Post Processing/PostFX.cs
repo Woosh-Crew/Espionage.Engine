@@ -1,9 +1,7 @@
 ﻿using System;
 using Espionage.Engine.Services;
-using ImGuiNET;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
-using Object = UnityEngine.Object;
 
 namespace Espionage.Engine.PostProcessing
 {
@@ -28,14 +26,6 @@ namespace Espionage.Engine.PostProcessing
 
 			Debug = camera.gameObject.AddComponent<PostProcessDebug>();
 			Debug.postProcessLayer = Layer;
-		}
-
-		private void Item( string name, DebugOverlay overlay )
-		{
-			if ( ImGui.MenuItem( name, null, Debug.debugOverlay == overlay ) )
-			{
-				Debug.debugOverlay = Debug.debugOverlay == overlay ? DebugOverlay.None : overlay;
-			}
 		}
 
 		//
@@ -95,7 +85,7 @@ namespace Espionage.Engine.PostProcessing
 			}
 
 			// Get all Post FX.
-			var all = Object.FindObjectsOfType<PostProcessVolume>();
+			var all = GameObject.FindObjectsOfType<PostProcessVolume>();
 			Debugging.Log.Info( "Adjusting Post FX Profiles" );
 
 			foreach ( var volume in all )
