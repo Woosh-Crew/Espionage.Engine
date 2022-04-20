@@ -1,8 +1,8 @@
 ﻿namespace Espionage.Engine.Resources
 {
-	public interface ICompiler<T>
+	public interface ICompiler<in T>
 	{
-		void Compile( string asset );
+		void Compile( T asset );
 	}
 
 	public interface ITester<T>

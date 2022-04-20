@@ -158,7 +158,7 @@ namespace Espionage.Engine
 		{
 			return Database[hash];
 		}
-		
+
 		//
 		// Properties
 		// 
@@ -168,15 +168,15 @@ namespace Espionage.Engine
 		/// that have the Property attribute on them. They are used for
 		/// serialization.
 		/// </summary>
-		public IDatabase<Property, string> Properties { get; private set; }
+		public IDatabase<Property, string, int> Properties { get; private set; }
 
 		/// <summary>
 		/// All the functions on this library. These are the members
 		/// that have the Function attribute on them. 
 		/// </summary>
-		public IDatabase<Function, string> Functions { get; private set; }
+		public IDatabase<Function, string, int> Functions { get; private set; }
 
-		private class MemberDatabase<T, TInfo> : IDatabase<T, string> where T : class, IMember<TInfo> where TInfo : MemberInfo
+		private class MemberDatabase<T, TInfo> : IDatabase<T, string, int> where T : class, IMember<TInfo> where TInfo : MemberInfo
 		{
 			internal static readonly Dictionary<Type, HashSet<T>> Registry = new();
 
@@ -187,12 +187,28 @@ namespace Espionage.Engine
 
 			// IDatabase
 
-			public int Count => _all.Count;
-			public T this[ string key ] => _all.ContainsKey( key ) ? _all[key] : null;
+			public int Count => _storage.Count;
+
+			public T this[ int hash ]
+			{
+				get
+				{
+					return _storage[hash];
+				}
+			}
+
+			public T this[ string key ]
+			{
+				get
+				{
+					var entry = key.Hash();
+					return _storage.ContainsKey( entry ) ? _storage[entry] : null;
+				}
+			}
 
 			// Instance
 
-			private readonly Dictionary<string, T> _all = new();
+			private readonly SortedList<int, T> _storage = new();
 			private readonly Library _owner;
 
 			// Enumerator
@@ -200,7 +216,7 @@ namespace Espionage.Engine
 			public IEnumerator<T> GetEnumerator()
 			{
 				// This shouldn't box. _store.GetEnumerator Does. but Enumerable.Empty shouldn't.
-				return Count == 0 ? Enumerable.Empty<T>().GetEnumerator() : _all.Values.GetEnumerator();
+				return Count == 0 ? Enumerable.Empty<T>().GetEnumerator() : _storage.Values.GetEnumerator();
 			}
 
 			IEnumerator IEnumerable.GetEnumerator()
@@ -231,29 +247,34 @@ namespace Espionage.Engine
 					item.Group = item.Group.IsEmpty( _owner.Title );
 				}
 
+				if ( item.Identifier == default )
+				{
+					item.Identifier = item.Name.Hash();
+				}
+
 				// Now add it to the instance
-				if ( _all.ContainsKey( item.Name ) )
+				if ( _storage.ContainsKey( item.Identifier ) )
 				{
 					Debugging.Log.Error( $"Replacing {item.Name}, from {_owner.Name}" );
 					return;
 				}
 
-				_all.Add( item.Name, item );
+				_storage.Add( item.Identifier, item );
 			}
 
 			public bool Contains( T item )
 			{
-				return _all.ContainsKey( item.Name );
+				return _storage.ContainsKey( item.Identifier );
 			}
 
 			public void Remove( T item )
 			{
-				_all.Remove( item.Name );
+				_storage.Remove( item.Identifier );
 			}
 
 			public void Clear()
 			{
-				_all.Clear();
+				_storage.Clear();
 			}
 		}
 	}

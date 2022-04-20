@@ -37,6 +37,7 @@ namespace Espionage.Engine
 			return $"Function:[{Name}/{Owner.Name}]";
 		}
 
+		public int Identifier { get; set; }
 		public string Name { get; }
 		public string Title { get; set; }
 		public string Group { get; set; }

@@ -16,7 +16,8 @@ namespace Espionage.Engine
 
 			if ( name.Length > 32 )
 			{
-				Debugging.Log.Warning( $"Property Name [{name}] is longer than 32 characters" );
+				// Suppressing the warning for now...
+				// Debugging.Log.Warning( $"Property Name [{name}] is longer than 32 characters" );
 			}
 
 			Name = name;
@@ -51,6 +52,7 @@ namespace Espionage.Engine
 		public PropertyInfo Info { get; }
 		public Components<Property> Components { get; }
 
+		public int Identifier { get; set; }
 		public string Name { get; }
 		public object Default { get; }
 

@@ -22,11 +22,12 @@ namespace Espionage.Engine.Resources.Maps
 			return $"+map \"{Files.Pathing.Absolute( $"maps://{Files.Pathing.Name( asset, false )}.umap" )}\"";
 		}
 
-		public void Compile( string scenePath )
+		public void Compile( SceneAsset asset )
 		{
 			// Ask the user if they want to save the scene, if not don't export!
 			var activeScene = SceneManager.GetActiveScene();
 			var originalPath = activeScene.path;
+			var scenePath = AssetDatabase.GetAssetPath( asset );
 
 			if ( activeScene.path == scenePath && !EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo() )
 			{

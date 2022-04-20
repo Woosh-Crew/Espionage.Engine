@@ -15,9 +15,10 @@ namespace Espionage.Engine.Resources.Models
 
 	public partial class UMDL : ICompiler<GameObject>
 	{
-		public void Compile( string asset )
+		public void Compile( GameObject asset )
 		{
 			var exportPath = $"Exports/{ClassInfo.Group}/";
+			var assetPath = AssetDatabase.GetAssetPath( asset );
 
 			// Track how long exporting took
 			using ( Debugging.Stopwatch( "Model Compiled", true ) )
@@ -25,9 +26,9 @@ namespace Espionage.Engine.Resources.Models
 				try
 				{
 					// Find relative folder
-					if ( Files.Pathing.InFolder( "Models", asset, "project://" ) )
+					if ( Files.Pathing.InFolder( "Models", assetPath, "project://" ) )
 					{
-						var split = asset.Split( '/' );
+						var split = assetPath.Split( '/' );
 						for ( var i = split.Length - 1; i >= 0; i-- )
 						{
 							if ( split[i] != "Models" )
@@ -43,7 +44,7 @@ namespace Espionage.Engine.Resources.Models
 					Files.Pathing.Create( exportPath );
 
 					var extension = ClassInfo.Components.Get<FileAttribute>().Extension;
-					var builds = new[] { new AssetBundleBuild() { assetNames = new[] { asset }, assetBundleName = $"{Files.Pathing.Name( asset, false )}.{extension}" } };
+					var builds = new[] { new AssetBundleBuild() { assetNames = new[] { assetPath }, assetBundleName = $"{Files.Pathing.Name( assetPath, false )}.{extension}" } };
 
 					var bundle = BuildPipeline.BuildAssetBundles( exportPath, builds, BuildAssetBundleOptions.ChunkBasedCompression, BuildTarget.StandaloneWindows );
 
