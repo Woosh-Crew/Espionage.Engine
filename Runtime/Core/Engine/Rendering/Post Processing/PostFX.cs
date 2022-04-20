@@ -8,10 +8,10 @@ using Object = UnityEngine.Object;
 namespace Espionage.Engine.PostProcessing
 {
 	[Library( "services.postfx" ), Group( "Post Processing" )]
-	public class PostFXService : Service
+	public class PostFX : Service
 	{
-		private PostProcessDebug _debug;
-		private PostProcessLayer _layer;
+		public PostProcessLayer Layer { get; private set; }
+		public PostProcessDebug Debug { get; private set; }
 
 		public override void OnReady()
 		{
@@ -19,42 +19,22 @@ namespace Espionage.Engine.PostProcessing
 			var camera = Engine.Camera;
 
 			// Setup Post Processing
-			_layer = camera.gameObject.AddComponent<PostProcessLayer>();
-			_layer.Init( UnityEngine.Resources.Load<PostProcessResources>( "PostProcessResources" ) );
+			Layer = camera.gameObject.AddComponent<PostProcessLayer>();
+			Layer.Init( UnityEngine.Resources.Load<PostProcessResources>( "PostProcessResources" ) );
 
-			_layer.volumeTrigger = camera.transform;
-			_layer.volumeLayer = LayerMask.GetMask( "TransparentFX", "Water" );
-			_layer.antialiasingMode = PostProcessLayer.Antialiasing.SubpixelMorphologicalAntialiasing;
+			Layer.volumeTrigger = camera.transform;
+			Layer.volumeLayer = LayerMask.GetMask( "TransparentFX", "Water" );
+			Layer.antialiasingMode = PostProcessLayer.Antialiasing.SubpixelMorphologicalAntialiasing;
 
-			_debug = camera.gameObject.AddComponent<PostProcessDebug>();
-			_debug.postProcessLayer = _layer;
-		}
-
-		//
-		// UI
-		//
-
-		[Function, Callback( "dev.menu_bar.graphics" )]
-		private void MenuBar()
-		{
-			// Post Processing Debug Overlays
-			if ( ImGui.BeginMenu( "Fullbright Overlays" ) )
-			{
-				foreach ( var value in Enum.GetValues( typeof( DebugOverlay ) ) )
-				{
-					var item = (DebugOverlay)value;
-					Item( item.ToString().ToTitleCase().IsEmpty( "Null" ), item );
-				}
-
-				ImGui.EndMenu();
-			}
+			Debug = camera.gameObject.AddComponent<PostProcessDebug>();
+			Debug.postProcessLayer = Layer;
 		}
 
 		private void Item( string name, DebugOverlay overlay )
 		{
-			if ( ImGui.MenuItem( name, null, _debug.debugOverlay == overlay ) )
+			if ( ImGui.MenuItem( name, null, Debug.debugOverlay == overlay ) )
 			{
-				_debug.debugOverlay = _debug.debugOverlay == overlay ? DebugOverlay.None : overlay;
+				Debug.debugOverlay = Debug.debugOverlay == overlay ? DebugOverlay.None : overlay;
 			}
 		}
 

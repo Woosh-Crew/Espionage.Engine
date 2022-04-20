@@ -47,6 +47,7 @@ namespace Espionage.Engine.Resources
 			if ( resource == null )
 			{
 				Debugging.Log.Error( $"Resource [{path}] couldn't be found" );
+				return;
 			}
 
 			Unload( resource );

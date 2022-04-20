@@ -1,5 +1,4 @@
-﻿using ImGuiNET;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Espionage.Engine.Tripods
 {
