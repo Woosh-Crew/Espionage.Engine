@@ -13,7 +13,7 @@
 
 			path = Files.Pathing.Absolute( path );
 
-			if ( Registered[path] != null )
+			if ( Registered[path] != null && Registered[path].Resource != null )
 			{
 				var asset = Registered[path];
 				asset.Resource.Load();

@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using Espionage.Engine.Services;
 using UnityEngine;
 using UnityEngine.LowLevel;
@@ -47,9 +49,22 @@ namespace Espionage.Engine
 		/// </summary>
 		public static Camera Camera => Services.Get<CameraService>().Camera;
 
+		/// <summary>
+		/// Is Developer is a launch arg -dev which indicated should
+		/// we enable developer features. Such as resource hotloading, verbose
+		/// logging, etc. Try to use this on everything the average user wouldn't
+		/// need to see.
+		/// </summary>
+		public static bool IsDeveloper { get; }
+
 		//
 		// Initialization
 		//
+
+		static Engine()
+		{
+			IsDeveloper = Application.isEditor || Environment.GetCommandLineArgs().Contains( "-dev" );
+		}
 
 		[RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.AfterSceneLoad )]
 		private static void Initialize_RuntimePostScene()
