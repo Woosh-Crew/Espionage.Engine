@@ -13,17 +13,17 @@
 
 			path = Files.Pathing.Absolute( path );
 
-			if ( Database[path] != null )
+			if ( Registered[path] != null )
 			{
-				var asset = Database[path];
-				asset.Load();
+				var asset = Registered[path];
+				asset.Resource.Load();
 				return asset as T;
 			}
 
 			if ( Files.Pathing.Exists( path ) )
 			{
 				var model = new T { Identifier = path.Hash(), Persistant = persistant };
-				Database.Add( model );
+				Registered.Add( model );
 
 				model.Setup( path );
 				model.Load();
@@ -45,7 +45,7 @@
 
 		public static void Unload( string path )
 		{
-			var resource = Database[path];
+			var resource = Registered[path];
 
 			if ( resource == null )
 			{
@@ -53,7 +53,7 @@
 				return;
 			}
 
-			Unload( resource );
+			Unload( resource.Resource );
 		}
 
 		public static void Unload( IResource resource )
@@ -62,7 +62,7 @@
 
 			if ( resource!.Unload() && !resource.Persistant )
 			{
-				Database.Remove( resource );
+				Registered.Remove( resource );
 			}
 		}
 	}

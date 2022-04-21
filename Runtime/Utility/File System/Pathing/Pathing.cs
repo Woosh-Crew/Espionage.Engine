@@ -306,7 +306,7 @@ namespace Espionage.Engine.IO
 		public IEnumerable<string> All( string path )
 		{
 			path = Absolute( path );
-			return !Exists( path ) ? null : Directory.GetFiles( path );
+			return !Exists( path ) ? Array.Empty<string>() : Directory.GetFiles( path, "*", SearchOption.AllDirectories );
 		}
 
 		/// <summary>
@@ -316,7 +316,7 @@ namespace Espionage.Engine.IO
 		public IEnumerable<string> All( string path, SearchOption option )
 		{
 			path = Absolute( path );
-			return !Exists( path ) ? null : Directory.GetDirectories( path, "*", option );
+			return !Exists( path ) ? Array.Empty<string>() : Directory.GetDirectories( path, "*", option );
 		}
 
 		/// <summary>
@@ -328,7 +328,7 @@ namespace Espionage.Engine.IO
 
 			if ( !Exists( path ) )
 			{
-				return null;
+				return Array.Empty<string>();
 			}
 
 			return Directory.GetFiles( path, "*.*", SearchOption.AllDirectories )

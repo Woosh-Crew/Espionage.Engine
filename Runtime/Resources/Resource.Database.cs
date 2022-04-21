@@ -6,13 +6,13 @@ namespace Espionage.Engine.Resources
 {
 	public partial class Resource
 	{
-		public static IDatabase<IResource, string> Database { get; } = new InternalDatabase();
+		public static Registry Registered { get; } = new();
 
-		private class InternalDatabase : IDatabase<IResource, string, int>
+		public class Registry : IEnumerable<Registry.Reference>
 		{
-			private readonly SortedList<int, IResource> _storage = new();
+			private readonly SortedList<int, Reference> _storage = new();
 
-			public IResource this[ string key ]
+			public Reference this[ string key ]
 			{
 				get
 				{
@@ -21,15 +21,15 @@ namespace Espionage.Engine.Resources
 				}
 			}
 
-			public IResource this[ int key ] => _storage.ContainsKey( key ) ? _storage[key] : null;
+			public Reference this[ int key ] => _storage.ContainsKey( key ) ? _storage[key] : null;
 			public int Count => _storage.Count;
 
 			// Enumerator
 
-			public IEnumerator<IResource> GetEnumerator()
+			public IEnumerator<Reference> GetEnumerator()
 			{
-				// This shouldn't box. _store.GetEnumerator Does. but Enumerable.Empty shouldn't.
-				return Count == 0 ? Enumerable.Empty<Model>().GetEnumerator() : _storage.Values.GetEnumerator();
+				// This is bit hacky, but its a facade API! I love facade APIs!
+				return Count == 0 ? Enumerable.Empty<Reference>().GetEnumerator() : _storage.Values.GetEnumerator();
 			}
 
 			IEnumerator IEnumerable.GetEnumerator()
@@ -37,36 +37,68 @@ namespace Espionage.Engine.Resources
 				return GetEnumerator();
 			}
 
+			//
 			// API
+			//
+
+			public void Fill( string path )
+			{
+				var instance = new Reference( path );
+				_storage.Add( instance.Identifier, instance );
+			}
 
 			public void Add( IResource item )
 			{
 				// Store it in Database
 				if ( _storage.ContainsKey( item.Identifier ) )
 				{
-					Debugging.Log.Warning( $"Replacing Resource [{item.Identifier}]" );
-					_storage[item.Identifier] = item;
+					_storage[item.Identifier].Resource = item;
 				}
 				else
 				{
-					_storage.Add( item.Identifier, item );
+					Debugging.Log.Warning( $"Adding new resource [{item.Identifier}]" );
+					_storage.Add( item.Identifier, new( item.Identifier ) );
 				}
-			}
-
-			public bool Contains( IResource item )
-			{
-				return _storage.ContainsKey( item.Identifier );
 			}
 
 			public void Remove( IResource item )
 			{
-				_storage.Remove( item.Identifier );
+				_storage[item.Identifier].Resource = null;
 				item.Delete();
 			}
 
-			public void Clear()
+			// 
+			// Data
+			//
+
+			public class Reference
 			{
-				_storage.Clear();
+				public IResource Resource { get; set; }
+
+				public Reference( string path )
+				{
+					Path = path;
+					Identifier = path.Hash();
+				}
+
+				public Reference( int hash )
+				{
+					Path = null;
+					Identifier = hash;
+				}
+
+				~Reference()
+				{
+					Resource = null;
+				}
+
+				public string Path { get; }
+				public int Identifier { get; }
+
+				public override string ToString()
+				{
+					return $"loaded:[{Resource != null}] path:[{Path}]";
+				}
 			}
 		}
 	}
