@@ -26,7 +26,7 @@ namespace Espionage.Engine.Internal
 			// Groupings
 			foreach ( var file in files )
 			{
-				if ( !Files.Pathing.Exists( file.Key ) )
+				if ( !Files.Pathing( file.Key ).Absolute().Exists() )
 				{
 					// Nothing to load.
 					return;

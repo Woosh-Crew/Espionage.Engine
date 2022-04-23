@@ -1,21 +1,22 @@
-﻿namespace Espionage.Engine.Resources
+﻿using Espionage.Engine.IO;
+
+namespace Espionage.Engine.Resources
 {
 	public partial class Resource
 	{
-		public static T Load<T>( string path, bool persistant = false ) where T : class, IResource, new()
+		public static T Load<T>( Pathing path, bool persistant = false ) where T : class, IResource, new()
 		{
 			Library library = typeof( T );
-			var pathing = Files.Pathing( path );
 
 			// Apply shorthand, if path doesn't have one
-			if ( !pathing.Valid() && library.Components.TryGet<PathAttribute>( out var attribute ) )
+			if ( !path.Valid() && library.Components.TryGet<PathAttribute>( out var attribute ) )
 			{
 				path = $"{attribute.ShortHand}://" + path;
 			}
 
-			pathing = pathing.Absolute();
+			path = path.Absolute();
 
-			if ( Registered[pathing]?.Resource != null )
+			if ( Registered[path]?.Resource != null )
 			{
 				var asset = Registered[path];
 
@@ -25,9 +26,9 @@
 				return asset.Resource as T;
 			}
 
-			if ( pathing.Exists() )
+			if ( path.Exists() )
 			{
-				var asset = new T { Persistant = persistant, Identifier = path.Hash() };
+				var asset = new T { Persistant = persistant, Identifier = path.Output.Hash() };
 
 				Registered.Fill( path );
 				Registered.Add( asset );
@@ -39,7 +40,7 @@
 			}
 
 			// Either Load Error Model, or nothing if not found.
-			Debugging.Log.Error( $"{library.Title} Path [{pathing.Output}], couldn't be found." );
+			Debugging.Log.Error( $"{library.Title} Path [{path.Output}], couldn't be found." );
 
 			// Load default resource, if its not there
 			if ( library.Components.TryGet( out FileAttribute files ) && Registered[files.Fallback] != null )

@@ -162,14 +162,33 @@ namespace Espionage.Engine.IO
 			Output = Original;
 		}
 
+		public override string ToString()
+		{
+			return Output;
+		}
+
+		// Operators
+
 		public static implicit operator string( Pathing pathing )
 		{
 			return pathing.Output;
 		}
 
-		public override string ToString()
+		public static implicit operator Pathing( string pathing )
 		{
-			return Output;
+			return new( pathing );
+		}
+
+		public static Pathing operator +( Pathing left, Pathing b )
+		{
+			left.Output += b.Output;
+			return left;
+		}
+
+		public static Pathing operator +( Pathing left, string b )
+		{
+			left.Output += b;
+			return left;
 		}
 
 		//
@@ -348,7 +367,7 @@ namespace Espionage.Engine.IO
 		}
 
 		/// <summary>
-		/// <inheritdoc cref="All(string)"/> with an extension
+		/// <inheritdoc cref="All()"/> with an extension
 		/// </summary>
 		public IEnumerable<string> All( params string[] extension )
 		{

@@ -3,6 +3,7 @@
 using System.Diagnostics;
 using System.Text;
 using Espionage.Engine.Editor.Resources;
+using Espionage.Engine.IO;
 using UnityEngine;
 using Espionage.Engine.Resources;
 using UnityEditor;
@@ -44,7 +45,7 @@ namespace Espionage.Engine.Tools.Editor
 		[InitializeOnLoadMethod]
 		private static void Initialize()
 		{
-			if ( !Files.Pathing.Exists( "exports://full_build.bat" ) )
+			if ( !Files.Pathing( "exports://full_build.bat" ).Exists() )
 			{
 				CreateBatch();
 			}
@@ -84,7 +85,7 @@ namespace Espionage.Engine.Tools.Editor
 			const string errorPath = "Packages/com.wooshcrew.espionage.engine/Assets/Models/Bad/w_error.prefab";
 			const string garryPath = "Packages/com.wooshcrew.espionage.engine/Assets/Models/Garry/w_garry.prefab";
 
-			if ( !Files.Pathing.Exists( "models://w_garry.umdl" ) || !Files.Pathing.Exists( "models://w_error.umdl" ) )
+			if ( !Files.Pathing( "models://w_garry.umdl" ).Exists() || !Files.Pathing( "models://w_error.umdl" ).Exists() )
 			{
 				Debugging.Log.Info( "Compiling Default Resources" );
 				Compiler.Compile( errorPath, typeof( GameObject ) );
@@ -119,7 +120,7 @@ namespace Espionage.Engine.Tools.Editor
 			if ( !buildSettings.options.HasFlag( BuildOptions.BuildScriptsOnly ) )
 			{
 				MoveCompiledAssets( $"{path}{info.Name}_Data/" );
-				
+
 				// Because map doesnt inherit from IResource
 				MoveGroup( typeof( Map ), $"{path}{info.Name}_Data/" );
 			}
@@ -128,7 +129,7 @@ namespace Espionage.Engine.Tools.Editor
 		public static void Play( string launchArgs = null )
 		{
 			var info = Engine.Game.ClassInfo;
-			Process.Start( Files.Pathing.Absolute( $"Exports/{info.Title}/{info.Name}.exe" ), launchArgs );
+			Process.Start( Files.Pathing( $"Exports/{info.Title}/{info.Name}.exe" ).Absolute(), launchArgs );
 		}
 
 		// Utility
@@ -139,7 +140,7 @@ namespace Espionage.Engine.Tools.Editor
 
 			builder.Append( $"\"{EditorApplication.applicationPath}\" -quit -batchmode -silent-crashes " );
 			builder.Append( "-logFile /../Logs/compile_output.log " );
-			builder.Append( $"-projectPath \"{Files.Pathing.Absolute( "project://" )}\" " );
+			builder.Append( $"-projectPath \"{Files.Pathing( "project://" ).Absolute()}\" " );
 
 			Files.Save( "serializer.string", $"{builder}-executeMethod Espionage.Engine.Tools.Editor.Builder.Build ", "exports://full_build.bat" );
 			Files.Save( "serializer.string", $"{builder}-executeMethod Espionage.Engine.Tools.Editor.Builder.BuildDevelopment ", "exports://development_build.bat" );
@@ -154,19 +155,19 @@ namespace Espionage.Engine.Tools.Editor
 			}
 		}
 
-		private static void MoveGroup( Library lib, string path )
+		private static void MoveGroup( Library lib, Pathing path )
 		{
-			path = Files.Pathing.Absolute( path );
-			
+			path.Absolute();
+
 			// Does Assets actually Exists?
-			if ( !Files.Pathing.Exists( $"assets://{lib.Group}" ) )
+			if ( !Files.Pathing( $"assets://{lib.Group}" ).Exists() )
 			{
 				Debugging.Log.Info( $"{lib.Title} doesn't have any exported assets." );
 				return;
 			}
 
-			var outputPath = $"{path}{lib.Group}/";
-			Files.Pathing.Create( outputPath );
+			Pathing outputPath = $"{path}{lib.Group}/";
+			outputPath.Create();
 			Files.Copy( $"assets://{lib.Group}", outputPath );
 
 			Debugging.Log.Info( $"Moving [{lib.Group}] to [{outputPath}]" );

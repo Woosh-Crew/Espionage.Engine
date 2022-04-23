@@ -29,7 +29,7 @@ namespace Espionage.Engine.Editor.Resources
 		[MenuItem( "Assets/Test Asset", true )]
 		private static bool TestValidate()
 		{
-			if ( !Files.Pathing.Exists( "compiled://" ) )
+			if ( !Files.Pathing( "compiled://" ).Exists() )
 			{
 				return false;
 			}
@@ -51,8 +51,8 @@ namespace Espionage.Engine.Editor.Resources
 
 			Test( path, selection.GetType() );
 		}
-		
-		[MenuItem("Assets/Compile and Test Asset", true )]
+
+		[MenuItem( "Assets/Compile and Test Asset", true )]
 		private static bool BothValidate()
 		{
 			return TestValidate() && Compiler.Exists( Selection.activeObject?.GetType() );
@@ -98,7 +98,7 @@ namespace Espionage.Engine.Editor.Resources
 			{
 				var launchArgs = method?.Invoke( converter, new object[] { asset } );
 				Messages.Send( (string)launchArgs, Application );
-				Debugging.Log.Info( Files.Pathing.Absolute( Application ) );
+				Debugging.Log.Info( (string)Files.Pathing( Application ).Absolute() );
 			}
 			catch ( Exception e )
 			{

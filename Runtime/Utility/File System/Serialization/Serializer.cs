@@ -15,13 +15,10 @@ namespace Espionage.Engine.IO
 		/// it will overwrite if the file at that
 		/// path already exists.
 		/// </summary>
-		public virtual void Store( byte[] data, string path )
+		public virtual void Store( byte[] data, Pathing path )
 		{
-			path = Files.Pathing.Absolute( path );
-
-			var fileInfo = new FileInfo( path );
-
-			Files.Pathing.Create( fileInfo.DirectoryName );
+			var fileInfo = new FileInfo( path.Absolute() );
+			Files.Pathing( fileInfo.DirectoryName ).Create();
 
 			using var stream = File.Create( path );
 			stream.Write( data );
@@ -91,10 +88,9 @@ namespace Espionage.Engine.IO
 		/// This is faster, if you already have the lib.
 		/// </para>
 		/// </summary>
-		public virtual T Deserialize<T>( Library lib, string path )
+		public virtual T Deserialize<T>( Library lib, Pathing path )
 		{
-			path = Files.Pathing.Absolute( path );
-
+			path.Absolute();
 			var deserializer = Library.Create<IDeserializer<T>>( lib.Info );
 			return deserializer.Deserialize( Deserialize( path ) );
 		}
@@ -102,9 +98,9 @@ namespace Espionage.Engine.IO
 		/// <summary>
 		/// Just gives us the raw data from a file at a path
 		/// </summary>
-		public virtual byte[] Deserialize( string path )
+		public virtual byte[] Deserialize( Pathing path )
 		{
-			path = Files.Pathing.Absolute( path );
+			path.Absolute();
 
 			if ( !File.Exists( path ) )
 			{

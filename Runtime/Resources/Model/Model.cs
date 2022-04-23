@@ -47,7 +47,7 @@ namespace Espionage.Engine.Resources
 		{
 			if ( Instances.Count <= 0 && Cache == null )
 			{
-				using var stopwatch = Debugging.Stopwatch( $"Loaded Model [{Files.Pathing.Name( Source.Info )}]" );
+				using var stopwatch = Debugging.Stopwatch( $"Loaded Model [{Files.Pathing( Source.Info ).Name()}]" );
 				Source.Load( OnLoad );
 			}
 
@@ -65,7 +65,7 @@ namespace Espionage.Engine.Resources
 
 			if ( !Persistant && Instances.Count <= 0 )
 			{
-				Debugging.Log.Info( $"Unloading Model [{Files.Pathing.Name( Source.Info )}]" );
+				Debugging.Log.Info( $"Unloading Model [{Files.Pathing( Source.Info ).Name()}]" );
 
 				Source.Unload();
 				Cache = null;

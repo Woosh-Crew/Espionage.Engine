@@ -24,15 +24,19 @@ namespace Espionage.Engine
 			return new( path );
 		}
 
+		public static Pathing Pathing( FileInfo path )
+		{
+			return new( path.FullName );
+		}
+
 		/// <summary>
 		/// Gets the class that represents the target files extension.
 		/// </summary>
-		public static T Grab<T>( string path ) where T : class, IFile
+		public static T Grab<T>( Pathing path ) where T : class, IFile
 		{
-			var pathing = Pathing( path );
-			path = pathing.Absolute();
+			path.Absolute();
 
-			Assert.IsFalse( pathing.Exists(), "File doesn't exist" );
+			Assert.IsFalse( path.Exists(), "File doesn't exist" );
 
 			var info = new FileInfo( path );
 			var library = Library.Database.Find<T>( e => e.Components.Get<FileAttribute>()?.Extension == info.Extension[1..] );
@@ -79,11 +83,11 @@ namespace Espionage.Engine
 		/// <summary>
 		/// Deletes the file at the given path
 		/// </summary>
-		public static void Delete( string path )
+		public static void Delete( Pathing path )
 		{
-			path = Pathing.Absolute( path );
+			path.Absolute();
 
-			if ( File.Exists( path ) )
+			if ( path.Exists() )
 			{
 				File.Delete( path );
 			}
@@ -94,21 +98,18 @@ namespace Espionage.Engine
 		/// <summary>
 		/// Deletes all files with the given extension at the path
 		/// </summary>
-		public static void Delete( string path, string extension )
+		public static void Delete( Pathing path, string extension )
 		{
-			path = Pathing.Absolute( path );
-
-			var files = Directory.GetFiles( path, $"*.{extension}" );
-			foreach ( var item in files )
+			foreach ( var item in path.Absolute().All( $"*.{extension}" ) )
 			{
 				File.Delete( item );
 			}
 		}
 
-		/// <inheritdoc cref="Delete(string, string)"/> 
-		public static void Delete( string path, params string[] extension )
+		/// <inheritdoc cref="Delete(Espionage.Engine.IO.Pathing, string)"/> 
+		public static void Delete( Pathing path, params string[] extension )
 		{
-			if ( !Pathing.Exists( path ) )
+			if ( !path.Exists() )
 			{
 				Debugging.Log.Error( $"Path [{path}], doesn't exist" );
 				return;
@@ -124,13 +125,13 @@ namespace Espionage.Engine
 		/// <summary>
 		/// Copies the source file or directory to the target path
 		/// </summary>
-		public static void Copy( string sourcePath, string targetPath, bool overwrite = true )
+		public static void Copy( Pathing sourcePath, Pathing targetPath, bool overwrite = true )
 		{
-			sourcePath = Pathing.Absolute( sourcePath );
-			targetPath = Pathing.Absolute( targetPath );
+			sourcePath.Absolute();
+			targetPath.Absolute();
 
 			// Is File
-			if ( Pathing.Meta( sourcePath ).IsFile )
+			if ( sourcePath.Meta().IsFile )
 			{
 				var fileInfo = new FileInfo( sourcePath );
 
@@ -139,8 +140,8 @@ namespace Espionage.Engine
 					throw new FileNotFoundException();
 				}
 
-				Pathing.Create( targetPath );
-				fileInfo.CopyTo( targetPath + $"{Pathing.Name( sourcePath )}", overwrite );
+				targetPath.Create();
+				fileInfo.CopyTo( targetPath + $"{sourcePath.Name()}", overwrite );
 			}
 			// Is Directory
 			else
@@ -160,12 +161,12 @@ namespace Espionage.Engine
 		/// <summary>
 		/// Moves the source file to the target destination
 		/// </summary>
-		public static void Move( string source, string destination )
+		public static void Move( Pathing source, Pathing destination )
 		{
-			source = Pathing.Absolute( source );
-			destination = Pathing.Absolute( destination );
+			source.Absolute();
+			destination.Absolute();
 
-			if ( !File.Exists( source ) )
+			if ( !source.Exists() )
 			{
 				throw new FileNotFoundException();
 			}
@@ -177,13 +178,14 @@ namespace Espionage.Engine
 		/// Opens the given directory in the OS's File Explorer,
 		/// or opens the given file in the default application
 		/// </summary>
-		public static void Open( string path )
+		public static void Open( Pathing path )
 		{
-			path = Pathing.Absolute( path );
+			path.Absolute();
 
-			if ( !Pathing.Exists( path ) )
+			if ( !path.Exists() )
 			{
 				Debugging.Log.Warning( $"Path or File [{path}], doesn't exist" );
+				return;
 			}
 
 			Process.Start( $"file://{path}" );
