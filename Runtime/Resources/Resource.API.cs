@@ -5,38 +5,44 @@
 		public static T Load<T>( string path, bool persistant = false ) where T : class, IResource, new()
 		{
 			Library library = typeof( T );
+			path = Files.Pathing.Absolute( path );
 
+			// Apply shorthand, if path doesn't have one
 			if ( !Files.Pathing.Valid( path ) && library.Components.TryGet<PathAttribute>( out var pathing ) )
 			{
 				path = $"{pathing.ShortHand}://" + path;
 			}
 
-			path = Files.Pathing.Absolute( path );
-
-			if ( Registered[path] != null && Registered[path].Resource != null )
+			if ( Registered[path]?.Resource != null )
 			{
 				var asset = Registered[path];
+
 				asset.Resource.Load();
-				return asset as T;
+				asset.Resource.Persistant ^= persistant;
+
+				return asset.Resource as T;
 			}
 
 			if ( Files.Pathing.Exists( path ) )
 			{
-				var model = new T { Identifier = path.Hash(), Persistant = persistant };
-				Registered.Add( model );
+				var asset = new T { Persistant = persistant, Identifier = path.Hash() };
 
-				model.Setup( path );
-				model.Load();
+				Registered.Fill( path );
+				Registered.Add( asset );
 
-				return model;
+				asset.Setup( path );
+				asset.Load();
+
+				return asset;
 			}
 
 			// Either Load Error Model, or nothing if not found.
 			Debugging.Log.Error( $"{library.Title} Path [{path}], couldn't be found." );
 
 			// Load default resource, if its not there
-			if ( library.ClassInfo.Components.TryGet( out FileAttribute files ) && !files.Fallback.IsEmpty() && Files.Pathing.Exists( files.Fallback ) )
+			if ( library.Components.TryGet( out FileAttribute files ) && Registered[files.Fallback] != null )
 			{
+				Debugging.Log.Info( "Loading Fallback" );
 				return Load<T>( files.Fallback, true );
 			}
 
@@ -53,7 +59,7 @@
 				return;
 			}
 
-			Unload( resource.Resource );
+			Registered.Remove( resource );
 		}
 
 		public static void Unload( IResource resource )
@@ -62,7 +68,7 @@
 
 			if ( resource!.Unload() && !resource.Persistant )
 			{
-				Registered.Remove( resource );
+				Registered.Remove( Registered[resource.Identifier] );
 			}
 		}
 	}

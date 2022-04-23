@@ -8,7 +8,7 @@ namespace Espionage.Engine.Resources
 	{
 		public static Registry Registered { get; } = new();
 
-		public class Registry : IEnumerable<Registry.Reference>
+		public class Registry : IEnumerable<Resource.Reference>
 		{
 			private readonly SortedList<int, Reference> _storage = new();
 
@@ -16,6 +16,11 @@ namespace Espionage.Engine.Resources
 			{
 				get
 				{
+					if ( key.IsEmpty() )
+					{
+						return null;
+					}
+
 					var hash = key.Hash();
 					return _storage.ContainsKey( hash ) ? _storage[hash] : null;
 				}
@@ -41,64 +46,34 @@ namespace Espionage.Engine.Resources
 			// API
 			//
 
-			public void Fill( string path )
+			public Reference Fill( string path )
 			{
+				var hash = path.Hash();
+
+				if ( Registered[hash] != null )
+				{
+					return Registered[hash];
+				}
+
 				var instance = new Reference( path );
+
 				_storage.Add( instance.Identifier, instance );
+				return instance;
 			}
 
-			public void Add( IResource item )
+			public void Add( IResource resource )
 			{
 				// Store it in Database
-				if ( _storage.ContainsKey( item.Identifier ) )
-				{
-					_storage[item.Identifier].Resource = item;
-				}
-				else
-				{
-					Debugging.Log.Warning( $"Adding new resource [{item.Identifier}]" );
-					_storage.Add( item.Identifier, new( item.Identifier ) );
-				}
+				Assert.IsFalse( _storage.ContainsKey( resource.Identifier ) );
+				_storage[resource.Identifier].Resource = resource;
 			}
 
-			public void Remove( IResource item )
+			public void Remove( Reference item )
 			{
 				_storage[item.Identifier].Resource = null;
-				item.Delete();
-			}
 
-			// 
-			// Data
-			//
-
-			public class Reference
-			{
-				public IResource Resource { get; set; }
-
-				public Reference( string path )
-				{
-					Path = path;
-					Identifier = path.Hash();
-				}
-
-				public Reference( int hash )
-				{
-					Path = null;
-					Identifier = hash;
-				}
-
-				~Reference()
-				{
-					Resource = null;
-				}
-
-				public string Path { get; }
-				public int Identifier { get; }
-
-				public override string ToString()
-				{
-					return $"loaded:[{Resource != null}] path:[{Path}]";
-				}
+				item.Resource.Delete();
+				item.Resource = null;
 			}
 		}
 	}

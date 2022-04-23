@@ -36,5 +36,37 @@ namespace Espionage.Engine.Resources
 			// Stop watching resources for updates
 			// Unload any currently loaded resources
 		}
+
+		// Data
+
+		public class Reference
+		{
+			public IResource Resource { get; set; }
+
+			public Reference( string path )
+			{
+				Path = path;
+				Identifier = path.Hash();
+			}
+
+			public Reference( int hash )
+			{
+				Path = null;
+				Identifier = hash;
+			}
+
+			~Reference()
+			{
+				Resource = null;
+			}
+
+			public string Path { get; }
+			public int Identifier { get; }
+
+			public override string ToString()
+			{
+				return $"loaded:[{Resource != null}] path:[{Path}]";
+			}
+		}
 	}
 }

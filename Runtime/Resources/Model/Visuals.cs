@@ -22,13 +22,13 @@ namespace Espionage.Engine.Resources
 
 		public override void OnDetached()
 		{
-			base.OnDetached();
-
 			Animator = null;
 			Renderers = null;
 
 			_model?.Delete();
 			_model = null;
+			
+			base.OnDetached();
 		}
 
 		// Utility
@@ -42,6 +42,7 @@ namespace Espionage.Engine.Resources
 		public Action Changed { get; set; }
 		public Animator Animator { get; private set; }
 		public Renderer[] Renderers { get; private set; }
+		public Bounds Bounds { get; private set; }
 
 		// Model
 
@@ -52,17 +53,16 @@ namespace Espionage.Engine.Resources
 			get => _model?.Model;
 			set
 			{
-				if ( _model?.Model == value )
-				{
-					Debugging.Log.Info( "Trying to apply the same Model" );
-					return;
-				}
-
 				if ( value == null )
 				{
 					_model?.Delete();
 					_model = null;
 					return;
+				}
+
+				if ( _model?.Model == value )
+				{
+					Debugging.Log.Warning( "Trying to apply the same Model" );
 				}
 
 				_model?.Delete();
@@ -75,6 +75,19 @@ namespace Espionage.Engine.Resources
 
 				Animator = _model.GameObject.GetComponent<Animator>();
 				Renderers = _root.GetComponentsInChildren<Renderer>();
+				Bounds = default;
+
+				foreach ( var renderer in Renderers )
+				{
+					if ( Bounds == default )
+					{
+						Bounds = renderer.bounds;
+						continue;
+					}
+
+					Bounds.Encapsulate( renderer.bounds );
+				}
+
 				Changed?.Invoke();
 			}
 		}
