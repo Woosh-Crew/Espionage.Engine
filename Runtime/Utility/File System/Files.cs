@@ -13,20 +13,26 @@ namespace Espionage.Engine
 	[Library, Group( "Files" ), Title( "File System" )]
 	public static class Files
 	{
-		public static Pathing Pathing { get; } = new();
 		public static Serializer Serialization { get; } = new();
 
 		//
 		// API
 		//
 
+		public static Pathing Pathing( string path )
+		{
+			return new( path );
+		}
+
 		/// <summary>
 		/// Gets the class that represents the target files extension.
 		/// </summary>
 		public static T Grab<T>( string path ) where T : class, IFile
 		{
-			path = Pathing.Absolute( path );
-			Assert.IsFalse( Pathing.Exists( path ), "File doesn't exist" );
+			var pathing = Pathing( path );
+			path = pathing.Absolute();
+
+			Assert.IsFalse( pathing.Exists(), "File doesn't exist" );
 
 			var info = new FileInfo( path );
 			var library = Library.Database.Find<T>( e => e.Components.Get<FileAttribute>()?.Extension == info.Extension[1..] );
@@ -122,7 +128,7 @@ namespace Espionage.Engine
 		{
 			sourcePath = Pathing.Absolute( sourcePath );
 			targetPath = Pathing.Absolute( targetPath );
-			
+
 			// Is File
 			if ( Pathing.Meta( sourcePath ).IsFile )
 			{

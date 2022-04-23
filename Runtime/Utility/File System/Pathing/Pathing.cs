@@ -7,14 +7,14 @@ using UnityEngine;
 
 namespace Espionage.Engine.IO
 {
-	public class Pathing
+	public ref struct Pathing
 	{
 		private readonly struct Grouping
 		{
-			public Grouping( string path, bool isOverridable )
+			public Grouping( string path, bool overridable )
 			{
 				Path = path;
-				IsOverridable = isOverridable;
+				Overridable = overridable;
 			}
 
 			public static implicit operator Grouping( string value )
@@ -23,10 +23,10 @@ namespace Espionage.Engine.IO
 			}
 
 			public string Path { get; }
-			public bool IsOverridable { get; }
+			public bool Overridable { get; }
 		}
 
-		private readonly Dictionary<string, Grouping> _paths = new()
+		private static readonly Dictionary<string, Grouping> Paths = new()
 		{
 			// -- Game Specific
 			["game"] = Application.dataPath,
@@ -62,7 +62,7 @@ namespace Espionage.Engine.IO
 
 		// Reason why its a func, is cause some of these values are null
 		// when the static constructor gets called, so we use the func instead
-		private readonly Dictionary<string, Func<string[], string>> _keywords = new()
+		private static readonly Dictionary<string, Func<string[], string>> Keywords = new()
 		{
 			// -- Game Specific
 			["game"] = ( _ ) => Engine.Game?.ClassInfo.Title ?? "None",
@@ -74,10 +74,6 @@ namespace Espionage.Engine.IO
 			["library_title"] = ( args ) => Library.Database[args[0]]?.Title,
 			["library_group"] = ( args ) => Library.Database[args[0]]?.Group
 		};
-
-		//
-		// Pathing
-		//
 
 		private static string GetUserPath( string xdgVar, string windowsPath, string linuxPath, string macPath )
 		{
@@ -99,28 +95,24 @@ namespace Espionage.Engine.IO
 			};
 		}
 
-		//
-		// API
-		//
-
 		/// <summary>
 		/// Add a shorthand / virtual path to the pathing database
 		/// for use later, you can't override already exising keys.
 		/// </summary>
-		public void Add( string key, string path, bool overrideable = false )
+		public static void Add( string key, string path, bool overrideable = false )
 		{
 			if ( path.IsEmpty() )
 			{
 				Debugging.Log.Warning( $"Path [{path}] for key [{key}] was empty / null!" );
 			}
 
-			if ( _paths.ContainsKey( key ) )
+			if ( Paths.ContainsKey( key ) )
 			{
 				Debugging.Log.Error( $"Pathing already contains shorthand {key}" );
 				return;
 			}
 
-			_paths.Add( key, new( path, overrideable ) );
+			Paths.Add( key, new( path, overrideable ) );
 		}
 
 		/// <summary>
@@ -129,38 +121,76 @@ namespace Espionage.Engine.IO
 		/// The string[] are optional parameters you can include
 		/// into the Keyword, they are divided by a comma.
 		/// </summary>
-		public void Add( string key, Func<string[], string> word )
+		public static void Add( string key, Func<string[], string> word )
 		{
-			if ( _keywords.ContainsKey( key ) )
+			if ( Keywords.ContainsKey( key ) )
 			{
 				Debugging.Log.Error( $"Pathing already contains keyword {key}" );
 				return;
 			}
 
-			_keywords.Add( key, word );
+			Keywords.Add( key, word );
 		}
 
 		/// <summary>
 		/// Does the paths database contain this key?
 		/// </summary>
-		public bool Contains( string item )
+		public static bool Contains( string path )
 		{
-			return _paths.ContainsKey( item );
+			return Paths.ContainsKey( path );
 		}
+
+		/// <summary>
+		/// Can this path be overriden by mods? (such as "models://")
+		/// </summary>
+		/// <returns> True if I can be overriden </returns>
+		public static bool IsOverridable( string path )
+		{
+			return Paths[path].Overridable;
+		}
+
+		//
+		// Pathing
+		//
+
+		public string Original { get; }
+		public string Output { get; private set; }
+
+		public Pathing( string path )
+		{
+			Original = path;
+			Output = Original;
+		}
+
+		public static implicit operator string( Pathing pathing )
+		{
+			return pathing.Output;
+		}
+
+		public override string ToString()
+		{
+			return Output;
+		}
+
+		//
+		// Builders
+		//
 
 		/// <summary>
 		/// Gets the Path, If you use the virtual pathing
 		/// It'll search loaded mods first then the base content,
 		/// Depending on the virtual path you are trying to get.
 		/// </summary>
-		public string Absolute( string path, bool directoryOnly = false )
+		public Pathing Absolute( bool directoryOnly = false )
 		{
+			var path = Output;
+
 			Assert.IsNull( path );
 
 			// Change Keywords
 			if ( path.Contains( '<' ) )
 			{
-				foreach ( var (key, value) in _keywords )
+				foreach ( var (key, value) in Keywords )
 				{
 					if ( !path.Contains( $"<{key}" ) )
 					{
@@ -186,25 +216,28 @@ namespace Espionage.Engine.IO
 			if ( !path.Contains( "://" ) )
 			{
 				path = Path.GetFullPath( path );
-				return directoryOnly ? Path.GetDirectoryName( path ) : path;
+
+				Output = directoryOnly ? Path.GetDirectoryName( path ) : path;
+				return this;
 			}
 
 			var splitPath = path.Split( "://" );
 			var virtualPath = splitPath[0];
 
-			if ( !_paths.ContainsKey( virtualPath ) )
+			if ( !Paths.ContainsKey( virtualPath ) )
 			{
 				throw new( $"Path {virtualPath} isn't present in the Keys. Make sure you have valid pathing." );
 			}
 
-			splitPath[0] = Absolute( _paths[virtualPath].Path );
+			splitPath[0] = new Pathing( Paths[virtualPath].Path ).Absolute();
 
 			var newPath = Path.GetFullPath( Path.Combine( splitPath[0], splitPath[1] ) );
 
 			// See if we can override it.
 			if ( !IsOverridable( virtualPath ) )
 			{
-				return directoryOnly ? Path.GetDirectoryName( newPath ) : newPath;
+				Output = directoryOnly ? Path.GetDirectoryName( newPath ) : newPath;
+				return this;
 			}
 
 			// Go through mods, see if we can replace it.
@@ -216,21 +249,39 @@ namespace Espionage.Engine.IO
 			// 	}
 			// }
 
-			return directoryOnly ? Path.GetDirectoryName( newPath ) : newPath;
+			Output = directoryOnly ? Path.GetDirectoryName( newPath ) : newPath;
+			return this;
 		}
 
 		/// <summary>
 		/// Creates a directory at the given path
 		/// if the directory didnt exist.
 		/// </summary>
-		public void Create( string path )
+		public Pathing Create()
 		{
-			path = Absolute( path );
-			if ( !Exists( path ) )
+			if ( !Exists() )
 			{
-				Directory.CreateDirectory( path );
+				Directory.CreateDirectory( Output );
 			}
+
+			return this;
 		}
+
+		/// <summary>
+		/// Gets the path, relative to another path. If you use
+		/// the virtual pathing It'll search loaded mods first
+		/// then the base content, Depending on the virtual
+		/// path you are trying to get.
+		/// </summary>
+		public Pathing Relative( string relative )
+		{
+			Output = Path.GetRelativePath( Files.Pathing( relative ).Absolute(), Absolute() );
+			return this;
+		}
+
+		//
+		// Outputs
+		//
 
 		/// <summary>
 		/// Gets the files meta at the given path.
@@ -238,10 +289,10 @@ namespace Espionage.Engine.IO
 		/// created, the lsat access time and the last
 		/// write time.
 		/// </summary>
-		public Files.Meta Meta( string path )
+		public Files.Meta Meta()
 		{
-			path = Absolute( path );
-			return !Exists( path )
+			var path = Absolute();
+			return !Exists()
 				? default
 				: new Files.Meta(
 					File.GetAttributes( path ),
@@ -255,83 +306,58 @@ namespace Espionage.Engine.IO
 		/// Checks if this path is a valid path. Meaning it'll check
 		/// if it is a string that could potentially lead to a path. 
 		/// </summary>
-		public bool Valid( string path )
+		public bool Valid()
 		{
 			// It works... Don't complain.
-			return Path.IsPathFullyQualified( path ) || path.Contains( "://" );
-		}
-
-		/// <summary>
-		/// Can this path be overriden by mods? (such as "models://")
-		/// </summary>
-		/// <returns> True if I can be overriden </returns>
-		public bool IsOverridable( string path )
-		{
-			return _paths[path].IsOverridable;
+			return Path.IsPathFullyQualified( Output ) || Output.Contains( "://" );
 		}
 
 		/// <summary>
 		/// Is this path or file in a folder named "x"? (Folder must be relative to something,
 		/// or else it might pick up on duplicated folders.)
 		/// </summary>
-		public bool InFolder( string folderName, string path, string relativeTo = "game://" )
+		public bool InFolder( string folderName, string relativeTo = "game://" )
 		{
-			path = Relative( relativeTo, Absolute( path, true ) );
-			return path.Contains( folderName );
-		}
-
-		/// <summary>
-		/// Gets the path, relative to another path. If you use
-		/// the virtual pathing It'll search loaded mods first
-		/// then the base content, Depending on the virtual
-		/// path you are trying to get.
-		/// </summary>
-		public string Relative( string relative, string path )
-		{
-			return Path.GetRelativePath( Absolute( relative ), Absolute( path ) );
+			return Relative( relativeTo ).Output.Contains( folderName );
 		}
 
 		/// <summary>
 		/// Will check if the File or Directory exists
 		/// </summary>
-		public bool Exists( string path )
+		public bool Exists()
 		{
-			path = Absolute( path );
+			var path = Absolute();
 			return Directory.Exists( path ) || File.Exists( path );
 		}
 
 		/// <summary>
 		/// Gets all files at the given path
 		/// </summary>
-		public IEnumerable<string> All( string path )
+		public IEnumerable<string> All()
 		{
-			path = Absolute( path );
-			return !Exists( path ) ? Array.Empty<string>() : Directory.GetFiles( path, "*", SearchOption.AllDirectories );
+			return !Exists() ? Array.Empty<string>() : Directory.GetFiles( Output, "*", SearchOption.AllDirectories );
 		}
 
 		/// <summary>
 		/// Gets all directories at the given path with the
 		/// following search option
 		/// </summary>
-		public IEnumerable<string> All( string path, SearchOption option )
+		public IEnumerable<string> All( SearchOption option )
 		{
-			path = Absolute( path );
-			return !Exists( path ) ? Array.Empty<string>() : Directory.GetDirectories( path, "*", option );
+			return !Exists() ? Array.Empty<string>() : Directory.GetDirectories( Output, "*", option );
 		}
 
 		/// <summary>
 		/// <inheritdoc cref="All(string)"/> with an extension
 		/// </summary>
-		public IEnumerable<string> All( string path, params string[] extension )
+		public IEnumerable<string> All( params string[] extension )
 		{
-			path = Absolute( path );
-
-			if ( !Exists( path ) )
+			if ( !Exists() )
 			{
 				return Array.Empty<string>();
 			}
 
-			return Directory.GetFiles( path, "*.*", SearchOption.AllDirectories )
+			return Directory.GetFiles( Output, "*.*", SearchOption.AllDirectories )
 				.Where( file => Path.HasExtension( file ) && extension.Contains( Path.GetExtension( file )[1..] ) );
 		}
 
@@ -339,16 +365,14 @@ namespace Espionage.Engine.IO
 		/// Gets the name of last directory or file
 		/// at the given path
 		/// </summary>
-		public string Name( string path, bool withExtension = true )
+		public string Name( bool withExtension = true )
 		{
-			path = Absolute( path );
-			return withExtension ? Path.GetFileName( path ) : Path.GetFileNameWithoutExtension( path );
+			return withExtension ? Path.GetFileName( Output ) : Path.GetFileNameWithoutExtension( Output );
 		}
 
-		///<inheritdoc cref="Name(string,bool)"/>
-		public string Name( FileInfo file, bool withExtension = true )
+		public FileSystemInfo Info()
 		{
-			return withExtension ? file.Name : file.FullName;
+			return Meta().IsDirectory ? new DirectoryInfo( Output ) : new FileInfo( Output );
 		}
 	}
 }

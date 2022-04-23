@@ -5,15 +5,17 @@
 		public static T Load<T>( string path, bool persistant = false ) where T : class, IResource, new()
 		{
 			Library library = typeof( T );
-			path = Files.Pathing.Absolute( path );
+			var pathing = Files.Pathing( path );
 
 			// Apply shorthand, if path doesn't have one
-			if ( !Files.Pathing.Valid( path ) && library.Components.TryGet<PathAttribute>( out var pathing ) )
+			if ( !pathing.Valid() && library.Components.TryGet<PathAttribute>( out var attribute ) )
 			{
-				path = $"{pathing.ShortHand}://" + path;
+				path = $"{attribute.ShortHand}://" + path;
 			}
 
-			if ( Registered[path]?.Resource != null )
+			pathing = pathing.Absolute();
+
+			if ( Registered[pathing]?.Resource != null )
 			{
 				var asset = Registered[path];
 
@@ -23,7 +25,7 @@
 				return asset.Resource as T;
 			}
 
-			if ( Files.Pathing.Exists( path ) )
+			if ( pathing.Exists() )
 			{
 				var asset = new T { Persistant = persistant, Identifier = path.Hash() };
 
@@ -37,7 +39,7 @@
 			}
 
 			// Either Load Error Model, or nothing if not found.
-			Debugging.Log.Error( $"{library.Title} Path [{path}], couldn't be found." );
+			Debugging.Log.Error( $"{library.Title} Path [{pathing.Output}], couldn't be found." );
 
 			// Load default resource, if its not there
 			if ( library.Components.TryGet( out FileAttribute files ) && Registered[files.Fallback] != null )

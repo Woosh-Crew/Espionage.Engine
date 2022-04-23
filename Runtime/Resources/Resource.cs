@@ -14,7 +14,7 @@ namespace Espionage.Engine.Resources
 
 			foreach ( var pathing in Library.Database.GetAll<IResource>().Select( e => e.Components.Get<PathAttribute>() ) )
 			{
-				foreach ( var file in Files.Pathing.All( $"{pathing.ShortHand}://" ) )
+				foreach ( var file in Files.Pathing( $"{pathing.ShortHand}://" ).All() )
 				{
 					Registered.Fill( file );
 				}
