@@ -314,7 +314,7 @@ namespace Espionage.Engine.IO
 					continue;
 				}
 
-				var relative = Files.Pathing( Output ).Relative( pathing );
+				var relative = Files.Pathing( Output ).Absolute().Relative( pathing );
 
 				// Invalid Pathing
 				if ( !relative.IsRelative() || relative.Output.StartsWith( @"..\" ) )
@@ -369,12 +369,19 @@ namespace Espionage.Engine.IO
 		/// </summary>
 		public bool IsValid()
 		{
-			// It works... Don't complain.
-			return Path.IsPathFullyQualified( Output ) || Output.Contains( "://" );
+			try
+			{
+				// It works... Don't complain.
+				return Path.IsPathFullyQualified( Output ) || Output.Contains( "://" );
+			}
+			catch
+			{
+				return false;
+			}
 		}
 
 		/// <summary>
-		/// Checks if a path is a virtual path (Meaning it has a shorthand assigner)
+		/// Checks if a path is a virtual path (Meaning it is relative to a shorthand)
 		/// </summary>
 		public bool IsVirtual()
 		{

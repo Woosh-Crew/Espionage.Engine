@@ -17,11 +17,6 @@ namespace Espionage.Engine.Resources
 			{
 				get
 				{
-					if ( key.IsRelative() )
-					{
-						return null;
-					}
-
 					var hash = key.Hash();
 					return _storage.ContainsKey( hash ) ? _storage[hash] : null;
 				}

@@ -14,7 +14,9 @@ namespace Espionage.Engine.Resources
 				path = $"{attribute.ShortHand}://" + path;
 			}
 
-			path = path.Absolute();
+			path = path.Virtual();
+
+			Debugging.Log.Info( $"Loading Resource [{library.Title}] at Path [{path}]" );
 
 			if ( Registered[path]?.Resource != null )
 			{
@@ -28,7 +30,7 @@ namespace Espionage.Engine.Resources
 
 			if ( path.Exists() )
 			{
-				var asset = new T { Persistant = persistant, Identifier = path.Output.Hash() };
+				var asset = new T { Persistant = persistant, Identifier = path.Hash() };
 
 				Registered.Fill( path );
 				Registered.Add( asset );
