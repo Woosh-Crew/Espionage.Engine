@@ -8,7 +8,7 @@ namespace Espionage.Engine.Resources
 	{
 		public static Registry Registered { get; } = new();
 
-		public class Registry : IEnumerable<Resource.Reference>
+		public class Registry : IEnumerable<Reference>
 		{
 			private readonly SortedList<int, Reference> _storage = new();
 
@@ -70,9 +70,7 @@ namespace Espionage.Engine.Resources
 
 			public void Remove( Reference item )
 			{
-				_storage[item.Identifier].Resource = null;
-
-				item.Resource.Delete();
+				item.Resource?.Delete();
 				item.Resource = null;
 			}
 		}

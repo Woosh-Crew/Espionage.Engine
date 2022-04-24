@@ -22,7 +22,7 @@ namespace Espionage.Engine.Resources
 		/// </summary>
 		public static Map Find( Pathing path )
 		{
-			if ( !path.Valid() )
+			if ( !path.IsValid() )
 			{
 				path = "maps://" + path;
 			}

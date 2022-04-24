@@ -9,7 +9,7 @@ namespace Espionage.Engine.Resources
 			Library library = typeof( T );
 
 			// Apply shorthand, if path doesn't have one
-			if ( !path.Valid() && library.Components.TryGet<PathAttribute>( out var attribute ) )
+			if ( !path.IsValid() && library.Components.TryGet<PathAttribute>( out var attribute ) )
 			{
 				path = $"{attribute.ShortHand}://" + path;
 			}

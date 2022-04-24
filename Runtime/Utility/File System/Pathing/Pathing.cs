@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Espionage.Engine.IO
 {
-	public ref struct Pathing
+	public struct Pathing
 	{
 		private readonly struct Grouping
 		{
@@ -153,13 +153,11 @@ namespace Espionage.Engine.IO
 		// Pathing
 		//
 
-		public string Original { get; }
 		public string Output { get; private set; }
 
-		public Pathing( string path )
+		internal Pathing( string path )
 		{
-			Original = path;
-			Output = Original;
+			Output = path;
 		}
 
 		public override string ToString()
@@ -294,7 +292,7 @@ namespace Espionage.Engine.IO
 		/// </summary>
 		public Pathing Relative( string relative )
 		{
-			Output = Path.GetRelativePath( Files.Pathing( relative ).Absolute(), Absolute() );
+			Output = Path.GetRelativePath( Files.Pathing( relative ).Absolute(), Files.Pathing( Output ).Absolute() );
 			return this;
 		}
 
@@ -310,8 +308,8 @@ namespace Espionage.Engine.IO
 		/// </summary>
 		public Files.Meta Meta()
 		{
-			var path = Absolute();
-			return !Exists()
+			var path = Files.Pathing( Output ).Absolute();
+			return !path.Exists()
 				? default
 				: new Files.Meta(
 					File.GetAttributes( path ),
@@ -325,19 +323,45 @@ namespace Espionage.Engine.IO
 		/// Checks if this path is a valid path. Meaning it'll check
 		/// if it is a string that could potentially lead to a path. 
 		/// </summary>
-		public bool Valid()
+		public bool IsValid()
 		{
 			// It works... Don't complain.
 			return Path.IsPathFullyQualified( Output ) || Output.Contains( "://" );
 		}
 
 		/// <summary>
-		/// Is this path or file in a folder named "x"? (Folder must be relative to something,
-		/// or else it might pick up on duplicated folders.)
+		/// Is this path or file in a folder named "x"?
 		/// </summary>
-		public bool InFolder( string folderName, string relativeTo = "game://" )
+		public bool InFolder( string folderName, string relative = "game://" )
 		{
-			return Relative( relativeTo ).Output.Contains( folderName );
+			var path = Files.Pathing( Output ).Relative( relative ).Output.Contains( folderName );
+			return path;
+		}
+
+		public bool IsRelative()
+		{
+			try
+			{
+				// Try Catch, just in-case of invalid chars
+				return Path.IsPathRooted( Output );
+			}
+			catch
+			{
+				return false;
+			}
+		}
+
+		public bool IsAbsolute()
+		{
+			try
+			{
+				// Try Catch, just in-case of invalid chars
+				return Path.GetFullPath( Output ) == Output;
+			}
+			catch
+			{
+				return false;
+			}
 		}
 
 		/// <summary>
@@ -345,7 +369,7 @@ namespace Espionage.Engine.IO
 		/// </summary>
 		public bool Exists()
 		{
-			var path = Absolute();
+			var path = Files.Pathing( Output ).Absolute();
 			return Directory.Exists( path ) || File.Exists( path );
 		}
 
@@ -354,7 +378,8 @@ namespace Espionage.Engine.IO
 		/// </summary>
 		public IEnumerable<string> All()
 		{
-			return !Exists() ? Array.Empty<string>() : Directory.GetFiles( Output, "*", SearchOption.AllDirectories );
+			var path = Files.Pathing( Output ).Absolute();
+			return !path.Exists() ? Array.Empty<string>() : Directory.GetFiles( path.Output, "*", SearchOption.AllDirectories );
 		}
 
 		/// <summary>
@@ -389,9 +414,9 @@ namespace Espionage.Engine.IO
 			return withExtension ? Path.GetFileName( Output ) : Path.GetFileNameWithoutExtension( Output );
 		}
 
-		public FileSystemInfo Info()
+		public T Info<T>() where T : FileSystemInfo
 		{
-			return Meta().IsDirectory ? new DirectoryInfo( Output ) : new FileInfo( Output );
+			return Meta().IsDirectory ? new DirectoryInfo( Output ) as T : new FileInfo( Output ) as T;
 		}
 	}
 }

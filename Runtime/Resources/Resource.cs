@@ -1,9 +1,10 @@
 ﻿using System.Linq;
+using Espionage.Engine.IO;
 using Espionage.Engine.Services;
 
 namespace Espionage.Engine.Resources
 {
-	public partial class Resource : Service
+	public sealed partial class Resource : Service
 	{
 		public override void OnReady()
 		{
@@ -60,7 +61,7 @@ namespace Espionage.Engine.Resources
 				Resource = null;
 			}
 
-			public string Path { get; }
+			public Pathing Path { get; }
 			public int Identifier { get; }
 
 			public override string ToString()
