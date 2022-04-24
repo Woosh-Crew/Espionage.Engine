@@ -100,7 +100,7 @@ namespace Espionage.Engine
 		/// </summary>
 		public static void Delete( Pathing path, string extension )
 		{
-			foreach ( var item in path.Absolute().All( $"*.{extension}" ) )
+			foreach ( var item in path.Absolute().All( SearchOption.TopDirectoryOnly, $"*.{extension}" ) )
 			{
 				File.Delete( item );
 			}

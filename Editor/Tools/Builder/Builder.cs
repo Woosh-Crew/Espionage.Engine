@@ -1,6 +1,7 @@
 ﻿#if UNITY_EDITOR
 
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using Espionage.Engine.Editor.Resources;
 using Espionage.Engine.IO;
@@ -107,8 +108,6 @@ namespace Espionage.Engine.Tools.Editor
 				targetGroup = BuildTargetGroup.Standalone
 			};
 
-			buildSettings.scenes = new[] { "Assets/Test/Scenes/lab.unity" };
-
 			if ( !string.IsNullOrEmpty( Engine.Game.Splash.Scene ) )
 			{
 				buildSettings.scenes = new[] { Engine.Game.Splash.Scene };
@@ -149,7 +148,7 @@ namespace Espionage.Engine.Tools.Editor
 
 		private static void MoveCompiledAssets( string path )
 		{
-			foreach ( var library in Library.Database.GetAll<IResource>() )
+			foreach ( var library in Library.Database.GetAll<IResource>().Where( e => !e.Info.IsAbstract ) )
 			{
 				MoveGroup( library, path );
 			}

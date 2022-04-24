@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
 using Espionage.Engine.IO;
 using Espionage.Engine.Services;
 using UnityEngine;
@@ -45,7 +46,7 @@ namespace Espionage.Engine.Resources.Maps
 			}
 
 			var extensions = Library.Database.GetAll<Map.File>().Select( e => e.Components.Get<FileAttribute>()?.Extension ).ToArray();
-			foreach ( var item in pathing.All( extensions ) )
+			foreach ( var item in pathing.All( SearchOption.AllDirectories, extensions ) )
 			{
 				Pathing path = item;
 

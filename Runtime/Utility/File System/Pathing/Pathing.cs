@@ -290,9 +290,53 @@ namespace Espionage.Engine.IO
 		/// then the base content, Depending on the virtual
 		/// path you are trying to get.
 		/// </summary>
-		public Pathing Relative( string relative )
+		public Pathing Relative( Pathing relative )
 		{
-			Output = Path.GetRelativePath( Files.Pathing( relative ).Absolute(), Files.Pathing( Output ).Absolute() );
+			Output = Path.GetRelativePath( relative.Absolute(), Files.Pathing( Output ).Absolute() );
+			return this;
+		}
+
+		/// <summary>
+		/// Converts this pathing to be virtual path. Useful for loading over
+		/// the network, where files would be relative to a shorthand
+		/// </summary>
+		public Pathing Virtual()
+		{
+			var potential = string.Empty;
+			var shorthand = string.Empty;
+
+			foreach ( var (key, value) in Paths )
+			{
+				var pathing = Files.Pathing( value.Path ).Absolute();
+
+				if ( pathing.Meta().IsFile )
+				{
+					continue;
+				}
+
+				var relative = Files.Pathing( Output ).Relative( pathing );
+
+				// Invalid Pathing
+				if ( !relative.IsRelative() || relative.Output.StartsWith( @"..\" ) )
+				{
+					continue;
+				}
+
+				// Has shortest relative path length, must be the right shorthand 
+				if ( relative.Output.Length < potential.Length || potential.IsEmpty() )
+				{
+					potential = relative;
+					shorthand = key;
+				}
+			}
+
+			if ( potential.IsEmpty() )
+			{
+				Debugging.Log.Warning( $"Couldn't make [{Output}] virtual" );
+				return this;
+			}
+
+			Output = $"{shorthand}://{potential}";
 			return this;
 		}
 
@@ -338,12 +382,15 @@ namespace Espionage.Engine.IO
 			return path;
 		}
 
+		/// <summary>
+		/// Checks if the current path is rooted
+		/// </summary>
 		public bool IsRelative()
 		{
 			try
 			{
 				// Try Catch, just in-case of invalid chars
-				return Path.IsPathRooted( Output );
+				return !Path.IsPathRooted( Output );
 			}
 			catch
 			{
@@ -351,6 +398,9 @@ namespace Espionage.Engine.IO
 			}
 		}
 
+		/// <summary>
+		/// Checks if the current path is a full valid path
+		/// </summary>
 		public bool IsAbsolute()
 		{
 			try
@@ -374,35 +424,26 @@ namespace Espionage.Engine.IO
 		}
 
 		/// <summary>
-		/// Gets all files at the given path
-		/// </summary>
-		public IEnumerable<string> All()
-		{
-			var path = Files.Pathing( Output ).Absolute();
-			return !path.Exists() ? Array.Empty<string>() : Directory.GetFiles( path.Output, "*", SearchOption.AllDirectories );
-		}
-
-		/// <summary>
-		/// Gets all directories at the given path with the
+		/// Gets all directories or files at the given path with the
 		/// following search option
 		/// </summary>
-		public IEnumerable<string> All( SearchOption option )
+		public IEnumerable<Pathing> All( bool directories = false, SearchOption option = SearchOption.AllDirectories )
 		{
-			return !Exists() ? Array.Empty<string>() : Directory.GetDirectories( Output, "*", option );
+			var pathing = new Pathing( Output ).Absolute();
+			return !pathing.Exists() ? Array.Empty<Pathing>() : (directories ? Directory.GetDirectories( pathing.Output, "*", option ) : Directory.GetFiles( pathing.Output, "*", option )).Select( e => new Pathing( e ) );
 		}
 
 		/// <summary>
-		/// <inheritdoc cref="All()"/> with an extension
+		/// Gets all files at the current scoped directory with the given extensions 
 		/// </summary>
-		public IEnumerable<string> All( params string[] extension )
+		public IEnumerable<Pathing> All( SearchOption option = SearchOption.AllDirectories, params string[] extension )
 		{
-			if ( !Exists() )
-			{
-				return Array.Empty<string>();
-			}
+			var pathing = new Pathing( Output ).Absolute();
 
-			return Directory.GetFiles( Output, "*.*", SearchOption.AllDirectories )
-				.Where( file => Path.HasExtension( file ) && extension.Contains( Path.GetExtension( file )[1..] ) );
+			return !pathing.Exists()
+				? Array.Empty<Pathing>()
+				: Directory.GetFiles( pathing.Output, "*.*", option ).Where( file => Path.HasExtension( file ) && extension.Contains( Path.GetExtension( file )[1..] ) ).Select( e => new Pathing( e ) );
+
 		}
 
 		/// <summary>
@@ -414,6 +455,9 @@ namespace Espionage.Engine.IO
 			return withExtension ? Path.GetFileName( Output ) : Path.GetFileNameWithoutExtension( Output );
 		}
 
+		/// <summary>
+		/// Gets the FileSystemInfo type
+		/// </summary>
 		public T Info<T>() where T : FileSystemInfo
 		{
 			return Meta().IsDirectory ? new DirectoryInfo( Output ) as T : new FileInfo( Output ) as T;

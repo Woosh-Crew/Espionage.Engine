@@ -1,4 +1,5 @@
-﻿using Espionage.Engine.Components;
+﻿using System.IO;
+using Espionage.Engine.Components;
 using Espionage.Engine.IO;
 using Espionage.Engine.Resources;
 
@@ -53,7 +54,7 @@ namespace Espionage.Engine
 				return;
 			}
 
-			foreach ( var file in mapPathing.All( Map.Extensions ) )
+			foreach ( var file in mapPathing.All( SearchOption.AllDirectories, Map.Extensions ) )
 			{
 				Map.Setup.Path( file )?
 					.Origin( name )
