@@ -54,8 +54,10 @@ namespace Espionage.Engine.Resources
 			return null;
 		}
 
-		public static void Unload( string path )
+		public static void Unload( Pathing path )
 		{
+			path = path.Virtual();
+			
 			var resource = Registered[path];
 
 			if ( resource == null )

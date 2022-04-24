@@ -17,7 +17,6 @@ namespace Espionage.Engine.Resources
 			{
 				foreach ( var file in Files.Pathing( $"{pathing.ShortHand}://" ).All() )
 				{
-					Debugging.Log.Info( file.Virtual() );
 					Registered.Fill( file.Virtual() );
 				}
 			}
@@ -49,12 +48,6 @@ namespace Espionage.Engine.Resources
 			{
 				Path = path;
 				Identifier = path.Hash();
-			}
-
-			public Reference( int hash )
-			{
-				Path = null;
-				Identifier = hash;
 			}
 
 			~Reference()

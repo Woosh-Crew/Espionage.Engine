@@ -27,7 +27,7 @@ namespace Espionage.Engine.Resources
 
 			_model?.Delete();
 			_model = null;
-			
+
 			base.OnDetached();
 		}
 

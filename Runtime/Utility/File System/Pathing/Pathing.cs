@@ -229,7 +229,7 @@ namespace Espionage.Engine.IO
 				}
 			}
 
-			// Get Absolute Path
+			// No shorthand pathing, exit out
 			if ( !path.Contains( "://" ) )
 			{
 				path = Path.GetFullPath( path );
@@ -340,6 +340,17 @@ namespace Espionage.Engine.IO
 			return this;
 		}
 
+		/// <summary>
+		/// Makes all directory separator chars the same, makes all text lower case
+		/// </summary>
+		public Pathing Normalise()
+		{
+			Output = Output.ToLower();
+			Output = Output.Replace( '\\', '/' );
+
+			return this;
+		}
+
 		//
 		// Outputs
 		//
@@ -422,6 +433,14 @@ namespace Espionage.Engine.IO
 		}
 
 		/// <summary>
+		/// Does this path come from a drive?
+		/// </summary>
+		public bool IsRooted()
+		{
+			return Path.IsPathRooted( Files.Pathing( Output ).Absolute() );
+		}
+
+		/// <summary>
 		/// Checks if the current path is a full valid path
 		/// </summary>
 		public bool IsAbsolute()
@@ -474,7 +493,7 @@ namespace Espionage.Engine.IO
 		/// </summary>
 		public int Hash()
 		{
-			return Output.Hash();
+			return Files.Pathing( Output ).Normalise().Hash();
 		}
 
 		/// <summary>
