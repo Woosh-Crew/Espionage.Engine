@@ -26,7 +26,7 @@ namespace Espionage.Engine.IO
 			public bool Overridable { get; }
 		}
 
-		private static readonly Dictionary<string, Grouping> Paths = new()
+		private static readonly Dictionary<string, Grouping> Paths = new( StringComparer.OrdinalIgnoreCase )
 		{
 			// -- Game Specific
 			["game"] = Application.dataPath,
@@ -374,6 +374,22 @@ namespace Espionage.Engine.IO
 		}
 
 		/// <summary>
+		/// Checks if a path is a virtual path (Meaning it has a shorthand assigner)
+		/// </summary>
+		public bool IsVirtual()
+		{
+			return Output.Contains( "://" ) && Paths.ContainsKey( Output.Split( "://" )[0] );
+		}
+
+		/// <summary>
+		/// Checks if the path is empty or null 
+		/// </summary>
+		public bool IsEmpty()
+		{
+			return Output.IsEmpty();
+		}
+
+		/// <summary>
 		/// Is this path or file in a folder named "x"?
 		/// </summary>
 		public bool InFolder( string folderName, string relative = "game://" )
@@ -444,6 +460,14 @@ namespace Espionage.Engine.IO
 				? Array.Empty<Pathing>()
 				: Directory.GetFiles( pathing.Output, "*.*", option ).Where( file => Path.HasExtension( file ) && extension.Contains( Path.GetExtension( file )[1..] ) ).Select( e => new Pathing( e ) );
 
+		}
+
+		/// <summary>
+		/// Fast Hashes this path for use over network
+		/// </summary>
+		public int Hash()
+		{
+			return Output.Hash();
 		}
 
 		/// <summary>

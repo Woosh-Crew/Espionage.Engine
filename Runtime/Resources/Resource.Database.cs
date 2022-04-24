@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Espionage.Engine.IO;
 
 namespace Espionage.Engine.Resources
 {
@@ -12,11 +13,11 @@ namespace Espionage.Engine.Resources
 		{
 			private readonly SortedList<int, Reference> _storage = new();
 
-			public Reference this[ string key ]
+			public Reference this[ Pathing key ]
 			{
 				get
 				{
-					if ( key.IsEmpty() )
+					if ( key.IsRelative() )
 					{
 						return null;
 					}
@@ -46,7 +47,7 @@ namespace Espionage.Engine.Resources
 			// API
 			//
 
-			public Reference Fill( string path )
+			public Reference Fill( Pathing path )
 			{
 				var hash = path.Hash();
 
