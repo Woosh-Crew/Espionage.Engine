@@ -493,7 +493,7 @@ namespace Espionage.Engine.IO
 		/// </summary>
 		public int Hash()
 		{
-			return Files.Pathing( Output ).Normalise().Hash();
+			return Files.Pathing( Output ).Normalise().Output.Hash();
 		}
 
 		/// <summary>

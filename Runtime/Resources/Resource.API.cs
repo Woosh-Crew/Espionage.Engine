@@ -14,8 +14,8 @@ namespace Espionage.Engine.Resources
 				path = $"{attribute.ShortHand}://" + path;
 			}
 
-			path = path.Virtual();
-
+			path = path.Virtual().Normalise();
+			
 			Debugging.Log.Info( $"Loading Resource [{library.Title}] at Path [{path}]" );
 
 			if ( Registered[path]?.Resource != null )
@@ -45,10 +45,14 @@ namespace Espionage.Engine.Resources
 			Debugging.Log.Error( $"{library.Title} Path [{path.Output}], couldn't be found." );
 
 			// Load default resource, if its not there
-			if ( library.Components.TryGet( out FileAttribute files ) && Registered[files.Fallback] != null )
+			if ( library.Components.TryGet( out FileAttribute files ) && !files.Fallback.IsEmpty() )
 			{
 				Debugging.Log.Info( "Loading Fallback" );
-				return Load<T>( files.Fallback, true );
+
+				Pathing fallback = files.Fallback;
+				fallback = fallback.Virtual().Normalise();
+
+				return !fallback.Exists() ? null : Load<T>( fallback, true );
 			}
 
 			return null;
@@ -57,7 +61,7 @@ namespace Espionage.Engine.Resources
 		public static void Unload( Pathing path )
 		{
 			path = path.Virtual();
-			
+
 			var resource = Registered[path];
 
 			if ( resource == null )

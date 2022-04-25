@@ -17,7 +17,7 @@ namespace Espionage.Engine.Resources
 			{
 				foreach ( var file in Files.Pathing( $"{pathing.ShortHand}://" ).All() )
 				{
-					Registered.Fill( file.Virtual() );
+					Registered.Fill( file.Virtual().Normalise() );
 				}
 			}
 		}
