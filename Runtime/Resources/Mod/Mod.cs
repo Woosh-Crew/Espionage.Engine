@@ -6,7 +6,7 @@ using Espionage.Engine.Resources;
 namespace Espionage.Engine
 {
 	[Library( "res.mod" ), Group( "Mods" ), Path( "mods", "assets://Mods" )]
-	public sealed class Mod : IResource
+	public sealed class Mod : IAsset
 	{
 		public Library ClassInfo { get; }
 		public Components<Mod> Components { get; }
@@ -32,15 +32,15 @@ namespace Espionage.Engine
 
 		// Resource
 
-		int IResource.Identifier { get; set; }
-		bool IResource.Persistant { get; set; }
+		int IAsset.Identifier { get; set; }
+		bool IAsset.Persistant { get; set; }
 
-		void IResource.Setup( string path )
+		void IAsset.Setup( string path )
 		{
 			Path = path;
 		}
 
-		void IResource.Load()
+		void IAsset.Load()
 		{
 			var name = Files.Pathing( Path ).Name();
 			Pathing.Add( name, Path );
@@ -63,7 +63,7 @@ namespace Espionage.Engine
 			}
 		}
 
-		bool IResource.Unload()
+		bool IAsset.Unload()
 		{
 			return false;
 		}

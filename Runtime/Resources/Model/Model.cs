@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Espionage.Engine.IO;
 using UnityEngine;
 
 namespace Espionage.Engine.Resources
 {
 	[Library( "res.model" ), File( Fallback = "models://w_error.umdl" ), Group( "Models" ), Path( "models", "assets://Models", Overridable = true )]
-	public sealed class Model : IResource
+	public sealed class Model : IAsset
 	{
 		public Library ClassInfo { get; }
 
-		int IResource.Identifier { get; set; }
-		public bool Persistant { get; set; }
+		Resource IAsset.Resource { get; set; }
 
 		public Model()
 		{
@@ -25,7 +25,6 @@ namespace Espionage.Engine.Resources
 		public Instance Consume( Transform transform )
 		{
 			var instance = Instances[^1];
-
 			Assert.IsTrue( instance.IsConsumed );
 			instance.IsConsumed = true;
 			instance.GameObject.SetActive( true );
@@ -35,7 +34,7 @@ namespace Espionage.Engine.Resources
 			return instance;
 		}
 
-		void IResource.Setup( string path )
+		void IAsset.Setup( Pathing path )
 		{
 			var file = Files.Grab<File>( path );
 			Assert.IsNull( file );
@@ -43,7 +42,7 @@ namespace Espionage.Engine.Resources
 			Source = file;
 		}
 
-		void IResource.Load()
+		void IAsset.Load()
 		{
 			if ( Instances.Count <= 0 && Cache == null )
 			{
@@ -59,7 +58,7 @@ namespace Espionage.Engine.Resources
 			Cache = gameObject;
 		}
 
-		bool IResource.Unload()
+		bool IAsset.Unload()
 		{
 			if ( !Persistant && Instances.Count <= 0 )
 			{
@@ -92,7 +91,7 @@ namespace Espionage.Engine.Resources
 				Model.Instances.Remove( this );
 
 				GameObject.Destroy( GameObject );
-				Resource.Unload( Model );
+				Assets.Unload( Model );
 
 				Model = null;
 				GameObject = null;
@@ -101,7 +100,7 @@ namespace Espionage.Engine.Resources
 
 		public static implicit operator Model( string value )
 		{
-			return Resource.Load<Model>( value );
+			return Assets.Load<Model>( value );
 		}
 
 		[Library( "mdl.file" ), Group( "Models" )]

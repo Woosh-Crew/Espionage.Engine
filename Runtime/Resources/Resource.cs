@@ -1,67 +1,32 @@
-﻿using System.Linq;
-using Espionage.Engine.IO;
-using Espionage.Engine.Services;
+﻿using Espionage.Engine.IO;
 
 namespace Espionage.Engine.Resources
 {
-	public sealed partial class Resource : Service
+	public sealed class Resource
 	{
-		public override void OnReady()
+		public bool IsLoaded => Asset != null;
+
+		public IAsset Asset { get; set; }
+		public bool Persistant { get; set; }
+
+		public int Identifier { get; }
+		public Pathing Path { get; }
+
+		public Resource( Pathing path )
 		{
-			base.OnReady();
-
-			// Get reference pathing to all resources
-			// Load default resources (Maps & Mods)
-
-			foreach ( var pathing in Library.Database.GetAll<IResource>().Select( e => e.Components.Get<PathAttribute>() ) )
-			{
-				foreach ( var file in Files.Pathing( $"{pathing.ShortHand}://" ).All() )
-				{
-					Registered.Fill( file.Virtual().Normalise() );
-				}
-			}
+			Path = path;
+			Identifier = path.Hash();
 		}
 
-		public override void OnUpdate()
+		public T Create<T>() where T : class, IAsset, new()
 		{
-			base.OnUpdate();
+			Assert.IsTrue( Asset != null );
 
-			// Watch resource for change
-			// Unload resource after 1 minute of inactive use
-		}
+			Asset = new T();
+			Asset.Resource = this;
+			Asset.Setup( Path );
 
-		public override void OnShutdown()
-		{
-			base.OnShutdown();
-
-			// Stop watching resources for updates
-			// Unload any currently loaded resources
-		}
-
-		// Data
-
-		public class Reference
-		{
-			public IResource Resource { get; set; }
-
-			public Reference( Pathing path )
-			{
-				Path = path;
-				Identifier = path.Hash();
-			}
-
-			~Reference()
-			{
-				Resource = null;
-			}
-
-			public Pathing Path { get; }
-			public int Identifier { get; }
-
-			public override string ToString()
-			{
-				return $"loaded:[{Resource != null}] path:[{Path}]";
-			}
+			return Asset as T;
 		}
 	}
 }
