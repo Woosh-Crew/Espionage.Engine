@@ -27,6 +27,8 @@ namespace Espionage.Engine.Resources
 			Bundle = file;
 		}
 
+		// Loading
+
 		void IAsset.Load()
 		{
 			using var stopwatch = Debugging.Stopwatch( $"Loaded Model [{Files.Pathing( Bundle.Info ).Name()}]" );
@@ -46,10 +48,35 @@ namespace Espionage.Engine.Resources
 			Cache = null;
 		}
 
+		// Instances
+
+		IAsset IAsset.Clone()
+		{
+			return new Model()
+			{
+				Bundle = Bundle, Cache = GameObject.Instantiate( Cache ),
+			};
+		}
+
+		public void Delete()
+		{
+			Library.Unregister( this );
+			GameObject.Destroy( Cache );
+
+			Bundle = null;
+			Resource = null;
+
+			Resource?.Instances.Remove( this );
+		}
+
+		// Helpers
+
 		public static implicit operator Model( string value )
 		{
 			return Assets.Load<Model>( value );
 		}
+
+		// File
 
 		[Library( "mdl.file" ), Group( "Models" )]
 		public abstract class File : IFile

@@ -4,10 +4,12 @@ namespace Espionage.Engine.Resources
 {
 	public interface IAsset : ILibrary
 	{
-		Resource Resource { get; set; }
+		Resource Resource { set; }
 		void Setup( Pathing path );
 
 		void Load();
 		void Unload();
+
+		IAsset Clone();
 	}
 }

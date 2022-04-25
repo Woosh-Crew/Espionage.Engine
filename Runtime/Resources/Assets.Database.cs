@@ -40,7 +40,7 @@ namespace Espionage.Engine.Resources
 
 			public Resource Fill( Pathing path )
 			{
-				var hash = path.Hash();
+				var hash = path.Virtual().Hash();
 
 				if ( Registered[hash] != null )
 				{

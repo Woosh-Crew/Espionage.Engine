@@ -15,20 +15,7 @@ namespace Espionage.Engine.Resources
 			}
 
 			var resource = Find( path.Virtual().Normalise() );
-			return resource != null ? Load<T>( resource, persistant ) : Fallback<T>();
-		}
-
-		public static T Load<T>( Resource resource, bool persistant = false ) where T : class, IAsset, new()
-		{
-			Library library = typeof( T );
-
-			Debugging.Log.Info( $"Loading Resource [{library.Title}] at Path [{resource.Path}]" );
-
-			resource.Source ??= resource.Create<T>();
-			resource.Source.Load();
-			resource.Persistant ^= persistant;
-
-			return resource.Source as T;
+			return resource != null ? resource.Load<T>() : Fallback<T>();
 		}
 
 		public static T Fallback<T>() where T : class, IAsset, new()
