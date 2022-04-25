@@ -54,10 +54,11 @@ namespace Espionage.Engine.Resources
 			Persistant ^= persistant;
 
 			Library library = typeof( T );
-			Debugging.Log.Info( $"Loading {library.Title} at Path [{Path}]" );
 
 			if ( !IsLoaded )
 			{
+				Debugging.Log.Info( $"Loading {library.Title} at Path [{Path}]" );
+
 				Instances = new();
 				Source = Create<T>();
 				Source.Load();
