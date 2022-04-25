@@ -32,12 +32,12 @@ namespace Espionage.Engine
 
 		// Resource
 
-		int IAsset.Identifier { get; set; }
-		bool IAsset.Persistant { get; set; }
+		public Resource Resource { get; set; }
 
-		void IAsset.Setup( string path )
+		void IAsset.Setup( Pathing path )
 		{
 			Path = path;
+			Resource.Persistant = true;
 		}
 
 		void IAsset.Load()
@@ -63,9 +63,11 @@ namespace Espionage.Engine
 			}
 		}
 
-		bool IAsset.Unload()
+		void IAsset.Unload() { }
+
+		public IAsset Clone()
 		{
-			return false;
+			return null;
 		}
 	}
 }

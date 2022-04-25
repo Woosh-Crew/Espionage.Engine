@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using Espionage.Engine.IO;
 
 namespace Espionage.Engine.Resources
 {
@@ -36,15 +37,13 @@ namespace Espionage.Engine.Resources
 
 		// Resource
 
-		int IAsset.Identifier { get; set; }
-		bool IAsset.Persistant { get; set; }
+		public Resource Resource { get; set; }
+		protected FileInfo Source { get; private set; }
 
-		void IAsset.Setup( string path )
+		void IAsset.Setup( Pathing path )
 		{
 			Source = new( path );
 		}
-
-		protected FileInfo Source { get; private set; }
 
 		void IAsset.Load()
 		{
@@ -57,13 +56,17 @@ namespace Espionage.Engine.Resources
 
 		protected virtual void OnLoad( BinaryReader reader ) { }
 
-		bool IAsset.Unload()
+		void IAsset.Unload()
 		{
 			OnUnload();
-			return true;
 		}
 
 		protected virtual void OnUnload() { }
+
+		IAsset IAsset.Clone()
+		{
+			return this;
+		}
 
 		// Hotloading
 

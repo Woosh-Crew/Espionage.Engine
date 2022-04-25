@@ -31,7 +31,6 @@ namespace Espionage.Engine.Resources
 
 		void IAsset.Load()
 		{
-			using var stopwatch = Debugging.Stopwatch( $"Loaded Model [{Files.Pathing( Bundle.Info ).Name()}]" );
 			Bundle.Load( OnLoad );
 		}
 
@@ -42,8 +41,6 @@ namespace Espionage.Engine.Resources
 
 		void IAsset.Unload()
 		{
-			Debugging.Log.Info( $"Unloading Model [{Files.Pathing( Bundle.Info ).Name()}]" );
-
 			Bundle.Unload();
 			Cache = null;
 		}

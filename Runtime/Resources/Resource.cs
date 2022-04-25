@@ -11,6 +11,16 @@ namespace Espionage.Engine.Resources
 			Identifier = path.Hash();
 		}
 
+		public override int GetHashCode()
+		{
+			return Identifier;
+		}
+
+		public override string ToString()
+		{
+			return $"loaded:[{IsLoaded}] path:[{Path}]";
+		}
+
 		// State
 
 		public bool Persistant { get; set; }
@@ -18,8 +28,8 @@ namespace Espionage.Engine.Resources
 
 		// References
 
-		public IAsset Source { get; set; }
-		public List<IAsset> Instances { get; } = new();
+		public IAsset Source { get; private set; }
+		public List<IAsset> Instances { get; private set; }
 
 		// Identification
 
@@ -44,31 +54,56 @@ namespace Espionage.Engine.Resources
 			Persistant ^= persistant;
 
 			Library library = typeof( T );
-			Debugging.Log.Info( $"Loading Resource [{library.Title}] at Path [{Path}]" );
+			Debugging.Log.Info( $"Loading {library.Title} at Path [{Path}]" );
 
-			if ( Source == null )
+			if ( !IsLoaded )
 			{
+				Instances = new();
 				Source = Create<T>();
 				Source.Load();
 			}
 
 			var instance = Source.Clone();
-			instance.Resource = this;
+
+			if ( instance == null )
+			{
+				Debugging.Log.Error( $"Can't load [{library.Title}]" );
+				return null;
+			}
+
 			Instances.Add( instance );
+			instance.Resource = this;
 
 			return instance as T;
 		}
 
 		public void Unload( bool forcefully )
 		{
+			if ( !IsLoaded )
+			{
+				// Nothing was loaded
+				return;
+			}
+
 			foreach ( var instance in Instances )
 			{
+				if ( instance == Source )
+				{
+					continue;
+				}
+
 				instance.Delete();
 			}
 
+			Instances.Clear();
+
 			if ( forcefully || !Persistant )
 			{
+				Debugging.Log.Info( $"Unloading {Source.ClassInfo.Title} [{Path}]" );
+
 				Source.Unload();
+				Source.Delete();
+				Source = null;
 			}
 		}
 	}
