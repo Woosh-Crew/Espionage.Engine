@@ -1,66 +1,110 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
 using Espionage.Engine.IO;
-using Espionage.Engine.Services;
 
 namespace Espionage.Engine.Resources
 {
-	public sealed partial class Resource : Service
+	public sealed class Resource
 	{
-		public override void OnReady()
+		public Resource( Pathing path )
 		{
-			base.OnReady();
+			Path = path;
+			Identifier = path.Hash();
+		}
 
-			// Get reference pathing to all resources
-			// Load default resources (Maps & Mods)
+		public override int GetHashCode()
+		{
+			return Identifier;
+		}
 
-			foreach ( var pathing in Library.Database.GetAll<IResource>().Select( e => e.Components.Get<PathAttribute>() ) )
+		public override string ToString()
+		{
+			return $"loaded:[{IsLoaded}] path:[{Path}]";
+		}
+
+		// State
+
+		public bool Persistant { get; set; }
+		public bool IsLoaded => Source != null;
+
+		// References
+
+		public IAsset Source { get; private set; }
+		public List<IAsset> Instances { get; private set; }
+
+		// Identification
+
+		public int Identifier { get; }
+		public Pathing Path { get; }
+
+		// Management
+
+		public T Create<T>() where T : class, IAsset, new()
+		{
+			Assert.IsTrue( Source != null );
+
+			Source = new T();
+			Source.Resource = this;
+			Source.Setup( Path );
+
+			return Source as T;
+		}
+
+		public T Load<T>( bool persistant = false ) where T : class, IAsset, new()
+		{
+			Persistant ^= persistant;
+
+			Library library = typeof( T );
+
+			if ( !IsLoaded )
 			{
-				foreach ( var file in Files.Pathing( $"{pathing.ShortHand}://" ).All() )
+				Debugging.Log.Info( $"Loading {library.Title} at Path [{Path}]" );
+
+				Instances = new();
+				Source = Create<T>();
+				Source.Load();
+			}
+
+			var instance = Source.Clone();
+
+			if ( instance == null )
+			{
+				Debugging.Log.Error( $"Can't load [{library.Title}]" );
+				return null;
+			}
+
+			Instances.Add( instance );
+			instance.Resource = this;
+
+			return instance as T;
+		}
+
+		public void Unload( bool forcefully )
+		{
+			if ( !IsLoaded )
+			{
+				// Nothing was loaded
+				return;
+			}
+
+			foreach ( var instance in Instances )
+			{
+				if ( instance == Source )
 				{
-					Registered.Fill( file.Virtual().Normalise() );
+					continue;
 				}
-			}
-		}
 
-		public override void OnUpdate()
-		{
-			base.OnUpdate();
-
-			// Watch resource for change
-			// Unload resource after 1 minute of inactive use
-		}
-
-		public override void OnShutdown()
-		{
-			base.OnShutdown();
-
-			// Stop watching resources for updates
-			// Unload any currently loaded resources
-		}
-
-		// Data
-
-		public class Reference
-		{
-			public IResource Resource { get; set; }
-
-			public Reference( Pathing path )
-			{
-				Path = path;
-				Identifier = path.Hash();
+				instance.Delete();
 			}
 
-			~Reference()
-			{
-				Resource = null;
-			}
+			Instances.Clear();
 
-			public Pathing Path { get; }
-			public int Identifier { get; }
-
-			public override string ToString()
+			if ( forcefully || !Persistant )
 			{
-				return $"loaded:[{Resource != null}] path:[{Path}]";
+				Debugging.Log.Info( $"Unloading {Source.ClassInfo.Title} [{Path}]" );
+
+				Source.Unload();
+				Source.Delete();
+				Source = null;
 			}
 		}
 	}

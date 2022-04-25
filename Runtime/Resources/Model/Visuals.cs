@@ -22,11 +22,14 @@ namespace Espionage.Engine.Resources
 
 		public override void OnDetached()
 		{
+			Model = null;
 			Animator = null;
 			Renderers = null;
 
-			_model?.Delete();
-			_model = null;
+			if ( _root != null )
+			{
+				GameObject.Destroy( _root );
+			}
 
 			base.OnDetached();
 		}
@@ -46,50 +49,60 @@ namespace Espionage.Engine.Resources
 
 		// Model
 
-		private Model.Instance _model;
+		private Model _model;
 
 		public Model Model
 		{
-			get => _model?.Model;
-			set
+			get => _model;
+			set => Change( value );
+		}
+
+		private void Change( Model value )
+		{
+			if ( value == null )
 			{
-				if ( value == null )
-				{
-					_model?.Delete();
-					_model = null;
-					return;
-				}
-
-				if ( _model?.Model == value )
-				{
-					Debugging.Log.Warning( "Trying to apply the same Model" );
-				}
-
 				_model?.Delete();
-				_model = value.Consume( _root );
-
-				if ( _model == null )
-				{
-					return;
-				}
-
-				Animator = _model.GameObject.GetComponent<Animator>();
-				Renderers = _root.GetComponentsInChildren<Renderer>();
-				Bounds = default;
-
-				foreach ( var renderer in Renderers )
-				{
-					if ( Bounds == default )
-					{
-						Bounds = renderer.bounds;
-						continue;
-					}
-
-					Bounds.Encapsulate( renderer.bounds );
-				}
-
-				Changed?.Invoke();
+				_model = null;
+				return;
 			}
+
+			if ( _model == value )
+			{
+				Debugging.Log.Warning( "Trying to apply the same Model" );
+			}
+
+			_model?.Delete();
+			_model = value;
+
+			if ( _model == null )
+			{
+				return;
+			}
+
+			// Parent to Root
+			var gameObject = _model.Cache;
+			gameObject.SetActive( true );
+			gameObject.transform.parent = _root;
+			gameObject.transform.localPosition = Vector3.zero;
+
+			// Get Renderers and Animator
+			Animator = gameObject.GetComponent<Animator>();
+			Renderers = gameObject.GetComponentsInChildren<Renderer>();
+			Bounds = default;
+
+			foreach ( var renderer in Renderers )
+			{
+				if ( Bounds == default )
+				{
+					Bounds = renderer.bounds;
+					continue;
+				}
+
+				Bounds.Encapsulate( renderer.bounds );
+			}
+
+			// Finished
+			Changed?.Invoke();
 		}
 	}
 }

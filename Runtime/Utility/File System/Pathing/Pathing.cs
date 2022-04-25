@@ -43,11 +43,6 @@ namespace Espionage.Engine.IO
 				$"{Environment.GetFolderPath( Environment.SpecialFolder.UserProfile )}/.config/<game>",
 				$"{Environment.GetFolderPath( Environment.SpecialFolder.UserProfile )}/Library/Preferences/<game>"
 			),
-			["data"] = GetUserPath( "XDG_DATA_HOME",
-				$"{Environment.GetFolderPath( Environment.SpecialFolder.LocalApplicationData )}\\<game>",
-				$"{Environment.GetFolderPath( Environment.SpecialFolder.UserProfile )}/.local/share/<game>",
-				$"{Environment.GetFolderPath( Environment.SpecialFolder.UserProfile )}/Library/Application Support/<game>"
-			),
 
 			#if UNITY_EDITOR
 

@@ -148,7 +148,7 @@ namespace Espionage.Engine.Tools.Editor
 
 		private static void MoveCompiledAssets( string path )
 		{
-			foreach ( var library in Library.Database.GetAll<IResource>().Where( e => !e.Info.IsAbstract ) )
+			foreach ( var library in Library.Database.GetAll<IAsset>().Where( e => !e.Info.IsAbstract ) )
 			{
 				MoveGroup( library, path );
 			}

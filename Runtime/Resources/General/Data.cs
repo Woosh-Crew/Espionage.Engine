@@ -1,16 +1,17 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using Espionage.Engine.IO;
 
 namespace Espionage.Engine.Resources
 {
-	[Group( "Data" ), Path( "custom_assets", "assets://Data", Overridable = true )]
-	public abstract class Asset : IResource, IWatchable
+	[Group( "Data" ), Path( "data", "assets://Data", Overridable = true )]
+	public abstract class Data : IAsset, IWatchable
 	{
 		public Library ClassInfo { get; }
 		public string Name { get; set; }
 
-		public Asset()
+		public Data()
 		{
 			ClassInfo = Library.Register( this );
 		}
@@ -36,17 +37,15 @@ namespace Espionage.Engine.Resources
 
 		// Resource
 
-		int IResource.Identifier { get; set; }
-		bool IResource.Persistant { get; set; }
+		public Resource Resource { get; set; }
+		protected FileInfo Source { get; private set; }
 
-		void IResource.Setup( string path )
+		void IAsset.Setup( Pathing path )
 		{
 			Source = new( path );
 		}
 
-		protected FileInfo Source { get; private set; }
-
-		void IResource.Load()
+		void IAsset.Load()
 		{
 			using var file = Source.Open( FileMode.Open, FileAccess.Read );
 			using var reader = new BinaryReader( file );
@@ -57,41 +56,45 @@ namespace Espionage.Engine.Resources
 
 		protected virtual void OnLoad( BinaryReader reader ) { }
 
-		bool IResource.Unload()
+		void IAsset.Unload()
 		{
 			OnUnload();
-			return true;
 		}
 
 		protected virtual void OnUnload() { }
+
+		IAsset IAsset.Clone()
+		{
+			return this;
+		}
 
 		// Hotloading
 
 		void IWatchable.OnHotload()
 		{
-			(this as IResource).Load();
+			(this as IAsset).Load();
 		}
 
 		void IWatchable.OnDeleted() { }
 
 		// Compiler
 
-		internal class Compiler : ICompiler<Asset>
+		internal class Compiler : ICompiler<Data>
 		{
-			public void Compile( Asset asset )
+			public void Compile( Data data )
 			{
-				var extension = asset.ClassInfo.Components.Get<FileAttribute>()?.Extension ?? asset.ClassInfo.Name.ToLower();
+				var extension = data.ClassInfo.Components.Get<FileAttribute>()?.Extension ?? data.ClassInfo.Name.ToLower();
 
 				// Create path, just in case
-				Files.Pathing( "assets://Data" ).Create();
+				Files.Pathing( "data://" ).Create();
 
-				using var stopwatch = Debugging.Stopwatch( $"{asset.ClassInfo.Title} Compiled", true );
-				using var file = File.Create( Files.Pathing( $"custom_assets://{asset.Name}.{extension}" ).Absolute() );
+				using var stopwatch = Debugging.Stopwatch( $"{data.ClassInfo.Title} Compiled", true );
+				using var file = File.Create( Files.Pathing( $"data://{data.Name}.{extension}" ).Absolute() );
 				using var writer = new BinaryWriter( file );
 
 				try
 				{
-					asset.Compile( writer );
+					data.Compile( writer );
 				}
 				catch ( Exception e )
 				{
