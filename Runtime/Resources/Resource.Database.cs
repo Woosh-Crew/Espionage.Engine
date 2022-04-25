@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Espionage.Engine.IO;
 
 namespace Espionage.Engine.Resources
 {
@@ -8,19 +9,14 @@ namespace Espionage.Engine.Resources
 	{
 		public static Registry Registered { get; } = new();
 
-		public class Registry : IEnumerable<Resource.Reference>
+		public class Registry : IEnumerable<Reference>
 		{
 			private readonly SortedList<int, Reference> _storage = new();
 
-			public Reference this[ string key ]
+			public Reference this[ Pathing key ]
 			{
 				get
 				{
-					if ( key.IsEmpty() )
-					{
-						return null;
-					}
-
 					var hash = key.Hash();
 					return _storage.ContainsKey( hash ) ? _storage[hash] : null;
 				}
@@ -46,7 +42,7 @@ namespace Espionage.Engine.Resources
 			// API
 			//
 
-			public Reference Fill( string path )
+			public Reference Fill( Pathing path )
 			{
 				var hash = path.Hash();
 
@@ -70,9 +66,7 @@ namespace Espionage.Engine.Resources
 
 			public void Remove( Reference item )
 			{
-				_storage[item.Identifier].Resource = null;
-
-				item.Resource.Delete();
+				item.Resource?.Delete();
 				item.Resource = null;
 			}
 		}

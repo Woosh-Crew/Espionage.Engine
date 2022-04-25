@@ -1,17 +1,22 @@
-﻿namespace Espionage.Engine.Resources
+﻿using Espionage.Engine.IO;
+
+namespace Espionage.Engine.Resources
 {
 	public partial class Resource
 	{
-		public static T Load<T>( string path, bool persistant = false ) where T : class, IResource, new()
+		public static T Load<T>( Pathing path, bool persistant = false ) where T : class, IResource, new()
 		{
 			Library library = typeof( T );
-			path = Files.Pathing.Absolute( path );
 
 			// Apply shorthand, if path doesn't have one
-			if ( !Files.Pathing.Valid( path ) && library.Components.TryGet<PathAttribute>( out var pathing ) )
+			if ( !path.IsValid() && library.Components.TryGet<PathAttribute>( out var attribute ) )
 			{
-				path = $"{pathing.ShortHand}://" + path;
+				path = $"{attribute.ShortHand}://" + path;
 			}
+
+			path = path.Virtual().Normalise();
+			
+			Debugging.Log.Info( $"Loading Resource [{library.Title}] at Path [{path}]" );
 
 			if ( Registered[path]?.Resource != null )
 			{
@@ -23,7 +28,7 @@
 				return asset.Resource as T;
 			}
 
-			if ( Files.Pathing.Exists( path ) )
+			if ( path.Exists() )
 			{
 				var asset = new T { Persistant = persistant, Identifier = path.Hash() };
 
@@ -37,20 +42,26 @@
 			}
 
 			// Either Load Error Model, or nothing if not found.
-			Debugging.Log.Error( $"{library.Title} Path [{path}], couldn't be found." );
+			Debugging.Log.Error( $"{library.Title} Path [{path.Output}], couldn't be found." );
 
 			// Load default resource, if its not there
-			if ( library.Components.TryGet( out FileAttribute files ) && Registered[files.Fallback] != null )
+			if ( library.Components.TryGet( out FileAttribute files ) && !files.Fallback.IsEmpty() )
 			{
 				Debugging.Log.Info( "Loading Fallback" );
-				return Load<T>( files.Fallback, true );
+
+				Pathing fallback = files.Fallback;
+				fallback = fallback.Virtual().Normalise();
+
+				return !fallback.Exists() ? null : Load<T>( fallback, true );
 			}
 
 			return null;
 		}
 
-		public static void Unload( string path )
+		public static void Unload( Pathing path )
 		{
+			path = path.Virtual();
+
 			var resource = Registered[path];
 
 			if ( resource == null )

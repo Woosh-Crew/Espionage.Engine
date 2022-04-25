@@ -1,4 +1,5 @@
-﻿using Espionage.Engine.Resources.Maps;
+﻿using Espionage.Engine.IO;
+using Espionage.Engine.Resources.Maps;
 
 namespace Espionage.Engine.Resources
 {
@@ -8,11 +9,11 @@ namespace Espionage.Engine.Resources
 		/// Sets up a builder for the map using a path, Allowing you 
 		/// to easily control its data through a build setup.
 		/// </summary>
-		public static Map.Builder? Path( this Map.Factory factory, string path )
+		public static Map.Builder? Path( this Map.Factory factory, Pathing path )
 		{
-			path = Files.Pathing.Absolute( path );
+			path.Absolute();
 
-			if ( !Files.Pathing.Exists( path ) )
+			if ( !path.Exists() )
 			{
 				Debugging.Log.Info( $"Path [{path}], doesn't exist" );
 				return null;

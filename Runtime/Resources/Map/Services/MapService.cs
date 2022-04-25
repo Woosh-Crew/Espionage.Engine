@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.IO;
+using System.Linq;
+using Espionage.Engine.IO;
 using Espionage.Engine.Services;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -35,17 +37,21 @@ namespace Espionage.Engine.Resources.Maps
 				Map.Setup.Index( i ).Meta( scene.name ).Origin( "Game" ).Build();
 			}
 
-			if ( !Files.Pathing.Exists( "maps://" ) )
+			var pathing = Files.Pathing( "maps://" ).Absolute();
+
+			if ( !pathing.Exists() )
 			{
 				// No Maps in the project
 				return;
 			}
 
 			var extensions = Library.Database.GetAll<Map.File>().Select( e => e.Components.Get<FileAttribute>()?.Extension ).ToArray();
-			foreach ( var item in Files.Pathing.All( "maps://", extensions ) )
+			foreach ( var item in pathing.All( SearchOption.AllDirectories, extensions ) )
 			{
+				Pathing path = item;
+
 				Map.Setup.Path( item )?
-					.Meta( Files.Pathing.Name( item, false ).ToTitleCase() )
+					.Meta( path.Name( false ).ToTitleCase() )
 					.Origin( "Game" )
 					.Build();
 			}

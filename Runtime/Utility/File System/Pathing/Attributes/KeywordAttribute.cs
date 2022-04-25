@@ -23,11 +23,11 @@ namespace Espionage.Engine
 
 			if ( item.Info.GetParameters().Length == 0 )
 			{
-				Files.Pathing.Add( Key, _ => item.Invoke<string>( null ) );
+				Pathing.Add( Key, _ => item.Invoke<string>( null ) );
 				return;
 			}
 
-			Files.Pathing.Add( Key, args => item.Invoke<string>( null, args ) );
+			Pathing.Add( Key, args => item.Invoke<string>( null, args ) );
 		}
 	}
 }

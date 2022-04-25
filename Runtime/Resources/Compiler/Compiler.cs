@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Espionage.Engine.IO;
 using Espionage.Engine.Resources;
 
 #if UNITY_EDITOR
@@ -57,9 +58,9 @@ namespace Espionage.Engine.Resources
 			method?.Invoke( null, new[] { item } );
 		}
 
-		public static void Compile( string asset, Type type )
+		public static void Compile( Pathing asset, Type type )
 		{
-			if ( !Files.Pathing.Exists( asset ) )
+			if ( !asset.Exists() )
 			{
 				Debugging.Log.Error( $"Path [{asset}] doesn't exist" );
 				return;
@@ -75,7 +76,7 @@ namespace Espionage.Engine.Resources
 
 			try
 			{
-				Debugging.Log.Info( $"Compiling {Files.Pathing.Name( asset )} [{type.Name}]" );
+				Debugging.Log.Info( $"Compiling {asset.Name()} [{type.Name}]" );
 				method?.Invoke( converter, new object[] { asset } );
 			}
 			catch ( Exception e )

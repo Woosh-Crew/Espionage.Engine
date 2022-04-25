@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Espionage.Engine.Components;
+using Espionage.Engine.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -19,14 +20,14 @@ namespace Espionage.Engine.Resources
 		/// Trys to find the map by path. If it couldn't find the map in the database,
 		/// it'll create a new reference to that map for use later if it exists.
 		/// </summary>
-		public static Map Find( string path )
+		public static Map Find( Pathing path )
 		{
-			if ( !Files.Pathing.Valid( path ) )
+			if ( !path.IsValid() )
 			{
 				path = "maps://" + path;
 			}
 
-			path = Files.Pathing.Absolute( path );
+			path = path.Absolute();
 
 			// Use the Database Map if we have it
 			if ( Database[path] != null )
@@ -34,7 +35,7 @@ namespace Espionage.Engine.Resources
 				return Database[path];
 			}
 
-			if ( Files.Pathing.Exists( path ) )
+			if ( path.Exists() )
 			{
 				return new( Files.Grab<File>( path ) );
 			}
@@ -46,10 +47,9 @@ namespace Espionage.Engine.Resources
 		/// <summary>
 		/// Checks if the map / path already exists in the maps database. 
 		/// </summary>
-		public static bool Exists( string path )
+		public static bool Exists( Pathing path )
 		{
-			path = Files.Pathing.Absolute( path );
-			return Database[path] != null;
+			return Database[path.Absolute()] != null;
 		}
 
 		//

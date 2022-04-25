@@ -83,10 +83,10 @@ namespace Espionage.Engine.Resources
 				var extension = asset.ClassInfo.Components.Get<FileAttribute>()?.Extension ?? asset.ClassInfo.Name.ToLower();
 
 				// Create path, just in case
-				Files.Pathing.Create( "assets://Data" );
+				Files.Pathing( "assets://Data" ).Create();
 
 				using var stopwatch = Debugging.Stopwatch( $"{asset.ClassInfo.Title} Compiled", true );
-				using var file = File.Create( Files.Pathing.Absolute( $"custom_assets://{asset.Name}.{extension}" ) );
+				using var file = File.Create( Files.Pathing( $"custom_assets://{asset.Name}.{extension}" ).Absolute() );
 				using var writer = new BinaryWriter( file );
 
 				try

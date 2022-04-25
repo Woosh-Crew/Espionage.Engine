@@ -1,5 +1,6 @@
 ﻿using System;
 using Espionage.Engine.Components;
+using Espionage.Engine.IO;
 
 namespace Espionage.Engine
 {
@@ -19,7 +20,7 @@ namespace Espionage.Engine
 
 		public void OnAttached( Library item )
 		{
-			Files.Pathing.Add( ShortHand, Path, Overridable );
+			Pathing.Add( ShortHand, Path, Overridable );
 		}
 	}
 }

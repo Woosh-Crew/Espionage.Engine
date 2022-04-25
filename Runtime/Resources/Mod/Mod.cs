@@ -1,4 +1,6 @@
-﻿using Espionage.Engine.Components;
+﻿using System.IO;
+using Espionage.Engine.Components;
+using Espionage.Engine.IO;
 using Espionage.Engine.Resources;
 
 namespace Espionage.Engine
@@ -21,8 +23,11 @@ namespace Espionage.Engine
 
 		public bool Exists( string path, out string full )
 		{
-			full = Files.Pathing.Absolute( "assets://" ) + Files.Pathing.Relative( "assets://", Path + "/" + Files.Pathing.Relative( "assets://", path ) );
-			return Files.Pathing.Exists( full );
+			var assets = Files.Pathing( "assets://" );
+			var absolute = assets.Absolute();
+
+			full = absolute + assets.Relative( Path + "/" + assets.Relative( path ) );
+			return Files.Pathing( full ).Exists();
 		}
 
 		// Resource
@@ -37,20 +42,23 @@ namespace Espionage.Engine
 
 		void IResource.Load()
 		{
-			var name = Files.Pathing.Name( Path );
-			Files.Pathing.Add( name, Path );
+			var name = Files.Pathing( Path ).Name();
+			Pathing.Add( name, Path );
 
 			// Grab Maps
-			if ( !Files.Pathing.Exists( $"{name}://Maps" ) )
+
+			var mapPathing = Files.Pathing( $"{name}://Maps" );
+
+			if ( !mapPathing.Exists() )
 			{
 				return;
 			}
 
-			foreach ( var mapPath in Files.Pathing.All( $"{name}://Maps", Map.Extensions ) )
+			foreach ( var file in mapPathing.All( SearchOption.AllDirectories, Map.Extensions ) )
 			{
-				Map.Setup.Path( mapPath )?
+				Map.Setup.Path( file )?
 					.Origin( name )
-					.Meta( Files.Pathing.Name( mapPath ) )
+					.Meta( Files.Pathing( file ).Name() )
 					.Build();
 			}
 		}

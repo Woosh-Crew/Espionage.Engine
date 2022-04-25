@@ -71,7 +71,7 @@ namespace Espionage.Engine
 
 		private static void Server( string applicationPath )
 		{
-			Game = new() { StartInfo = new( Files.Pathing.Absolute( applicationPath ) ) { UseShellExecute = false } };
+			Game = new() { StartInfo = new( Files.Pathing( applicationPath ).Absolute() ) { UseShellExecute = false } };
 			Pipe = new( PipeDirection.Out, HandleInheritability.Inheritable );
 
 			Debugging.Log.Info( "[SERVER] Creating Pipe" );

@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Espionage.Engine.Resources
 {
-	[Library( "res.model" ), File( Fallback = "w_error.umdl" ), Group( "Models" ), Path( "models", "assets://Models", Overridable = true )]
+	[Library( "res.model" ), File( Fallback = "models://w_error.umdl" ), Group( "Models" ), Path( "models", "assets://Models", Overridable = true )]
 	public sealed class Model : IResource
 	{
 		public Library ClassInfo { get; }
@@ -20,11 +20,11 @@ namespace Espionage.Engine.Resources
 
 		public File Source { get; private set; }
 		public GameObject Cache { get; set; }
-		private Stack<Instance> Instances { get; set; } = new();
+		private List<Instance> Instances { get; set; } = new();
 
 		public Instance Consume( Transform transform )
 		{
-			var instance = Instances.Peek();
+			var instance = Instances[^1];
 
 			Assert.IsTrue( instance.IsConsumed );
 			instance.IsConsumed = true;
@@ -47,11 +47,11 @@ namespace Espionage.Engine.Resources
 		{
 			if ( Instances.Count <= 0 && Cache == null )
 			{
-				using var stopwatch = Debugging.Stopwatch( $"Loaded Model [{Files.Pathing.Name( Source.Info )}]" );
+				using var stopwatch = Debugging.Stopwatch( $"Loaded Model [{Files.Pathing( Source.Info ).Name()}]" );
 				Source.Load( OnLoad );
 			}
 
-			Instances.Push( new( this ) );
+			Instances.Add( new( this ) );
 		}
 
 		private void OnLoad( GameObject gameObject )
@@ -61,11 +61,9 @@ namespace Espionage.Engine.Resources
 
 		bool IResource.Unload()
 		{
-			Instances.Pop();
-
 			if ( !Persistant && Instances.Count <= 0 )
 			{
-				Debugging.Log.Info( $"Unloading Model [{Files.Pathing.Name( Source.Info )}]" );
+				Debugging.Log.Info( $"Unloading Model [{Files.Pathing( Source.Info ).Name()}]" );
 
 				Source.Unload();
 				Cache = null;
@@ -85,15 +83,25 @@ namespace Espionage.Engine.Resources
 				GameObject.SetActive( false );
 			}
 
-			public Model Model { get; }
-			public GameObject GameObject { get; }
+			public Model Model { get; private set; }
+			public GameObject GameObject { get; private set; }
 			public bool IsConsumed { get; set; }
 
 			public void Delete()
 			{
+				Model.Instances.Remove( this );
+
 				GameObject.Destroy( GameObject );
 				Resource.Unload( Model );
+
+				Model = null;
+				GameObject = null;
 			}
+		}
+
+		public static implicit operator Model( string value )
+		{
+			return Resource.Load<Model>( value );
 		}
 
 		[Library( "mdl.file" ), Group( "Models" )]

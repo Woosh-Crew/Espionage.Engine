@@ -3,6 +3,7 @@ using System.IO;
 using UnityEngine;
 
 #if UNITY_EDITOR
+using Espionage.Engine.IO;
 using UnityEditor;
 #endif
 
@@ -17,8 +18,8 @@ namespace Espionage.Engine.Resources.Models
 	{
 		public void Compile( GameObject asset )
 		{
-			var exportPath = $"Exports/{ClassInfo.Group}/";
-			var assetPath = AssetDatabase.GetAssetPath( asset );
+			Pathing exportPath = $"Exports/{ClassInfo.Group}/";
+			Pathing assetPath = AssetDatabase.GetAssetPath( asset );
 
 			// Track how long exporting took
 			using ( Debugging.Stopwatch( "Model Compiled", true ) )
@@ -26,9 +27,9 @@ namespace Espionage.Engine.Resources.Models
 				try
 				{
 					// Find relative folder
-					if ( Files.Pathing.InFolder( "Models", assetPath, "project://" ) )
+					if ( assetPath.InFolder( "Models", "project://" ) )
 					{
-						var split = assetPath.Split( '/' );
+						var split = assetPath.Output.Split( '/' );
 						for ( var i = split.Length - 1; i >= 0; i-- )
 						{
 							if ( split[i] != "Models" )
@@ -41,10 +42,10 @@ namespace Espionage.Engine.Resources.Models
 						}
 					}
 
-					Files.Pathing.Create( exportPath );
+					exportPath.Create();
 
 					var extension = ClassInfo.Components.Get<FileAttribute>().Extension;
-					var builds = new[] { new AssetBundleBuild() { assetNames = new[] { assetPath }, assetBundleName = $"{Files.Pathing.Name( assetPath, false )}.{extension}" } };
+					var builds = new[] { new AssetBundleBuild() { assetNames = new string[] { assetPath }, assetBundleName = $"{assetPath.Name( false )}.{extension}" } };
 
 					var bundle = BuildPipeline.BuildAssetBundles( exportPath, builds, BuildAssetBundleOptions.ChunkBasedCompression, BuildTarget.StandaloneWindows );
 
@@ -54,7 +55,7 @@ namespace Espionage.Engine.Resources.Models
 						return;
 					}
 
-					Files.Delete( Files.Pathing.Absolute( exportPath ), "manifest", "" );
+					Files.Delete( exportPath.Absolute(), "manifest", "" );
 				}
 				catch ( Exception e )
 				{
