@@ -14,38 +14,45 @@ namespace Espionage.Engine.Resources
 				path = $"{attribute.ShortHand}://" + path;
 			}
 
-			path = path.Virtual().Normalise();
+			var resource = Find( path.Virtual().Normalise() );
+			return resource != null ? Load<T>( resource, persistant ) : Fallback<T>();
+		}
 
-			Debugging.Log.Info( $"Loading Resource [{library.Title}] at Path [{path}]" );
+		public static T Load<T>( Resource resource, bool persistant = false ) where T : class, IAsset, new()
+		{
+			Library library = typeof( T );
 
-			// Get resource and load or grab asset from path
-			var resource = Registered[path] != null ? Registered[path] : (path.Exists() ? Registered.Fill( path ) : null);
+			Debugging.Log.Info( $"Loading Resource [{library.Title}] at Path [{resource.Path}]" );
 
-			if ( resource == null )
+			resource.Source ??= resource.Create<T>();
+			resource.Source.Load();
+			resource.Persistant ^= persistant;
+
+			return resource.Source as T;
+		}
+
+		public static T Fallback<T>() where T : class, IAsset, new()
+		{
+			Library library = typeof( T );
+
+			// Load default resource, if its not there
+			if ( !library.Components.TryGet( out FileAttribute files ) || files.Fallback.IsEmpty() )
 			{
-				// Either Load Error Model, or nothing if not found.
-				Debugging.Log.Error( $"{library.Title} Path [{path.Output}], couldn't be found." );
-
-				// Load default resource, if its not there
-				if ( library.Components.TryGet( out FileAttribute files ) && !files.Fallback.IsEmpty() )
-				{
-					Debugging.Log.Info( "Loading Fallback" );
-
-					Pathing fallback = files.Fallback;
-					fallback = fallback.Virtual().Normalise();
-
-					return !fallback.Exists() ? null : Load<T>( fallback, true );
-				}
-
 				return null;
 			}
 
-			resource.Asset ??= resource.Create<T>();
+			Debugging.Log.Error( $"Loading fallback for [{library.Title}]" );
 
-			resource.Asset.Load();
-			resource.Persistant ^= persistant;
+			Pathing fallback = files.Fallback;
+			fallback = fallback.Virtual().Normalise();
 
-			return resource.Asset as T;
+			return !fallback.Exists() ? null : Load<T>( fallback, true );
+		}
+
+		public static Resource Find( Pathing path )
+		{
+			path = path.Virtual().Normalise();
+			return Registered[path] != null ? Registered[path] : (path.Exists() ? Registered.Fill( path ) : null);
 		}
 	}
 }

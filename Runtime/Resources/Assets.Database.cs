@@ -13,6 +13,8 @@ namespace Espionage.Engine.Resources
 		{
 			private readonly SortedList<int, Resource> _storage = new();
 
+			public Resource this[ int key ] => _storage.ContainsKey( key ) ? _storage[key] : null;
+
 			public Resource this[ Pathing key ]
 			{
 				get
@@ -22,15 +24,11 @@ namespace Espionage.Engine.Resources
 				}
 			}
 
-			public Resource this[ int key ] => _storage.ContainsKey( key ) ? _storage[key] : null;
-			public int Count => _storage.Count;
-
 			// Enumerator
 
 			public IEnumerator<Resource> GetEnumerator()
 			{
-				// This is bit hacky, but its a facade API! I love facade APIs!
-				return Count == 0 ? Enumerable.Empty<Resource>().GetEnumerator() : _storage.Values.GetEnumerator();
+				return _storage.Values.GetEnumerator();
 			}
 
 			IEnumerator IEnumerable.GetEnumerator()

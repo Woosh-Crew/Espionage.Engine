@@ -1,56 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using Espionage.Engine.IO;
 using UnityEngine;
 
 namespace Espionage.Engine.Resources
 {
-	[Library( "res.model" ), File( Fallback = "models://w_error.umdl" ), Group( "Models" ), Path( "models", "assets://Models", Overridable = true )]
+	[Library( "mdl.asset" ), File( Fallback = "models://w_error.umdl" ), Group( "Models" ), Path( "models", "assets://Models", Overridable = true )]
 	public sealed class Model : IAsset
 	{
 		public Library ClassInfo { get; }
-
-		Resource IAsset.Resource { get; set; }
+		public Resource Resource { get; set; }
 
 		public Model()
 		{
 			ClassInfo = Library.Register( this );
 		}
 
-		public File Source { get; private set; }
+		public File Bundle { get; private set; }
 		public GameObject Cache { get; set; }
-		private List<Instance> Instances { get; set; } = new();
-
-		public Instance Consume( Transform transform )
-		{
-			var instance = Instances[^1];
-			Assert.IsTrue( instance.IsConsumed );
-			instance.IsConsumed = true;
-			instance.GameObject.SetActive( true );
-			instance.GameObject.transform.parent = transform;
-			instance.GameObject.transform.localPosition = Vector3.zero;
-
-			return instance;
-		}
 
 		void IAsset.Setup( Pathing path )
 		{
 			var file = Files.Grab<File>( path );
 			Assert.IsNull( file );
 
-			Source = file;
+			Bundle = file;
 		}
 
 		void IAsset.Load()
 		{
-			if ( Instances.Count <= 0 && Cache == null )
-			{
-				using var stopwatch = Debugging.Stopwatch( $"Loaded Model [{Files.Pathing( Source.Info ).Name()}]" );
-				Source.Load( OnLoad );
-			}
-
-			Instances.Add( new( this ) );
+			using var stopwatch = Debugging.Stopwatch( $"Loaded Model [{Files.Pathing( Bundle.Info ).Name()}]" );
+			Bundle.Load( OnLoad );
 		}
 
 		private void OnLoad( GameObject gameObject )
@@ -58,44 +38,12 @@ namespace Espionage.Engine.Resources
 			Cache = gameObject;
 		}
 
-		bool IAsset.Unload()
+		void IAsset.Unload()
 		{
-			if ( !Persistant && Instances.Count <= 0 )
-			{
-				Debugging.Log.Info( $"Unloading Model [{Files.Pathing( Source.Info ).Name()}]" );
+			Debugging.Log.Info( $"Unloading Model [{Files.Pathing( Bundle.Info ).Name()}]" );
 
-				Source.Unload();
-				Cache = null;
-			}
-
-			return Instances.Count <= 0;
-		}
-
-		public sealed class Instance
-		{
-			public Instance( Model model )
-			{
-				Model = model;
-				IsConsumed = false;
-
-				GameObject = GameObject.Instantiate( Model.Cache );
-				GameObject.SetActive( false );
-			}
-
-			public Model Model { get; private set; }
-			public GameObject GameObject { get; private set; }
-			public bool IsConsumed { get; set; }
-
-			public void Delete()
-			{
-				Model.Instances.Remove( this );
-
-				GameObject.Destroy( GameObject );
-				Assets.Unload( Model );
-
-				Model = null;
-				GameObject = null;
-			}
+			Bundle.Unload();
+			Cache = null;
 		}
 
 		public static implicit operator Model( string value )

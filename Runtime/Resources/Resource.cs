@@ -1,13 +1,15 @@
-﻿using Espionage.Engine.IO;
+﻿using System.Collections.Generic;
+using Espionage.Engine.IO;
 
 namespace Espionage.Engine.Resources
 {
 	public sealed class Resource
 	{
-		public bool IsLoaded => Asset != null;
-
-		public IAsset Asset { get; set; }
 		public bool Persistant { get; set; }
+		public bool IsLoaded => Source != null;
+
+		public IAsset Source { get; set; }
+		public Stack<IAsset> Instances { get; } = new();
 
 		public int Identifier { get; }
 		public Pathing Path { get; }
@@ -20,13 +22,13 @@ namespace Espionage.Engine.Resources
 
 		public T Create<T>() where T : class, IAsset, new()
 		{
-			Assert.IsTrue( Asset != null );
+			Assert.IsTrue( Source != null );
 
-			Asset = new T();
-			Asset.Resource = this;
-			Asset.Setup( Path );
+			Source = new T();
+			Source.Resource = this;
+			Source.Setup( Path );
 
-			return Asset as T;
+			return Source as T;
 		}
 	}
 }

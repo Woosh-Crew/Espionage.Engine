@@ -8,6 +8,6 @@ namespace Espionage.Engine.Resources
 		void Setup( Pathing path );
 
 		void Load();
-		bool Unload();
+		void Unload();
 	}
 }
