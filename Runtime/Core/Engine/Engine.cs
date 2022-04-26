@@ -40,7 +40,7 @@ namespace Espionage.Engine
 		/// cache this as this will do a services Get() call, which
 		/// creates garbage (due to LINQ).
 		/// </summary>
-		public static Camera Camera => Modules.Get<Cameras>().Camera;
+		public static Camera Camera => Modules.Get<CameraModule>().Camera;
 
 		/// <summary>
 		/// Bootstrap is how Espionage.Engine connects with Unity. Hooks into
@@ -64,12 +64,13 @@ namespace Espionage.Engine
 			}
 
 			Bootstrap.Inject();
-			Modules = new();
-
+			
+			Local.Client = new( "Local" );
+			
 			// Create engine layer scene
 			Scene = SceneManager.CreateScene( "Engine Layer" );
-
-			Local.Client = new Client( "Local" );
+			
+			Modules = new();
 			Callback.Run( "engine.getting_ready" );
 
 			Modules.Ready();

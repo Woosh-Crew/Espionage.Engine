@@ -5,12 +5,12 @@ using UnityEngine.Rendering;
 namespace Espionage.Engine
 {
 	[Order( -5 ), Title( "Cameras" )]
-	public class Cameras : Module
+	public class CameraModule : Module
 	{
 		private Controller _controller;
 		public Camera Camera => _controller.Camera;
 
-		protected override void OnReady()
+		protected override bool OnRegister()
 		{
 			// Main Camera
 			_controller = Entity.Create<Controller>();
@@ -19,6 +19,8 @@ namespace Espionage.Engine
 			// Tell everyone we got cameras
 			Engine.Project.OnCameraCreated( _controller.Camera );
 			Callback.Run( "camera.created", _controller.Camera );
+
+			return true;
 		}
 
 		// Frame

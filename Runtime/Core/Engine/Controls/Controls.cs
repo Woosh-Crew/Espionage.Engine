@@ -13,10 +13,12 @@ namespace Espionage.Engine
 
 		private Setup _setup = new() { Cursor = new() { Locked = true, Visible = false } };
 
-		protected override void OnReady()
+		protected override bool OnRegister()
 		{
 			Local.Client.Input = _setup;
 			_setup.Scheme = Engine.Project.SetupControls();
+
+			return true;
 		}
 
 		protected override void OnUpdate()
