@@ -76,7 +76,7 @@ namespace Espionage.Engine.Tools.Editor
 
 		public static void Build( BuildTarget target, BuildOptions options )
 		{
-			if ( Engine.Game == null )
+			if ( Engine.Project == null )
 			{
 				Debugging.Log.Error( "No Game!" );
 				return;
@@ -93,7 +93,7 @@ namespace Espionage.Engine.Tools.Editor
 				Compiler.Compile( garryPath, typeof( GameObject ) );
 			}
 
-			var info = Engine.Game.ClassInfo;
+			var info = Engine.Project.ClassInfo;
 			var path = $"Exports/{info.Title}/";
 
 			PlayerSettings.productName = info.Title;
@@ -108,9 +108,9 @@ namespace Espionage.Engine.Tools.Editor
 				targetGroup = BuildTargetGroup.Standalone
 			};
 
-			if ( !string.IsNullOrEmpty( Engine.Game.Splash.Scene ) )
+			if ( !string.IsNullOrEmpty( Engine.Project.Splash.Scene ) )
 			{
-				buildSettings.scenes = new[] { Engine.Game.Splash.Scene };
+				buildSettings.scenes = new[] { Engine.Project.Splash.Scene };
 			}
 
 			Callback.Run( "project_builder.building", target, buildSettings );
@@ -127,7 +127,7 @@ namespace Espionage.Engine.Tools.Editor
 
 		public static void Play( string launchArgs = null )
 		{
-			var info = Engine.Game.ClassInfo;
+			var info = Engine.Project.ClassInfo;
 			Process.Start( Files.Pathing( $"Exports/{info.Title}/{info.Name}.exe" ).Absolute(), launchArgs );
 		}
 

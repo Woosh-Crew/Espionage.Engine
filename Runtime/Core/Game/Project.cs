@@ -1,39 +1,27 @@
 ﻿using Espionage.Engine.Gamemodes;
+using Espionage.Engine.Resources;
 using UnityEngine;
 
 namespace Espionage.Engine
 {
-	/// <summary>
-	/// The Entry point for your game.
-	/// Use this as your "GameManager".
-	/// </summary>
 	[Spawnable, Group( "Engine" )]
-	public abstract partial class Game : ILibrary
+	public abstract partial class Project : ILibrary
 	{
 		public Library ClassInfo { get; }
-
-		public Loader Loader { get; protected set; }
 		public Splash Splash { get; protected set; }
 
-		public Game()
+		public Project()
 		{
-			Loader = new();
-			Splash = new( string.Empty, 3 );
-
-			// Doesn't go out of scope, no need
-			// to unregister it.
 			ClassInfo = Library.Register( this );
+			Splash = new( string.Empty, 3 );
 		}
 
-		/// <summary> Called when Espionage.Engine and Unity are ready. </summary>
+		// Callbacks
+
 		public abstract void OnReady();
-
-		/// <summary> Called locally for setting up input. </summary>
-		/// <param name="scheme"> Scheme comes with default values. </param>
 		protected abstract void OnSetup( ref Scheme scheme );
-
-		/// <summary> Called when the application gets shutdown. </summary>
-		public abstract void OnShutdown();
+		public virtual void OnShutdown() { }
+		public virtual void OnUpdate() { }
 
 		// Networking & Game-loop
 
@@ -43,7 +31,9 @@ namespace Espionage.Engine
 			(cl.Pawn ? cl.Pawn : null)?.Simulate( cl );
 		}
 
+		//
 		// Gamemode
+		//
 
 		private Gamemode _gamemode;
 
@@ -203,12 +193,5 @@ namespace Espionage.Engine
 				((IControls)Local.Pawn).Build( setup );
 			}
 		}
-
-		//
-		// Callbacks
-		//
-
-		[Function, Callback( "cookies.saved" )]
-		public virtual void OnCookiesSaved() { }
 	}
 }

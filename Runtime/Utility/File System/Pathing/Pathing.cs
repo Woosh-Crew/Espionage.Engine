@@ -60,8 +60,8 @@ namespace Espionage.Engine.IO
 		private static readonly Dictionary<string, Func<string[], string>> Keywords = new()
 		{
 			// -- Game Specific
-			["game"] = ( _ ) => Engine.Game?.ClassInfo.Title ?? "None",
-			["executable"] = ( _ ) => Engine.Game == null ? "error" : $"{Engine.Game.ClassInfo.Name}.exe",
+			["game"] = ( _ ) => Engine.Project?.ClassInfo.Title ?? "None",
+			["executable"] = ( _ ) => Engine.Project == null ? "error" : $"{Engine.Project.ClassInfo.Name}.exe",
 			["company"] = ( _ ) => Application.companyName,
 			["user"] = ( _ ) => Environment.UserName,
 

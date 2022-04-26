@@ -2,31 +2,50 @@
 
 namespace Espionage.Engine
 {
-	/// <summary>
-	/// <para>
-	/// Espionage.Engine's Input System. You should be using
-	/// this over UnityEngine.Input.
-	/// </para>
-	/// <para>
-	/// All Controls is , is just a wrapper for Unity's default
-	/// Input Manager. Later down the line I'd love to have our
-	/// own input readers / streams.
-	/// </para>
-	/// </summary>
-	public static class Controls
+	public class Controls : Module
 	{
-		public static Mouse Mouse => _active.Mouse;
-		public static Cursor Cursor => _active.Cursor;
-		public static Scheme Scheme => _active.Scheme;
+		public static Setup Active { get; internal set; }
+		public static Mouse Mouse => Active.Mouse;
+		public static Cursor Cursor => Active.Cursor;
+		public static Scheme Scheme => Active.Scheme;
 
-		internal static void SetSetup( Client client )
+		// Client
+
+		private Setup _setup = new() { Cursor = new() { Locked = true, Visible = false } };
+
+		protected override void OnReady()
 		{
-			_active = client.Input;
+			Local.Client.Input = _setup;
+			_setup.Scheme = Engine.Project.SetupControls();
 		}
 
-		// Fields
+		protected override void OnUpdate()
+		{
+			// Setup ViewAngles,
+			var mouse = new Vector2( Input.GetAxis( "Mouse X" ), Input.GetAxis( "Mouse Y" ) ) * Options.MouseSensitivity;
 
-		private static Setup _active;
+			_setup.Mouse = new() { Delta = mouse, Wheel = Input.GetAxisRaw( "Mouse ScrollWheel" ) };
+			_setup.Forward = Input.GetAxisRaw( "Vertical" );
+			_setup.Horizontal = Input.GetAxisRaw( "Horizontal" );
+
+			// Sample Scheme
+			foreach ( var binding in _setup.Scheme )
+			{
+				binding.Sample();
+			}
+
+			// Building
+			_setup = Engine.Project.BuildControls( _setup );
+
+			// Applying
+			UnityEngine.Cursor.visible = _setup.Cursor.Visible;
+			UnityEngine.Cursor.lockState = _setup.Cursor.Locked ? CursorLockMode.Locked : CursorLockMode.None;
+
+			if ( !_setup.Cursor.Locked && _setup.Cursor.Confined )
+			{
+				UnityEngine.Cursor.lockState = CursorLockMode.Confined;
+			}
+		}
 
 		/// <summary>
 		/// Controls the raw values of Input. This is what would be built

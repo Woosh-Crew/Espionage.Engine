@@ -1,17 +1,16 @@
 ﻿using System;
-using Espionage.Engine.Services;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 
-namespace Espionage.Engine.PostProcessing
+namespace Espionage.Engine
 {
 	[Library( "services.postfx" ), Group( "Post Processing" )]
-	public class PostFX : Service
+	public class PostFX : Module
 	{
 		public PostProcessLayer Layer { get; private set; }
 		public PostProcessDebug Debug { get; private set; }
 
-		public override void OnReady()
+		protected override void OnReady()
 		{
 			// Get the Main Camera
 			var camera = Engine.Camera;

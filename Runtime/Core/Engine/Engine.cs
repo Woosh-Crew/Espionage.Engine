@@ -1,9 +1,5 @@
-using System;
-using System.Linq;
-using Espionage.Engine.Services;
+using Espionage.Engine;
 using UnityEngine;
-using UnityEngine.LowLevel;
-using UnityEngine.PlayerLoop;
 using UnityEngine.SceneManagement;
 
 #if UNITY_EDITOR
@@ -20,20 +16,17 @@ namespace Espionage.Engine
 	public static class Engine
 	{
 		/// <summary>
-		/// The Current Game that is in Session, this will
-		/// be automatically created when the game launches, and
-		/// will be based off the game you exported from	
-		/// the packager.
+		/// The current project that is in sSession, this will
+		/// be automatically created when the application launches.
 		/// </summary>
-		public static Game Game { get; private set; }
+		public static Project Project { get; private set; }
 
 		/// <summary>
-		/// Services are hooks attached to Espionage.Engine. This
-		/// allows us to fire and forget stuff that services would need.
-		/// such as, Update, PostUpdate, Shutdown, etc. Think of it as
-		/// micro managers. So Camera Managers, Input Mangers, etc.
+		/// Modules are hooks attached to Espionage.Engine. This
+		/// allows us to fire and forget logic that needs to run
+		/// in the background. We use this for Tripods and Controls
 		/// </summary>
-		public static Service.Database Services { get; private set; }
+		public static Module.Registry Modules { get; private set; }
 
 		/// <summary>
 		/// The Engine Layer scene. Use this scene
@@ -47,24 +40,16 @@ namespace Espionage.Engine
 		/// cache this as this will do a services Get() call, which
 		/// creates garbage (due to LINQ).
 		/// </summary>
-		public static Camera Camera => Services.Get<CameraService>().Camera;
+		public static Camera Camera => Modules.Get<Cameras>().Camera;
 
 		/// <summary>
-		/// Is Developer is a launch arg -dev which indicated should
-		/// we enable developer features. Such as resource hotloading, verbose
-		/// logging, etc. Try to use this on everything the average user wouldn't
-		/// need to see.
+		/// Bootstrap is how Espionage.Engine connects with Unity. Hooks into
+		/// its low level player loop, adding update methods as well as applications
+		/// quitting hooks.
 		/// </summary>
-		public static bool IsDeveloper { get; }
+		public static Bootstrap Bootstrap { get; } = new( OnShutdown, OnUpdate );
 
-		//
 		// Initialization
-		//
-
-		static Engine()
-		{
-			IsDeveloper = Application.isEditor || Environment.GetCommandLineArgs().Contains( "-dev" );
-		}
 
 		[RuntimeInitializeOnLoadMethod( RuntimeInitializeLoadType.AfterSceneLoad )]
 		private static void Initialize_RuntimePostScene()
@@ -72,14 +57,14 @@ namespace Espionage.Engine
 			using var _ = Debugging.Stopwatch( "Engine / Game Ready", true );
 
 			// Find Game
-			if ( Game == null && !SetupGame() )
+			if ( Project == null && !Setup() )
 			{
 				Debugging.Log.Error( "Game couldn't be found. Make sure to make a class inherited from Game" );
 				return;
 			}
 
-			UpdatePlayerLoop();
-			Services = new();
+			Bootstrap.Inject();
+			Modules = new();
 
 			// Create engine layer scene
 			Scene = SceneManager.CreateScene( "Engine Layer" );
@@ -87,10 +72,8 @@ namespace Espionage.Engine
 			Local.Client = new Client( "Local" );
 			Callback.Run( "engine.getting_ready" );
 
-			Services.Ready();
-			Game.OnReady();
-
-			Application.quitting += OnShutdown;
+			Modules.Ready();
+			Project.OnReady();
 
 			Callback.Run( "engine.ready" );
 		}
@@ -101,9 +84,9 @@ namespace Espionage.Engine
 		private static void Initialize_Editor()
 		{
 			// Find Game
-			if ( Game == null && !SetupGame() )
+			if ( Project == null && !Setup() )
 			{
-				Debugging.Log.Error( "Game couldn't be found. Make sure to make a class inherited from Game" );
+				Debugging.Log.Error( "Project couldn't be found. Make sure to make a class inherited from Project" );
 				return;
 			}
 
@@ -113,83 +96,45 @@ namespace Espionage.Engine
 
 		#endif
 
-		private static bool SetupGame()
+		private static bool Setup()
 		{
-			var target = Library.Database.Find<Game>();
+			var target = Library.Database.Find<Project>();
 
 			if ( target == null )
 			{
-				Callback.Run( "game.not_found" );
 				return false;
 			}
 
-			Game = Library.Create<Game>( target.Info );
+			var project = Library.Create<Project>( target );
+			Project = project;
 
 			Callback.Run( "game.ready" );
-
-			Debugging.Log.Info( $"Using {Game.ClassInfo.Title} as the Game, [{Game.ClassInfo.Name}]" );
+			Debugging.Log.Info( $"Using {Project.ClassInfo.Title} as the Project, [{Project.ClassInfo.Name}]" );
 
 			return true;
 		}
 
-		//
-		// Layer
-		//
-
-		private static void UpdatePlayerLoop( bool remove = false )
-		{
-			var loop = PlayerLoop.GetCurrentPlayerLoop();
-
-			for ( var i = 0; i < loop.subSystemList.Length; ++i )
-			{
-				// Frame Update
-				if ( loop.subSystemList[i].type == typeof( Update ) )
-				{
-					if ( remove )
-					{
-						loop.subSystemList[i].updateDelegate -= OnUpdate;
-					}
-					else
-					{
-						loop.subSystemList[i].updateDelegate += OnUpdate;
-					}
-				}
-
-				if ( loop.subSystemList[i].type == typeof( PostLateUpdate ) )
-				{
-					if ( remove )
-					{
-						loop.subSystemList[i].updateDelegate -= OnPostUpdate;
-					}
-					else
-					{
-						loop.subSystemList[i].updateDelegate += OnPostUpdate;
-					}
-				}
-			}
-
-			PlayerLoop.SetPlayerLoop( loop );
-		}
-
-		//
-		// Callbacks
-		//
+		// Frame Loop
 
 		private static void OnUpdate()
 		{
-			Services.Update();
-			Callback.Run( "app.frame" );
+			Modules.Frame();
+			Project.OnUpdate();
 
+			OnTick(); // We will change this to a fixed rate in the future
+
+			Callback.Run( "app.frame" );
+		}
+
+		private static void OnTick()
+		{
 			foreach ( var client in Client.All )
 			{
 				client.Simulate();
 			}
 		}
 
-		private static void OnPostUpdate()
-		{
-			Services.PostUpdate();
-		}
+		// Quit
 
 		public static bool IsQuitting { get; private set; }
 
@@ -197,10 +142,8 @@ namespace Espionage.Engine
 		{
 			IsQuitting = true;
 
-			UpdatePlayerLoop( true );
-
-			Services.Shutdown();
-			Game.OnShutdown();
+			Bootstrap.Remove();
+			Project.OnShutdown();
 		}
 	}
 }

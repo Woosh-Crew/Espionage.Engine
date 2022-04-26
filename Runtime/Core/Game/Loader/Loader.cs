@@ -6,27 +6,12 @@ using System.Threading;
 namespace Espionage.Engine
 {
 	/// <summary>
-	/// <para>
-	/// The loader is a callback based
-	/// sequential loader, that has a UI
-	/// representing its progress / status.
-	/// </para>
-	/// <para>
-	/// Loader asks for a <see cref="ILoadable"/>
-	/// which is an interface that tell the loader
-	/// it can be loaded. (Like you probably guessed)
-	/// </para>
+	/// <para> The loader is a callback based sequential loader,  that has a UI representing its progress / status. </para>
+	/// <para>Loader asks for a <see cref="ILoadable"/> which is an interface that tell the loader it can be loaded. (Like you probably guessed) </para>
 	/// </summary>
 	[Spawnable, Singleton, Group( "Engine" )]
-	public class Loader : ILibrary
+	public sealed class Loader : Module
 	{
-		public Library ClassInfo { get; }
-
-		public Loader()
-		{
-			ClassInfo = Library.Register( this );
-		}
-
 		public Action Started { get; set; }
 		public Action Finished { get; set; }
 
@@ -77,16 +62,11 @@ namespace Espionage.Engine
 			Amount = Stack.Count;
 
 			Load();
-
-			OnStart();
 			Started?.Invoke();
 		}
 
-		protected virtual void OnStart() { }
-
 		private void Finish()
 		{
-			OnFinish();
 			Timing.Stop();
 			Finished?.Invoke();
 
@@ -96,8 +76,6 @@ namespace Espionage.Engine
 			Current = null;
 			Amount = 0;
 		}
-
-		protected virtual void OnFinish() { }
 
 		// Stack
 

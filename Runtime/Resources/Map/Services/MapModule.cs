@@ -1,16 +1,16 @@
 ﻿using System.IO;
 using System.Linq;
 using Espionage.Engine.IO;
-using Espionage.Engine.Services;
+using Espionage.Engine;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Espionage.Engine.Resources.Maps
 {
 	[Order( 150 )] // Load after everything
-	internal class MapService : Service
+	internal class MapModule : Module
 	{
-		public override void OnReady()
+		protected override void OnReady()
 		{
 			Map.Binder provider = Application.isEditor ? new EditorSceneMapProvider() : new BuildIndexMapProvider( 0 );
 

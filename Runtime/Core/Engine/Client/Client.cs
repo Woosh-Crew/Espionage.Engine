@@ -38,8 +38,8 @@ namespace Espionage.Engine
 
 		internal virtual void Simulate()
 		{
-			Controls.SetSetup( this );
-			Engine.Game.Simulate( this );
+			Controls.Active = Input;
+			Engine.Project.Simulate( this );
 		}
 
 		// Camera

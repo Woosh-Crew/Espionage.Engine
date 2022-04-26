@@ -1,11 +1,11 @@
 ﻿using System.Linq;
-using Espionage.Engine.Services;
+using Espionage.Engine;
 
 namespace Espionage.Engine.Resources
 {
-	public sealed partial class Assets : Service
+	public sealed partial class Assets : Module
 	{
-		public override void OnReady()
+		protected override void OnReady()
 		{
 			// Get reference pathing to all resources
 			// Load default resources (Maps & Mods)
@@ -19,7 +19,7 @@ namespace Espionage.Engine.Resources
 			}
 		}
 
-		public override void OnUpdate()
+		protected override void OnUpdate()
 		{
 			// Watch asset for change
 			// Unload asset after 1 minute of inactive use
@@ -27,7 +27,7 @@ namespace Espionage.Engine.Resources
 			Sweep();
 		}
 
-		public override void OnShutdown()
+		protected override void OnShutdown()
 		{
 			// Stop watching asset for updates
 			// Unload any currently loaded assets
