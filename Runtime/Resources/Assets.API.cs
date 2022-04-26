@@ -41,5 +41,10 @@ namespace Espionage.Engine.Resources
 			path = path.Virtual().Normalise();
 			return Registered[path] != null ? Registered[path] : (path.Exists() ? Registered.Fill( path ) : null);
 		}
+		
+		public static Resource Find( int hash )
+		{
+			return Registered[hash];
+		}
 	}
 }
