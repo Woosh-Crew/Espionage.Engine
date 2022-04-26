@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Espionage.Engine
 {
@@ -22,16 +23,18 @@ namespace Espionage.Engine
 		protected virtual void OnUpdate() { }
 
 		// Registry
-		public class Registry : IEnumerable<Module>
+		public class Container : IEnumerable<Module>
 		{
-			private SortedList<int, Module> _storage { get; } = new();
+			private Dictionary<int, Module> _storage { get; } = new();
 
-			public Registry()
+			public Container()
 			{
 				foreach ( var library in Library.Database.GetAll<Module>() )
 				{
 					Create( library );
 				}
+
+				_storage = _storage.OrderBy( e => e.Value.ClassInfo.Components.Get<OrderAttribute>()?.Order ?? 5 ).ToDictionary( e => e.Key, e => e.Value );
 			}
 
 			public Module this[ Library lib ] => _storage.ContainsKey( lib.Id ) ? _storage[lib.Id] : null;
@@ -86,7 +89,7 @@ namespace Espionage.Engine
 					module.OnUpdate();
 				}
 			}
-			
+
 			// Enumerator
 
 			public IEnumerator<Module> GetEnumerator()

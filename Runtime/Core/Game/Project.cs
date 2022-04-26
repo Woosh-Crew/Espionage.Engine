@@ -144,7 +144,6 @@ namespace Espionage.Engine
 
 			// Add support for flares
 			camera.gameObject.AddComponent<FlareLayer>();
-
 		}
 
 		//

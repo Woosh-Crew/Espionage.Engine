@@ -1,4 +1,3 @@
-using Espionage.Engine;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -26,12 +25,11 @@ namespace Espionage.Engine
 		/// allows us to fire and forget logic that needs to run
 		/// in the background. We use this for Tripods and Controls
 		/// </summary>
-		public static Module.Registry Modules { get; private set; }
+		public static Module.Container Modules { get; private set; }
 
 		/// <summary>
-		/// The Engine Layer scene. Use this scene
-		/// for persisting objects across map changes.
-		/// This scene should never be unloaded.
+		/// The Engine Layer scene. Use this scene for persisting objects
+		/// across map changes. This scene should never be unloaded.
 		/// </summary>
 		public static Scene Scene { get; private set; }
 
@@ -64,12 +62,12 @@ namespace Espionage.Engine
 			}
 
 			Bootstrap.Inject();
-			
+
 			Local.Client = new( "Local" );
-			
+
 			// Create engine layer scene
 			Scene = SceneManager.CreateScene( "Engine Layer" );
-			
+
 			Modules = new();
 			Callback.Run( "engine.getting_ready" );
 

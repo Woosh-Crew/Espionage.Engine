@@ -2,6 +2,7 @@
 
 namespace Espionage.Engine
 {
+	[Order( -5 )]
 	public class Controls : Module
 	{
 		public static Setup Active { get; internal set; }
@@ -13,12 +14,10 @@ namespace Espionage.Engine
 
 		private Setup _setup = new() { Cursor = new() { Locked = true, Visible = false } };
 
-		protected override bool OnRegister()
+		protected override void OnReady()
 		{
 			Local.Client.Input = _setup;
 			_setup.Scheme = Engine.Project.SetupControls();
-
-			return true;
 		}
 
 		protected override void OnUpdate()

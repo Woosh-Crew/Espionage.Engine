@@ -10,7 +10,7 @@ namespace Espionage.Engine
 		private Controller _controller;
 		public Camera Camera => _controller.Camera;
 
-		protected override bool OnRegister()
+		protected override void OnReady()
 		{
 			// Main Camera
 			_controller = Entity.Create<Controller>();
@@ -19,8 +19,6 @@ namespace Espionage.Engine
 			// Tell everyone we got cameras
 			Engine.Project.OnCameraCreated( _controller.Camera );
 			Callback.Run( "camera.created", _controller.Camera );
-
-			return true;
 		}
 
 		// Frame
@@ -58,7 +56,7 @@ namespace Espionage.Engine
 		// Entities
 
 		[Library( "camera.controller" ), Group( "Engine" ), Singleton]
-		internal class Controller : Entity
+		private class Controller : Entity
 		{
 			internal Camera Camera { get; private set; }
 
