@@ -2,7 +2,7 @@
 
 namespace Espionage.Engine
 {
-	public partial class Game
+	public partial class Project
 	{
 		[Function( "dev.tripod" ), Terminal]
 		private static void DevTripodCommand()

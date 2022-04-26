@@ -44,10 +44,10 @@
 			var health = Health;
 			health.Heal( health.Max - health.Current );
 
-			if ( Engine.Game.Gamemode != null )
+			if ( Engine.Project.Gamemode != null )
 			{
 				// Tell the Gamemode, we want to respawn
-				Engine.Game.Gamemode.OnActorRespawned( this );
+				Engine.Project.Gamemode.OnActorRespawned( this );
 			}
 			else
 			{
@@ -77,7 +77,7 @@
 		protected virtual bool OnDamaged( ref IDamageable.Info info )
 		{
 			// Ask Gamemode if we can Damage
-			if ( Engine.Game.Gamemode != null && !Engine.Game.Gamemode.OnActorDamaged( this, ref info ) )
+			if ( Engine.Project.Gamemode != null && !Engine.Project.Gamemode.OnActorDamaged( this, ref info ) )
 			{
 				return false;
 			}
@@ -103,10 +103,10 @@
 		{
 			Debugging.Log.Info( "Actor got Killed" );
 
-			if ( Engine.Game.Gamemode != null )
+			if ( Engine.Project.Gamemode != null )
 			{
 				// Tell the Gamemode, we want to respawn
-				Engine.Game.Gamemode.OnActorKilled( this, info );
+				Engine.Project.Gamemode.OnActorKilled( this, info );
 			}
 
 			foreach ( var item in Components.GetAll<ICallbacks>() )

@@ -1,20 +1,20 @@
 ﻿using System.Collections.Generic;
-using Espionage.Engine.Services;
+using Espionage.Engine;
 using UnityEngine;
 
 namespace Espionage.Engine.Overlays
 {
-	public class OverlayProvider : Service, IOverlayProvider
+	public class OverlayProvider : Module, IOverlayProvider
 	{
 		public bool Show { get; set; } = true;
 
-		public override void OnReady()
+		protected override void OnReady()
 		{
 			// Tell Debugging to use this
 			Debugging.Overlay = this;
 		}
 
-		public override void OnUpdate()
+		protected override void OnUpdate()
 		{
 			for ( var i = 0; i < _requests.Count; i++ )
 			{

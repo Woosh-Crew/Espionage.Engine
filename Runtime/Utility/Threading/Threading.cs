@@ -2,11 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
-using Espionage.Engine.Services;
 
 namespace Espionage.Engine
 {
-	public class Threading : Service
+	public class Threading : Module
 	{
 		public static Meta Main { get; private set; }
 		public static Thread Current => Thread.CurrentThread;
@@ -27,13 +26,13 @@ namespace Espionage.Engine
 
 		// Main Thread 
 
-		public override void OnReady()
+		protected override void OnReady()
 		{
 			// Add Main Thread
 			Main = Create( "main", Thread.CurrentThread );
 		}
 
-		public override void OnUpdate()
+		protected override void OnUpdate()
 		{
 			Main.Run();
 		}

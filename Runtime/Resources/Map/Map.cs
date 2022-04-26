@@ -271,7 +271,7 @@ namespace Espionage.Engine.Resources
 			}
 
 			// Load new Map
-			Engine.Game.Loader.Start(
+			Engine.Modules.Get<Loader>().Start(
 				Find( path )
 			);
 		}

@@ -44,9 +44,9 @@ namespace Espionage.Engine.Gamemodes
 		protected override void OnDelete()
 		{
 			// Just in-case gamemode has a reference to this.
-			if ( Engine.Game.Gamemode == this )
+			if ( Engine.Project.Gamemode == this )
 			{
-				Engine.Game.Gamemode = null;
+				Engine.Project.Gamemode = null;
 			}
 		}
 

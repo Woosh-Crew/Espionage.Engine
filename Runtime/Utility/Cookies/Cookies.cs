@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Espionage.Engine.Services;
+using Espionage.Engine;
 
 namespace Espionage.Engine.Internal
 {
@@ -10,7 +10,7 @@ namespace Espionage.Engine.Internal
 	/// Cookies are responsible for saving global variables. Use this for storing
 	/// the value of preferences or ConVars
 	/// </summary>
-	public class Cookies : Service
+	public class Cookies : Module
 	{
 		private static Dictionary<string, Reference> Registry { get; } = new();
 
@@ -19,7 +19,7 @@ namespace Espionage.Engine.Internal
 			Registry.Add( cookie.Property.Name, cookie );
 		}
 
-		public override void OnReady()
+		protected override void OnReady()
 		{
 			var files = Registry.Values.GroupBy( e => e.File );
 
@@ -58,7 +58,7 @@ namespace Espionage.Engine.Internal
 			}
 		}
 
-		public override void OnShutdown()
+		protected override void OnShutdown()
 		{
 			Save();
 		}

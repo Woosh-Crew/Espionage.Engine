@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using Espionage.Engine.Logging;
 using Espionage.Engine.Commands;
@@ -16,30 +17,37 @@ namespace Espionage.Engine
 	[Library, Group( "Debug" )]
 	public static class Debugging
 	{
+		/// <summary>
+		/// Is Developer is a launch arg -dev which indicated should
+		/// we enable developer features.
+		/// </summary>
+		public static bool IsDeveloper { get; }
+
 		// Providers
 
 		/// <summary>
-		/// Command Console. Use Run(string, object[]) to run a command. Reason
-		/// its not its own static class is so we can add extension methods to it.
-		/// It also provides a SOLID way of handling it. Your game can have its own
-		/// Console provider.
+		/// Command Console. Use Run(string, object[]) to run a command.
+		/// Your game can have its own Console provider.
 		/// </summary>
 		public static ICommandProvider Terminal { get; set; }
 
 		/// <summary>
-		/// Logging in a SOLID way. Add your own extension methods if need be,
-		/// since this is an instanced class.
+		/// Add your own extension methods if need be, since this is an
+		/// instanced class. 
 		/// </summary>
 		public static ILoggingProvider Log { get; set; }
 
+		/// <summary>
+		/// Debug overlays for positional debugging and screen text.
+		/// Instanced so you can provide you're own provider
+		/// or extension methods.
+		/// </summary>
 		public static IOverlayProvider Overlay { get; set; }
 
 		/// <summary>
 		/// Runs a stopwatch on a IDisposable Scope. Use this in a using() expression
 		/// to record how long it took to execute that code block.
 		/// </summary>
-		/// <param name="message">The message that should print along side the completion time.</param>
-		/// <param name="alwaysReport">Should we always report? or only report if the Var is set.</param>
 		public static IDisposable Stopwatch( string message = null, bool alwaysReport = false )
 		{
 			return ReportStopwatch || alwaysReport ? new TimedScope( message ) : null;
@@ -47,6 +55,8 @@ namespace Espionage.Engine
 
 		static Debugging()
 		{
+			IsDeveloper = Application.isEditor || Environment.GetCommandLineArgs().Contains( "-dev" );
+
 			Log = new SimpleLoggingProvider();
 			Terminal = new SimpleCommandProvider();
 		}
@@ -119,7 +129,7 @@ namespace Espionage.Engine
 		{
 			Log.Clear();
 		}
-		
+
 		[Terminal, Function( "quit" )]
 		private static void Quit()
 		{

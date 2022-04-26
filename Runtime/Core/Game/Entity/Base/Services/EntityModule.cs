@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 
-namespace Espionage.Engine.Services
+namespace Espionage.Engine
 {
-	internal class EntityService : Service
+	internal class EntityModule : Module
 	{
-		public override void OnUpdate()
+		protected override void OnUpdate()
 		{
 			// Run Think and Update
 			foreach ( var entity in Entity.All )
