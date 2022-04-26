@@ -144,6 +144,7 @@ namespace Espionage.Engine
 			IsQuitting = true;
 
 			Bootstrap.Remove();
+			Modules.Shutdown();
 			Project.OnShutdown();
 		}
 	}
