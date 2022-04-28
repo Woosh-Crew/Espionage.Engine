@@ -13,7 +13,7 @@ namespace Espionage.Engine
 	public partial class Entity : ScriptableObject, IValid, ILibrary
 	{
 		public Library ClassInfo { get; private set; }
-		
+
 		public string Name { get; set; }
 		public int Identifier { get; private set; }
 
@@ -93,6 +93,11 @@ namespace Espionage.Engine
 
 		protected bool Deleted { get; private set; }
 
+		/// <summary>
+		/// Deletes this entity by calling Scriptable.Destroy. Clean up any
+		/// resource using OnDelete. Its recommended that you null all your
+		/// variables in OnDelete, so the garbage collector doesnt shit itself
+		/// </summary>
 		public void Delete()
 		{
 			Destroy( this );
@@ -101,6 +106,11 @@ namespace Espionage.Engine
 		// Frame Update
 		// --------------------------------------------------------------------------------------- //
 
+		/// <summary>
+		/// Frame gets called by the entities module's frame callback.
+		/// If you try deleting an entity in this call chain, it'll most likely
+		/// break as the enumerable collection would of changed.
+		/// </summary>
 		internal void Frame()
 		{
 			OnFrame();
@@ -109,9 +119,15 @@ namespace Espionage.Engine
 		// Callbacks
 		// --------------------------------------------------------------------------------------- //
 
+		/// <inheritdoc cref="Spawn"/>
 		protected virtual void OnSpawn() { }
+
+		/// <inheritdoc cref="Frame"/>
 		protected virtual void OnFrame() { }
+
+		/// <inheritdoc cref="Delete"/>
 		protected virtual void OnDelete() { }
+
 
 		// Think
 		// --------------------------------------------------------------------------------------- //
@@ -148,17 +164,38 @@ namespace Espionage.Engine
 		// Registering and Deserialization
 		// --------------------------------------------------------------------------------------- //
 
-		internal void Register( IReadOnlyDictionary<string, object> values = null )
-		{
-			OnRegister( null );
-		}
+		private bool _registered;
 
 		/// <summary>
 		/// This is called from the entity spawner, when a map is loaded from a proxy.
 		/// This will deserialize the data and put them into the correct properties (through reflection)
 		/// override this if you want do it yourself manually (which is recommended).
 		/// </summary>
-		protected virtual void OnRegister( IReadOnlyDictionary<string, object> values ) { }
+		internal void Register( IReadOnlyDictionary<string, string> values = null )
+		{
+			Assert.IsFalse( _registered = !_registered );
+			OnRegister( values );
+		}
+
+		/// <inheritdoc cref="Register"/>
+		protected virtual void OnRegister( IReadOnlyDictionary<string, string> values )
+		{
+			// Use reflection to deserialize Key-Value pairs
+			foreach ( var (key, value) in values )
+			{
+				var property = ClassInfo.Properties[key];
+
+				if ( property == null )
+				{
+					continue;
+				}
+
+				// This is why you should override this... this fucking sucks
+				property[this] = Converter.Convert( value, property.Type );
+			}
+
+			// Use reflection to generate Outputs
+		}
 
 		// Implicit Operators
 		// --------------------------------------------------------------------------------------- //
@@ -238,7 +275,6 @@ namespace Espionage.Engine
 		/// </summary>
 		[Serialize, Group( "Transform" )]
 		public Vector3 Position
-
 		{
 			get => Transform.position;
 			set => Transform.position = value;
@@ -251,7 +287,6 @@ namespace Espionage.Engine
 		/// </summary>
 		[Serialize, Group( "Transform" )]
 		public Quaternion Rotation
-
 		{
 			get => Transform.rotation;
 			set => Transform.rotation = value;
@@ -264,7 +299,6 @@ namespace Espionage.Engine
 		/// </summary>
 		[Serialize, Group( "Transform" )]
 		public Vector3 Scale
-
 		{
 			get => Transform.lossyScale;
 			set => Transform.localScale = value;
@@ -277,7 +311,6 @@ namespace Espionage.Engine
 		/// </summary>
 		[Serialize]
 		public bool Enabled
-
 		{
 			// I hate Unity, this is so stupid
 			get => GameObject.activeInHierarchy;

@@ -28,44 +28,27 @@ namespace Espionage.Engine
 			}
 		}
 
-		// Spawn Entities
-
 		[Function, Callback( "map.loaded" )]
 		public void OnMapLoaded()
 		{
 			foreach ( var proxy in GameObject.FindObjectsOfType<Proxy>() )
 			{
-				var ent = proxy.Create();
+				var ent = proxy.Create( out var sheet );
 				if ( ent == null )
 				{
 					continue;
 				}
 
-				ent.Register();
+				ent.Register( sheet?.ToDictionary( e => e.key, e => e.value ) );
 				ent.Spawn();
 			}
 		}
 
-		//
 		// Database
-		// 
+		// --------------------------------------------------------------------------------------- //
 
 		public const int Max = 2048;
 		private readonly SortedList<int, Entity> _storage = new( Max );
-
-		// Enumerator
-
-		public IEnumerator<Entity> GetEnumerator()
-		{
-			return _storage.Values.GetEnumerator();
-		}
-
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return GetEnumerator();
-		}
-
-		// Entity Access
 
 		internal void Add( Entity item )
 		{
@@ -77,7 +60,21 @@ namespace Espionage.Engine
 			_storage.Remove( item.Identifier );
 		}
 
-		// API
+		// Enumerator
+		// --------------------------------------------------------------------------------------- //
+
+		public IEnumerator<Entity> GetEnumerator()
+		{
+			return _storage.Values.GetEnumerator();
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
+		}
+
+		// Public API
+		// --------------------------------------------------------------------------------------- //
 
 		public Entity this[ int key ] => _storage.ContainsKey( key ) ? _storage[key] : null;
 		public Entity[] this[ string key ] => string.IsNullOrWhiteSpace( key ) ? null : _storage.Values.Where( e => string.Equals( e.Name, key, StringComparison.CurrentCultureIgnoreCase ) ).ToArray();

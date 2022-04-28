@@ -13,7 +13,7 @@ namespace Espionage.Engine
 			public string value;
 		}
 
-		internal Entity Create()
+		internal Entity Create( out Sheet[] sheet )
 		{
 			var ent = Library.Create( className ) as Entity;
 
@@ -25,6 +25,7 @@ namespace Espionage.Engine
 				ent.Enabled = !disabled;
 			}
 
+			sheet = properties.Length > 0 ? properties : null;
 			return ent;
 		}
 
