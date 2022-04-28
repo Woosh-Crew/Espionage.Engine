@@ -5,7 +5,6 @@ namespace Espionage.Engine
 	[SelectionBase, DisallowMultipleComponent]
 	public class Proxy : Behaviour
 	{
-
 		internal Entity Create()
 		{
 			Library lib = className;
@@ -65,7 +64,6 @@ namespace Espionage.Engine
 		internal new string name;
 
 		[SerializeField]
-		internal string className;
+		internal string className = "info.player_start";
 	}
-
 }

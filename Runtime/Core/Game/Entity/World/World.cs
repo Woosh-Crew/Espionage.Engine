@@ -7,9 +7,6 @@ namespace Espionage.Engine
 	[Library( "env.world" ), Group( "Environment" ), Singleton]
 	public class World : Entity
 	{
-		// Singleton
-		// --------------------------------------------------------------------------------------- //
-
 		private static World _instance;
 
 		public static World Instance

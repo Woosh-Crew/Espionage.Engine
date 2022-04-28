@@ -18,7 +18,7 @@
 
 		// API
 
-		public void Invoke( Entity from, Entity caller )
+		public void Invoke()
 		{
 			foreach ( var entity in Entity.All[Target] )
 			{

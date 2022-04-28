@@ -201,7 +201,7 @@ namespace Espionage.Engine
 		private bool _registered;
 
 		/// <summary>
-		/// This is called from the entity spawner, when a map is loaded from a proxy.
+		/// This should called from an entity spawner (usually proxy), when a map is loaded.
 		/// This will deserialize the data and put them into the correct properties (through reflection)
 		/// override this if you want do it yourself manually (which is recommended).
 		/// </summary>

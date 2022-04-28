@@ -9,6 +9,17 @@ namespace Espionage.Engine.Editor
 	[CustomEditor( typeof( Proxy ), true )]
 	public class ProxyEditor : BehaviourEditor
 	{
+		[MenuItem( "GameObject/Entity/Create Proxy", false, 10 )]
+		static void CreateCustomGameObject( MenuCommand menuCommand )
+		{
+			var go = new GameObject( "Entity Proxy" );
+			go.AddComponent<Proxy>();
+			
+			GameObjectUtility.SetParentAndAlign( go, menuCommand.context as GameObject );
+			Undo.RegisterCreatedObjectUndo( go, "Create " + go.name );
+			Selection.activeObject = go;
+		}
+
 		private static LibraryList Dropdown { get; set; }
 
 		// Instance
