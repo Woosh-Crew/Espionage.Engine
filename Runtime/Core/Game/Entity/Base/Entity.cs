@@ -12,12 +12,16 @@ namespace Espionage.Engine
 	[Group( "Entities" ), Constructor( nameof( Constructor ) ), Spawnable]
 	public partial class Entity : ScriptableObject, IValid, ILibrary
 	{
+		public Library ClassInfo { get; private set; }
+		
 		public string Name { get; set; }
 		public int Identifier { get; private set; }
-		public Library ClassInfo { get; private set; }
 
 		public Client Client { get; internal set; }
 		public HashSet<string> Tags { get; } = new();
+
+		// Initialization (Awake and OnDestroy, because of ScriptableObject)
+		// --------------------------------------------------------------------------------------- //
 
 		private void Awake()
 		{
@@ -74,84 +78,90 @@ namespace Espionage.Engine
 			Components = null;
 		}
 
-		~Entity()
+		private bool _spawned;
+
+		public void Spawn()
 		{
-			Debugging.Log.Info( $"Disposing Entity, {ClassInfo.Name}" );
+			Assert.IsFalse( _spawned = !_spawned );
+			OnSpawn();
 		}
 
-		// Deletion
+		// Entity Deletion
+		// --------------------------------------------------------------------------------------- //
 
 		bool IValid.IsValid => !Deleted && _gameObject != null;
 
-		protected bool Deleted
-		{
-			get;
-			private set;
-		}
+		protected bool Deleted { get; private set; }
 
 		public void Delete()
 		{
 			Destroy( this );
 		}
 
+		// Frame Update
+		// --------------------------------------------------------------------------------------- //
+
+		internal void Frame()
+		{
+			OnFrame();
+		}
+
+		// Callbacks
+		// --------------------------------------------------------------------------------------- //
+
+		protected virtual void OnSpawn() { }
+		protected virtual void OnFrame() { }
 		protected virtual void OnDelete() { }
 
-		// Either gets called on map spawn, or by the constructor
-		public virtual void Spawn() { }
-		
-		// Client Only
-		public virtual void Frame( float delta ) { }
-
-		//
 		// Think
-		//
+		// --------------------------------------------------------------------------------------- //
 
 		/// <summary>
 		/// Tick is the time it takes (in seconds), to call the active
 		/// <see cref="Thinking"/> scope. Gets reset when think is called,
 		/// so make sure to reset it. 
 		/// </summary>
-		public float Tick
-		{
-			set => Thinking.Tick = value;
-		}
+		public float Tick { set => Thinking.Tick = value; }
 
 		/// <summary>
 		/// Think gets called every tick, (which is in seconds). Use this for updating
 		/// state logic on the entity in a super performant way. Since its not being called
 		/// every frame, (AI, Particles, etc).
 		/// </summary>
-		public Thinker Thinking
-		{
-			get;
-		} = new();
+		public Thinker Thinking { get; } = new();
 
-		//
 		// Components
-		//
+		// --------------------------------------------------------------------------------------- //
 
 		/// <summary>
 		/// The Visuals for this Entity which is the Model, Animator, etc.
 		/// (This will just Get or Create the Visuals Component)
 		/// </summary>
-		public Visuals Visuals
-		{
-			get
-			{
-				Assert.IsInvalid( this );
-				return Components.GetOrCreate<Visuals>();
-			}
-		}
+		public Visuals Visuals => Components.GetOrCreate<Visuals>();
 
 		/// <summary>
 		/// Components that are currently attached to this Entity. Use Components for
 		/// injecting logic into an Entity (Dependency Injection)
 		/// </summary>
-		public Components<Entity> Components
+		public Components<Entity> Components { get; private set; }
+
+		// Registering and Deserialization
+		// --------------------------------------------------------------------------------------- //
+
+		internal void Register( IReadOnlyDictionary<string, object> values = null )
 		{
-			get;
-			private set;
+			OnRegister( null );
 		}
+
+		/// <summary>
+		/// This is called from the entity spawner, when a map is loaded from a proxy.
+		/// This will deserialize the data and put them into the correct properties (through reflection)
+		/// override this if you want do it yourself manually (which is recommended).
+		/// </summary>
+		protected virtual void OnRegister( IReadOnlyDictionary<string, object> values ) { }
+
+		// Implicit Operators
+		// --------------------------------------------------------------------------------------- //
 
 		/// <summary>
 		/// This is used for interfaces. Checks if the entity is T, if not checks the components
@@ -170,10 +180,6 @@ namespace Espionage.Engine
 
 			return Components.Get<T>();
 		}
-
-		//
-		// Helpers
-		//
 
 		public static implicit operator Transform( Entity entity )
 		{
@@ -202,9 +208,8 @@ namespace Espionage.Engine
 			return null;
 		}
 
-		//
 		// Unity Hooks
-		//
+		// --------------------------------------------------------------------------------------- //
 
 		private GameObject _gameObject;
 

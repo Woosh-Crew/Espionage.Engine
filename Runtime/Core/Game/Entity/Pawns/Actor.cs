@@ -10,9 +10,9 @@
 	{
 		public bool IsBot => Components.Get<AI.Brain>()?.Enabled ?? false;
 
-		public override void Spawn()
+		protected override void OnSpawn()
 		{
-			base.Spawn();
+			base.OnSpawn();
 			
 			Health.OnKilled += OnKilled;
 			Health.OnDamaged += OnDamaged;

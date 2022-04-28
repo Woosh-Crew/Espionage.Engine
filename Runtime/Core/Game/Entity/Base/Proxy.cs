@@ -12,15 +12,15 @@ namespace Espionage.Engine
 			public string key;
 			public string value;
 		}
-		
-		public Entity Create()
+
+		internal Entity Create()
 		{
 			var ent = Library.Create( className ) as Entity;
 
 			if ( ent != null )
 			{
 				ent.MoveTo( transform );
-				
+
 				ent.Name = name;
 				ent.Enabled = !disabled;
 			}

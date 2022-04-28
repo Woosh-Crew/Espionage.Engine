@@ -68,9 +68,14 @@ namespace Espionage.Engine.Resources
 
 		// Helpers
 
+		public static Model Load( Pathing path )
+		{
+			return Assets.Load<Model>( path );
+		}
+
 		public static implicit operator Model( string value )
 		{
-			return Assets.Load<Model>( value );
+			return Load( value );
 		}
 
 		// File

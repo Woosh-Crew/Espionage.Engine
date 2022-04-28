@@ -7,13 +7,48 @@ using UnityEngine;
 namespace Espionage.Engine
 {
 	/// <summary>
-	/// Entities is not an Entity Manager, It is responsible for containing a
+	/// Entities is an Entity Manager, It is responsible for containing a
 	/// reference to all entities that are currently in the game world. Use
 	/// this for finding entities by type, name, etc.
 	/// </summary>
-	public sealed class Entities : IEnumerable<Entity>
+	public sealed class Entities : Module, IEnumerable<Entity>
 	{
-		public int Count => _storage.Count;
+		protected override bool OnRegister()
+		{
+			Entity.All = this;
+			return true;
+		}
+
+		protected override void OnUpdate()
+		{
+			foreach ( var entity in Entity.All )
+			{
+				(entity ? entity : null)?.Frame();
+				(entity ? entity : null)?.Thinking.Run();
+			}
+		}
+
+		// Spawn Entities
+
+		[Function, Callback( "map.loaded" )]
+		public void OnMapLoaded()
+		{
+			foreach ( var proxy in GameObject.FindObjectsOfType<Proxy>() )
+			{
+				var ent = proxy.Create();
+				if ( ent == null )
+				{
+					continue;
+				}
+
+				ent.Register();
+				ent.Spawn();
+			}
+		}
+
+		//
+		// Database
+		// 
 
 		public const int Max = 2048;
 		private readonly SortedList<int, Entity> _storage = new( Max );

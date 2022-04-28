@@ -59,7 +59,7 @@ namespace Espionage.Engine
 
 		// Instance
 
-		public override void Spawn()
+		protected override void OnSpawn()
 		{
 			Visuals.Changed += OnModelChanged;
 			Enabled = Showing;	

@@ -3,7 +3,7 @@
 	public partial class Entity
 	{
 		/// <summary> All the entities that exists in the game world. </summary>
-		public static Entities All { get; } = new();
+		public static Entities All { get; internal set; }
 
 		/// <summary> Create an Entity, from its type. </summary>
 		public static T Create<T>() where T : Entity, new()
@@ -21,13 +21,13 @@
 		/// </summary>
 		public static Entity Create( Library lib )
 		{
-			var ent =  (Entity)Library.Create( lib );
-			ent.Spawn();
+			var ent = (Entity)Library.Create( lib );
+			ent.OnSpawn();
 			return ent;
 		}
 
 		internal static Entity Constructor( Library lib )
-		{ 
+		{
 			var ent = (Entity)CreateInstance( lib.Info );
 			return ent;
 		}

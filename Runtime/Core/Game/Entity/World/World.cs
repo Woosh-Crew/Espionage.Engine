@@ -26,7 +26,7 @@ namespace Espionage.Engine
 			}
 		}
 
-		public override void Spawn()
+		protected override void OnSpawn()
 		{
 			if ( _instance == null )
 			{
