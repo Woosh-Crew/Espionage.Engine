@@ -69,7 +69,7 @@ namespace Espionage.Engine
 			{
 				return method?.Invoke( converter, new object[] { value } );
 			}
-			catch ( InvalidCastException e )
+			catch ( Exception e )
 			{
 				Debugging.Log.Exception( e );
 				return default;

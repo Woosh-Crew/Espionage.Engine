@@ -46,11 +46,5 @@ namespace Espionage.Engine
 				_instance = null;
 			}
 		}
-
-		// Logic
-		// --------------------------------------------------------------------------------------- //
-
-		public bool IsCold { get; set; }
-		public string Title { get; set; }
 	}
 }

@@ -33,13 +33,13 @@ namespace Espionage.Engine
 		{
 			foreach ( var proxy in GameObject.FindObjectsOfType<Proxy>() )
 			{
-				var ent = proxy.Create( out var sheet );
+				var ent = proxy.Create();
 				if ( ent == null )
 				{
 					continue;
 				}
 
-				ent.Register( sheet?.ToDictionary( e => e.Key, e => e.Value ) );
+				ent.Register( proxy.properties, proxy.outputs );
 				ent.Spawn();
 			}
 		}

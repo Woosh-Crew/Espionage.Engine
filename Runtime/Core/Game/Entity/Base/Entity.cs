@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
 using Espionage.Engine.Components;
 using Espionage.Engine.Resources;
 using UnityEngine;
@@ -86,6 +88,39 @@ namespace Espionage.Engine
 			OnSpawn();
 		}
 
+		// Entity Creation + Static API
+		// --------------------------------------------------------------------------------------- //
+
+		/// <summary> All the entities that exists in the game world. </summary>
+		public static Entities All { get; internal set; }
+
+		/// <summary> Create an Entity, from its type. </summary>
+		public static T Create<T>() where T : Entity, new()
+		{
+			return Create( typeof( T ) ) as T;
+		}
+
+		/// <summary>
+		/// Create an Entity, from its Library. behind the scene's it'll
+		/// call a Library.Create using the fed in library and call the
+		/// entities spawn method, as its implied it was called from code.
+		/// If you don't it to call that, use Library.Create instead.
+		/// Plus because its a library you can use the implicit operator for string
+		/// to library.
+		/// </summary>
+		public static Entity Create( Library lib )
+		{
+			var ent = (Entity)Library.Create( lib );
+			ent.OnSpawn();
+			return ent;
+		}
+
+		internal static Entity Constructor( Library lib )
+		{
+			var ent = (Entity)CreateInstance( lib.Info );
+			return ent;
+		}
+
 		// Entity Deletion
 		// --------------------------------------------------------------------------------------- //
 
@@ -127,7 +162,6 @@ namespace Espionage.Engine
 
 		/// <inheritdoc cref="Delete"/>
 		protected virtual void OnDelete() { }
-
 
 		// Think
 		// --------------------------------------------------------------------------------------- //
@@ -171,35 +205,44 @@ namespace Espionage.Engine
 		/// This will deserialize the data and put them into the correct properties (through reflection)
 		/// override this if you want do it yourself manually (which is recommended).
 		/// </summary>
-		internal void Register( IReadOnlyDictionary<string, string> values = null )
+		internal void Register( Sheet[] values = null, Sheet[] outputs = null )
 		{
 			Assert.IsFalse( _registered = !_registered );
-			OnRegister( values );
+			OnRegister( values, outputs );
 		}
 
 		/// <inheritdoc cref="Register"/>
-		protected virtual void OnRegister( IReadOnlyDictionary<string, string> values )
+		protected virtual void OnRegister( Sheet[] properties, Sheet[] outputs )
 		{
-			// Use reflection to generate Outputs
-
-
 			// Use reflection to deserialize Key-Value pairs
-			if ( values == null )
+			if ( properties != null )
+			{
+				foreach ( var sheet in properties )
+				{
+					// This is why you should override this... this fucking sucks
+					sheet.Apply( this );
+				}
+			}
+
+			// Use reflection to deserialize outputs and call them
+			if ( outputs == null )
 			{
 				return;
 			}
 
-			foreach ( var (key, value) in values )
+			foreach ( var (key, value) in outputs )
 			{
+				var split = value.Split( ',' );
 				var property = ClassInfo.Properties[key];
 
-				if ( property is not { Editable: true } )
+				if ( property == null || property.Type != typeof( Output ) )
 				{
+					Debugging.Log.Warning( $"Output [{key}] is not valid on [{ClassInfo.Name}]" );
 					continue;
 				}
 
-				// This is why you should override this... this fucking sucks
-				property[this] = property.Type == typeof( string ) ? value : Converter.Convert( value, property.Type );
+				Debugging.Log.Info( $"Adding Output {key}" );
+				property[this] = new Output( split[0], split[1], 0 );
 			}
 		}
 

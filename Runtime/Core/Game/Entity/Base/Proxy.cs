@@ -1,31 +1,24 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Espionage.Engine
 {
 	[SelectionBase, DisallowMultipleComponent]
 	public class Proxy : Behaviour
 	{
-		[Serializable]
-		public class Sheet
-		{
-			public string Key;
-			public string Value;
-		}
 
-		internal Entity Create( out Sheet[] sheet )
+		internal Entity Create()
 		{
-			var ent = Library.Create( className ) as Entity;
+			Library lib = className;
 
-			if ( ent != null )
+			if ( lib == null )
 			{
-				ent.MoveTo( transform );
-
-				ent.Name = name;
-				ent.Enabled = !disabled;
+				return null;
 			}
 
-			sheet = properties.Length > 0 ? properties : null;
+			var ent = (Entity)Library.Create( lib );
+			ent.MoveTo( transform );
+			ent.Name = name;
+			ent.Enabled = !disabled;
 			return ent;
 		}
 
@@ -63,6 +56,9 @@ namespace Espionage.Engine
 		internal Sheet[] properties;
 
 		[SerializeField]
+		internal Sheet[] outputs;
+
+		[SerializeField]
 		internal bool disabled;
 
 		[SerializeField]
@@ -71,4 +67,5 @@ namespace Espionage.Engine
 		[SerializeField]
 		internal string className;
 	}
+
 }
