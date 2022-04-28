@@ -77,7 +77,7 @@ namespace Espionage.Engine.Resources
 			try
 			{
 				Debugging.Log.Info( $"Compiling {asset.Name()} [{type.Name}]" );
-				method?.Invoke( converter, new object[] { asset } );
+				method?.Invoke( converter, new object[] { asset.Output } );
 			}
 			catch ( Exception e )
 			{

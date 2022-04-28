@@ -180,21 +180,27 @@ namespace Espionage.Engine
 		/// <inheritdoc cref="Register"/>
 		protected virtual void OnRegister( IReadOnlyDictionary<string, string> values )
 		{
+			// Use reflection to generate Outputs
+
+
 			// Use reflection to deserialize Key-Value pairs
+			if ( values == null )
+			{
+				return;
+			}
+
 			foreach ( var (key, value) in values )
 			{
 				var property = ClassInfo.Properties[key];
 
-				if ( property == null )
+				if ( property is not { Editable: true } )
 				{
 					continue;
 				}
 
 				// This is why you should override this... this fucking sucks
-				property[this] = Converter.Convert( value, property.Type );
+				property[this] = property.Type == typeof( string ) ? value : Converter.Convert( value, property.Type );
 			}
-
-			// Use reflection to generate Outputs
 		}
 
 		// Implicit Operators

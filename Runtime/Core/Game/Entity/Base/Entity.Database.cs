@@ -39,7 +39,7 @@ namespace Espionage.Engine
 					continue;
 				}
 
-				ent.Register( sheet?.ToDictionary( e => e.key, e => e.value ) );
+				ent.Register( sheet?.ToDictionary( e => e.Key, e => e.Value ) );
 				ent.Spawn();
 			}
 		}

@@ -9,8 +9,8 @@ namespace Espionage.Engine
 		[Serializable]
 		public class Sheet
 		{
-			public string key;
-			public string value;
+			public string Key;
+			public string Value;
 		}
 
 		internal Entity Create( out Sheet[] sheet )
