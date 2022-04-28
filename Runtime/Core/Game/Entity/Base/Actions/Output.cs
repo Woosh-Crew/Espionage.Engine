@@ -2,13 +2,16 @@
 {
 	public readonly struct Output
 	{
-		public Output( string target, string function, float delay )
+		public Output( string name, string target, string function, float delay )
 		{
+			Name = name;
+
 			Target = target;
 			Input = function;
 			Delay = delay;
 		}
 
+		public string Name { get; }
 		private string Target { get; }
 		private string Input { get; }
 		private float Delay { get; }

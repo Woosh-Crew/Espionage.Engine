@@ -24,8 +24,7 @@ namespace Espionage.Engine.Resources
 		{
 			foreach ( var selection in Selection.objects )
 			{
-				var path = AssetDatabase.GetAssetPath( selection );
-				Compile( path, selection.GetType() );
+				Compile( selection, selection.GetType() );
 			}
 		}
 
@@ -77,7 +76,7 @@ namespace Espionage.Engine.Resources
 			try
 			{
 				Debugging.Log.Info( $"Compiling {asset.Name()} [{type.Name}]" );
-				method?.Invoke( converter, new object[] { asset.Output } );
+				method?.Invoke( converter, new object[] { asset } );
 			}
 			catch ( Exception e )
 			{

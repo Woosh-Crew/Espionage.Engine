@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Espionage.Engine
@@ -9,16 +10,19 @@ namespace Espionage.Engine
 		public string Key => key;
 		public string Value => value;
 
-		public void Apply( ILibrary target )
+		public static void Apply( IEnumerable<Sheet> template, ILibrary target )
 		{
-			var property = target.ClassInfo.Properties[key];
-
-			if ( property is not { Editable: true } )
+			foreach ( var (key, value) in template )
 			{
-				return;
-			}
+				var property = target.ClassInfo.Properties[key];
 
-			property[target] = property.Type == typeof( string ) ? value : Converter.Convert( value, property.Type );
+				if ( property is not { Editable: true } )
+				{
+					return;
+				}
+
+				property[target] = property.Type == typeof( string ) ? value : Converter.Convert( value, property.Type );
+			}
 		}
 
 		public void Deconstruct( out string outKey, out string outValue )

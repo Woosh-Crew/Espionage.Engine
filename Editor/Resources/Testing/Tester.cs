@@ -65,7 +65,7 @@ namespace Espionage.Engine.Editor.Resources
 			var selection = Selection.activeObject;
 			var path = AssetDatabase.GetAssetPath( selection );
 
-			Compiler.Compile( path, selection.GetType() );
+			Compiler.Compile( selection, selection.GetType() );
 			Test( path, selection.GetType() );
 		}
 

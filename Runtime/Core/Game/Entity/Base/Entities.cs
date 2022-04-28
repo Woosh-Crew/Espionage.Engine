@@ -39,7 +39,12 @@ namespace Espionage.Engine
 					continue;
 				}
 
-				ent.Register( proxy.properties, proxy.outputs );
+				ent.Register( proxy.properties, proxy.outputs.Select( e =>
+				{
+					var split = e.Value.Split( ',' );
+					return new Output( e.Key, split[0], split[1], 0 );
+				} ).ToArray() );
+				
 				ent.Spawn();
 			}
 		}

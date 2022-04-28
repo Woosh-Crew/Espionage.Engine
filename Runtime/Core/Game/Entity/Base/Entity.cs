@@ -205,23 +205,19 @@ namespace Espionage.Engine
 		/// This will deserialize the data and put them into the correct properties (through reflection)
 		/// override this if you want do it yourself manually (which is recommended).
 		/// </summary>
-		internal void Register( Sheet[] values = null, Sheet[] outputs = null )
+		public void Register( Sheet[] values = null, Output[] outputs = null )
 		{
 			Assert.IsFalse( _registered = !_registered );
 			OnRegister( values, outputs );
 		}
 
 		/// <inheritdoc cref="Register"/>
-		protected virtual void OnRegister( Sheet[] properties, Sheet[] outputs )
+		protected virtual void OnRegister( Sheet[] properties, Output[] outputs )
 		{
 			// Use reflection to deserialize Key-Value pairs
 			if ( properties != null )
 			{
-				foreach ( var sheet in properties )
-				{
-					// This is why you should override this... this fucking sucks
-					sheet.Apply( this );
-				}
+				Sheet.Apply( properties, this );
 			}
 
 			// Use reflection to deserialize outputs and call them
@@ -230,19 +226,17 @@ namespace Espionage.Engine
 				return;
 			}
 
-			foreach ( var (key, value) in outputs )
+			foreach ( var output in outputs )
 			{
-				var split = value.Split( ',' );
-				var property = ClassInfo.Properties[key];
+				var property = ClassInfo.Properties[output.Name];
 
 				if ( property == null || property.Type != typeof( Output ) )
 				{
-					Debugging.Log.Warning( $"Output [{key}] is not valid on [{ClassInfo.Name}]" );
+					Debugging.Log.Warning( $"Output [{output.Name}] is not valid on [{ClassInfo.Name}]" );
 					continue;
 				}
 
-				Debugging.Log.Info( $"Adding Output {key}" );
-				property[this] = new Output( split[0], split[1], 0 );
+				property[this] = output;
 			}
 		}
 
