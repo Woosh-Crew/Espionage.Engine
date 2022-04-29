@@ -109,7 +109,7 @@ namespace Espionage.Engine
 		public static Entity Create( Library lib )
 		{
 			var ent = (Entity)Library.Create( lib );
-			ent.OnSpawn();
+			ent.Spawn();
 			return ent;
 		}
 
