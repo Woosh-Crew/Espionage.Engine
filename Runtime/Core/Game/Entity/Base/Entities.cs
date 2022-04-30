@@ -86,14 +86,37 @@ namespace Espionage.Engine
 		// Public API
 		// --------------------------------------------------------------------------------------- //
 
-		public Entity this[ int key ] => _storage.ContainsKey( key ) ? _storage[key] : null;
+		public Entity this[ int key ] => _storage.TryGetValue( key, out var value ) ? value : null;
 
-		public IEnumerable<Entity> this[ string key, bool includeDisabled = false ] =>
-			key.IsEmpty() ? null : _storage.Values.Where( e => (includeDisabled || e.Enabled) && e.Name.Equals( key, StringComparison.CurrentCultureIgnoreCase ) );
+		public IEnumerable<Entity> this[ string key, bool includeDisabled = false ]
+		{
+			get
+			{
+				if ( key.IsEmpty() )
+				{
+					return null;
+				}
+
+				// Find by Library
+				if ( key.EndsWith( '*' ) )
+				{
+					key = key[..^1];
+					return _storage.Values.Where( e => (includeDisabled || e.Enabled) && e.ClassInfo.Name.StartsWith( key ) );
+				}
+
+				// Find by Name
+				return _storage.Values.Where( e => (includeDisabled || e.Enabled) && e.Name.Equals( key, StringComparison.CurrentCultureIgnoreCase ) );
+			}
+		}
 
 		public T Find<T>() where T : Entity
 		{
-			return _storage.FirstOrDefault( e => e is T ) as T;
+			return (T)_storage.Values.FirstOrDefault( e => e is T );
+		}
+
+		public T Find<T>( Library library ) where T : Entity
+		{
+			return (T)_storage.Values.FirstOrDefault( e => e.ClassInfo == library );
 		}
 
 		// Inside Sphere

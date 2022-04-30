@@ -8,13 +8,7 @@ namespace Espionage.Engine
 		internal Entity Create()
 		{
 			Library lib = className;
-
-			if ( lib == null )
-			{
-				return null;
-			}
-
-			return (Entity)Library.Create( lib );
+			return lib == null ? null : (Entity)Library.Create( lib );
 		}
 
 		private void OnDrawGizmos()

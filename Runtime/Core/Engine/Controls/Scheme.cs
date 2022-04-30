@@ -14,9 +14,9 @@ namespace Espionage.Engine
 		{
 			get
 			{
-				if ( _storage.ContainsKey( key ) )
+				if ( _storage.TryGetValue( key, out var value ) )
 				{
-					return _storage[key];
+					return value;
 				}
 
 				Debugging.Log.Error( $"Controls Scheme doesn't have [{key}] Binding" );
