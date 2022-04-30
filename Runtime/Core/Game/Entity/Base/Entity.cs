@@ -34,23 +34,7 @@ namespace Espionage.Engine
 				return;
 			}
 
-			// Create Hook to Unity
-			_gameObject = new( ClassInfo.Name );
-			_gameObject.AddComponent<Hook>().Owner = this;
-
-			if ( ClassInfo.Components.Has<PersistentAttribute>() )
-			{
-				DontDestroyOnLoad( this );
-				DontDestroyOnLoad( _gameObject );
-			}
-
-			Identifier = GameObject.GetInstanceID();
-
-			// Create Components architecture
 			Components = new( this );
-
-			// Add to Database
-			All.Add( this );
 		}
 
 		private void OnDestroy()
@@ -78,12 +62,36 @@ namespace Espionage.Engine
 			Components = null;
 		}
 
-		private bool _spawned;
+		private bool Spawned { get; set; }
 
 		public void Spawn()
 		{
-			Assert.IsFalse( _spawned = !_spawned );
+			if ( Spawned )
+			{
+				Debugging.Log.Warning( "Trying to spawn, an already spawned entity." );
+				return;
+			}
+
+			if ( _gameObject == null )
+			{
+				_gameObject = new( ClassInfo.Name );
+				_gameObject.AddComponent<Hook>().Owner = this;
+			}
+
+			if ( ClassInfo.Components.Has<PersistentAttribute>() )
+			{
+				DontDestroyOnLoad( this );
+				DontDestroyOnLoad( _gameObject );
+			}
+
+			Identifier = GameObject.GetInstanceID();
+
+			// Add to Database
+			All.Add( this );
+
 			OnSpawn();
+
+			Spawned = true;
 		}
 
 		// Entity Creation + Static API
@@ -95,7 +103,7 @@ namespace Espionage.Engine
 		/// <summary> Create an Entity, from its type. </summary>
 		public static T Create<T>() where T : Entity, new()
 		{
-			return Create( typeof( T ) ) as T;
+			return (T)Create( typeof( T ) );
 		}
 
 		/// <summary>
@@ -106,15 +114,26 @@ namespace Espionage.Engine
 		/// Plus because its a library you can use the implicit operator for string
 		/// to library.
 		/// </summary>
-		public static Entity Create( Library lib )
+		public static Entity Create( Library lib, bool spawn = true )
 		{
 			var ent = (Entity)Library.Create( lib );
-			ent.Spawn();
+
+			if ( spawn )
+			{
+				ent.Spawn();
+			}
+
 			return ent;
 		}
 
 		internal static Entity Constructor( Library lib )
 		{
+			if ( !Application.isPlaying )
+			{
+				Debugging.Log.Error( "Trying to create an entity, without being in Playmode" );
+				return null;
+			}
+
 			var ent = (Entity)CreateInstance( lib.Info );
 			return ent;
 		}
@@ -300,7 +319,6 @@ namespace Espionage.Engine
 			}
 		}
 
-		[Serialize, Group( "Transform" ), Order( -15 )]
 		public Transform Transform
 		{
 			get
@@ -314,7 +332,6 @@ namespace Espionage.Engine
 		/// The Position of this Entity. (Feeds
 		/// the value to the transforms position)
 		/// </summary>
-		[Serialize, Group( "Transform" )]
 		public Vector3 Position
 		{
 			get => Transform.position;
@@ -326,7 +343,6 @@ namespace Espionage.Engine
 		/// (Feeds the value to the transforms
 		/// rotation)
 		/// </summary>
-		[Serialize, Group( "Transform" )]
 		public Quaternion Rotation
 		{
 			get => Transform.rotation;
@@ -338,7 +354,6 @@ namespace Espionage.Engine
 		/// (Feeds the value to the transforms
 		/// local scale)
 		/// </summary>
-		[Serialize, Group( "Transform" )]
 		public Vector3 Scale
 		{
 			get => Transform.lossyScale;
@@ -350,7 +365,6 @@ namespace Espionage.Engine
 		/// (Changes gameObject.SetActive() to
 		/// the target value)
 		/// </summary>
-		[Serialize]
 		public bool Enabled
 		{
 			// I hate Unity, this is so stupid

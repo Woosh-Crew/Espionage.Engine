@@ -14,11 +14,7 @@ namespace Espionage.Engine
 				return null;
 			}
 
-			var ent = (Entity)Library.Create( lib );
-			ent.MoveTo( transform );
-			ent.Name = name;
-			ent.Enabled = !disabled;
-			return ent;
+			return (Entity)Library.Create( lib );
 		}
 
 		private void OnDrawGizmos()

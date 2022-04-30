@@ -44,8 +44,13 @@ namespace Espionage.Engine
 					var split = e.Value.Split( ',' );
 					return new Output( e.Key, split[0], split[1], 0 );
 				} ).ToArray() );
-				
+
 				ent.Spawn();
+
+				ent.Enabled = !proxy.disabled;
+				ent.Name = proxy.name;
+
+				ent.MoveTo( proxy.transform );
 			}
 		}
 
@@ -82,12 +87,17 @@ namespace Espionage.Engine
 		// --------------------------------------------------------------------------------------- //
 
 		public Entity this[ int key ] => _storage.ContainsKey( key ) ? _storage[key] : null;
-		public Entity[] this[ string key ] => string.IsNullOrWhiteSpace( key ) ? null : _storage.Values.Where( e => string.Equals( e.Name, key, StringComparison.CurrentCultureIgnoreCase ) ).ToArray();
+
+		public IEnumerable<Entity> this[ string key, bool includeDisabled = false ] =>
+			key.IsEmpty() ? null : _storage.Values.Where( e => (includeDisabled || e.Enabled) && e.Name.Equals( key, StringComparison.CurrentCultureIgnoreCase ) );
 
 		public T Find<T>() where T : Entity
 		{
 			return _storage.FirstOrDefault( e => e is T ) as T;
 		}
+
+		// Inside Sphere
+		// --------------------------------------------------------------------------------------- //
 
 		public T[] InSphere<T>( Vector3 position, float radius ) where T : Entity
 		{
@@ -98,6 +108,9 @@ namespace Espionage.Engine
 		{
 			return this.Where( entity => (entity.Position - position).magnitude <= radius ).ToArray();
 		}
+
+		// Inside Bounds
+		// --------------------------------------------------------------------------------------- //
 
 		public T[] InBox<T>( Vector3 position, Vector3 size ) where T : Entity
 		{
@@ -117,6 +130,32 @@ namespace Espionage.Engine
 		public Entity[] InBounds( Bounds bounds )
 		{
 			return this.Where( entity => bounds.Contains( entity.Position ) ).ToArray();
+		}
+
+		// Inside Cone
+		// --------------------------------------------------------------------------------------- //
+
+		public T[] InCone<T>( Vector3 origin, Vector3 direction, float angle, float range ) where T : Entity
+		{
+			return this.OfType<T>().Where( entity => IsPointInsideCone( entity.Position, origin, direction, angle, range ) ).ToArray();
+		}
+
+		public Entity[] InCone( Vector3 origin, Vector3 direction, float angle, float range )
+		{
+			return this.Where( entity => IsPointInsideCone( entity.Position, origin, direction, angle, range ) ).ToArray();
+		}
+
+		private static bool IsPointInsideCone( Vector3 point, Vector3 origin, Vector3 dir, float maxAngle, float range )
+		{
+			var distance = (point - origin).magnitude;
+
+			if ( distance > range )
+			{
+				return false;
+			}
+
+			var angle = Vector3.Angle( dir, point - origin );
+			return angle < maxAngle;
 		}
 	}
 }
