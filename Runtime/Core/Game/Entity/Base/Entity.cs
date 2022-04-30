@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Espionage.Engine.Components;
 using Espionage.Engine.Resources;
 using UnityEngine;
@@ -10,7 +11,7 @@ namespace Espionage.Engine
 	/// be saved and restored, has a unique id for each, etc.
 	/// </summary>
 	[Group( "Entities" ), Constructor( nameof( Constructor ) ), Spawnable]
-	public partial class Entity : ScriptableObject, IValid, ILibrary
+	public partial class Entity : IValid, ILibrary
 	{
 		public Library ClassInfo { get; private set; }
 
@@ -18,12 +19,11 @@ namespace Espionage.Engine
 		public int Identifier { get; private set; }
 
 		public Client Client { get; internal set; }
-		public HashSet<string> Tags { get; } = new();
 
 		// Initialization (Awake and OnDestroy, because of ScriptableObject)
 		// --------------------------------------------------------------------------------------- //
 
-		private void Awake()
+		public Entity()
 		{
 			ClassInfo = Library.Register( this );
 
@@ -34,32 +34,12 @@ namespace Espionage.Engine
 				return;
 			}
 
-			Components = new( this );
+			_components = new( this );
 		}
 
-		private void OnDestroy()
+		~Entity()
 		{
-			Deleted = true;
-
-			if ( ClassInfo == null )
-			{
-				// Nothing was initialized
-				Debugging.Log.Error( "ClassInfo was null, when trying to destroy an entity." );
-				return;
-			}
-
-			Components.Clear();
-			All.Remove( this );
-
-			Library.Unregister( this );
-			OnDelete();
-
-			if ( _gameObject != null )
-			{
-				Destroy( _gameObject );
-			}
-
-			Components = null;
+			Debugging.Log.Info( "Disposing Entity" );
 		}
 
 		private bool Spawned { get; set; }
@@ -80,8 +60,7 @@ namespace Espionage.Engine
 
 			if ( ClassInfo.Components.Has<PersistentAttribute>() )
 			{
-				DontDestroyOnLoad( this );
-				DontDestroyOnLoad( _gameObject );
+				GameObject.DontDestroyOnLoad( _gameObject );
 			}
 
 			Identifier = GameObject.GetInstanceID();
@@ -134,7 +113,7 @@ namespace Espionage.Engine
 				return null;
 			}
 
-			var ent = (Entity)CreateInstance( lib.Info );
+			var ent = (Entity)Activator.CreateInstance( lib.Info );
 			return ent;
 		}
 
@@ -143,7 +122,7 @@ namespace Espionage.Engine
 
 		bool IValid.IsValid => !Deleted && _gameObject != null;
 
-		protected bool Deleted { get; private set; }
+		private bool Deleted { get; set; }
 
 		/// <summary>
 		/// Deletes this entity by calling Scriptable.Destroy. Clean up any
@@ -152,7 +131,27 @@ namespace Espionage.Engine
 		/// </summary>
 		public void Delete()
 		{
-			Destroy( this );
+
+			if ( ClassInfo == null )
+			{
+				// Nothing was initialized
+				Debugging.Log.Error( "ClassInfo was null, when trying to destroy an entity." );
+				return;
+			}
+
+			_components.Clear();
+			All.Remove( this );
+
+			Library.Unregister( this );
+			OnDelete();
+
+			Deleted = true;
+			if ( _gameObject != null )
+			{
+				GameObject.Destroy( _gameObject );
+			}
+
+			_components = null;
 		}
 
 		// Frame Update
@@ -200,6 +199,8 @@ namespace Espionage.Engine
 		// Components
 		// --------------------------------------------------------------------------------------- //
 
+		private Components<Entity> _components;
+
 		/// <summary>
 		/// The Visuals for this Entity which is the Model, Animator, etc.
 		/// (This will just Get or Create the Visuals Component)
@@ -210,7 +211,14 @@ namespace Espionage.Engine
 		/// Components that are currently attached to this Entity. Use Components for
 		/// injecting logic into an Entity (Dependency Injection)
 		/// </summary>
-		public Components<Entity> Components { get; private set; }
+		public Components<Entity> Components
+		{
+			get
+			{
+				Assert.IsInvalid( this );
+				return _components;
+			}
+		}
 
 		// Registering and Deserialization
 		// --------------------------------------------------------------------------------------- //
@@ -280,7 +288,7 @@ namespace Espionage.Engine
 
 		public static implicit operator Transform( Entity entity )
 		{
-			return entity != null ? entity.Transform : null;
+			return entity?.Transform;
 		}
 
 		public static implicit operator GameObject( Entity entity )

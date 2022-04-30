@@ -10,13 +10,13 @@ namespace Espionage.Engine
 
 			private void OnDestroy()
 			{
-				(Owner ? Owner : null)?.Delete();
+				Owner?.Delete();
 				Owner = null;
 			}
 
 			private Entity GetEntity()
 			{
-				return (Owner ? Owner : null);
+				return Owner;
 			}
 
 			// Unity Events

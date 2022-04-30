@@ -15,6 +15,7 @@ namespace Espionage.Engine.Resources
 	{
 		public static Map Current { get; internal set; }
 		public static string[] Extensions { get; } = Library.Database.GetAll<File>().Select( e => e.Components.Get<FileAttribute>()?.Extension ).ToArray();
+		public static Action<Map> Loaded { get; set; }
 
 		/// <summary>
 		/// Trys to find the map by path. If it couldn't find the map in the database,
@@ -139,6 +140,7 @@ namespace Espionage.Engine.Resources
 			}
 
 			Callback.Run( "map.loaded" );
+			Loaded?.Invoke( Current );
 		}
 
 		private void OnUnload()

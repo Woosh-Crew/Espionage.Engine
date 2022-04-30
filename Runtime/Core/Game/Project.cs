@@ -28,7 +28,7 @@ namespace Espionage.Engine
 		public virtual void Simulate( Client cl )
 		{
 			// Temp Simulator
-			(cl.Pawn ? cl.Pawn : null)?.Simulate( cl );
+			cl.Pawn?.Simulate( cl );
 		}
 
 		//
@@ -49,9 +49,9 @@ namespace Espionage.Engine
 				}
 
 				// Finish and do Cleanup
-				(_gamemode ? _gamemode : null)?.Finish();
+				_gamemode?.Finish();
 				_gamemode = value;
-				(_gamemode ? _gamemode : null)?.Begin();
+				_gamemode?.Begin();
 
 				Callback.Run( "gamemodes.switched" );
 			}
