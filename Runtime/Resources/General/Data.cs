@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using Espionage.Engine.IO;
 
 namespace Espionage.Engine.Resources
@@ -18,6 +17,11 @@ namespace Espionage.Engine.Resources
 
 		// Compile
 
+		public void Compile()
+		{
+			Resources.Compiler.Compile<Data>( this );
+		}
+
 		internal void Compile( BinaryWriter writer )
 		{
 			writer.Write( ClassInfo.Id );
@@ -34,6 +38,7 @@ namespace Espionage.Engine.Resources
 		void IAsset.Setup( Pathing path )
 		{
 			Source = new( path.Absolute() );
+			Name = path.Name( false );
 		}
 
 		void IAsset.Load()
@@ -78,12 +83,13 @@ namespace Espionage.Engine.Resources
 			public void Compile( Data data )
 			{
 				var extension = data.ClassInfo.Components.Get<FileAttribute>()?.Extension ?? data.ClassInfo.Name.ToLower();
+				var output = Files.Pathing( $"{(data.ClassInfo.Components.Get<PathAttribute>()?.ShortHand ?? "data")}://" ).Absolute();
 
 				// Create path, just in case
-				Files.Pathing( "data://" ).Absolute().Create();
+				output.Create();
 
 				using var stopwatch = Debugging.Stopwatch( $"{data.ClassInfo.Title} Compiled", true );
-				using var file = File.Create( Files.Pathing( $"data://{data.Name}.{extension}" ).Absolute() );
+				using var file = File.Create( Files.Pathing( $"{output.Output}/{data.Name}.{extension}" ).Absolute() );
 				using var writer = new BinaryWriter( file );
 
 				try

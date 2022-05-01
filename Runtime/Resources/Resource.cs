@@ -57,11 +57,13 @@ namespace Espionage.Engine.Resources
 
 			if ( !IsLoaded )
 			{
-				Debugging.Log.Info( $"Loading {library.Title} at Path [{Path}]" );
+				var stopwatch = Debugging.Stopwatch( $"Loaded {library.Title} at Path [{Path}]" );
 
 				Instances = new();
 				Source = Create<T>();
 				Source.Load();
+
+				stopwatch.Dispose();
 			}
 
 			var instance = Source.Clone();

@@ -2,7 +2,7 @@ using System.IO;
 
 namespace Espionage.Engine.Resources
 {
-	[Group( "Surfaces" ), Path( "surface", "data://Surfaces" ), File( Extension = "surf" )]
+	[Group( "Surfaces" ), Path( "surfaces", "assets://Surfaces" ), File( Extension = "surf" )]
 	public sealed class Surface : Data
 	{
 		public float Friction { get; set; }
