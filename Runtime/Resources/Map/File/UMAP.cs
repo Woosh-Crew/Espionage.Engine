@@ -24,44 +24,25 @@ namespace Espionage.Engine.Resources.Maps
 
 		public void Compile( SceneAsset asset )
 		{
-			// Ask the user if they want to save the scene, if not don't export!
-			var activeScene = SceneManager.GetActiveScene();
-			var originalPath = activeScene.path;
 			var scenePath = AssetDatabase.GetAssetPath( asset );
 
-			if ( activeScene.path == scenePath && !EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo() )
+			if ( SceneManager.GetActiveScene().path == scenePath && !EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo() )
 			{
 				Debugging.Log.Warning( "Not compiling, User didn't want to save." );
 				return;
 			}
 
-			var scene = EditorSceneManager.OpenScene( scenePath, OpenSceneMode.Single );
 			var exportPath = $"Exports/{ClassInfo.Group}/";
 
-			// Track how long exporting took
-			using ( Debugging.Stopwatch( "Map Compiled", true ) )
+			using ( Debugging.Stopwatch( $"Map [{asset.name}] Compiled", true ) )
 			{
-				if ( Callback.Run<bool>( "compiler.sanity_check", scene )?.Any( e => e is false ) ?? false )
-				{
-					Debugging.Log.Info( "Sanity check failed" );
-					return;
-				}
-
 				try
 				{
-					// Create the Map scene, we use this for preprocessing & exporting
-					EditorSceneManager.SaveScene( scene, "Assets/Map.unity", true );
-					AssetDatabase.Refresh();
+					Files.Pathing( exportPath ).Absolute().Create();
 
-					if ( !Directory.Exists( Path.GetFullPath( exportPath ) ) )
-					{
-						Directory.CreateDirectory( Path.GetFullPath( exportPath ) );
-					}
-
-					var extension = Library.Database.Get<UMAP>().Components.Get<FileAttribute>().Extension;
-					var builds = new[] { new AssetBundleBuild() { assetNames = new[] { "Assets/Map.unity" }, assetBundleName = $"{scene.name}.{extension}" } };
-
-					var bundle = BuildPipeline.BuildAssetBundles( exportPath, builds, BuildAssetBundleOptions.ChunkBasedCompression, BuildTarget.StandaloneWindows );
+					var extension = ClassInfo.Components.Get<FileAttribute>().Extension;
+					var bundle = BuildPipeline.BuildAssetBundles( exportPath, new[] { new AssetBundleBuild() { assetNames = new[] { scenePath }, assetBundleName = $"{asset.name}.{extension}" } },
+						BuildAssetBundleOptions.ChunkBasedCompression, BuildTarget.StandaloneWindows );
 
 					if ( bundle == null )
 					{
@@ -77,10 +58,6 @@ namespace Espionage.Engine.Resources.Maps
 				}
 				finally
 				{
-					EditorSceneManager.OpenScene( originalPath );
-
-					// Delete Level1, as its not needed anymore
-					AssetDatabase.DeleteAsset( "Assets/Map.unity" );
 					AssetDatabase.Refresh();
 				}
 			}

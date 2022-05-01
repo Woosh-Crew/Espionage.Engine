@@ -88,8 +88,9 @@ namespace Espionage.Engine.Resources
 				// Create path, just in case
 				output.Create();
 
-				using var stopwatch = Debugging.Stopwatch( $"{data.ClassInfo.Title} Compiled", true );
-				using var file = File.Create( Files.Pathing( $"{output.Output}/{data.Name}.{extension}" ).Absolute() );
+				var outputPath = Files.Pathing( $"{output.Output}/{data.Name}.{extension}" ).Absolute();
+				using var stopwatch = Debugging.Stopwatch( $"{data.ClassInfo.Title} Compiled [{outputPath.Output}]", true );
+				using var file = File.Create( outputPath );
 				using var writer = new BinaryWriter( file );
 
 				try

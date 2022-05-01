@@ -128,7 +128,7 @@ namespace Espionage.Engine.Tools.Editor
 		public static void Play( string launchArgs = null )
 		{
 			var info = Engine.Project.ClassInfo;
-			Process.Start( Files.Pathing( $"Exports/{info.Title}/{info.Name}.exe" ).Absolute(), launchArgs );
+			Process.Start( Files.Pathing( $"Exports/{info.Title}/{info.Name}.exe" ).Absolute(), launchArgs + " -dev" );
 		}
 
 		// Utility

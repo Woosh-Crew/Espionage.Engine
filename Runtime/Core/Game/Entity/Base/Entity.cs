@@ -11,9 +11,9 @@ namespace Espionage.Engine
 	/// be saved and restored, has a unique id for each, etc.
 	/// </summary>
 	[Group( "Entities" ), Constructor( nameof( Constructor ) ), Spawnable]
-	public partial class Entity : IValid, ILibrary
+	public partial class Entity : ScriptableObject, IValid, ILibrary
 	{
-		public Library ClassInfo { get; }
+		public Library ClassInfo { get; private set; }
 
 		public string Name { get; set; }
 		public int Identifier { get; private set; }
@@ -23,7 +23,7 @@ namespace Espionage.Engine
 		// Initialization (Awake and OnDestroy, because of ScriptableObject)
 		// --------------------------------------------------------------------------------------- //
 
-		public Entity()
+		private void Awake()
 		{
 			ClassInfo = Library.Register( this );
 
@@ -117,23 +117,18 @@ namespace Espionage.Engine
 				return null;
 			}
 
-			var ent = (Entity)Activator.CreateInstance( lib.Info );
+			var ent = (Entity)CreateInstance( lib.Info );
 			return ent;
 		}
 
 		// Entity Deletion
 		// --------------------------------------------------------------------------------------- //
 
-		bool IValid.IsValid => !Deleted && _gameObject != null;
+		bool IValid.IsValid => !Deleted;
 
 		private bool Deleted { get; set; }
 
-		/// <summary>
-		/// Deletes this entity by calling Scriptable.Destroy. Clean up any
-		/// resource using OnDelete. Its recommended that you null all your
-		/// variables in OnDelete, so the garbage collector doesnt shit itself
-		/// </summary>
-		public void Delete()
+		private void OnDestroy()
 		{
 			if ( ClassInfo == null )
 			{
@@ -151,10 +146,20 @@ namespace Espionage.Engine
 			Deleted = true;
 			if ( _gameObject != null )
 			{
-				GameObject.Destroy( _gameObject );
+				Destroy( _gameObject );
 			}
 
 			_components = null;
+		}
+
+		/// <summary>
+		/// Deletes this entity by calling Scriptable.Destroy. Clean up any
+		/// resource using OnDelete. Its recommended that you null all your
+		/// variables in OnDelete, so the garbage collector doesnt shit itself
+		/// </summary>
+		public void Delete()
+		{
+			Destroy( this );
 		}
 
 		// Frame Update
@@ -307,7 +312,7 @@ namespace Espionage.Engine
 
 		public static implicit operator Transform( Entity entity )
 		{
-			return entity?.Transform;
+			return (entity ? entity : null)?.Transform;
 		}
 
 		public static implicit operator GameObject( Entity entity )

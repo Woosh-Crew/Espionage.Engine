@@ -42,12 +42,10 @@ namespace Espionage.Engine.Resources
 			return library != null;
 		}
 
-		public static void Compile<T>( T item ) where T : ILibrary
+		public static void Compile<T>( T item )
 		{
 			var library = Library.Database.Find( typeof( ICompiler<T> ) );
 			Assert.IsNull( library );
-
-			Debugging.Log.Info( $"Compiling {item.ClassInfo.Title}" );
 			var compiler = Library.Create<ICompiler<T>>( library.Info );
 			compiler.Compile( item );
 		}

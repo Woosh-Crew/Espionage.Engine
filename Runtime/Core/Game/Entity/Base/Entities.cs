@@ -23,8 +23,8 @@ namespace Espionage.Engine
 		{
 			foreach ( var entity in Entity.All )
 			{
-				entity?.Frame();
-				entity?.Thinking.Run();
+				(entity ? entity : null)?.Frame();
+				(entity ? entity : null)?.Thinking.Run();
 			}
 		}
 

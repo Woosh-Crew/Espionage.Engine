@@ -2,7 +2,7 @@
 
 namespace Espionage.Engine
 {
-	public  partial class Entity
+	public partial class Entity
 	{
 		private class Hook : MonoBehaviour
 		{
@@ -10,7 +10,7 @@ namespace Espionage.Engine
 
 			private void OnDestroy()
 			{
-				Owner?.Delete();
+				(Owner ? Owner : null)?.Delete();
 				Owner = null;
 			}
 
