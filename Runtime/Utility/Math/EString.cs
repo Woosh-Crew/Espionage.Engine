@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Text;
+using Espionage.Engine.IO;
 
 namespace Espionage.Engine
 {
@@ -61,6 +62,12 @@ namespace Espionage.Engine
 
 			prefix = prefix.Split( '.' )[^1] ?? "";
 			return $"{prefix}.{name}".ToLower();
+		}
+
+		public static Pathing ToPath( this string value )
+		{
+			Pathing path = value;
+			return path;
 		}
 	}
 }

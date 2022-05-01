@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Espionage.Engine.IO;
 
@@ -9,12 +10,19 @@ namespace Espionage.Engine.Resources
 	{
 		protected override void OnReady()
 		{
+			// Setup Resources
 			foreach ( var pathing in Library.Database.GetAll<IAsset>().Select( e => e.Components.Get<PathAttribute>() ) )
 			{
 				foreach ( var file in Files.Pathing( $"{pathing.ShortHand}://" ).All() )
 				{
 					Registered.Fill( file.Virtual().Normalise() );
 				}
+			}
+
+			// Load Mods
+			foreach ( var directory in Files.Pathing( "mods://" ).All( true, SearchOption.TopDirectoryOnly ) )
+			{
+				var mod = Load<Mod>( directory );
 			}
 		}
 

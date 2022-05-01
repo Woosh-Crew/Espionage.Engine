@@ -34,6 +34,13 @@ namespace Espionage.Engine
 		public static Scene Scene { get; private set; }
 
 		/// <summary>
+		/// The world is the currently loaded scenes, plus their global components
+		/// such as weather, skybox, etc. The world is also responsible for controlling
+		/// entities per map. 
+		/// </summary>
+		public static World World { get; private set; }
+
+		/// <summary>
 		/// The Main Camera Espionage.Engine creates. We recommend you
 		/// cache this as this will do a services Get() call, which
 		/// creates garbage (due to LINQ).

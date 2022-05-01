@@ -13,7 +13,7 @@ namespace Espionage.Engine.Resources
 			base.OnAttached( item );
 
 			// Add Parent to Transform
-			var go = new GameObject( "Visuals" );
+			var go = new GameObject( "comp.visuals" );
 			go.transform.SetParent( Entity );
 			go.transform.localPosition = Vector3.zero;
 

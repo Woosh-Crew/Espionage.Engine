@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Espionage.Engine.Resources
 {
-	[Library( "mdl.asset" ), File( Fallback = "models://w_error.umdl" ), Group( "Models" ), Path( "models", "assets://Models", Overridable = true )]
+	[Library( "mdl.asset" ), File( Fallback = "models://w_error.umdl" ), Group( "Models" ), Path( "models", "assets://Models" )]
 	public sealed class Model : IAsset
 	{
 		public Library ClassInfo { get; }

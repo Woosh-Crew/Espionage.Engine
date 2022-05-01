@@ -21,15 +21,6 @@ namespace Espionage.Engine
 			Components = new( this );
 		}
 
-		public bool Exists( string path, out string full )
-		{
-			var assets = Files.Pathing( "assets://" );
-			var absolute = assets.Absolute();
-
-			full = absolute + assets.Relative( Path + "/" + assets.Relative( path ) );
-			return Files.Pathing( full ).Exists();
-		}
-
 		// Resource
 
 		public Resource Resource { get; set; }
@@ -45,6 +36,13 @@ namespace Espionage.Engine
 			var name = Files.Pathing( Path ).Name();
 			Pathing.Add( name, Path );
 
+			// Add Models
+
+			if ( Files.Pathing( $"{name}://Models" ).Exists() )
+			{
+				Pathing.Add( "models", $"{name}://Models" );
+			}
+
 			// Grab Maps
 
 			var mapPathing = Files.Pathing( $"{name}://Maps" );
@@ -56,10 +54,7 @@ namespace Espionage.Engine
 
 			foreach ( var file in mapPathing.All( SearchOption.AllDirectories, Map.Extensions ) )
 			{
-				Map.Setup.Path( file )?
-					.Origin( name )
-					.Meta( Files.Pathing( file ).Name() )
-					.Build();
+				Map.Setup.Path( file )?.Origin( name ).Meta( Files.Pathing( file ).Name() ).Build();
 			}
 		}
 

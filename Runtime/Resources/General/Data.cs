@@ -5,7 +5,7 @@ using Espionage.Engine.IO;
 
 namespace Espionage.Engine.Resources
 {
-	[Group( "Data" ), Path( "data", "assets://Data", Overridable = true )]
+	[Group( "Data" ), Path( "data", "assets://Data" )]
 	public abstract class Data : IAsset, IWatchable
 	{
 		public Library ClassInfo { get; }

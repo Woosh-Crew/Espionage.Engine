@@ -13,7 +13,7 @@ namespace Espionage.Engine
 	[Group( "Entities" ), Constructor( nameof( Constructor ) ), Spawnable]
 	public partial class Entity : IValid, ILibrary
 	{
-		public Library ClassInfo { get; private set; }
+		public Library ClassInfo { get; }
 
 		public string Name { get; set; }
 		public int Identifier { get; private set; }
@@ -39,11 +39,15 @@ namespace Espionage.Engine
 
 		~Entity()
 		{
-			Debugging.Log.Info( "Disposing Entity" );
+			Debugging.Log.Info( $"Disposing {ClassInfo.Name}" );
 		}
 
 		private bool Spawned { get; set; }
 
+		/// <summary>
+		/// Spawns this Entity and places it into the game world. This most of the
+		/// time will be automatically called for you. (Either by a proxy or Entity.Create)
+		/// </summary>
 		public void Spawn()
 		{
 			if ( Spawned )
@@ -131,7 +135,6 @@ namespace Espionage.Engine
 		/// </summary>
 		public void Delete()
 		{
-
 			if ( ClassInfo == null )
 			{
 				// Nothing was initialized
@@ -265,6 +268,22 @@ namespace Espionage.Engine
 			}
 		}
 
+		// Save and Restore System
+		// --------------------------------------------------------------------------------------- //
+
+		internal void Save()
+		{
+			OnSave();
+		}
+
+		internal void Restore()
+		{
+			OnRestore();
+		}
+
+		protected virtual void OnSave() { }
+		protected virtual void OnRestore() { }
+
 		// Implicit Operators
 		// --------------------------------------------------------------------------------------- //
 
@@ -376,8 +395,16 @@ namespace Espionage.Engine
 		public bool Enabled
 		{
 			// I hate Unity, this is so stupid
-			get => GameObject.activeInHierarchy;
-			set => GameObject.SetActive( value );
+			get
+			{
+				Assert.IsInvalid( this );
+				return GameObject.activeInHierarchy;
+			}
+			set
+			{
+				Assert.IsInvalid( this );
+				GameObject.SetActive( value );
+			}
 		}
 
 		/// <summary>
@@ -387,8 +414,16 @@ namespace Espionage.Engine
 		/// </summary>
 		public int Layer
 		{
-			get => GameObject.layer;
-			set => GameObject.layer = value;
+			get
+			{
+				Assert.IsInvalid( this );
+				return GameObject.layer;
+			}
+			set
+			{
+				Assert.IsInvalid( this );
+				GameObject.layer = value;
+			}
 		}
 
 		//

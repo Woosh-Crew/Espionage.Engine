@@ -96,9 +96,9 @@ namespace Espionage.Engine
 			var main = typeof( Library ).Assembly;
 			Add( main );
 
-			foreach ( var assembly in AppDomain.CurrentDomain.GetAssemblies() )
+			foreach ( var assembly in AppDomain.CurrentDomain.GetAssemblies().Where( e => e.IsDefined( typeof( LibraryAttribute ) ) ) )
 			{
-				if ( assembly != main && assembly.GetReferencedAssemblies().Any( e => e.FullName == main.FullName ) )
+				if ( assembly != main )
 				{
 					Add( assembly );
 				}

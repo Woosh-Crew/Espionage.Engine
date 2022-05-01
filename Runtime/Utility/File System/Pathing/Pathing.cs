@@ -9,51 +9,87 @@ namespace Espionage.Engine.IO
 {
 	public struct Pathing
 	{
-		private readonly struct Grouping
+		private readonly struct Shorthand
 		{
-			public Grouping( string path, bool overridable )
+			// Static API
+			// --------------------------------------------------------------------------------------- //
+
+			internal static readonly Dictionary<string, Shorthand> All = new( StringComparer.OrdinalIgnoreCase );
+
+			/// <summary>
+			/// Tries to find a shorthand that matches the key, then returns one. This
+			/// can return default.
+			/// </summary>
+			public static Shorthand Find( string key )
 			{
-				Path = path;
-				Overridable = overridable;
+				return All.TryGetValue( key, out var shorthand ) ? shorthand : default;
 			}
 
-			public static implicit operator Grouping( string value )
+			// Shorthand Instance
+			// --------------------------------------------------------------------------------------- //
+
+			public string Apply( string path = null )
 			{
-				return new( value, false );
+				// Not Virtualized Shorthand, Break
+				if ( Path.Count == 1 || path.IsEmpty() )
+				{
+					return new Pathing( Path.Peek() ).Absolute();
+				}
+
+				// Find, based off path
+				foreach ( var pathing in Path )
+				{
+					var potential = Files.Pathing( pathing ).Absolute();
+					if ( (potential + $"/{path}").Exists() )
+					{
+						return potential;
+					}
+				}
+
+				return string.Empty;
 			}
 
-			public string Path { get; }
-			public bool Overridable { get; }
+			internal Shorthand( string key, string path )
+			{
+				Key = key;
+
+				Path = new();
+				Path.Push( path );
+			}
+
+			public string Key { get; }
+			public Stack<string> Path { get; }
 		}
 
-		private static readonly Dictionary<string, Grouping> Paths = new( StringComparer.OrdinalIgnoreCase )
+		static Pathing()
 		{
 			// -- Game Specific
-			["game"] = Application.dataPath,
-			["assets"] = Application.isEditor ? "exports://" : "game://",
+			Add( "game", Application.dataPath );
+			Add( "assets", Application.isEditor ? "exports://" : "game://" );
 
 			// -- User Specific
-			["cache"] = GetUserPath( "XDG_CACHE_HOME",
+			Add( "cache", GetUserPath( "XDG_CACHE_HOME",
 				$"{Environment.GetEnvironmentVariable( "TEMP" )}\\<game>",
 				$"{Environment.GetFolderPath( Environment.SpecialFolder.UserProfile )}/.cache/<game>",
 				$"{Environment.GetFolderPath( Environment.SpecialFolder.UserProfile )}/Library/Caches/<game>"
-			),
-			["config"] = GetUserPath( "XDG_CONFIG_HOME",
+			) );
+
+			Add( "config", GetUserPath( "XDG_CONFIG_HOME",
 				$"{Environment.GetFolderPath( Environment.SpecialFolder.ApplicationData )}\\<game>",
 				$"{Environment.GetFolderPath( Environment.SpecialFolder.UserProfile )}/.config/<game>",
 				$"{Environment.GetFolderPath( Environment.SpecialFolder.UserProfile )}/Library/Preferences/<game>"
-			),
+			) );
 
 			#if UNITY_EDITOR
 
 			// -- Editor Specific
-			["project"] = $"{Application.dataPath}/../",
-			["exports"] = "project://Exports/",
-			["compiled"] = "exports://<game>/",
-			["editor"] = EditorApplication.applicationPath,
+			Add( "project", $"{Application.dataPath}/../" );
+			Add( "exports", "project://Exports/" );
+			Add( "compiled", "exports://<game>/" );
+			Add( "editor", EditorApplication.applicationPath );
 
 			#endif
-		};
+		}
 
 		// Reason why its a func, is cause some of these values are null
 		// when the static constructor gets called, so we use the func instead
@@ -92,22 +128,29 @@ namespace Espionage.Engine.IO
 
 		/// <summary>
 		/// Add a shorthand / virtual path to the pathing database
-		/// for use later, you can't override already exising keys.
+		/// for use later. You can add to already exising keys.
 		/// </summary>
-		public static void Add( string key, string path, bool overrideable = false )
+		public static void Add( string key, string path )
 		{
 			if ( path.IsEmpty() )
 			{
 				Debugging.Log.Warning( $"Path [{path}] for key [{key}] was empty / null!" );
-			}
-
-			if ( Paths.ContainsKey( key ) )
-			{
-				Debugging.Log.Error( $"Pathing already contains shorthand {key}" );
 				return;
 			}
 
-			Paths.Add( key, new( path, overrideable ) );
+			if ( Shorthand.All.TryGetValue( key, out var shorthand ) )
+			{
+				if ( shorthand.Path.Contains( path ) )
+				{
+					return;
+				}
+
+				shorthand.Path.Push( path );
+				return;
+			}
+
+			shorthand = new( key, path );
+			Shorthand.All.Add( shorthand.Key, shorthand );
 		}
 
 		/// <summary>
@@ -127,26 +170,8 @@ namespace Espionage.Engine.IO
 			Keywords.Add( key, word );
 		}
 
-		/// <summary>
-		/// Does the paths database contain this key?
-		/// </summary>
-		public static bool Contains( string path )
-		{
-			return Paths.ContainsKey( path );
-		}
-
-		/// <summary>
-		/// Can this path be overriden by mods? (such as "models://")
-		/// </summary>
-		/// <returns> True if I can be overriden </returns>
-		public static bool IsOverridable( string path )
-		{
-			return Paths[path].Overridable;
-		}
-
-		//
-		// Pathing
-		//
+		// Pathing Builder
+		// --------------------------------------------------------------------------------------- //
 
 		public string Output { get; private set; }
 
@@ -184,9 +209,8 @@ namespace Espionage.Engine.IO
 			return left;
 		}
 
-		//
-		// Builders
-		//
+		// Pathing Mutators
+		// --------------------------------------------------------------------------------------- //
 
 		/// <summary>
 		/// Gets the Path, If you use the virtual pathing
@@ -199,7 +223,10 @@ namespace Espionage.Engine.IO
 
 			Assert.IsNull( path );
 
-			// Change Keywords
+			//
+			// Keywords
+			//
+
 			if ( path.Contains( '<' ) )
 			{
 				foreach ( var (key, value) in Keywords )
@@ -224,42 +251,26 @@ namespace Espionage.Engine.IO
 				}
 			}
 
-			// No shorthand pathing, exit out
+			//
+			// Shorthand
+			//
+
 			if ( !path.Contains( "://" ) )
 			{
 				path = Path.GetFullPath( path );
-
 				Output = directoryOnly ? Path.GetDirectoryName( path ) : path;
 				return this;
 			}
 
 			var splitPath = path.Split( "://" );
-			var virtualPath = splitPath[0];
+			var shorthand = splitPath[0];
 
-			if ( !Paths.ContainsKey( virtualPath ) )
-			{
-				throw new( $"Path {virtualPath} isn't present in the Keys. Make sure you have valid pathing." );
-			}
-
-			splitPath[0] = new Pathing( Paths[virtualPath].Path ).Absolute();
-
+			splitPath[0] = Shorthand.Find( shorthand ).Apply( splitPath[1] );
 			var newPath = Path.GetFullPath( Path.Combine( splitPath[0], splitPath[1] ) );
 
-			// See if we can override it.
-			if ( !IsOverridable( virtualPath ) )
-			{
-				Output = directoryOnly ? Path.GetDirectoryName( newPath ) : newPath;
-				return this;
-			}
-
-			// Go through mods, see if we can replace it.
-			// foreach ( var mod in Mod.Database )
-			// {
-			// 	if ( mod.Exists( newPath, out var potentialPath ) )
-			// 	{
-			// 		return directoryOnly ? Path.GetDirectoryName( potentialPath ) : potentialPath;
-			// 	}
-			// }
+			//
+			// Output
+			//	
 
 			Output = directoryOnly ? Path.GetDirectoryName( newPath ) : newPath;
 			return this;
@@ -300,38 +311,40 @@ namespace Espionage.Engine.IO
 			var potential = string.Empty;
 			var shorthand = string.Empty;
 
-			foreach ( var (key, value) in Paths )
+			foreach ( var (key, value) in Shorthand.All )
 			{
-				var pathing = Files.Pathing( value.Path ).Absolute();
-
-				if ( pathing.Meta().IsFile )
+				foreach ( var input in value.Path )
 				{
-					continue;
-				}
+					var pathing = Files.Pathing( input ).Absolute();
 
-				var relative = Files.Pathing( Output ).Absolute().Relative( pathing );
+					// Ignore files
+					if ( pathing.Meta().IsFile )
+					{
+						continue;
+					}
 
-				// Invalid Pathing
-				if ( !relative.IsRelative() || relative.Output.StartsWith( @"..\" ) )
-				{
-					continue;
-				}
+					var relative = Files.Pathing( Output ).Absolute().Relative( pathing );
+					if ( !relative.IsRelative() || relative.Output.StartsWith( @"..\" ) )
+					{
+						continue;
+					}
 
-				// Has shortest relative path length, must be the right shorthand 
-				if ( relative.Output.Length < potential.Length || potential.IsEmpty() )
-				{
-					potential = relative;
-					shorthand = key;
+					// Has shortest relative path length, must be the right shorthand 
+					if ( relative.Output.Length < potential.Length || potential.IsEmpty() )
+					{
+						potential = relative;
+						shorthand = key;
+					}
 				}
 			}
 
-			if ( potential.IsEmpty() )
+			if ( !potential.IsEmpty() )
 			{
-				Debugging.Log.Warning( $"Couldn't make [{Output}] virtual" );
+				Output = $"{shorthand}://{potential}";
 				return this;
 			}
 
-			Output = $"{shorthand}://{potential}";
+			Debugging.Log.Warning( $"Couldn't find shorthand for [{Output}]" );
 			return this;
 		}
 
@@ -346,9 +359,8 @@ namespace Espionage.Engine.IO
 			return this;
 		}
 
-		//
-		// Outputs
-		//
+		// Pathing Outputs
+		// --------------------------------------------------------------------------------------- //
 
 		/// <summary>
 		/// Gets the files meta at the given path.
@@ -391,7 +403,7 @@ namespace Espionage.Engine.IO
 		/// </summary>
 		public bool IsVirtual()
 		{
-			return Output.Contains( "://" ) && Paths.ContainsKey( Output.Split( "://" )[0] );
+			return Output.Contains( "://" ) && Shorthand.All.ContainsKey( Output.Split( "://" )[0] );
 		}
 
 		/// <summary>
@@ -498,6 +510,15 @@ namespace Espionage.Engine.IO
 		public string Name( bool withExtension = true )
 		{
 			return withExtension ? Path.GetFileName( Output ) : Path.GetFileNameWithoutExtension( Output );
+		}
+
+		/// <summary>
+		/// Gets the name of last directory or file
+		/// at the given path
+		/// </summary>
+		public string Extension()
+		{
+			return Path.GetExtension( Output );
 		}
 
 		/// <summary>

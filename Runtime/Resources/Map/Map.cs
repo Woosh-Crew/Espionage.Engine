@@ -129,7 +129,7 @@ namespace Espionage.Engine.Resources
 
 			foreach ( var comp in Components.GetAll<ICallbacks>() )
 			{
-				comp.OnLoad( Provider.Scene );
+				comp.OnLoad();
 			}
 
 			// Piss off all the crap we don't need
@@ -206,7 +206,7 @@ namespace Espionage.Engine.Resources
 
 		public interface ICallbacks
 		{
-			void OnLoad( Scene scene );
+			void OnLoad();
 			void OnUnload();
 
 			ILoadable Inject() { return null; }

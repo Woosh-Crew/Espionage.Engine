@@ -66,10 +66,9 @@ namespace Espionage.Engine.Resources
 
 			var instance = Source.Clone();
 
-			if ( instance == null )
+			if ( instance == null || instance == Source )
 			{
-				Debugging.Log.Error( $"Can't load [{library.Title}]" );
-				return null;
+				return (T)Source;
 			}
 
 			Instances.Add( instance );
