@@ -1,43 +1,64 @@
-using UnityEngine;
+using System.IO;
 
-namespace Espionage.Engine
+namespace Espionage.Engine.Resources
 {
-	[CreateAssetMenu( menuName = "Espionage.Engine/Surface" )]
-	public sealed class Surface : ScriptableObject, ILibrary
+	[Group( "Surfaces" ), Path( "surface", "data://Surfaces" ), File( Extension = "surf" )]
+	public sealed class Surface : Data
 	{
-		public Library ClassInfo { get; private set; }
+		public float Friction { get; set; }
+		public float Density { get; set; }
+		public string[] Footsteps { get; set; }
+		public string[] Impacts { get; set; }
 
-		public float Friction => friction;
-		public float Density => density;
-		public AudioClip[] Footsteps => footstepSounds;
-		public AudioClip[] ImpactSounds => impactSounds;
-		public ParticleSystem[] ImpactEffects => impactEffects;
+		// Asset Compiling & Loading
+		// --------------------------------------------------------------------------------------- //
 
-		private void OnEnable()
+		protected override void OnCompile( BinaryWriter writer )
 		{
-			ClassInfo = Library.Database[typeof( Surface )];
+			writer.Write( Friction );
+			writer.Write( Density );
+
+			// Footsteps
+
+			writer.Write( Footsteps.Length );
+
+			for ( var i = 0; i < Footsteps.Length; i++ )
+			{
+				writer.Write( Footsteps[i] );
+			}
+
+			// Impacts
+
+			writer.Write( Impacts.Length );
+
+			for ( var i = 0; i < Impacts.Length; i++ )
+			{
+				writer.Write( Impacts[i] );
+			}
 		}
 
-		// Fields
-
-		[SerializeField]
-		private float friction = 1f;
-
-		[SerializeField]
-		private float density = 100f;
-
-		[SerializeField]
-		private AudioClip[] footstepSounds;
-
-		[SerializeField]
-		private AudioClip[] impactSounds;
-
-		[SerializeField]
-		private ParticleSystem[] impactEffects;
-
-		public static implicit operator PhysicMaterial( Surface surface )
+		protected override void OnLoad( BinaryReader reader )
 		{
-			return new( surface.name ) { staticFriction = surface.friction };
+			Friction = reader.ReadSingle();
+			Density = reader.ReadSingle();
+
+			// Footsteps
+
+			Footsteps = new string[reader.ReadInt32()];
+
+			for ( var i = 0; i < Footsteps.Length; i++ )
+			{
+				Footsteps[i] = reader.ReadString();
+			}
+
+			// Impacts
+
+			Impacts = new string[reader.ReadInt32()];
+
+			for ( var i = 0; i < Impacts.Length; i++ )
+			{
+				Impacts[i] = reader.ReadString();
+			}
 		}
 	}
 

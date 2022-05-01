@@ -21,15 +21,6 @@ namespace Espionage.Engine.Resources
 		internal void Compile( BinaryWriter writer )
 		{
 			writer.Write( ClassInfo.Id );
-
-			foreach ( var property in ClassInfo.Properties.Where( e => e.Serialized ) )
-			{
-				// Write ID and Offset into file
-				writer.Write( property.Identifier );
-			}
-
-			// Data
-
 			OnCompile( writer );
 		}
 
@@ -42,7 +33,7 @@ namespace Espionage.Engine.Resources
 
 		void IAsset.Setup( Pathing path )
 		{
-			Source = new( path );
+			Source = new( path.Absolute() );
 		}
 
 		void IAsset.Load()
@@ -79,14 +70,17 @@ namespace Espionage.Engine.Resources
 
 		// Compiler
 
-		internal class Compiler : ICompiler<Data>
+		[Library( "data.compiler" )]
+		internal class Compiler : ICompiler<Data>, ILibrary
 		{
+			public Library ClassInfo => typeof( Compiler );
+
 			public void Compile( Data data )
 			{
 				var extension = data.ClassInfo.Components.Get<FileAttribute>()?.Extension ?? data.ClassInfo.Name.ToLower();
 
 				// Create path, just in case
-				Files.Pathing( "data://" ).Create();
+				Files.Pathing( "data://" ).Absolute().Create();
 
 				using var stopwatch = Debugging.Stopwatch( $"{data.ClassInfo.Title} Compiled", true );
 				using var file = File.Create( Files.Pathing( $"data://{data.Name}.{extension}" ).Absolute() );

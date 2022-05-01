@@ -1,12 +1,13 @@
-﻿using UnityEngine;
+﻿using Espionage.Engine.Resources;
+using UnityEngine;
 
 namespace Espionage.Engine
 {
 	public class AdvancedMaterial : MonoBehaviour, ISurface
 	{
-		public Surface Surface => surface;
-		
+		public Surface Surface => null;
+
 		[SerializeField]
-		private Surface surface;
+		private string surface;
 	}
 }
