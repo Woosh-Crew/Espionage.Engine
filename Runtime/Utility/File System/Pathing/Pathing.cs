@@ -344,7 +344,6 @@ namespace Espionage.Engine.IO
 				return this;
 			}
 
-			Debugging.Log.Warning( $"Couldn't find shorthand for [{Output}]" );
 			return this;
 		}
 
