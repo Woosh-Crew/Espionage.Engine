@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Espionage.Engine.Components;
+﻿using Espionage.Engine.Components;
 using Espionage.Engine.Resources;
 using UnityEngine;
 
@@ -160,6 +158,26 @@ namespace Espionage.Engine
 		public void Delete()
 		{
 			Destroy( this );
+		}
+
+		private static bool Compare( Entity left, Entity right )
+		{
+			var leftNull = (object)left == null;
+			var rightNull = (object)right == null;
+
+			if ( rightNull & leftNull )
+				return true;
+
+			if ( rightNull )
+				return !left.IsValid();
+
+			return leftNull ? !right.IsValid() : left.Identifier == right.Identifier;
+		}
+
+		public override bool Equals( object other )
+		{
+			Entity rightSide = other as Entity;
+			return (!(rightSide == null) || other == null || other is Entity) && Compare( this, rightSide );
 		}
 
 		// Frame Update
