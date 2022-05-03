@@ -160,6 +160,13 @@ namespace Espionage.Engine
 			Destroy( this );
 		}
 
+		public static implicit operator bool( Entity exists ) => !Compare( exists, null );
+
+		public static bool operator ==( Entity x, Entity y ) => Compare( x, y );
+
+		public static bool operator !=( Entity x, Entity y ) => !Compare( x, y );
+
+
 		private static bool Compare( Entity left, Entity right )
 		{
 			var leftNull = (object)left == null;
@@ -174,10 +181,15 @@ namespace Espionage.Engine
 			return leftNull ? !right.IsValid() : left.Identifier == right.Identifier;
 		}
 
+		public override int GetHashCode()
+		{
+			return Identifier;
+		}
+
 		public override bool Equals( object other )
 		{
-			Entity rightSide = other as Entity;
-			return (!(rightSide == null) || other == null || other is Entity) && Compare( this, rightSide );
+			var rightSide = other as Entity;
+			return (!(rightSide == null) || other is null or Entity) && Compare( this, rightSide );
 		}
 
 		// Frame Update
